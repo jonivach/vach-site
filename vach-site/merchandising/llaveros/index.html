@@ -328,6 +328,59 @@
     }
     .empty-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; }
     .empty-card p { font-size: 0.92rem; color: var(--lgray); line-height: 1.6; max-width: 560px; }
+
+    /* GALLERY CONTRAST OVERLAY */
+    .gallery-item::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 58%;
+      background: linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.32) 55%, transparent 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .gallery-item .gallery-cap { background: none; z-index: 2; }
+    .gallery-item img { cursor: zoom-in; }
+
+    /* LIGHTBOX */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 2rem;
+      cursor: zoom-out;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      object-fit: contain;
+      cursor: default;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      font-size: 1.3rem;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
 </style>
 </head>
 <body>
@@ -354,13 +407,13 @@
 
   <div class="section-title">Trabajos realizados</div>
   <div class="gallery">
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-vach.jpg" alt="Llavero personalizado VACH*" loading="lazy"><span class="gallery-cap">Llavero 3D · VACH*</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-acrilico.jpg" alt="Llavero acrílico ilustrado" loading="lazy"><span class="gallery-cap">Llavero acrílico full color</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-oso.jpg" alt="Llavero 3D oso AXE" loading="lazy"><span class="gallery-cap">Llavero 3D · AXE</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-axe.jpg" alt="Mini réplica desodorante AXE" loading="lazy"><span class="gallery-cap">Mini réplica · AXE</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-mcdonalds.jpg" alt="Llavero personalizado McDonald's" loading="lazy"><span class="gallery-cap">Llavero 3D · McDonald's</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-ambulancia.jpg" alt="Llavero 3D ambulancia personalizado" loading="lazy"><span class="gallery-cap">Llavero 3D a medida</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-mickey.jpg" alt="Llavero 3D Mickey fullcolor" loading="lazy"><span class="gallery-cap">Llavero 3D fullcolor</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-vach.jpg" alt="Llavero personalizado VACH*" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Llavero 3D · VACH*</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-acrilico.jpg" alt="Llavero acrílico ilustrado" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Llavero acrílico full color</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-oso.jpg" alt="Llavero 3D oso AXE" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Llavero 3D · AXE</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-axe.jpg" alt="Mini réplica desodorante AXE" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Mini réplica · AXE</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-mcdonalds.jpg" alt="Llavero personalizado McDonald's" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Llavero 3D · McDonald's</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-ambulancia.jpg" alt="Llavero 3D ambulancia personalizado" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Llavero 3D a medida</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-mickey.jpg" alt="Llavero 3D Mickey fullcolor" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Llavero 3D fullcolor</span></div>
   </div>
 
 
@@ -386,6 +439,31 @@
   <footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
 
 </div>
+
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
+  <img src="" alt="" id="lightbox-img">
+</div>
+<script>
+  function openLightbox(src, alt) {
+    var lb = document.getElementById('lightbox');
+    var img = document.getElementById('lightbox-img');
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('active');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.getElementById('lightbox-img').src = '';
+  }
+  document.getElementById('lightbox').addEventListener('click', function (e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+</script>
 
 </body>
 </html>
