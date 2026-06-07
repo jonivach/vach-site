@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Merchandising · VACH*</title>
+  <title>Llaveros 3D · Merchandising · VACH*</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -181,7 +181,6 @@
       transform: translateY(-2px);
     }
     .product-card:hover::before { opacity: 1; }
-    a.product-card { display: block; text-decoration: none; color: inherit; cursor: pointer; }
 
     .product-icon {
       font-size: 1.5rem;
@@ -318,7 +317,18 @@
     @media (max-width: 480px) {
       .products { grid-template-columns: 1fr; }
     }
-  </style>
+  
+    .cat-hero-icon { font-size: 2.4rem; margin-bottom: 0.75rem; display: block; }
+    .empty-card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      background: rgba(255,255,255,0.03);
+      margin-bottom: 4rem;
+    }
+    .empty-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .empty-card p { font-size: 0.92rem; color: var(--lgray); line-height: 1.6; max-width: 560px; }
+</style>
 </head>
 <body>
 
@@ -328,88 +338,31 @@
 <div class="page">
 
   <nav>
-    <a href="/" class="back">
+    <a href="/merchandising" class="back">
       <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Volver
+      Merchandising
     </a>
     <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
   </nav>
 
   <div class="hero">
     <div class="hero-label"><span class="dot"></span>Merchandising</div>
-    <h1>Hecho a<br>tu <em>medida.</em></h1>
-    <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
-  </div>
-
-  <div class="brands-label">Trabajamos con</div>
-  <div class="brands">
-    <span class="brand-pill">AXE</span>
-    <span class="brand-pill">Absolut</span>
-    <span class="brand-pill">CeraVe</span>
-    <span class="brand-pill">VACH*</span>
-    <span class="brand-pill">Y más</span>
-  </div>
-
-  <div class="section-title">Lo que podemos crear</div>
-  <div class="products">
-
-    <a class="product-card" href="/merchandising/llaveros">
-      <span class="product-icon">🔑</span>
-      <div class="product-name">Llaveros 3D</div>
-      <div class="product-desc">Impresión 3D con acabados únicos. Con fragancia, NFC, acrílico transparente o fullcolor.</div>
-      <span class="product-tag">Impresión 3D · NFC · Acrílico</span>
-    </a>
-
-    <a class="product-card" href="/merchandising/pines">
-      <span class="product-icon">📌</span>
-      <div class="product-name">Pines</div>
-      <div class="product-desc">Pines personalizados con tu diseño. Ideales para eventos, lanzamientos y regalos corporativos.</div>
-      <span class="product-tag">Metal · Esmalte</span>
-    </a>
-
-    <a class="product-card" href="/merchandising/fundas">
-      <span class="product-icon">📱</span>
-      <div class="product-name">Fundas Interactivas</div>
-      <div class="product-desc">Fundas de teléfono con diseño adaptado a tu identidad de marca. Funcionales y coleccionables.</div>
-      <span class="product-tag">Customización total</span>
-    </a>
-
-    <a class="product-card" href="/merchandising/envases">
-      <span class="product-icon">📦</span>
-      <div class="product-name">Realización de Envases</div>
-      <div class="product-desc">Packaging y envases custom para productos. Desde el diseño hasta la producción final.</div>
-      <span class="product-tag">Packaging · Branding</span>
-    </a>
-
-    <a class="product-card" href="/merchandising/centros-de-mesa">
-      <span class="product-icon">🌸</span>
-      <div class="product-name">Centros de Mesa</div>
-      <div class="product-desc">Piezas decorativas únicas para eventos corporativos, lanzamientos y activaciones de marca.</div>
-      <span class="product-tag">Eventos · Decoración</span>
-    </a>
-
-    <a class="product-card" href="/merchandising/objetos-a-medida">
-      <span class="product-icon">✨</span>
-      <div class="product-name">Objetos a Medida</div>
-      <div class="product-desc">¿Tenés una idea sin límites? La hacemos realidad. Cualquier material, cualquier forma.</div>
-      <span class="product-tag">Sin límites</span>
-    </a>
-
+    <span class="cat-hero-icon">🔑</span>
+    <h1>Llaveros<br><em>3D.</em></h1>
+    <p>Impresión 3D con acabados únicos: acrílico transparente, fullcolor, fragancia o NFC. Cada pieza, pensada para representar tu marca.</p>
   </div>
 
   <div class="section-title">Trabajos realizados</div>
   <div class="gallery">
     <div class="gallery-item"><img src="/merchandising/gallery/llavero-vach.jpg" alt="Llavero personalizado VACH*" loading="lazy"><span class="gallery-cap">Llavero 3D · VACH*</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/pin-absolut.jpg" alt="Pin esmaltado Absolut" loading="lazy"><span class="gallery-cap">Pin · Absolut</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/letras-cerave.jpg" alt="Letras corpóreas CeraVe" loading="lazy"><span class="gallery-cap">Letras corpóreas · CeraVe</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/funda-interactiva.jpg" alt="Funda interactiva personalizada" loading="lazy"><span class="gallery-cap">Funda interactiva</span></div>
     <div class="gallery-item"><img src="/merchandising/gallery/llavero-acrilico.jpg" alt="Llavero acrílico ilustrado" loading="lazy"><span class="gallery-cap">Llavero acrílico full color</span></div>
     <div class="gallery-item"><img src="/merchandising/gallery/llavero-oso.jpg" alt="Llavero 3D oso AXE" loading="lazy"><span class="gallery-cap">Llavero 3D · AXE</span></div>
     <div class="gallery-item"><img src="/merchandising/gallery/llavero-axe.jpg" alt="Mini réplica desodorante AXE" loading="lazy"><span class="gallery-cap">Mini réplica · AXE</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/limas-bioter.jpg" alt="Limas personalizadas Bioter" loading="lazy"><span class="gallery-cap">Limas grabadas · Bioter</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/trofeo-sneakerhouse.jpg" alt="Trofeo acrílico Sneaker House" loading="lazy"><span class="gallery-cap">Trofeo acrílico · Sneaker House</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/caja-hellmanns.jpg" alt="Cajas organizadoras Hellmann's" loading="lazy"><span class="gallery-cap">Caja organizadora · Hellmann's</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-mcdonalds.jpg" alt="Llavero personalizado McDonald's" loading="lazy"><span class="gallery-cap">Llavero 3D · McDonald's</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-ambulancia.jpg" alt="Llavero 3D ambulancia personalizado" loading="lazy"><span class="gallery-cap">Llavero 3D a medida</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-mickey.jpg" alt="Llavero 3D Mickey fullcolor" loading="lazy"><span class="gallery-cap">Llavero 3D fullcolor</span></div>
   </div>
+
 
   <hr />
 
@@ -419,7 +372,7 @@
       <p>Transformamos tus ideas en productos únicos.</p>
     </div>
     <div class="cta-actions">
-      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20cotizar%20merchandising" target="_blank" class="btn btn-yellow">
+      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20cotizar%20llaveros%203D" target="_blank" class="btn btn-yellow">
         Consultar por WhatsApp
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
