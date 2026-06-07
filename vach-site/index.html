@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VACH* | Productora Creativa</title>
+  <meta name="description" content="Transformamos tus ideas en experiencias únicas. Merchandising, grabado láser en vivo, sublimado en vivo y más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #0A0A0A;
+      --teal:   #1CC4A0;
+      --purple: #7B4FFF;
+      --yellow: #F5C800;
+      --white:  #FFFFFF;
+      --gray:   #888;
+      --lgray:  #AAAAAA;
+      --border: rgba(255,255,255,0.1);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* gradient background */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(28,196,160,0.08) 0%, transparent 55%),
+                  #0A0A0A;
+      z-index: 0;
+    }
+
+    /* subtle grid overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    /* layout */
+    .layout {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 2.5rem;
+    }
+
+    /* header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 28px;
+      width: auto;
+      display: block;
+    }
+    .ig-link {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--lgray);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .ig-link:hover { color: var(--white); }
+
+    /* tagline */
+    .tagline {
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .tagline h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+    .tagline p {
+      font-size: 1rem;
+      color: var(--lgray);
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: none; }
+    }
+
+    /* services grid */
+    .services {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.6s forwards;
+    }
+
+    .service-card {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      text-decoration: none;
+      color: var(--white);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+      transition: border-color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-height: 130px;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* per-card accent */
+    .card-merchandising { --accent: var(--yellow); }
+    .card-merchandising::before { background: radial-gradient(circle at 0% 100%, rgba(245,200,0,0.12) 0%, transparent 60%); }
+    .card-merchandising:hover { border-color: rgba(245,200,0,0.4); box-shadow: 0 0 30px rgba(245,200,0,0.08); }
+
+    .card-laser { --accent: var(--teal); }
+    .card-laser::before { background: radial-gradient(circle at 0% 100%, rgba(28,196,160,0.12) 0%, transparent 60%); }
+    .card-laser:hover { border-color: rgba(28,196,160,0.4); box-shadow: 0 0 30px rgba(28,196,160,0.08); }
+
+    .card-sublimado { --accent: var(--purple); }
+    .card-sublimado::before { background: radial-gradient(circle at 0% 100%, rgba(123,79,255,0.12) 0%, transparent 60%); }
+    .card-sublimado:hover { border-color: rgba(123,79,255,0.35); box-shadow: 0 0 30px rgba(123,79,255,0.08); }
+
+    .card-otros { --accent: #555; }
+    .card-otros:hover { border-color: rgba(255,255,255,0.2); }
+
+    .service-card:hover::before { opacity: 1; }
+
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent, var(--lgray));
+      margin-bottom: 0.25rem;
+    }
+    .card-tag .dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent, var(--lgray));
+    }
+    .card-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--lgray);
+      line-height: 1.5;
+      margin-top: 0.25rem;
+    }
+    .card-arrow {
+      margin-top: auto;
+      font-size: 1rem;
+      color: var(--accent, var(--lgray));
+      align-self: flex-end;
+      opacity: 0;
+      transform: translate(-4px, 4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .service-card:hover .card-arrow {
+      opacity: 1;
+      transform: translate(0,0);
+    }
+
+    /* coming soon badge */
+    .soon-badge {
+      position: absolute;
+      top: 1rem; right: 1rem;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--purple);
+      padding: 0.2rem 0.55rem;
+      border-radius: 100px;
+    }
+
+    /* footer */
+    footer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--gray);
+    }
+
+    /* responsive */
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }
+      .layout { height: auto; min-height: 100vh; gap: 3rem; padding: 1.5rem; }
+      .services { grid-template-columns: 1fr 1fr; }
+      .tagline h1 { font-size: 2.8rem; }
+      .service-card { min-height: 0; padding: 1rem; }
+      .soon-badge {
+        position: relative;
+        top: auto; right: auto;
+        display: inline-block;
+        margin-bottom: 4px;
+        align-self: flex-start;
+      }
+    }
+    @media (max-width: 480px) {
+      .services { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="grid-overlay"></div>
+
+<div class="layout">
+  <header>
+    <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
+    <a href="https://www.instagram.com/vach.arg/" target="_blank" class="ig-link">@vach.arg <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+  </header>
+
+  <div class="tagline">
+    <h1>Productora<br>Creativa.</h1>
+    <p>Transformamos ideas en experiencias únicas.</p>
+  </div>
+
+  <nav class="services">
+    <a href="/merchandising" class="service-card card-merchandising">
+      <span class="card-tag"><span class="dot"></span>Activo</span>
+      <span class="card-name">Merchandising</span>
+      <span class="card-desc">Productos personalizados para tu marca o evento. Impresión 3D · Acrílico · Metal · Madera · Cerámica · Silicona y más.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+
+    <a href="/laservach" class="service-card card-laser">
+      <span class="card-tag"><span class="dot"></span>Activo</span>
+      <span class="card-name">LaserVach</span>
+      <span class="card-desc">Diseñá y grabá láser en vivo tus productos on-site para eventos sociales, corporativos y activaciones de marca.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+
+    <a href="/vachlive" class="service-card card-sublimado">
+      <span class="card-tag"><span class="dot"></span>En desarrollo</span>
+      <span class="soon-badge">Próximamente</span>
+      <span class="card-name">Sublimado en vivo</span>
+      <span class="card-desc">Personalizá productos textiles en tiempo real durante tu evento, eligiendo qué poner, dónde ponerlo y cómo ponerlo.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+
+    <a href="https://www.instagram.com/vach.arg/" target="_blank" class="service-card card-otros">
+      <span class="card-tag"><span class="dot"></span>Ver todo</span>
+      <span class="card-name">Otros proyectos</span>
+      <span class="card-desc">Seguinos en Instagram y mantenete informado tocando la campanita y activando notificaciones de historias.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+  </nav>
+
+  <footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
+</div>
+
+</body>
+</html>

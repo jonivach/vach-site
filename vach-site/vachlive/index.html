@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sublimado en Vivo · VACH*</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      font-family: 'Space Grotesk', sans-serif;
+      background: #0A0A0A;
+      color: #FFF;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+    .bg {
+      position: fixed; inset: 0;
+      background-image: url('https://framerusercontent.com/images/ltvqoN7oc4zmTOxOi6sxj45nGrc.jpg');
+      background-size: cover; background-position: center;
+      filter: brightness(0.18) saturate(0.6);
+    }
+    .overlay {
+      position: fixed; inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(123,79,255,0.12) 0%, transparent 70%);
+    }
+    .layout {
+      position: relative; z-index: 2;
+      height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 2.5rem;
+    }
+    nav { display: flex; align-items: center; justify-content: space-between; }
+    .back { font-size: 0.8rem; font-weight: 600; color: #888; text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .back:hover { color: #FFF; }
+    .logo { text-decoration: none; display: flex; align-items: center; }
+    .logo img { height: 24px; width: auto; display: block; }
+    .content { text-align: center; }
+    .label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #7B4FFF; margin-bottom: 1rem; }
+    h1 { font-size: clamp(3rem, 8vw, 7rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
+    h1 em { font-style: normal; color: #7B4FFF; }
+    .soon {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(123,79,255,0.15);
+      border: 1px solid rgba(123,79,255,0.3);
+      border-radius: 100px;
+      padding: 0.5rem 1.25rem;
+      font-size: 0.8rem; font-weight: 600;
+      color: #7B4FFF; margin-bottom: 1.5rem;
+    }
+    .soon .pulse {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: #7B4FFF;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(123,79,255,0.4); }
+      50%      { box-shadow: 0 0 0 6px rgba(123,79,255,0); }
+    }
+    p { font-size: 1rem; color: #AAAAAA; max-width: 400px; margin: 0 auto 2.5rem; line-height: 1.65; }
+    .notify-form { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+    .notify-form input {
+      font-family: inherit; font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.12); border-radius: 100px;
+      padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.05);
+      color: #FFF; outline: none; width: 260px;
+      transition: border-color 0.2s;
+    }
+    .notify-form input::placeholder { color: #555; }
+    .notify-form input:focus { border-color: #7B4FFF; }
+    .notify-form button {
+      font-family: inherit; font-size: 0.9rem; font-weight: 700;
+      padding: 0.75rem 1.5rem; border-radius: 100px;
+      background: #7B4FFF; color: #FFF; border: none; cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .notify-form button:hover { box-shadow: 0 0 20px rgba(123,79,255,0.5); }
+    .back-link { display: block; margin-top: 1.5rem; font-size: 0.82rem; color: #555; text-decoration: none; transition: color 0.2s; }
+    .back-link:hover { color: #FFF; }
+    footer { text-align: center; font-size: 0.72rem; color: #555; }
+  </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="overlay"></div>
+<div class="layout">
+  <nav>
+    <a href="/" class="back">← Volver</a>
+    <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
+  </nav>
+  <div class="content">
+    <div class="soon"><span class="pulse"></span> Próximamente</div>
+    <p class="label">↗ Sublimado en vivo</p>
+    <h1>Personalización<br>textil <em>en vivo.</em></h1>
+    <p>Sublimado full-color en tiempo real durante tu evento. Remeras, bolsas, accesorios — todo con tu diseño al instante.</p>
+    <form class="notify-form" onsubmit="handleNotify(event)">
+      <input type="email" placeholder="tu@email.com" required id="email-input" />
+      <button type="submit">Avisame cuando esté <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </form>
+    <a href="https://www.instagram.com/vach.arg/" target="_blank" class="back-link">Seguinos en @vach.arg para novedades</a>
+  </div>
+  <footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
+</div>
+<script>
+function handleNotify(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  btn.textContent = '¡Listo! Te avisamos ✓';
+  btn.style.background = '#1CC4A0';
+  btn.style.boxShadow = '0 0 20px rgba(28,196,160,0.5)';
+  e.target.querySelector('input').value = '';
+}
+</script>
+</body>
+</html>
