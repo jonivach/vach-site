@@ -76,7 +76,7 @@
       align-items: center;
     }
     .logo img {
-      height: 28px;
+      height: 22px;
       width: auto;
       display: block;
     }
@@ -212,10 +212,10 @@
       transform: translate(0,0);
     }
 
-    /* coming soon badge */
+    /* status badges */
     .soon-badge {
       position: absolute;
-      top: 1rem; right: 1rem;
+      top: 1.25rem; right: 1.25rem;
       font-size: 0.62rem;
       font-weight: 700;
       letter-spacing: 0.08em;
@@ -224,6 +224,9 @@
       background: var(--purple);
       padding: 0.2rem 0.55rem;
       border-radius: 100px;
+    }
+    .soon-badge.featured-badge {
+      background: var(--yellow);
     }
 
     /* footer */
@@ -261,7 +264,7 @@
 <div class="layout">
   <header>
     <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
-    <a href="https://www.instagram.com/vach.arg/" target="_blank" class="ig-link">@vach.arg <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="https://www.instagram.com/vach.arg/" target="_blank" class="ig-link">Seguinos en Insta <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
   </header>
 
   <div class="tagline">
@@ -271,6 +274,7 @@
 
   <nav class="services">
     <a href="/merchandising" class="service-card card-merchandising">
+      <span class="soon-badge featured-badge">Destacado</span>
       <span class="card-name">Merchandising</span>
       <span class="card-desc">Productos personalizados para tu marca o evento. Impresión 3D · Acrílico · Metal · Madera · Cerámica · Silicona y más.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
