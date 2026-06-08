@@ -342,6 +342,42 @@
     .gallery-item .gallery-cap { background: none; z-index: 2; }
     .gallery-item img { cursor: zoom-in; }
 
+    .subcat-block { margin-bottom: 2.25rem; }
+    .subcat-block:last-of-type { margin-bottom: 4rem; }
+    .subcat-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--yellow);
+      margin-bottom: 0.85rem;
+      letter-spacing: 0.01em;
+    }
+    .subcat-gallery { margin-bottom: 0; }
+
+    /* FLIP BUTTON (piezas bifaz) */
+    .flip-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: inherit;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 100px;
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .flip-btn:hover { background: rgba(0,0,0,0.75); border-color: rgba(255,255,255,0.45); }
+
     /* LIGHTBOX */
     .lightbox {
       position: fixed;
@@ -381,6 +417,28 @@
       transition: background 0.2s, border-color 0.2s;
     }
     .lightbox-close:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
+    .lightbox-flip {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--black);
+      background: var(--yellow);
+      border: none;
+      border-radius: 100px;
+      padding: 0.65rem 1.3rem;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .lightbox-flip:hover { box-shadow: 0 0 24px rgba(245,200,0,0.45); }
+    .lightbox-flip.visible { display: flex; }
 </style>
 </head>
 <body>
@@ -406,12 +464,69 @@
   </div>
 
   <div class="section-title">Trabajos realizados</div>
-  <div class="gallery">
-    <div class="gallery-item"><img src="/merchandising/gallery/limas-bioter.jpg" alt="Limas personalizadas Bioter" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Limas grabadas · Bioter</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/letras-cerave.jpg" alt="Letras corpóreas CeraVe" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Letras corpóreas · CeraVe</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/placa-topdest.jpg" alt="Placa personalizada Topdest" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Placa grabada · Topdest</span></div>
+
+  <div class="subcat-block">
+    <div class="subcat-title">Figuras y mascotas a medida</div>
+    <div class="gallery subcat-gallery">
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-bienbin.jpg" alt="Figura coleccionable a medida BienBin" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Figura a medida · BienBin</span></div>
+      <div class="gallery-item gallery-flip" data-front="/merchandising/gallery/objmedida-axe-celular-frente.jpg" data-front-alt="Soporte de celular oso AXE, vista de frente sosteniendo un teléfono" data-back="/merchandising/gallery/objmedida-axe-celular-dorso.jpg" data-back-alt="Soporte de celular oso AXE, vista trasera con el isotipo de la marca">
+        <img src="/merchandising/gallery/objmedida-axe-celular-frente.jpg" alt="Soporte de celular oso AXE, vista de frente sosteniendo un teléfono" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))">
+        <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="flipItem(event, this)">⟳ otra cara</button>
+        <span class="gallery-cap">Soporte oso · AXE</span>
+      </div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-blackmamba.jpg" alt="Set de réplicas de armas y cuchillos a medida, proyecto Black Mamba" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Set de réplicas · Black Mamba</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-cazzu.jpg" alt="Mini réplicas de zapatillas a medida, colección Cazzu" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Mini réplicas · Cazzu</span></div>
+    </div>
   </div>
 
+  <div class="subcat-block">
+    <div class="subcat-title">Accesorios tech y de uso diario</div>
+    <div class="gallery subcat-gallery">
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-axe-aros.jpg" alt="Aros personalizados AXE en forma de osito" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Aros a medida · AXE</span></div>
+      <div class="gallery-item gallery-flip" data-front="/merchandising/gallery/objmedida-adidas-estuche-cerrado.jpg" data-front-alt="Estuche personalizado Adidas cerrado, con logo en relieve" data-back="/merchandising/gallery/objmedida-adidas-estuche-abierto.jpg" data-back-alt="Estuche personalizado Adidas abierto, mostrando el interior con protectores">
+        <img src="/merchandising/gallery/objmedida-adidas-estuche-cerrado.jpg" alt="Estuche personalizado Adidas cerrado, con logo en relieve" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))">
+        <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="flipItem(event, this)">⟳ otra cara</button>
+        <span class="gallery-cap">Estuche a medida · Adidas</span>
+      </div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-adidas-luz.jpg" alt="Lámpara con logo iluminado de Adidas" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Lámpara con logo · Adidas</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-maybelline-espejos.jpg" alt="Espejos de bolsillo personalizados Maybelline New York" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Espejos de bolsillo · Maybelline</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-maybelline-funda.jpg" alt="Funda de celular personalizada Maybelline New York con espejo" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Funda con espejo · Maybelline</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-hellmanns-funda.jpg" alt="Funda de celular plegable personalizada Hellmann's" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Funda plegable · Hellmann's</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-riu-soporte.jpg" alt="Soporte de celular grabado en madera RIU Hotels &amp; Resorts" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Soporte de celular · RIU</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-samsung-llavero.jpg" alt="Llavero a medida con forma de casa, marca Samsung" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llavero a medida · Samsung</span></div>
+    </div>
+  </div>
+
+  <div class="subcat-block">
+    <div class="subcat-title">Placas, trofeos y reconocimientos</div>
+    <div class="gallery subcat-gallery">
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-copa-libertadores.jpg" alt="Réplica de la Copa Libertadores en vitrina, Puma Energy" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Réplica de trofeo · Puma Energy</span></div>
+      <div class="gallery-item gallery-flip" data-front="/merchandising/gallery/objmedida-menora-frente.jpg" data-front-alt="Cuadro conmemorativo enmarcado Menora, vista de frente" data-back="/merchandising/gallery/objmedida-menora-dorso.jpg" data-back-alt="Cuadro conmemorativo enmarcado Menora, vista lateral del marco">
+        <img src="/merchandising/gallery/objmedida-menora-frente.jpg" alt="Cuadro conmemorativo enmarcado Menora, vista de frente" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))">
+        <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="flipItem(event, this)">⟳ otra cara</button>
+        <span class="gallery-cap">Cuadro conmemorativo · Menora</span>
+      </div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-dfi-set.jpg" alt="Set de credencial, medalla y lanyard personalizados DFI" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Set de credenciales · DFI</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-dfi-placa.jpg" alt="Medalla colgante personalizada DFI" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Medalla colgante · DFI</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-veolia-cuadro.jpg" alt="Cuadro decorativo enmarcado con miniatura de auto de carrera, Veolia" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Cuadro decorativo · Veolia</span></div>
+    </div>
+  </div>
+
+  <div class="subcat-block">
+    <div class="subcat-title">Objetos de marca y promocionales</div>
+    <div class="gallery subcat-gallery">
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-garnier-bandeja.jpg" alt="Bandeja porta productos personalizada Garnier" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Bandeja a medida · Garnier</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-hellmanns-flor.jpg" alt="Portavasos con forma de flor personalizado Hellmann's" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Portavasos a medida · Hellmann's</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-hellmanns-lapicera.jpg" alt="Lapicera personalizada con clip de marca Hellmann's" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Lapicera a medida · Hellmann's</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-kkl-camion.jpg" alt="Réplica a escala de camión personalizado KKL" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Réplica a escala · KKL</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-jameson-tapitas.jpg" alt="Tapitas personalizadas con logo Jameson" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Tapitas a medida · Jameson</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-babydove-botella.jpg" alt="Botella personalizada con branding Baby Dove" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Botella con branding · Baby Dove</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-dove-jabonera.jpg" alt="Jabonera de viaje personalizada con branding Dove" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Jabonera con branding · Dove</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-sedal-secador.jpg" alt="Secador de pelo personalizado con branding Sedal" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Secador con branding · Sedal</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-sedal-planchita.jpg" alt="Planchita de pelo personalizada con branding Sedal" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Planchita con branding · Sedal</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/objmedida-olami-botella.jpg" alt="Botella térmica personalizada con branding Olami Urquiza" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Botella térmica · Olami Urquiza</span></div>
+    </div>
+  </div>
 
   <hr />
 
@@ -440,19 +555,56 @@
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
   <img src="" alt="" id="lightbox-img">
+  <button class="lightbox-flip" id="lightbox-flip" type="button">⟳ Ver otra cara</button>
 </div>
 <script>
-  function openLightbox(src, alt) {
+  var currentFlipItem = null;
+
+  function openLightbox(src, alt, item) {
     var lb = document.getElementById('lightbox');
     var img = document.getElementById('lightbox-img');
+    var flipBtn = document.getElementById('lightbox-flip');
     img.src = src;
     img.alt = alt || '';
+    if (item && item.classList.contains('gallery-flip')) {
+      currentFlipItem = item;
+      flipBtn.classList.add('visible');
+    } else {
+      currentFlipItem = null;
+      flipBtn.classList.remove('visible');
+    }
     lb.classList.add('active');
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.getElementById('lightbox-img').src = '';
+    document.getElementById('lightbox-flip').classList.remove('visible');
+    currentFlipItem = null;
   }
+  function flipItem(e, btn) {
+    e.stopPropagation();
+    swapFace(btn.closest('.gallery-flip'));
+  }
+  function swapFace(item) {
+    var img = item.querySelector('img');
+    var showingFront = img.getAttribute('src') === item.dataset.front;
+    if (showingFront) {
+      img.setAttribute('src', item.dataset.back);
+      img.setAttribute('alt', item.dataset.backAlt);
+    } else {
+      img.setAttribute('src', item.dataset.front);
+      img.setAttribute('alt', item.dataset.frontAlt);
+    }
+    var lbImg = document.getElementById('lightbox-img');
+    if (currentFlipItem === item && document.getElementById('lightbox').classList.contains('active')) {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+    }
+  }
+  document.getElementById('lightbox-flip').addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (currentFlipItem) swapFace(currentFlipItem);
+  });
   document.getElementById('lightbox').addEventListener('click', function (e) {
     if (e.target === this) closeLightbox();
   });
