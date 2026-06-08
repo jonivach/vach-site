@@ -171,21 +171,11 @@
 
     .service-card:hover::before { opacity: 1; }
 
-    .card-tag {
-      display: inline-flex;
+    .card-top {
+      display: flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--accent, var(--lgray));
-      margin-bottom: 0.25rem;
-    }
-    .card-tag .dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--accent, var(--lgray));
+      justify-content: space-between;
+      gap: 0.5rem;
     }
     .card-name {
       font-size: 1.15rem;
@@ -212,21 +202,24 @@
       transform: translate(0,0);
     }
 
-    /* status badges */
-    .soon-badge {
-      position: absolute;
-      top: 1.25rem; right: 1.25rem;
-      font-size: 0.62rem;
+    /* status badges (inline, aligned with card title) */
+    .card-badge {
+      flex-shrink: 0;
+      font-size: 0.6rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--black);
       background: var(--purple);
-      padding: 0.2rem 0.55rem;
+      padding: 0.25rem 0.6rem;
       border-radius: 100px;
+      white-space: nowrap;
     }
-    .soon-badge.featured-badge {
-      background: var(--yellow);
+    .card-badge.featured-badge { background: var(--yellow); }
+    .card-badge.ghost-badge {
+      color: var(--lgray);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
     }
 
     /* footer */
@@ -243,13 +236,7 @@
       .services { grid-template-columns: 1fr 1fr; }
       .tagline h1 { font-size: 2.8rem; }
       .service-card { min-height: 0; padding: 1rem; }
-      .soon-badge {
-        position: relative;
-        top: auto; right: auto;
-        display: inline-block;
-        margin-bottom: 4px;
-        align-self: flex-start;
-      }
+      .card-badge { font-size: 0.55rem; padding: 0.2rem 0.5rem; }
     }
     @media (max-width: 480px) {
       .services { grid-template-columns: 1fr 1fr; }
@@ -274,29 +261,37 @@
 
   <nav class="services">
     <a href="/merchandising" class="service-card card-merchandising">
-      <span class="soon-badge featured-badge">Destacado</span>
-      <span class="card-name">Merchandising</span>
+      <span class="card-top">
+        <span class="card-name">Merchandising</span>
+        <span class="card-badge featured-badge">Destacado</span>
+      </span>
       <span class="card-desc">Productos personalizados para tu marca o evento. Impresión 3D · Acrílico · Metal · Madera · Cerámica · Silicona y más.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
 
     <a href="/laservach" class="service-card card-laser">
-      <span class="soon-badge">Próximamente</span>
-      <span class="card-name">LaserVach</span>
-      <span class="card-desc">Diseña tu propio producto y grábalo con láser en vivo. Una propuesta para eventos sociales, corporativos y activaciones de marca.</span>
+      <span class="card-top">
+        <span class="card-name">LaserVach</span>
+        <span class="card-badge">Próximamente</span>
+      </span>
+      <span class="card-desc">Diseña tu producto y grábalo con láser en vivo. Una propuesta para eventos sociales, corporativos y activaciones de marca.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
 
     <a href="/vachlive" class="service-card card-sublimado">
-      <span class="soon-badge">En desarrollo</span>
-      <span class="card-name">Sublimado en vivo</span>
+      <span class="card-top">
+        <span class="card-name">Sublimado en vivo</span>
+        <span class="card-badge">En desarrollo</span>
+      </span>
       <span class="card-desc">Personalizá productos textiles en tiempo real durante tu evento, eligiendo qué poner, dónde ponerlo y cómo ponerlo.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
 
     <a href="https://www.instagram.com/vach.arg/" target="_blank" class="service-card card-otros">
-      <span class="card-tag"><span class="dot"></span>Ver todo</span>
-      <span class="card-name">Otros proyectos</span>
+      <span class="card-top">
+        <span class="card-name">Otros proyectos</span>
+        <span class="card-badge ghost-badge">Ver todo</span>
+      </span>
       <span class="card-desc">Seguinos en Instagram y mantenete informado tocando la campanita y activando notificaciones de historias.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
