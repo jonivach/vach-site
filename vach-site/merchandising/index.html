@@ -8,6 +8,45 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/merchandising/assets/shared.css" />
+  <style>
+    /* Estilos propios de esta página: las cards de categoría son enlaces */
+    a.product-card { display: block; text-decoration: none; color: inherit; cursor: pointer; }
+
+    .product-card.featured {
+      grid-column: span 2;
+      border-color: rgba(245,200,0,0.35);
+      background: linear-gradient(135deg, rgba(245,200,0,0.12) 0%, rgba(255,255,255,0.03) 100%);
+    }
+    .product-card.featured::before {
+      background: radial-gradient(circle at 0% 100%, rgba(245,200,0,0.2) 0%, transparent 65%);
+      opacity: 1;
+    }
+    .product-card.featured:hover {
+      border-color: rgba(245,200,0,0.6);
+      box-shadow: 0 0 28px rgba(245,200,0,0.18);
+    }
+    .product-card.featured .product-icon { font-size: 1.6rem; }
+    .product-card.featured .product-name { font-size: 1.1rem; }
+    .product-card.featured .product-desc { font-size: 0.78rem; max-width: 420px; }
+    .featured-badge {
+      display: inline-block;
+      margin-bottom: 0.6rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #000;
+      background: var(--yellow);
+      border-radius: 100px;
+      padding: 0.2rem 0.65rem;
+    }
+    @media (max-width: 768px) {
+      .product-card.featured { grid-column: span 2; }
+    }
+    @media (max-width: 480px) {
+      .product-card.featured { grid-column: span 1; }
+    }
+  </style>
 </head>
 <body>
 
