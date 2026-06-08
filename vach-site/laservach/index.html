@@ -20,7 +20,7 @@
       --purple:  #7B4FFF;
       --yellow:  #F5C800;
       --white:   #FFFFFF;
-      --gray:    #666;
+      --gray:    #888;
       --lgray:   #AAAAAA;
       --border:  rgba(255,255,255,0.08);
     }
@@ -718,13 +718,13 @@
     /* ═══════════════════════════════════════
        RESPONSIVE
     ═══════════════════════════════════════ */
-    @media (max-width: 900px) {
+    @media (max-width: 768px) {
       .nav-links { display: none; }
       .servicio-grid, .contact-grid, .laser-demo { grid-template-columns: 1fr; }
       .paquetes-grid { grid-template-columns: 1fr; }
       .hero-stats .hstat { padding: 1.25rem 1rem; }
     }
-    @media (max-width: 600px) {
+    @media (max-width: 480px) {
       .form-row { grid-template-columns: 1fr; }
       .hero-stats { display: grid; grid-template-columns: 1fr 1fr; border: none; gap: 0.5rem; }
       .hstat { border: 1px solid var(--border); border-radius: 12px; }
