@@ -154,20 +154,20 @@
     }
 
     /* per-card accent */
-    .card-merchandising { --accent: var(--yellow); }
+    .card-merchandising { --accent: var(--yellow); border-color: rgba(245,200,0,0.28); }
     .card-merchandising::before { background: radial-gradient(circle at 0% 100%, rgba(245,200,0,0.12) 0%, transparent 60%); }
-    .card-merchandising:hover { border-color: rgba(245,200,0,0.4); box-shadow: 0 0 30px rgba(245,200,0,0.08); }
+    .card-merchandising:hover, .card-merchandising:active { border-color: rgba(245,200,0,0.55); box-shadow: 0 0 30px rgba(245,200,0,0.08); }
 
-    .card-laser { --accent: var(--teal); }
+    .card-laser { --accent: var(--teal); border-color: rgba(28,196,160,0.28); }
     .card-laser::before { background: radial-gradient(circle at 0% 100%, rgba(28,196,160,0.12) 0%, transparent 60%); }
-    .card-laser:hover { border-color: rgba(28,196,160,0.4); box-shadow: 0 0 30px rgba(28,196,160,0.08); }
+    .card-laser:hover, .card-laser:active { border-color: rgba(28,196,160,0.55); box-shadow: 0 0 30px rgba(28,196,160,0.08); }
 
-    .card-sublimado { --accent: var(--purple); }
+    .card-sublimado { --accent: var(--purple); border-color: rgba(123,79,255,0.25); }
     .card-sublimado::before { background: radial-gradient(circle at 0% 100%, rgba(123,79,255,0.12) 0%, transparent 60%); }
-    .card-sublimado:hover { border-color: rgba(123,79,255,0.35); box-shadow: 0 0 30px rgba(123,79,255,0.08); }
+    .card-sublimado:hover, .card-sublimado:active { border-color: rgba(123,79,255,0.5); box-shadow: 0 0 30px rgba(123,79,255,0.08); }
 
-    .card-otros { --accent: #555; }
-    .card-otros:hover { border-color: rgba(255,255,255,0.2); }
+    .card-otros { --accent: #888; border-color: rgba(255,255,255,0.18); }
+    .card-otros:hover, .card-otros:active { border-color: rgba(255,255,255,0.35); }
 
     .service-card:hover::before { opacity: 1; }
 
@@ -277,13 +277,14 @@
     </a>
 
     <a href="/laservach" class="service-card card-laser">
+      <span class="soon-badge">Próximamente</span>
       <span class="card-name">LaserVach</span>
       <span class="card-desc">Diseña tu propio producto y grábalo con láser en vivo. Una propuesta para eventos sociales, corporativos y activaciones de marca.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
 
     <a href="/vachlive" class="service-card card-sublimado">
-      <span class="card-tag"><span class="dot"></span>En desarrollo</span>
+      <span class="soon-badge">En desarrollo</span>
       <span class="card-name">Sublimado en vivo</span>
       <span class="card-desc">Personalizá productos textiles en tiempo real durante tu evento, eligiendo qué poner, dónde ponerlo y cómo ponerlo.</span>
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
