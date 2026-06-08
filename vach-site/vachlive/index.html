@@ -29,13 +29,17 @@
     }
     .bg {
       position: fixed; inset: 0;
-      background-image: url('https://framerusercontent.com/images/ltvqoN7oc4zmTOxOi6sxj45nGrc.jpg');
-      background-size: cover; background-position: center;
-      filter: brightness(0.18) saturate(0.6);
+      background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.16) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(123,79,255,0.08) 0%, transparent 55%),
+                  #0A0A0A;
     }
-    .overlay {
+    .grid-overlay {
       position: fixed; inset: 0;
-      background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(123,79,255,0.12) 0%, transparent 70%);
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
     }
     .layout {
       position: relative; z-index: 2;
@@ -96,7 +100,7 @@
 </head>
 <body>
 <div class="bg"></div>
-<div class="overlay"></div>
+<div class="grid-overlay"></div>
 <div class="layout">
   <nav>
     <a href="/" class="back">← Volver</a>
