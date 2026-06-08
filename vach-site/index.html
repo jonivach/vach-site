@@ -242,6 +242,31 @@
     @media (max-width: 480px) {
       .services { grid-template-columns: 1fr 1fr; }
     }
+
+    /* ── mascota animada ── */
+    .services-outer { position: relative; }
+    .mascot-wrap {
+      position: absolute;
+      top: -54px;
+      left: 0;
+      pointer-events: none;
+      z-index: 20;
+    }
+    .mascot-flip { display: inline-block; }
+    .mascot-img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      display: block;
+      border-radius: 14px;
+      box-shadow: 0 4px 22px rgba(28,196,160,0.45), 0 2px 10px rgba(0,0,0,0.5);
+      animation: mascot-bob 0.48s ease-in-out infinite;
+    }
+    @keyframes mascot-bob {
+      0%, 100% { transform: translateY(0px)   rotate(0deg); }
+      50%       { transform: translateY(-9px)  rotate(5deg); }
+    }
+    @media (max-width: 768px) { .mascot-wrap { display: none; } }
   </style>
 </head>
 <body>
@@ -260,6 +285,12 @@
     <p>Transformamos ideas en experiencias únicas.</p>
   </div>
 
+  <div class="services-outer">
+  <div class="mascot-wrap" id="mascot">
+    <div class="mascot-flip" id="mascot-flip">
+      <img src="/mascota.png" class="mascot-img" alt="Mascota VACH*">
+    </div>
+  </div>
   <nav class="services">
     <a href="/merchandising" class="service-card card-merchandising">
       <span class="card-top">
@@ -297,9 +328,30 @@
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
   </nav>
+  </div><!-- /services-outer -->
 
   <footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
 </div>
+
+<script>
+(function () {
+  var wrap = document.getElementById('mascot');
+  var flip = document.getElementById('mascot-flip');
+  if (!wrap || !flip) return;
+  var parent = wrap.parentElement;
+  var x = -95, dir = 1, sx = 1;
+  function walk() {
+    x += 1.5 * dir;
+    var maxX = parent.offsetWidth + 10;
+    if (x > maxX) { dir = -1; sx = -1; }
+    if (x < -95)  { dir =  1; sx =  1; }
+    wrap.style.transform = 'translateX(' + x + 'px)';
+    flip.style.transform  = 'scaleX(' + sx + ')';
+    requestAnimationFrame(walk);
+  }
+  requestAnimationFrame(walk);
+})();
+</script>
 
 </body>
 </html>
