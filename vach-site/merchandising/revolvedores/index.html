@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Centros de Mesa · Merchandising · VACH*</title>
+  <title>Revolvedores · Merchandising · VACH*</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -342,31 +342,6 @@
     .gallery-item .gallery-cap { background: none; z-index: 2; }
     .gallery-item img { cursor: zoom-in; }
 
-    /* FLIP BUTTON (piezas bifaz) */
-    .flip-btn {
-      position: absolute;
-      top: 0.6rem;
-      right: 0.6rem;
-      z-index: 3;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-family: inherit;
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--white);
-      background: rgba(0,0,0,0.55);
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 100px;
-      padding: 0.3rem 0.65rem;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      transition: background 0.2s, border-color 0.2s;
-    }
-    .flip-btn:hover { background: rgba(0,0,0,0.75); border-color: rgba(255,255,255,0.45); }
-
     /* LIGHTBOX */
     .lightbox {
       position: fixed;
@@ -406,28 +381,6 @@
       transition: background 0.2s, border-color 0.2s;
     }
     .lightbox-close:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
-    .lightbox-flip {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      display: none;
-      align-items: center;
-      gap: 0.4rem;
-      font-family: inherit;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.03em;
-      color: var(--black);
-      background: var(--yellow);
-      border: none;
-      border-radius: 100px;
-      padding: 0.65rem 1.3rem;
-      cursor: pointer;
-      transition: box-shadow 0.2s;
-    }
-    .lightbox-flip:hover { box-shadow: 0 0 24px rgba(245,200,0,0.45); }
-    .lightbox-flip.visible { display: flex; }
 </style>
 </head>
 <body>
@@ -447,25 +400,14 @@
 
   <div class="hero">
     <div class="hero-label"><span class="dot"></span>Merchandising</div>
-    <span class="cat-hero-icon">🌸</span>
-    <h1>Centros de<br><em>mesa.</em></h1>
-    <p>Piezas decorativas únicas para eventos corporativos, lanzamientos y activaciones de marca, hechas a medida de tu evento.</p>
+    <span class="cat-hero-icon">🥄</span>
+    <h1>Revolvedores<br>de <em>marca.</em></h1>
+    <p>Revolvedores y agitadores personalizados para barras, eventos y activaciones: funcionales, prácticos y con tu logo en cada brindis.</p>
   </div>
 
   <div class="section-title">Trabajos realizados</div>
   <div class="gallery">
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-adidas.jpg" alt="Centro de mesa camiseta Selección Argentina · Adidas" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centro de mesa · Adidas</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-cerave.jpg" alt="Centro de mesa cartel de mesa CeraVe" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centro de mesa · CeraVe</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-hellmanns.jpg" alt="Centros de mesa heladeritas Hellmann's" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centros de mesa · Hellmann's</span></div>
-    <div class="gallery-item gallery-flip" data-front="/merchandising/gallery/centro-medialab-frente.jpg" data-front-alt="Centro de mesa Media Lab Agency, cara frontal" data-back="/merchandising/gallery/centro-medialab-dorso.jpg" data-back-alt="Centro de mesa Media Lab Agency, cara trasera">
-      <img src="/merchandising/gallery/centro-medialab-frente.jpg" alt="Centro de mesa Media Lab Agency, cara frontal" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))">
-      <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="flipItem(event, this)">⟳ otra cara</button>
-      <span class="gallery-cap">Centro de mesa bifaz · Media Lab</span>
-    </div>
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-mickey.jpg" alt="Centro de mesa Mickey Mouse" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centro de mesa · Mickey Mouse</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-olami.jpg" alt="Centros de mesa Olami negro y dorado" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centros de mesa · Olami</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-riu.jpg" alt="Centros de mesa RIU Hotels &amp; Resorts" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centros de mesa · RIU Hotels</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/centro-topdest.jpg" alt="Centro de mesa Top Dest" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Centro de mesa · Top Dest</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/revolvedor-bioter.jpg" alt="Revolvedores personalizados grabados Bioter" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Revolvedores grabados · Bioter</span></div>
   </div>
 
 
@@ -477,7 +419,7 @@
       <p>Transformamos tus ideas en productos únicos.</p>
     </div>
     <div class="cta-actions">
-      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20cotizar%20centros%20de%20mesa" target="_blank" class="btn btn-yellow">
+      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20cotizar%20revolvedores" target="_blank" class="btn btn-yellow">
         Consultar por WhatsApp
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -492,59 +434,23 @@
 
 </div>
 
+
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
   <img src="" alt="" id="lightbox-img">
-  <button class="lightbox-flip" id="lightbox-flip" type="button">⟳ Ver otra cara</button>
 </div>
 <script>
-  var currentFlipItem = null;
-
-  function openLightbox(src, alt, item) {
+  function openLightbox(src, alt) {
     var lb = document.getElementById('lightbox');
     var img = document.getElementById('lightbox-img');
-    var flipBtn = document.getElementById('lightbox-flip');
     img.src = src;
     img.alt = alt || '';
-    if (item && item.classList.contains('gallery-flip')) {
-      currentFlipItem = item;
-      flipBtn.classList.add('visible');
-    } else {
-      currentFlipItem = null;
-      flipBtn.classList.remove('visible');
-    }
     lb.classList.add('active');
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.getElementById('lightbox-img').src = '';
-    document.getElementById('lightbox-flip').classList.remove('visible');
-    currentFlipItem = null;
   }
-  function flipItem(e, btn) {
-    e.stopPropagation();
-    swapFace(btn.closest('.gallery-flip'));
-  }
-  function swapFace(item) {
-    var img = item.querySelector('img');
-    var showingFront = img.getAttribute('src') === item.dataset.front;
-    if (showingFront) {
-      img.setAttribute('src', item.dataset.back);
-      img.setAttribute('alt', item.dataset.backAlt);
-    } else {
-      img.setAttribute('src', item.dataset.front);
-      img.setAttribute('alt', item.dataset.frontAlt);
-    }
-    var lbImg = document.getElementById('lightbox-img');
-    if (currentFlipItem === item && document.getElementById('lightbox').classList.contains('active')) {
-      lbImg.src = img.src;
-      lbImg.alt = img.alt;
-    }
-  }
-  document.getElementById('lightbox-flip').addEventListener('click', function (e) {
-    e.stopPropagation();
-    if (currentFlipItem) swapFace(currentFlipItem);
-  });
   document.getElementById('lightbox').addEventListener('click', function (e) {
     if (e.target === this) closeLightbox();
   });
