@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Llaveros · Merchandising · VACH*</title>
+  <title>Llavero NFC · Merchandising · VACH*</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -152,16 +152,6 @@
       color: var(--gray);
       margin-bottom: 1.25rem;
     }
-    .subcat-block { margin-bottom: 2.25rem; }
-    .subcat-block:last-of-type { margin-bottom: 4rem; }
-    .subcat-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--yellow);
-      margin-bottom: 0.85rem;
-      letter-spacing: 0.01em;
-    }
-    .subcat-gallery { margin-bottom: 0; }
     .products {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -352,6 +342,31 @@
     .gallery-item .gallery-cap { background: none; z-index: 2; }
     .gallery-item img { cursor: zoom-in; }
 
+    /* FLIP BUTTON (piezas bifaz) */
+    .flip-btn {
+      position: absolute;
+      top: 0.6rem;
+      right: 0.6rem;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-family: inherit;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 100px;
+      padding: 0.3rem 0.65rem;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .flip-btn:hover { background: rgba(0,0,0,0.75); border-color: rgba(255,255,255,0.45); }
+
     /* LIGHTBOX */
     .lightbox {
       position: fixed;
@@ -391,6 +406,28 @@
       transition: background 0.2s, border-color 0.2s;
     }
     .lightbox-close:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); }
+    .lightbox-flip {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      color: var(--black);
+      background: var(--yellow);
+      border: none;
+      border-radius: 100px;
+      padding: 0.65rem 1.3rem;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+    .lightbox-flip:hover { box-shadow: 0 0 24px rgba(245,200,0,0.45); }
+    .lightbox-flip.visible { display: flex; }
 </style>
 </head>
 <body>
@@ -410,37 +447,21 @@
 
   <div class="hero">
     <div class="hero-label"><span class="dot"></span>Merchandising</div>
-    <span class="cat-hero-icon">🔑</span>
-    <h1>Llaveros a tu<br><em>medida.</em></h1>
-    <p>Llaveros personalizados en 3D, acrílico y metal: acabados únicos para representar tu marca en el día a día.</p>
+    <span class="cat-hero-icon">📡</span>
+    <h1>Llaveros<br><em>NFC.</em></h1>
+    <p>Llaveros con tecnología NFC: acercá el celular y compartí tu marca, perfil o contacto al instante. Diseño personalizado y funcionalidad en una sola pieza.</p>
   </div>
 
   <div class="section-title">Trabajos realizados</div>
-
-  <div class="subcat-block">
-    <div class="subcat-title">Llaveros 3D</div>
-    <div class="gallery subcat-gallery">
-      <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-cocacola.jpg" alt="Llaveros 3D Coca-Cola, colección de ornamentos personalizados" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llaveros 3D · Coca-Cola</span></div>
-      <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-bull.jpg" alt="Llavero 3D logo Bull" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llavero 3D · Bull</span></div>
-      <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-sneakerhouse.jpg" alt="Llavero 3D Sneaker House" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llavero 3D · Sneaker House</span></div>
-      <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-lipovich.jpg" alt="Llavero 3D personalizado Lipovich" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llavero 3D · Lipovich</span></div>
+  <div class="gallery">
+    <div class="gallery-item gallery-flip" data-front="/merchandising/gallery/llavero-nfc-vach-frente.jpg" data-front-alt="Llavero NFC VACH*, cara frontal con isotipo" data-back="/merchandising/gallery/llavero-nfc-vach-dorso.jpg" data-back-alt="Llavero NFC VACH*, dorso con logotipo">
+      <img src="/merchandising/gallery/llavero-nfc-vach-frente.jpg" alt="Llavero NFC VACH*, cara frontal con isotipo" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))">
+      <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="flipItem(event, this)">⟳ otra cara</button>
+      <span class="gallery-cap">Llavero NFC bifaz · VACH*</span>
     </div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-nfc-firstplug.jpg" alt="Llaveros NFC FirstPlug y Plug Into LATAM" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llavero NFC · FirstPlug</span></div>
   </div>
 
-  <div class="subcat-block">
-    <div class="subcat-title">Llaveros acrílicos</div>
-    <div class="gallery subcat-gallery">
-      <div class="gallery-item"><img src="/merchandising/gallery/llaveroacrilico-multimarca.jpg" alt="Llaveros acrílicos multimarca: Santander, SMusic, Amex, Lollapalooza" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llaveros acrílicos · Multimarca</span></div>
-      <div class="gallery-item"><img src="/merchandising/gallery/llaveroacrilico-sprite.jpg" alt="Llaveros acrílicos Sprite forma de lata" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llaveros acrílicos · Sprite</span></div>
-    </div>
-  </div>
-
-  <div class="subcat-block">
-    <div class="subcat-title">Llaveros metálicos</div>
-    <div class="gallery subcat-gallery">
-      <div class="gallery-item"><img src="/merchandising/gallery/llaverometalico-dove.jpg" alt="Llavero metálico Dove en forma de paloma" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Llavero metálico · Dove</span></div>
-    </div>
-  </div>
 
   <hr />
 
@@ -450,7 +471,7 @@
       <p>Transformamos tus ideas en productos únicos.</p>
     </div>
     <div class="cta-actions">
-      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20cotizar%20llaveros" target="_blank" class="btn btn-yellow">
+      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20cotizar%20llaveros%20nfc" target="_blank" class="btn btn-yellow">
         Consultar por WhatsApp
         <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -465,23 +486,59 @@
 
 </div>
 
-
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
   <img src="" alt="" id="lightbox-img">
+  <button class="lightbox-flip" id="lightbox-flip" type="button">⟳ Ver otra cara</button>
 </div>
 <script>
-  function openLightbox(src, alt) {
+  var currentFlipItem = null;
+
+  function openLightbox(src, alt, item) {
     var lb = document.getElementById('lightbox');
     var img = document.getElementById('lightbox-img');
+    var flipBtn = document.getElementById('lightbox-flip');
     img.src = src;
     img.alt = alt || '';
+    if (item && item.classList.contains('gallery-flip')) {
+      currentFlipItem = item;
+      flipBtn.classList.add('visible');
+    } else {
+      currentFlipItem = null;
+      flipBtn.classList.remove('visible');
+    }
     lb.classList.add('active');
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.getElementById('lightbox-img').src = '';
+    document.getElementById('lightbox-flip').classList.remove('visible');
+    currentFlipItem = null;
   }
+  function flipItem(e, btn) {
+    e.stopPropagation();
+    swapFace(btn.closest('.gallery-flip'));
+  }
+  function swapFace(item) {
+    var img = item.querySelector('img');
+    var showingFront = img.getAttribute('src') === item.dataset.front;
+    if (showingFront) {
+      img.setAttribute('src', item.dataset.back);
+      img.setAttribute('alt', item.dataset.backAlt);
+    } else {
+      img.setAttribute('src', item.dataset.front);
+      img.setAttribute('alt', item.dataset.frontAlt);
+    }
+    var lbImg = document.getElementById('lightbox-img');
+    if (currentFlipItem === item && document.getElementById('lightbox').classList.contains('active')) {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt;
+    }
+  }
+  document.getElementById('lightbox-flip').addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (currentFlipItem) swapFace(currentFlipItem);
+  });
   document.getElementById('lightbox').addEventListener('click', function (e) {
     if (e.target === this) closeLightbox();
   });
