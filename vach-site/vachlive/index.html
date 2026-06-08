@@ -76,24 +76,7 @@
       50%      { box-shadow: 0 0 0 6px rgba(123,79,255,0); }
     }
     p { font-size: 1rem; color: var(--lgray); max-width: 400px; margin: 0 auto 2.5rem; line-height: 1.65; }
-    .notify-form { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
-    .notify-form input {
-      font-family: inherit; font-size: 0.9rem;
-      border: 1px solid var(--border); border-radius: 100px;
-      padding: 0.75rem 1.25rem; background: rgba(255,255,255,0.05);
-      color: var(--white); outline: none; width: 260px;
-      transition: border-color 0.2s;
-    }
-    .notify-form input::placeholder { color: var(--gray); }
-    .notify-form input:focus { border-color: var(--purple); }
-    .notify-form button {
-      font-family: inherit; font-size: 0.9rem; font-weight: 700;
-      padding: 0.75rem 1.5rem; border-radius: 100px;
-      background: var(--purple); color: var(--white); border: none; cursor: pointer;
-      transition: box-shadow 0.2s;
-    }
-    .notify-form button:hover { box-shadow: 0 0 20px rgba(123,79,255,0.5); }
-    .back-link { display: block; margin-top: 1.5rem; font-size: 0.82rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    .back-link { display: block; margin-top: 0.5rem; font-size: 0.82rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
     .back-link:hover { color: var(--white); }
     footer { text-align: center; font-size: 0.72rem; color: var(--gray); }
   </style>
@@ -111,23 +94,9 @@
     <p class="label">↗ SubliVach</p>
     <h1>Personalización<br>textil <em>en vivo.</em></h1>
     <p>Sublimado full-color en tiempo real durante tu evento. Remeras, bolsas, accesorios — todo con tu diseño al instante.</p>
-    <form class="notify-form" onsubmit="handleNotify(event)">
-      <input type="email" placeholder="tu@email.com" required id="email-input" />
-      <button type="submit">Avisame cuando esté <svg width="11" height="11" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </form>
     <a href="https://www.instagram.com/vach.arg/" target="_blank" class="back-link">Seguinos en @vach.arg para novedades</a>
   </div>
   <footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
 </div>
-<script>
-function handleNotify(e) {
-  e.preventDefault();
-  const btn = e.target.querySelector('button');
-  btn.textContent = '¡Listo! Te avisamos ✓';
-  btn.style.background = '#1CC4A0';
-  btn.style.boxShadow = '0 0 20px rgba(28,196,160,0.5)';
-  e.target.querySelector('input').value = '';
-}
-</script>
 </body>
 </html>
