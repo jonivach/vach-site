@@ -57,14 +57,18 @@
       cursor: grab;
     }
     .marquee-track.dragging { cursor: grabbing; }
-    .marquee-track span {
+    .mq-brand {
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: rgba(255,255,255,0.22);
       padding: 0 1.5rem;
+      text-decoration: none;
+      transition: color 0.2s;
+      white-space: nowrap;
     }
+    .mq-brand:hover { color: rgba(255,255,255,0.7); }
     .marquee-track span.dot {
       color: rgba(255,255,255,0.1);
       padding: 0;
@@ -504,12 +508,48 @@
 <script>
   /* ── MARQUEE ── */
   (function() {
-    var brands = ['Coca-Cola','Samsung','Unilever','Adidas','Nike','Knorr','Dove','AXE','Rexona','Lysoform','Comfort','Bresh','Aperol','Absolut','Hendrick\'s','Peugeot','Citroën','BBVA','SodaStream','Colgate','Hellmann\'s','Sprite','Sedal','Nivea','Personal','F5','Sneaker House','Lipovich','Olami','Bull','Opella','Belo','Shomrim','SexyFish','Media Lab'];
+    var brands = [
+      { n: 'Coca-Cola',     url: '/merchandising/llaveros' },
+      { n: 'Samsung',       url: '/merchandising/llaveros' },
+      { n: 'Unilever',      url: '/merchandising/llaveros' },
+      { n: 'Adidas',        url: '/merchandising/pines' },
+      { n: 'Nike',          url: '/merchandising/llaveros' },
+      { n: 'Knorr',         url: '/merchandising/llaveros' },
+      { n: 'Dove',          url: '/merchandising/pines' },
+      { n: 'AXE',           url: '/merchandising/llaveros' },
+      { n: 'Rexona',        url: '/merchandising/llaveros' },
+      { n: 'Lysoform',      url: '/merchandising/llaveros' },
+      { n: 'Comfort',       url: '/merchandising/llaveros' },
+      { n: 'Bresh',         url: '/merchandising/llaveros' },
+      { n: 'Aperol',        url: '/merchandising/charms' },
+      { n: 'Absolut',       url: '/merchandising/pines' },
+      { n: 'Hendrick\'s',   url: '/merchandising/pines' },
+      { n: 'Peugeot',       url: '/merchandising/pines' },
+      { n: 'Citroën',       url: '/merchandising/pines' },
+      { n: 'BBVA',          url: '/merchandising/pines' },
+      { n: 'SodaStream',    url: '/merchandising/pines' },
+      { n: 'Colgate',       url: '/merchandising/pines' },
+      { n: 'Hellmann\'s',   url: '/merchandising/llaveros' },
+      { n: 'Sprite',        url: '/merchandising/llaveros' },
+      { n: 'Sedal',         url: '/merchandising/llaveros' },
+      { n: 'Nivea',         url: '/merchandising/llaveros' },
+      { n: 'Personal',      url: '/merchandising/llaveros' },
+      { n: 'F5',            url: '/merchandising/llaveros' },
+      { n: 'Sneaker House', url: '/merchandising/llaveros' },
+      { n: 'Lipovich',      url: '/merchandising/llaveros' },
+      { n: 'Olami',         url: '/merchandising/llaveros' },
+      { n: 'Bull',          url: '/merchandising/llaveros' },
+      { n: 'Opella',        url: '/merchandising/pines' },
+      { n: 'Belo',          url: '/merchandising/pines' },
+      { n: 'Shomrim',       url: '/merchandising/pines' },
+      { n: 'SexyFish',      url: '/merchandising/pines' },
+      { n: 'Media Lab',     url: '/merchandising/centros-de-mesa' },
+    ];
     var track = document.getElementById('marqueeTrack');
     var html = '';
     for (var r = 0; r < 2; r++) {
       brands.forEach(function(b) {
-        html += '<span>' + b + '</span><span class="dot">·</span>';
+        html += '<a class="mq-brand" href="' + b.url + '" draggable="false">' + b.n + '</a><span class="dot">·</span>';
       });
     }
     track.innerHTML = html;
@@ -522,6 +562,7 @@
     var dragStartPos = 0;
     var velocity = 0;
     var lastX = 0;
+    var dragDist = 0;
 
     function wrap(p) {
       if (half <= 0) return p;
@@ -552,11 +593,13 @@
       dragStartPos = pos;
       lastX = x;
       velocity = 0;
+      dragDist = 0;
       track.classList.add('dragging');
     }
     function onDragMove(x) {
       if (!dragging) return;
       velocity = x - lastX;
+      dragDist += Math.abs(velocity);
       lastX = x;
       pos = wrap(dragStartPos + (x - dragStartX));
     }
@@ -564,6 +607,14 @@
       if (!dragging) return;
       dragging = false;
       track.classList.remove('dragging');
+      // block link navigation if user dragged
+      if (dragDist > 5) {
+        var links = track.querySelectorAll('a');
+        links.forEach(function(a) { a.style.pointerEvents = 'none'; });
+        setTimeout(function() {
+          links.forEach(function(a) { a.style.pointerEvents = ''; });
+        }, 100);
+      }
       // hand off momentum to speed
       speed = Math.max(0.4, Math.min(3, -velocity * 0.6)) || 1.1;
       // ease speed back to default
