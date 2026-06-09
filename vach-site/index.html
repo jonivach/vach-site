@@ -80,15 +80,38 @@
       width: auto;
       display: block;
     }
-    .ig-link {
-      font-size: 0.78rem;
-      font-weight: 500;
-      color: var(--lgray);
-      text-decoration: none;
-      letter-spacing: 0.06em;
-      transition: color 0.2s;
+    /* header counter */
+    .header-counter {
+      text-align: right;
+      line-height: 1.2;
     }
-    .ig-link:hover { color: var(--white); }
+    .hc-num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .hc-label {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      display: block;
+    }
+    .hc-cta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--yellow);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .hc-cta.visible { opacity: 1; transform: none; }
+    .hc-cta a { color: var(--yellow); text-decoration: none; border-bottom: 1px solid rgba(245,200,0,0.35); padding-bottom: 1px; transition: border-color 0.2s; }
+    .hc-cta a:hover { border-color: var(--yellow); }
 
     /* tagline */
     .tagline {
@@ -223,45 +246,6 @@
       border: 1px solid var(--border);
     }
 
-    /* counter */
-    .counter-section {
-      text-align: center;
-      opacity: 0;
-      animation: fadeUp 0.7s ease 0.5s forwards;
-    }
-    .counter-num {
-      font-size: clamp(2.6rem, 5vw, 4.2rem);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1;
-      color: var(--white);
-    }
-    .counter-label {
-      font-size: 0.7rem;
-      color: var(--gray);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-top: 0.3rem;
-    }
-    .counter-cta {
-      margin-top: 0.6rem;
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--yellow);
-      opacity: 0;
-      transform: translateY(6px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .counter-cta.visible { opacity: 1; transform: none; }
-    .counter-cta a {
-      color: var(--yellow);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(245,200,0,0.35);
-      padding-bottom: 1px;
-      transition: border-color 0.2s;
-    }
-    .counter-cta a:hover { border-color: var(--yellow); }
-
     /* footer */
     footer {
       text-align: center;
@@ -291,18 +275,16 @@
 <div class="layout">
   <header>
     <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
-    <a href="https://www.instagram.com/vach.arg/" target="_blank" class="ig-link">Seguinos en Insta <svg width="10" height="10" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:middle"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <div class="header-counter">
+      <span class="hc-num" id="counter-num">0</span>
+      <span class="hc-label">proyectos realizados</span>
+      <span class="hc-cta" id="counter-cta">Sé el #121. <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20ser%20el%20proyecto%20%23121" target="_blank">Hablemos →</a></span>
+    </div>
   </header>
 
   <div class="tagline">
     <h1>Productora<br>Creativa.</h1>
     <p>Transformamos ideas en experiencias únicas.</p>
-  </div>
-
-  <div class="counter-section">
-    <div class="counter-num" id="counter-num">0</div>
-    <div class="counter-label">proyectos realizados</div>
-    <div class="counter-cta" id="counter-cta">Sé el proyecto número 121. <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20ser%20el%20proyecto%20%23121" target="_blank">Hablemos →</a></div>
   </div>
 
   <nav class="services">
@@ -335,7 +317,7 @@
 
     <a href="https://www.instagram.com/vach.arg/" target="_blank" class="service-card card-otros">
       <span class="card-top">
-        <span class="card-name">Otros proyectos</span>
+        <span class="card-name">Nuestras redes</span>
         <span class="card-badge ghost-badge">Ver todo</span>
       </span>
       <span class="card-desc">Seguinos en Instagram y mantenete informado tocando la campanita y activando notificaciones de historias.</span>
