@@ -32,13 +32,90 @@
     }
 
     /* gradient background */
-    .bg {
+    .bg { position: fixed; inset: 0; background: #0A0A0A; z-index: 0; }
+
+    /* animated blobs */
+    .blob {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(90px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .blob1 {
+      width: 65vw; height: 65vw;
+      background: rgba(123,79,255,0.13);
+      top: -15%; left: -10%;
+      animation: blob1 18s ease-in-out infinite alternate;
+    }
+    .blob2 {
+      width: 50vw; height: 50vw;
+      background: rgba(28,196,160,0.09);
+      bottom: -15%; right: -10%;
+      animation: blob2 22s ease-in-out infinite alternate;
+    }
+    @keyframes blob1 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(20vw, 15vh) scale(1.1); }
+      100% { transform: translate(10vw, 30vh) scale(0.95); }
+    }
+    @keyframes blob2 {
+      0%   { transform: translate(0, 0) scale(1); }
+      50%  { transform: translate(-18vw, -12vh) scale(1.08); }
+      100% { transform: translate(-8vw, -25vh) scale(1.15); }
+    }
+
+    /* grain */
+    .grain {
       position: fixed;
       inset: 0;
-      background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.12) 0%, transparent 60%),
-                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(28,196,160,0.08) 0%, transparent 55%),
-                  #0A0A0A;
-      z-index: 0;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0.04;
+    }
+
+    /* cursor glow */
+    .cursor-glow {
+      position: fixed;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(123,79,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      left: 50%; top: 50%;
+      transition: left 0.08s linear, top 0.08s linear;
+    }
+
+    /* marquee */
+    .marquee-wrap {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.8s forwards;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      animation: marquee 35s linear infinite;
+    }
+    .marquee-track span {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      padding: 0 1.5rem;
+    }
+    .marquee-track span.dot {
+      color: rgba(255,255,255,0.1);
+      padding: 0;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
     }
 
     /* subtle grid overlay */
@@ -391,6 +468,10 @@
 <body>
 
 <div class="bg"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<canvas class="grain" id="grain"></canvas>
+<div class="cursor-glow" id="cursorGlow"></div>
 <div class="grid-overlay"></div>
 
 <div class="layout">
@@ -406,6 +487,10 @@
   <div class="tagline">
     <h1>Productora<br>Creativa.</h1>
     <p>Transformamos ideas en experiencias únicas.</p>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack"></div>
   </div>
 
   <nav class="services">
@@ -469,6 +554,53 @@
 
 
 <script>
+  /* ── GRAIN ── */
+  (function() {
+    var canvas = document.getElementById('grain');
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+    function drawGrain() {
+      var img = ctx.createImageData(W, H);
+      var d = img.data;
+      for (var i = 0; i < d.length; i += 4) {
+        var v = Math.random() * 255 | 0;
+        d[i] = d[i+1] = d[i+2] = v; d[i+3] = 18;
+      }
+      ctx.putImageData(img, 0, 0);
+      setTimeout(function() { requestAnimationFrame(drawGrain); }, 80);
+    }
+    drawGrain();
+  })();
+
+  /* ── CURSOR GLOW ── */
+  (function() {
+    var glow = document.getElementById('cursorGlow');
+    if (window.matchMedia('(hover: hover)').matches) {
+      document.addEventListener('mousemove', function(e) {
+        glow.style.left = e.clientX + 'px';
+        glow.style.top  = e.clientY + 'px';
+      });
+    } else {
+      glow.style.display = 'none';
+    }
+  })();
+
+  /* ── MARQUEE ── */
+  (function() {
+    var brands = ['Coca-Cola','Samsung','Unilever','Adidas','Nike','Knorr','Dove','AXE','Rexona','Lysoform','Comfort','Bresh','Aperol','Absolut','Hendrick\'s','Peugeot','Citroën','BBVA','SodaStream','Colgate','Hellmann\'s','Sprite','Sedal','Nivea','Personal','F5','Sneaker House','Lipovich','Olami','Bull','Opella','Belo','Samsung','Shomrim','SexyFish','Knorr','Media Lab'];
+    var track = document.getElementById('marqueeTrack');
+    var html = '';
+    for (var r = 0; r < 2; r++) {
+      brands.forEach(function(b) {
+        html += '<span>' + b + '</span><span class="dot">·</span>';
+      });
+    }
+    track.innerHTML = html;
+  })();
+
   function openRedesModal() {
     document.getElementById('redesModal').classList.add('active');
   }
