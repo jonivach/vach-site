@@ -192,6 +192,13 @@
     .card-otros { --accent: #888; border-color: rgba(255,255,255,0.18); }
     .card-otros:hover, .card-otros:active { border-color: rgba(255,255,255,0.35); }
 
+    .card-dimmed {
+      opacity: 0.35;
+      filter: blur(1.5px);
+      pointer-events: none;
+      user-select: none;
+    }
+
     .service-card:hover::before { opacity: 1; }
 
     .card-top {
@@ -411,7 +418,7 @@
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
 
-    <a href="/laservach" class="service-card card-laser">
+    <a href="/laservach" class="service-card card-laser card-dimmed">
       <span class="card-top">
         <span class="card-name">LaserVach</span>
         <span class="card-badge">Próximamente</span>
@@ -420,7 +427,7 @@
       <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
     </a>
 
-    <a href="/vachlive" class="service-card card-sublimado">
+    <a href="/vachlive" class="service-card card-sublimado card-dimmed">
       <span class="card-top">
         <span class="card-name">SubliVach</span>
         <span class="card-badge">En desarrollo</span>
