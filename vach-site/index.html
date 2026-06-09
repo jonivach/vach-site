@@ -41,11 +41,31 @@
       z-index: 0;
     }
 
+    /* bg gallery */
+    .bg-gallery {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-img {
+      position: absolute;
+      border-radius: 10px;
+      object-fit: cover;
+      opacity: 0;
+      animation: bgFade linear infinite;
+    }
+    @keyframes bgFade {
+      0%, 100% { opacity: 0; }
+      25%, 75%  { opacity: 0.13; }
+    }
+
     /* subtle grid overlay */
     .grid-overlay {
       position: fixed;
       inset: 0;
-      z-index: 1;
+      z-index: 2;
       background-image:
         linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
@@ -56,7 +76,7 @@
     /* layout */
     .layout {
       position: relative;
-      z-index: 2;
+      z-index: 3;
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -247,6 +267,7 @@
 <body>
 
 <div class="bg"></div>
+<div class="bg-gallery" id="bg-gallery"></div>
 <div class="grid-overlay"></div>
 
 <div class="layout">
@@ -302,5 +323,41 @@
 </div>
 
 
+<script>
+  (function() {
+    var imgs = [
+      'llavero3d-cocacola.jpg','llavero3d-bresh.jpg','llavero3d-samsung-luz.jpg',
+      'llavero3d-adidas-padel.jpg','llavero3d-comfort.jpg','llavero3d-axe-blue.jpg',
+      'charm-cocacola.jpg','charm-bathandbody.jpg','charm-nivea.jpg',
+      'centro-adidas.jpg','centro-olami.jpg','centro-mickey.jpg',
+      'pin-metalico-absolut.jpg','pin-dome-bbva.jpg','pin-acrilico-adidas.jpg',
+      'llaveroacrilico-sprite.jpg','llaveroacrilico-samsung.jpg',
+      'objmedida-copa-libertadores.jpg','objmedida-johnniewalker-bandeja.jpg',
+      'reconocimiento-meta.jpg','pulsera-cocacola.jpg','llavero3d-knorr.jpg'
+    ];
+    var gallery = document.getElementById('bg-gallery');
+    var pool = imgs.concat(imgs).concat(imgs.slice(0, 8)); // ~30 items
+    pool.forEach(function(src) {
+      var el = document.createElement('img');
+      el.src = '/merchandising/gallery/' + src;
+      el.className = 'bg-img';
+      el.setAttribute('aria-hidden', 'true');
+      var w   = 60 + Math.random() * 110;            // 60–170px
+      var x   = Math.random() * 94;                  // 0–94% left
+      var y   = Math.random() * 88;                  // 0–88% top
+      var rot = (Math.random() - 0.5) * 26;          // -13 to 13 deg
+      var dur = 7 + Math.random() * 9;               // 7–16s
+      var del = -(Math.random() * dur);              // start mid-animation
+      el.style.cssText =
+        'width:' + w + 'px;' +
+        'left:' + x + '%;' +
+        'top:' + y + '%;' +
+        'transform:rotate(' + rot + 'deg);' +
+        'animation-duration:' + dur + 's;' +
+        'animation-delay:' + del + 's;';
+      gallery.appendChild(el);
+    });
+  })();
+</script>
 </body>
 </html>
