@@ -7,8 +7,6 @@
    mismos criterios. Cualquier ajuste hecho acá se refleja en todas.
    =================================================================== */
 
-@view-transition { navigation: auto; }
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -86,7 +84,7 @@ nav {
 }
 .back:hover { color: var(--white); }
 .logo { text-decoration: none; }
-.logo img { height: 24px; width: auto; display: block; view-transition-name: vach-logo; }
+.logo img { height: 24px; width: auto; display: block; }
 
 /* HERO */
 .hero {
