@@ -53,8 +53,10 @@
       display: flex;
       gap: 0;
       white-space: nowrap;
-      animation: marquee 35s linear infinite;
+      will-change: transform;
+      cursor: grab;
     }
+    .marquee-track.dragging { cursor: grabbing; }
     .marquee-track span {
       font-size: 0.7rem;
       font-weight: 600;
@@ -66,10 +68,6 @@
     .marquee-track span.dot {
       color: rgba(255,255,255,0.1);
       padding: 0;
-    }
-    @keyframes marquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
     }
 
     /* subtle grid overlay */
@@ -506,7 +504,7 @@
 <script>
   /* ── MARQUEE ── */
   (function() {
-    var brands = ['Coca-Cola','Samsung','Unilever','Adidas','Nike','Knorr','Dove','AXE','Rexona','Lysoform','Comfort','Bresh','Aperol','Absolut','Hendrick\'s','Peugeot','Citroën','BBVA','SodaStream','Colgate','Hellmann\'s','Sprite','Sedal','Nivea','Personal','F5','Sneaker House','Lipovich','Olami','Bull','Opella','Belo','Samsung','Shomrim','SexyFish','Knorr','Media Lab'];
+    var brands = ['Coca-Cola','Samsung','Unilever','Adidas','Nike','Knorr','Dove','AXE','Rexona','Lysoform','Comfort','Bresh','Aperol','Absolut','Hendrick\'s','Peugeot','Citroën','BBVA','SodaStream','Colgate','Hellmann\'s','Sprite','Sedal','Nivea','Personal','F5','Sneaker House','Lipovich','Olami','Bull','Opella','Belo','Shomrim','SexyFish','Media Lab'];
     var track = document.getElementById('marqueeTrack');
     var html = '';
     for (var r = 0; r < 2; r++) {
@@ -515,6 +513,76 @@
       });
     }
     track.innerHTML = html;
+
+    var pos = 0;
+    var speed = 1.1; // px per frame
+    var half = 0;
+    var dragging = false;
+    var dragStartX = 0;
+    var dragStartPos = 0;
+    var velocity = 0;
+    var lastX = 0;
+
+    function wrap(p) {
+      if (half <= 0) return p;
+      p = p % half;
+      if (p > 0) p -= half;
+      return p;
+    }
+
+    function tick() {
+      if (!dragging) {
+        pos -= speed;
+        half = track.scrollWidth / 2;
+        pos = wrap(pos);
+      }
+      track.style.transform = 'translateX(' + pos + 'px)';
+      requestAnimationFrame(tick);
+    }
+
+    // wait for fonts/layout
+    setTimeout(function() {
+      half = track.scrollWidth / 2;
+      requestAnimationFrame(tick);
+    }, 100);
+
+    function onDragStart(x) {
+      dragging = true;
+      dragStartX = x;
+      dragStartPos = pos;
+      lastX = x;
+      velocity = 0;
+      track.classList.add('dragging');
+    }
+    function onDragMove(x) {
+      if (!dragging) return;
+      velocity = x - lastX;
+      lastX = x;
+      pos = wrap(dragStartPos + (x - dragStartX));
+    }
+    function onDragEnd() {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove('dragging');
+      // hand off momentum to speed
+      speed = Math.max(0.4, Math.min(3, -velocity * 0.6)) || 1.1;
+      // ease speed back to default
+      (function decay() {
+        if (Math.abs(speed - 1.1) > 0.05) {
+          speed += (1.1 - speed) * 0.05;
+          requestAnimationFrame(decay);
+        } else { speed = 1.1; }
+      })();
+    }
+
+    // mouse
+    track.addEventListener('mousedown', function(e) { onDragStart(e.clientX); });
+    document.addEventListener('mousemove', function(e) { onDragMove(e.clientX); });
+    document.addEventListener('mouseup', onDragEnd);
+    // touch
+    track.addEventListener('touchstart', function(e) { onDragStart(e.touches[0].clientX); }, { passive: true });
+    track.addEventListener('touchmove',  function(e) { onDragMove(e.touches[0].clientX); },  { passive: true });
+    track.addEventListener('touchend',   onDragEnd);
   })();
 
   function openRedesModal() {
