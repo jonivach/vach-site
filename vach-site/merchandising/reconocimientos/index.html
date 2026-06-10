@@ -140,7 +140,17 @@
     img.alt = el.alt || '';
     var item = el.closest ? el.closest('.gallery-item') : null;
     var capEl = item ? item.querySelector('.gallery-cap') : null;
-    document.getElementById('lightbox-caption').textContent = capEl ? capEl.textContent : '';
+    var capText = '';
+    if (capEl) {
+      var cd = capEl.querySelector('.cap-desktop');
+      var cm = capEl.querySelector('.cap-mobile');
+      if (cd || cm) {
+        capText = (window.innerWidth <= 768 && cm) ? cm.textContent : (cd ? cd.textContent : capEl.textContent);
+      } else {
+        capText = capEl.textContent;
+      }
+    }
+    document.getElementById('lightbox-caption').textContent = capText;
     document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
     document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
   }
