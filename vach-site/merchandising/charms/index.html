@@ -75,7 +75,13 @@
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
   <button class="lightbox-prev" aria-label="Anterior" onclick="lightboxNav(-1)">&#8592;</button>
   <button class="lightbox-next" aria-label="Siguiente" onclick="lightboxNav(1)">&#8594;</button>
-  <img src="" alt="" id="lightbox-img">
+  <div class="lightbox-wrap">
+    <img src="" alt="" id="lightbox-img">
+    <div class="lightbox-footer">
+      <span class="lightbox-caption" id="lightbox-caption"></span>
+      <img class="lightbox-logo" src="/logo.png" alt="VACH*">
+    </div>
+  </div>
 </div>
 <script>
   var _lbImgs = [];
@@ -101,6 +107,9 @@
     var img = document.getElementById('lightbox-img');
     img.src = el.src;
     img.alt = el.alt || '';
+    var item = el.closest ? el.closest('.gallery-item') : null;
+    var capEl = item ? item.querySelector('.gallery-cap') : null;
+    document.getElementById('lightbox-caption').textContent = capEl ? capEl.textContent : '';
     document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
     document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
   }
