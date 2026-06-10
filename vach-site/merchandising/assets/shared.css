@@ -9,6 +9,12 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+.cap-mobile { display: none; }
+@media (max-width: 768px) {
+  .cap-desktop { display: none; }
+  .cap-mobile  { display: inline; }
+}
+
 :root {
   --black:  #0A0A0A;
   --yellow: #F5C800;
