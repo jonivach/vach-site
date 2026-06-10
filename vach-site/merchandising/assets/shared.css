@@ -121,7 +121,17 @@ html, body {
 .cat-nav-side a:hover + a { transform: scale(0.85); }
 .cat-nav-side a:has(+ a:hover) { transform: scale(0.85); }
 .cat-nav-side a.active { opacity: 1; background: rgba(255,255,255,0.1); }
-@media (max-width: 768px) { .cat-nav-side { display: none; } }
+@media (max-width: 768px) {
+  .cat-nav-side {
+    top: auto;
+    bottom: 1.25rem;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
+    padding: 0.4rem 0.6rem;
+    border-radius: 100px;
+  }
+}
 
 /* NAV */
 nav {
