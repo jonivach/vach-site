@@ -90,6 +90,8 @@ html, body {
   transition: opacity 0.2s, background 0.2s, transform 0.2s;
 }
 .cat-nav a:hover { opacity: 0.8; background: rgba(255,255,255,0.08); transform: scale(1.45); }
+.cat-nav a:hover + a { transform: scale(0.85); }
+.cat-nav a:has(+ a:hover) { transform: scale(0.85); }
 .cat-nav a.active { opacity: 1; background: rgba(255,255,255,0.1); }
 @media (max-width: 768px) { .cat-nav { display: none; } }
 
