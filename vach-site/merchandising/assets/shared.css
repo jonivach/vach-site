@@ -60,11 +60,14 @@ html, body {
 .cat-nav {
   position: fixed;
   left: 1rem;
+  right: auto;
   top: 50%;
   transform: translateY(-50%);
   z-index: 90;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
   gap: 0.25rem;
   background: rgba(10,10,10,0.75);
   backdrop-filter: blur(12px);
@@ -72,6 +75,7 @@ html, body {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 100px;
   padding: 0.6rem 0.4rem;
+  width: auto;
 }
 .cat-nav a {
   display: flex;
