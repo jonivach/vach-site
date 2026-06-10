@@ -32,16 +32,16 @@
 
   <div class="section-title">Trabajos realizados</div>
   <div class="gallery">
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-sneakerhouse.jpg" alt="Trofeo acrílico Sneaker House" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Trofeo acrílico · Sneaker House</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-meta.jpg" alt="Premio acrílico Meta Lighthouse Award" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Premio acrílico · Meta</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-titanes.jpg" alt="Trofeo Titanes Excelencia Comercial Latam" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Trofeo · Titanes Latam</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-olami.jpg" alt="Placas de reconocimiento Olami" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Placas grabadas · Olami</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-bat.jpg" alt="Placa acrílica BAT 20 años" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Placa acrílica · BAT</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-gdm.jpg" alt="Placa de reconocimiento GDM con edificio en relieve 3D" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Placa 3D · GDM</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-mccain.jpg" alt="Trofeo impreso en 3D The McCain Games" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Trofeo 3D · Mc Cain</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-parque-innovacion.jpg" alt="Trofeo Premio BA Parque de Innovación" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Trofeo · Parque de Innovación</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-dove.jpg" alt="Premio Dove cabeza de león en relieve 3D" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Premio 3D · Dove</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-menora.jpg" alt="Placa acrílica Premio Menora Internacional 2025" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Placa acrílica · Menora</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-sneakerhouse.jpg" alt="Trofeo acrílico Sneaker House" loading="lazy"><span class="gallery-cap">Trofeo acrílico · Sneaker House</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-meta.jpg" alt="Premio acrílico Meta Lighthouse Award" loading="lazy"><span class="gallery-cap">Premio acrílico · Meta</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-titanes.jpg" alt="Trofeo Titanes Excelencia Comercial Latam" loading="lazy"><span class="gallery-cap">Trofeo · Titanes Latam</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-olami.jpg" alt="Placas de reconocimiento Olami" loading="lazy"><span class="gallery-cap">Placas grabadas · Olami</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-bat.jpg" alt="Placa acrílica BAT 20 años" loading="lazy"><span class="gallery-cap">Placa acrílica · BAT</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-gdm.jpg" alt="Placa de reconocimiento GDM con edificio en relieve 3D" loading="lazy"><span class="gallery-cap">Placa 3D · GDM</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-mccain.jpg" alt="Trofeo impreso en 3D The McCain Games" loading="lazy"><span class="gallery-cap">Trofeo 3D · Mc Cain</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-parque-innovacion.jpg" alt="Trofeo Premio BA Parque de Innovación" loading="lazy"><span class="gallery-cap">Trofeo · Parque de Innovación</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-dove.jpg" alt="Premio Dove cabeza de león en relieve 3D" loading="lazy"><span class="gallery-cap">Premio 3D · Dove</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/reconocimiento-menora.jpg" alt="Placa acrílica Premio Menora Internacional 2025" loading="lazy"><span class="gallery-cap">Placa acrílica · Menora</span></div>
   </div>
 
 
@@ -71,25 +71,53 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
+  <button class="lightbox-prev" aria-label="Anterior" onclick="lightboxNav(-1)">&#8592;</button>
+  <button class="lightbox-next" aria-label="Siguiente" onclick="lightboxNav(1)">&#8594;</button>
   <img src="" alt="" id="lightbox-img">
 </div>
 <script>
-  function openLightbox(src, alt) {
-    var lb = document.getElementById('lightbox');
+  var _lbImgs = [];
+  var _lbIdx  = 0;
+
+  (function(){
+    var imgs = document.querySelectorAll('.gallery-item img');
+    for (var i = 0; i < imgs.length; i++) {
+      (function(el, idx){
+        el.onclick = function(){ _lbOpen(idx); };
+      })(imgs[i], _lbImgs.length);
+      _lbImgs.push(imgs[i]);
+    }
+  })();
+
+  function _lbOpen(idx) {
+    _lbIdx = idx;
+    _lbShow();
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function _lbShow() {
+    var el  = _lbImgs[_lbIdx];
     var img = document.getElementById('lightbox-img');
-    img.src = src;
-    img.alt = alt || '';
-    lb.classList.add('active');
+    img.src = el.src;
+    img.alt = el.alt || '';
+    document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
+    document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
+  }
+  function lightboxNav(dir) {
+    var n = _lbIdx + dir;
+    if (n >= 0 && n < _lbImgs.length) { _lbIdx = n; _lbShow(); }
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.getElementById('lightbox-img').src = '';
   }
-  document.getElementById('lightbox').addEventListener('click', function (e) {
+  document.getElementById('lightbox').addEventListener('click', function(e){
     if (e.target === this) closeLightbox();
   });
-  document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', function(e){
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
     if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
   });
 </script>
 

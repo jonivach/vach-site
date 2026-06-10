@@ -32,18 +32,18 @@
 
   <div class="section-title">Trabajos realizados</div>
   <div class="gallery">
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-cocacola.jpg" alt="Charm personalizado Coca-Cola Coke Studio" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Coca-Cola / Coke Studio</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-drlemon.jpg" alt="Charm personalizado Dr. Lemon" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Dr. Lemon</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-natura.jpg" alt="Charm personalizado Natura" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Natura</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-bathandbody.jpg" alt="Charms personalizados Bath & Body Works" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Bath & Body Works</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-ena.jpg" alt="Charms personalizados ENA con forma de pez" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">ENA</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-mcdonalds.jpg" alt="Charms personalizados McDonald's" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">McDonald's</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-nivea.jpg" alt="Charms personalizados Nivea Sun" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Nivea Sun</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-santander.jpg" alt="Charm personalizado Santander" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Santander</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-axe.jpg" alt="Charm personalizado AXE" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">AXE</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-aperol.jpg" alt="Charm personalizado Aperol Spritz" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Aperol</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/charm-guork.jpg" alt="Charm personalizado Guork" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Guork</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/pulsera-cocacola.jpg" alt="Pulsera personalizada con charms Coca-Cola Coke Studio" loading="lazy" onclick="openLightbox(this.src, this.alt)"><span class="gallery-cap">Pulsera · Coca-Cola</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-cocacola.jpg" alt="Charm personalizado Coca-Cola Coke Studio" loading="lazy"><span class="gallery-cap">Coca-Cola / Coke Studio</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-drlemon.jpg" alt="Charm personalizado Dr. Lemon" loading="lazy"><span class="gallery-cap">Dr. Lemon</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-natura.jpg" alt="Charm personalizado Natura" loading="lazy"><span class="gallery-cap">Natura</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-bathandbody.jpg" alt="Charms personalizados Bath & Body Works" loading="lazy"><span class="gallery-cap">Bath & Body Works</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-ena.jpg" alt="Charms personalizados ENA con forma de pez" loading="lazy"><span class="gallery-cap">ENA</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-mcdonalds.jpg" alt="Charms personalizados McDonald's" loading="lazy"><span class="gallery-cap">McDonald's</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-nivea.jpg" alt="Charms personalizados Nivea Sun" loading="lazy"><span class="gallery-cap">Nivea Sun</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-santander.jpg" alt="Charm personalizado Santander" loading="lazy"><span class="gallery-cap">Santander</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-axe.jpg" alt="Charm personalizado AXE" loading="lazy"><span class="gallery-cap">AXE</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-aperol.jpg" alt="Charm personalizado Aperol Spritz" loading="lazy"><span class="gallery-cap">Aperol</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/charm-guork.jpg" alt="Charm personalizado Guork" loading="lazy"><span class="gallery-cap">Guork</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/pulsera-cocacola.jpg" alt="Pulsera personalizada con charms Coca-Cola Coke Studio" loading="lazy"><span class="gallery-cap">Pulsera · Coca-Cola</span></div>
   </div>
 
 
@@ -73,25 +73,53 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
+  <button class="lightbox-prev" aria-label="Anterior" onclick="lightboxNav(-1)">&#8592;</button>
+  <button class="lightbox-next" aria-label="Siguiente" onclick="lightboxNav(1)">&#8594;</button>
   <img src="" alt="" id="lightbox-img">
 </div>
 <script>
-  function openLightbox(src, alt) {
-    var lb = document.getElementById('lightbox');
+  var _lbImgs = [];
+  var _lbIdx  = 0;
+
+  (function(){
+    var imgs = document.querySelectorAll('.gallery-item img');
+    for (var i = 0; i < imgs.length; i++) {
+      (function(el, idx){
+        el.onclick = function(){ _lbOpen(idx); };
+      })(imgs[i], _lbImgs.length);
+      _lbImgs.push(imgs[i]);
+    }
+  })();
+
+  function _lbOpen(idx) {
+    _lbIdx = idx;
+    _lbShow();
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function _lbShow() {
+    var el  = _lbImgs[_lbIdx];
     var img = document.getElementById('lightbox-img');
-    img.src = src;
-    img.alt = alt || '';
-    lb.classList.add('active');
+    img.src = el.src;
+    img.alt = el.alt || '';
+    document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
+    document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
+  }
+  function lightboxNav(dir) {
+    var n = _lbIdx + dir;
+    if (n >= 0 && n < _lbImgs.length) { _lbIdx = n; _lbShow(); }
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.getElementById('lightbox-img').src = '';
   }
-  document.getElementById('lightbox').addEventListener('click', function (e) {
+  document.getElementById('lightbox').addEventListener('click', function(e){
     if (e.target === this) closeLightbox();
   });
-  document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', function(e){
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
     if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
   });
 </script>
 

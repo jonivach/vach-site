@@ -33,12 +33,12 @@
   <div class="section-title">Trabajos realizados</div>
   <div class="gallery">
     <div class="gallery-item gallery-flip" data-front="/merchandising/gallery/llavero-nfc-vach-frente.jpg" data-front-alt="Llavero NFC VACH*, cara frontal con isotipo" data-back="/merchandising/gallery/llavero-nfc-vach-dorso.jpg" data-back-alt="Llavero NFC VACH*, dorso con logotipo">
-      <img src="/merchandising/gallery/llavero-nfc-vach-frente.jpg" alt="Llavero NFC VACH*, cara frontal con isotipo" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))">
+      <img src="/merchandising/gallery/llavero-nfc-vach-frente.jpg" alt="Llavero NFC VACH*, cara frontal con isotipo" loading="lazy">
       <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="flipItem(event, this)">⟳ otra cara</button>
       <span class="gallery-cap">VACH*</span>
     </div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-nfc-firstplug.jpg" alt="Llaveros NFC FirstPlug y Plug Into LATAM" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">FirstPlug</span></div>
-    <div class="gallery-item"><img src="/merchandising/gallery/llavero-nfc-bigotes.jpg" alt="Llavero NFC personalizado Bigotes" loading="lazy" onclick="openLightbox(this.src, this.alt, this.closest('.gallery-item'))"><span class="gallery-cap">Bigotes</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-nfc-firstplug.jpg" alt="Llaveros NFC FirstPlug y Plug Into LATAM" loading="lazy"><span class="gallery-cap">FirstPlug</span></div>
+    <div class="gallery-item"><img src="/merchandising/gallery/llavero-nfc-bigotes.jpg" alt="Llavero NFC personalizado Bigotes" loading="lazy"><span class="gallery-cap">Bigotes</span></div>
   </div>
 
 
@@ -67,62 +67,53 @@
 
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" aria-label="Cerrar" onclick="closeLightbox()">&times;</button>
+  <button class="lightbox-prev" aria-label="Anterior" onclick="lightboxNav(-1)">&#8592;</button>
+  <button class="lightbox-next" aria-label="Siguiente" onclick="lightboxNav(1)">&#8594;</button>
   <img src="" alt="" id="lightbox-img">
-  <button class="lightbox-flip" id="lightbox-flip" type="button">⟳ Ver otra cara</button>
 </div>
 <script>
-  var currentFlipItem = null;
+  var _lbImgs = [];
+  var _lbIdx  = 0;
 
-  function openLightbox(src, alt, item) {
-    var lb = document.getElementById('lightbox');
-    var img = document.getElementById('lightbox-img');
-    var flipBtn = document.getElementById('lightbox-flip');
-    img.src = src;
-    img.alt = alt || '';
-    if (item && item.classList.contains('gallery-flip')) {
-      currentFlipItem = item;
-      flipBtn.classList.add('visible');
-    } else {
-      currentFlipItem = null;
-      flipBtn.classList.remove('visible');
+  (function(){
+    var imgs = document.querySelectorAll('.gallery-item img');
+    for (var i = 0; i < imgs.length; i++) {
+      (function(el, idx){
+        el.onclick = function(){ _lbOpen(idx); };
+      })(imgs[i], _lbImgs.length);
+      _lbImgs.push(imgs[i]);
     }
-    lb.classList.add('active');
+  })();
+
+  function _lbOpen(idx) {
+    _lbIdx = idx;
+    _lbShow();
+    document.getElementById('lightbox').classList.add('active');
+  }
+  function _lbShow() {
+    var el  = _lbImgs[_lbIdx];
+    var img = document.getElementById('lightbox-img');
+    img.src = el.src;
+    img.alt = el.alt || '';
+    document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
+    document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
+  }
+  function lightboxNav(dir) {
+    var n = _lbIdx + dir;
+    if (n >= 0 && n < _lbImgs.length) { _lbIdx = n; _lbShow(); }
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
     document.getElementById('lightbox-img').src = '';
-    document.getElementById('lightbox-flip').classList.remove('visible');
-    currentFlipItem = null;
   }
-  function flipItem(e, btn) {
-    e.stopPropagation();
-    swapFace(btn.closest('.gallery-flip'));
-  }
-  function swapFace(item) {
-    var img = item.querySelector('img');
-    var showingFront = img.getAttribute('src') === item.dataset.front;
-    if (showingFront) {
-      img.setAttribute('src', item.dataset.back);
-      img.setAttribute('alt', item.dataset.backAlt);
-    } else {
-      img.setAttribute('src', item.dataset.front);
-      img.setAttribute('alt', item.dataset.frontAlt);
-    }
-    var lbImg = document.getElementById('lightbox-img');
-    if (currentFlipItem === item && document.getElementById('lightbox').classList.contains('active')) {
-      lbImg.src = img.src;
-      lbImg.alt = img.alt;
-    }
-  }
-  document.getElementById('lightbox-flip').addEventListener('click', function (e) {
-    e.stopPropagation();
-    if (currentFlipItem) swapFace(currentFlipItem);
-  });
-  document.getElementById('lightbox').addEventListener('click', function (e) {
+  document.getElementById('lightbox').addEventListener('click', function(e){
     if (e.target === this) closeLightbox();
   });
-  document.addEventListener('keydown', function (e) {
+  document.addEventListener('keydown', function(e){
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
     if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
   });
 </script>
 
