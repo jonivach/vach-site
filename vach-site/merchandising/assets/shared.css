@@ -519,6 +519,7 @@ footer {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
+  transition: opacity 0.15s ease;
 }
 .lightbox-footer {
   position: absolute;

@@ -138,8 +138,13 @@
   function _lbShow() {
     var el  = _lbImgs[_lbIdx];
     var img = document.getElementById('lightbox-img');
-    img.src = el.src;
-    img.alt = el.alt || '';
+    img.style.opacity = '0';
+    setTimeout(function(){
+      img.src = el.src;
+      img.alt = el.alt || '';
+      img.onload = function(){ img.style.opacity = '1'; };
+      if (img.complete) img.style.opacity = '1';
+    }, 150);
     var item = el.closest ? el.closest('.gallery-item') : null;
     var capEl = item ? item.querySelector('.gallery-cap') : null;
     var capText = '';
