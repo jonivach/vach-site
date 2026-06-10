@@ -204,6 +204,18 @@
     if (e.key === 'ArrowLeft')  lightboxNav(-1);
     if (e.key === 'ArrowRight') lightboxNav(1);
   });
+
+  // Swipe para navegar lightbox en mobile
+  var _lbTouchX = null;
+  document.getElementById('lightbox').addEventListener('touchstart', function(e){
+    _lbTouchX = e.touches[0].clientX;
+  }, { passive: true });
+  document.getElementById('lightbox').addEventListener('touchend', function(e){
+    if (_lbTouchX === null) return;
+    var dx = e.changedTouches[0].clientX - _lbTouchX;
+    _lbTouchX = null;
+    if (Math.abs(dx) > 50) lightboxNav(dx < 0 ? 1 : -1);
+  }, { passive: true });
 </script>
 
 </body>
