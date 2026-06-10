@@ -413,8 +413,9 @@ footer {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
   padding: 2.5rem 1.25rem 1rem;
   background: linear-gradient(0deg, rgba(0,0,0,0.78) 0%, transparent 100%);
   pointer-events: none;
@@ -426,17 +427,18 @@ footer {
   letter-spacing: 0.01em;
   line-height: 1.3;
 }
-.lightbox-footer-right {
+.lightbox-footer-bottom {
   display: flex;
+  width: 100%;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.6rem;
-  flex-shrink: 0;
 }
 .lightbox-logo {
   height: 16px;
   width: auto;
   opacity: 0.65;
   display: block;
+  flex-shrink: 0;
 }
 .lightbox-close {
   position: absolute;
@@ -488,19 +490,19 @@ footer {
 }
 .lightbox-flip {
   display: none;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.3);
   background: rgba(255,255,255,0.12);
   color: var(--white);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: background 0.2s, border-color 0.2s;
-  flex-shrink: 0;
   pointer-events: auto;
+  align-self: center;
 }
 .lightbox-flip:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
 .lightbox-flip.visible { display: flex; }
