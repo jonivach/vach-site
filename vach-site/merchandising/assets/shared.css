@@ -519,7 +519,13 @@ footer {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
-  transition: opacity 0.15s ease;
+}
+.lightbox-wrap img.lb-fade-in {
+  animation: lbImgFade 0.2s ease;
+}
+@keyframes lbImgFade {
+  from { opacity: 0.2; }
+  to   { opacity: 1; }
 }
 .lightbox-footer {
   position: absolute;
