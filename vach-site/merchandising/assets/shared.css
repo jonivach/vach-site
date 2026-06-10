@@ -87,9 +87,9 @@ html, body {
   font-size: 1rem;
   text-decoration: none;
   opacity: 0.35;
-  transition: opacity 0.2s, background 0.2s;
+  transition: opacity 0.2s, background 0.2s, transform 0.2s;
 }
-.cat-nav a:hover { opacity: 0.8; background: rgba(255,255,255,0.08); }
+.cat-nav a:hover { opacity: 0.8; background: rgba(255,255,255,0.08); transform: scale(1.25); }
 .cat-nav a.active { opacity: 1; background: rgba(255,255,255,0.1); }
 @media (max-width: 768px) { .cat-nav { display: none; } }
 
