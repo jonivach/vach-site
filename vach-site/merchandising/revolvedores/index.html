@@ -112,7 +112,12 @@
     _lbIdx = idx;
     _lbShow();
     document.getElementById('lightbox').classList.add('active');
+    var _sb = window.scrollY;
     document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.top = '-' + _sb + 'px';
+    document.body.style.width = '100%';
+    document.body._scrollY = _sb;
   }
   function _lbShow() {
     var el  = _lbImgs[_lbIdx];
@@ -131,7 +136,12 @@
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
+    var _sy = document.body._scrollY || 0;
     document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, _sy);
     document.getElementById('lightbox-img').src = '';
   }
   document.getElementById('lightbox').addEventListener('click', function(e){
