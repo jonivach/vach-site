@@ -56,6 +56,39 @@ html, body {
   padding: 6rem 2.5rem 4rem;
 }
 
+/* CATEGORY SIDEBAR NAV */
+.cat-nav {
+  position: fixed;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 0.6rem 0.4rem;
+}
+.cat-nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1rem;
+  text-decoration: none;
+  opacity: 0.35;
+  transition: opacity 0.2s, background 0.2s;
+}
+.cat-nav a:hover { opacity: 0.8; background: rgba(255,255,255,0.08); }
+.cat-nav a.active { opacity: 1; background: rgba(255,255,255,0.1); }
+@media (max-width: 768px) { .cat-nav { display: none; } }
+
 /* NAV */
 nav {
   position: fixed;
