@@ -84,6 +84,45 @@ html, body {
 .cat-nav a.active { opacity: 1; background: rgba(255,255,255,0.1); }
 @media (max-width: 768px) { .cat-nav { display: none; } }
 
+/* CATEGORY NAV — vertical sidebar left */
+.cat-nav-side {
+  position: fixed;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(10,10,10,0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 100px;
+  padding: 0.6rem 0.4rem;
+  width: auto;
+  right: auto;
+}
+.cat-nav-side a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1rem;
+  text-decoration: none;
+  opacity: 0.35;
+  transition: opacity 0.2s, background 0.2s, transform 0.2s;
+}
+.cat-nav-side a:hover { opacity: 0.8; background: rgba(255,255,255,0.08); transform: scale(1.45); }
+.cat-nav-side a:hover + a { transform: scale(0.85); }
+.cat-nav-side a:has(+ a:hover) { transform: scale(0.85); }
+.cat-nav-side a.active { opacity: 1; background: rgba(255,255,255,0.1); }
+@media (max-width: 768px) { .cat-nav-side { display: none; } }
+
 /* NAV */
 nav {
   position: fixed;
