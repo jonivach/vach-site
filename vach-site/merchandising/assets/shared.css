@@ -398,8 +398,6 @@ footer {
 .lightbox-wrap {
   position: relative;
   display: inline-block;
-  border-radius: 12px;
-  overflow: hidden;
   max-width: 90vw;
   max-height: 90vh;
   line-height: 0;
@@ -410,7 +408,6 @@ footer {
   max-width: 90vw;
   max-height: 90vh;
   object-fit: contain;
-  border-radius: 12px;
 }
 .lightbox-footer {
   position: absolute;
