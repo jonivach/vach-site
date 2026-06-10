@@ -132,6 +132,7 @@
     }
     _lbShow();
     document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
   }
   function _lbShow() {
     var el  = _lbImgs[_lbIdx];
@@ -161,6 +162,7 @@
   }
   function closeLightbox() {
     document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
     document.getElementById('lightbox-img').src = '';
     document.getElementById('lightbox-flip').classList.remove('visible');
     currentFlipItem = null;

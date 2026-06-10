@@ -511,7 +511,7 @@ footer {
   flex-shrink: 0;
 }
 .lightbox-close {
-  position: absolute;
+  position: fixed;
   top: 1.5rem;
   right: 1.5rem;
   width: 42px;
