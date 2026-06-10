@@ -226,6 +226,13 @@
     _lbTouchX = null;
     if (Math.abs(dx) > 50) lightboxNav(dx < 0 ? 1 : -1);
   }, { passive: true });
+
+  // Skeleton loader
+  document.querySelectorAll('.gallery-item img').forEach(function(img){
+    function markLoaded(){ img.classList.add('loaded'); img.closest('.gallery-item').classList.add('img-loaded'); }
+    if (img.complete && img.naturalWidth) { markLoaded(); }
+    else { img.addEventListener('load', markLoaded); img.addEventListener('error', markLoaded); }
+  });
 </script>
 
 </body>

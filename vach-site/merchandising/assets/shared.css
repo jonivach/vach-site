@@ -324,8 +324,26 @@ nav {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.3s ease;
   cursor: zoom-in;
+  opacity: 0;
+}
+.gallery-item img.loaded { opacity: 1; }
+.gallery-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shine 1.4s infinite;
+  z-index: 0;
+  border-radius: 14px;
+  transition: opacity 0.3s ease;
+}
+.gallery-item.img-loaded::before { opacity: 0; pointer-events: none; }
+@keyframes skeleton-shine {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 .gallery-item:hover img { transform: scale(1.06); }
 .gallery-item .gallery-cap {
