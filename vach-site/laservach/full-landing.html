@@ -740,8 +740,32 @@
   </script>
 <style id="cursor-style">
   /* ── CUSTOM CURSOR ── */
-  *, *::before, *::after { cursor: url('/cursor-circle.png') 8 8, auto !important; }
+  *, *::before, *::after { cursor: none !important; }
+  #vach-cursor {
+    position: fixed;
+    top: 0; left: 0;
+    width: 16px; height: 16px;
+    background: #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    transition: transform 0.08s ease, opacity 0.2s;
+  }
 </style>
+<script>
+(function(){
+  var el = document.createElement('div');
+  el.id = 'vach-cursor';
+  document.body.appendChild(el);
+  document.addEventListener('mousemove', function(e){
+    el.style.left = e.clientX + 'px';
+    el.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
+})();
+</script>
 </head>
 <body>
 
