@@ -656,6 +656,27 @@
     if (e.key === 'Escape') closeRedesModal();
   });
 
+  /* ── MAGNETIC EFFECT ── */
+  (function() {
+    if (window.matchMedia('(hover: none)').matches) return; // skip mobile
+    var els = document.querySelectorAll('.service-card, .logo');
+    els.forEach(function(el) {
+      el.addEventListener('mousemove', function(e) {
+        var r = el.getBoundingClientRect();
+        var cx = r.left + r.width / 2;
+        var cy = r.top + r.height / 2;
+        var dx = (e.clientX - cx) * 0.22;
+        var dy = (e.clientY - cy) * 0.22;
+        el.style.transition = 'transform 0.12s ease';
+        el.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+      });
+      el.addEventListener('mouseleave', function() {
+        el.style.transition = 'transform 0.55s cubic-bezier(0.23,1,0.32,1)';
+        el.style.transform = '';
+      });
+    });
+  })();
+
   setTimeout(function() {
     var el  = document.getElementById('counter-num');
     var cta = document.getElementById('counter-cta');
