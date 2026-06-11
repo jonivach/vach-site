@@ -104,19 +104,6 @@
     transition: transform 0.08s ease, opacity 0.2s;
   }
 </style>
-<script>
-(function(){
-  var el = document.createElement('div');
-  el.id = 'vach-cursor';
-  document.body.appendChild(el);
-  document.addEventListener('mousemove', function(e){
-    el.style.left = e.clientX + 'px';
-    el.style.top  = e.clientY + 'px';
-  });
-  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
-})();
-</script>
 </head>
 <body>
 
@@ -209,5 +196,17 @@
 
 </div>
 
+<div id="vach-cursor"></div>
+<script>
+(function(){
+  var el = document.getElementById('vach-cursor');
+  document.addEventListener('mousemove', function(e){
+    el.style.left = e.clientX + 'px';
+    el.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
+})();
+</script>
 </body>
 </html>
