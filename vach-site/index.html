@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VACH* | Productora Creativa</title>
+  <meta name="description" content="Transformamos tus ideas en experiencias únicas. Merchandising, grabado láser en vivo, sublimado en vivo y más." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #0A0A0A;
+      --teal:   #1CC4A0;
+      --purple: #7B4FFF;
+      --yellow: #F5C800;
+      --white:  #FFFFFF;
+      --gray:   #888;
+      --lgray:  #AAAAAA;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* gradient background */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.12) 0%, transparent 60%),
+                  radial-gradient(ellipse 60% 50% at 80% 80%, rgba(28,196,160,0.08) 0%, transparent 55%),
+                  #0A0A0A;
+      z-index: 0;
+    }
+
+    /* marquee */
+    .marquee-wrap {
+      overflow: hidden;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.8s forwards;
+    }
+    .marquee-track {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      will-change: transform;
+      cursor: grab;
+    }
+    .marquee-track.dragging { cursor: grabbing; }
+    .mq-brand {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      padding: 0 1.5rem;
+      white-space: nowrap;
+    }
+    .marquee-track span.dot {
+      color: rgba(255,255,255,0.1);
+      padding: 0;
+    }
+
+    /* subtle grid overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+    }
+
+    /* layout */
+    .layout {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem 2rem;
+    }
+
+    /* header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 24px;
+      width: auto;
+      display: block;
+    }
+    /* header counter */
+    .header-counter {
+      text-align: right;
+      line-height: 1.2;
+    }
+    .hc-num {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+    .hc-label {
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      display: block;
+    }
+    .hc-cta {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--yellow);
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .hc-cta.visible { opacity: 1; transform: none; }
+    .hc-cta a { color: var(--yellow); text-decoration: none; border-bottom: 1px solid rgba(245,200,0,0.35); padding-bottom: 1px; transition: border-color 0.2s; }
+    .hc-cta a:hover { border-color: var(--yellow); }
+
+    /* tagline */
+    .tagline {
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .tagline h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 700;
+      line-height: 0.95;
+      letter-spacing: -0.025em;
+      margin-bottom: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+    .tagline p {
+      font-size: 1rem;
+      color: var(--lgray);
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: none; }
+    }
+
+    /* services grid */
+    .services {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease 0.6s forwards;
+    }
+
+    .service-card {
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem 1.25rem;
+      text-decoration: none;
+      color: var(--white);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
+      transition: border-color 0.25s, background 0.25s, transform 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      min-height: 130px;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .service-card:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* per-card accent */
+    .card-merchandising { --accent: var(--yellow); border-color: rgba(245,200,0,0.28); }
+    .card-merchandising::before { background: radial-gradient(circle at 0% 100%, rgba(245,200,0,0.12) 0%, transparent 60%); }
+    .card-merchandising:hover, .card-merchandising:active { border-color: rgba(245,200,0,0.55); box-shadow: 0 0 30px rgba(245,200,0,0.08); }
+
+    .card-laser { --accent: var(--teal); border-color: rgba(28,196,160,0.28); }
+    .card-laser::before { background: radial-gradient(circle at 0% 100%, rgba(28,196,160,0.12) 0%, transparent 60%); }
+    .card-laser:hover, .card-laser:active { border-color: rgba(28,196,160,0.55); box-shadow: 0 0 30px rgba(28,196,160,0.08); }
+
+    .card-sublimado { --accent: var(--purple); border-color: rgba(123,79,255,0.25); }
+    .card-sublimado::before { background: radial-gradient(circle at 0% 100%, rgba(123,79,255,0.12) 0%, transparent 60%); }
+    .card-sublimado:hover, .card-sublimado:active { border-color: rgba(123,79,255,0.5); box-shadow: 0 0 30px rgba(123,79,255,0.08); }
+
+    .card-otros { --accent: #888; border-color: rgba(255,255,255,0.18); }
+    .card-otros:hover, .card-otros:active { border-color: rgba(255,255,255,0.35); }
+
+    .card-dimmed {
+      opacity: 0.35;
+      filter: blur(1.5px);
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .service-card:hover::before { opacity: 1; }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.4rem 0.5rem;
+    }
+    .card-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--lgray);
+      line-height: 1.5;
+      margin-top: 0.25rem;
+    }
+    .card-arrow {
+      margin-top: auto;
+      font-size: 1rem;
+      color: var(--accent, var(--lgray));
+      align-self: flex-end;
+      opacity: 0;
+      transform: translate(-4px, 4px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .service-card:hover .card-arrow {
+      opacity: 1;
+      transform: translate(0,0);
+    }
+
+    /* status badges (inline, aligned with card title) */
+    .card-badge {
+      flex-shrink: 0;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--accent, var(--purple));
+      padding: 0.25rem 0.6rem;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .card-badge.featured-badge { background: var(--yellow); }
+    .card-badge.ghost-badge {
+      color: var(--lgray);
+      background: rgba(255,255,255,0.07);
+      border: 1px solid var(--border);
+    }
+
+    /* modal redes */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-sheet {
+      background: #141414;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 2rem 1.75rem;
+      width: 100%;
+      max-width: 340px;
+      transform: scale(0.95);
+      transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      text-align: center;
+    }
+    .modal-overlay.active .modal-sheet {
+      transform: scale(1);
+    }
+    .modal-handle { display: none; }
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .modal-sub {
+      font-size: 0.8rem;
+      color: var(--lgray);
+      margin-bottom: 1.5rem;
+    }
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .modal-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.5rem;
+      border-radius: 100px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: box-shadow 0.2s, opacity 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .modal-btn-wa {
+      background: #25D366;
+      color: #000;
+    }
+    .modal-btn-wa:hover { box-shadow: 0 0 24px rgba(37,211,102,0.4); }
+    .modal-btn-ig {
+      background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      color: #fff;
+    }
+    .modal-btn-ig:hover { box-shadow: 0 0 24px rgba(220,39,67,0.35); }
+    .modal-cancel {
+      margin-top: 0.25rem;
+      font-size: 0.78rem;
+      color: var(--gray);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+    .modal-cancel:hover { color: var(--white); }
+
+    /* footer */
+    footer {
+      text-align: center;
+      font-size: 0.72rem;
+      color: var(--gray);
+    }
+
+    /* responsive */
+    @media (max-width: 768px) {
+      html, body { overflow: auto; }
+      .layout { height: auto; min-height: 100vh; gap: 2rem; padding: 1rem 1.5rem 1.5rem; }
+      .tagline h1 { font-size: 2.8rem; }
+      .services { grid-template-columns: 1fr; gap: 0.6rem; }
+      .service-card {
+        flex-direction: row;
+        align-items: center;
+        gap: 1rem;
+        min-height: 0;
+        padding: 0.85rem 1rem;
+        border-radius: 14px;
+      }
+      .card-top {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        flex-shrink: 0;
+        min-width: 110px;
+        flex-wrap: nowrap;
+      }
+      .card-name { font-size: 0.88rem; }
+      .card-desc {
+        flex: 1;
+        font-size: 0.72rem;
+        margin-top: 0;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .card-arrow { display: none; }
+      .service-card:hover .card-arrow { transform: translate(0, 0); }
+      .card-badge { font-size: 0.52rem; padding: 0.18rem 0.45rem; }
+      .hc-num { font-size: 0.9rem; }
+      .hc-label { font-size: 0.52rem; }
+      .hc-cta { font-size: 0.58rem; }
+    }
+  </style>
+  <!-- Microsoft Clarity -->
+  <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+      c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+      t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window,document,"clarity","script","x4zb3rb3a2");
+  </script>
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VACH*" />
+  <meta property="og:url" content="https://vach.com.ar/" />
+  <meta property="og:title" content="VACH* | Productora Creativa" />
+  <meta property="og:description" content="Transformamos tus ideas en experiencias únicas. Merchandising, grabado láser en vivo, sublimado en vivo y más." />
+  <meta property="og:image" content="https://vach.com.ar/og-image-v2.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VACH* | Productora Creativa" />
+  <meta name="twitter:description" content="Transformamos tus ideas en experiencias únicas. Merchandising, grabado láser en vivo, sublimado en vivo y más." />
+  <meta name="twitter:image" content="https://vach.com.ar/og-image-v2.png" />
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="grid-overlay"></div>
+
+<div class="layout">
+  <header>
+    <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
+    <div class="header-counter">
+      <span class="hc-num" id="counter-num">0</span>
+      <span class="hc-label">proyectos realizados</span>
+      <span class="hc-cta" id="counter-cta">Sé el #136. <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20ser%20el%20proyecto%20%23136" target="_blank">Hablemos →</a></span>
+    </div>
+  </header>
+
+  <div class="tagline">
+    <h1>Productora<br>Creativa.</h1>
+    <p>Transformamos ideas en experiencias únicas.</p>
+  </div>
+
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack"></div>
+  </div>
+
+  <nav class="services">
+    <a href="/merchandising" class="service-card card-merchandising">
+      <span class="card-top">
+        <span class="card-name">Merchandising</span>
+        <span class="card-badge featured-badge">Destacado</span>
+      </span>
+      <span class="card-desc">Productos personalizados para tu marca o evento. Impresión 3D · Acrílico · Metal · Madera · Cerámica · Silicona y más.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+
+    <a href="/laservach" class="service-card card-laser card-dimmed">
+      <span class="card-top">
+        <span class="card-name">LaserVach</span>
+        <span class="card-badge">Próximamente</span>
+      </span>
+      <span class="card-desc">Diseña tu producto y grábalo con láser en vivo. Una propuesta para eventos sociales, corporativos y activaciones de marca.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+
+    <a href="/vachlive" class="service-card card-sublimado card-dimmed">
+      <span class="card-top">
+        <span class="card-name">SubliVach</span>
+        <span class="card-badge">En desarrollo</span>
+      </span>
+      <span class="card-desc">Personalizá productos textiles en tiempo real durante tu evento, eligiendo qué poner, dónde ponerlo y cómo ponerlo.</span>
+      <span class="card-arrow"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    </a>
+
+    <button onclick="openRedesModal()" class="service-card card-otros" style="text-align:left;cursor:pointer;">
+      <span class="card-top">
+        <span class="card-name">Nuestras redes</span>
+        <span class="card-badge ghost-badge">Ver todo</span>
+      </span>
+      <span class="card-desc">Seguinos en Instagram para enterarte de todas las novedades, o escribinos por WhatsApp para empezar a trabajar juntos.</span>
+    </button>
+  </nav>
+
+  <footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
+</div>
+
+<div class="modal-overlay" id="redesModal" onclick="closeRedesModal(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nuestras redes</div>
+    <div class="modal-sub">¿Qué preferís?</div>
+    <div class="modal-actions">
+      <a href="https://wa.me/5491149477845?text=Hola%20VACH%2C%20quiero%20m%C3%A1s%20informaci%C3%B3n" target="_blank" class="modal-btn modal-btn-wa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+      <a href="https://www.instagram.com/vach.arg/" target="_blank" class="modal-btn modal-btn-ig">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+      <button class="modal-cancel" onclick="closeRedesModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  /* ── MARQUEE ── */
+  (function() {
+    var brands = [
+      { n: 'Coca-Cola',     url: '/merchandising/llaveros' },
+      { n: 'Samsung',       url: '/merchandising/llaveros' },
+      { n: 'Unilever',      url: '/merchandising/llaveros' },
+      { n: 'Adidas',        url: '/merchandising/pines' },
+      { n: 'Nike',          url: '/merchandising/llaveros' },
+      { n: 'Knorr',         url: '/merchandising/llaveros' },
+      { n: 'Dove',          url: '/merchandising/pines' },
+      { n: 'AXE',           url: '/merchandising/llaveros' },
+      { n: 'Rexona',        url: '/merchandising/llaveros' },
+      { n: 'Lysoform',      url: '/merchandising/llaveros' },
+      { n: 'Comfort',       url: '/merchandising/llaveros' },
+      { n: 'Bresh',         url: '/merchandising/llaveros' },
+      { n: 'Aperol',        url: '/merchandising/charms' },
+      { n: 'Absolut',       url: '/merchandising/pines' },
+      { n: 'Hendrick\'s',   url: '/merchandising/pines' },
+      { n: 'Peugeot',       url: '/merchandising/pines' },
+      { n: 'Citroën',       url: '/merchandising/pines' },
+      { n: 'BBVA',          url: '/merchandising/pines' },
+      { n: 'SodaStream',    url: '/merchandising/pines' },
+      { n: 'Colgate',       url: '/merchandising/pines' },
+      { n: 'Hellmann\'s',   url: '/merchandising/llaveros' },
+      { n: 'Sprite',        url: '/merchandising/llaveros' },
+      { n: 'Sedal',         url: '/merchandising/llaveros' },
+      { n: 'Nivea',         url: '/merchandising/llaveros' },
+      { n: 'Personal',      url: '/merchandising/llaveros' },
+      { n: 'F5',            url: '/merchandising/llaveros' },
+      { n: 'Sneaker House', url: '/merchandising/llaveros' },
+      { n: 'Lipovich',      url: '/merchandising/llaveros' },
+      { n: 'Olami',         url: '/merchandising/llaveros' },
+      { n: 'Bull',          url: '/merchandising/llaveros' },
+      { n: 'Opella',        url: '/merchandising/pines' },
+      { n: 'Belo',          url: '/merchandising/pines' },
+      { n: 'Shomrim',       url: '/merchandising/pines' },
+      { n: 'SexyFish',      url: '/merchandising/pines' },
+      { n: 'Media Lab',     url: '/merchandising/centros-de-mesa' },
+    ];
+    var track = document.getElementById('marqueeTrack');
+    var html = '';
+    for (var r = 0; r < 2; r++) {
+      brands.forEach(function(b) {
+        html += '<span class="mq-brand">' + b.n + '</span><span class="dot">·</span>';
+      });
+    }
+    track.innerHTML = html;
+
+    var pos = 0;
+    var speed = 1.1; // px per frame
+    var half = 0;
+    var dragging = false;
+    var dragStartX = 0;
+    var dragStartPos = 0;
+    var velocity = 0;
+    var lastX = 0;
+    var dragDist = 0;
+
+    function wrap(p) {
+      if (half <= 0) return p;
+      p = p % half;
+      if (p > 0) p -= half;
+      return p;
+    }
+
+    function tick() {
+      if (!dragging) {
+        pos -= speed;
+        half = track.scrollWidth / 2;
+        pos = wrap(pos);
+      }
+      track.style.transform = 'translateX(' + pos + 'px)';
+      requestAnimationFrame(tick);
+    }
+
+    // wait for fonts/layout
+    setTimeout(function() {
+      half = track.scrollWidth / 2;
+      requestAnimationFrame(tick);
+    }, 100);
+
+    function onDragStart(x) {
+      dragging = true;
+      dragStartX = x;
+      dragStartPos = pos;
+      lastX = x;
+      velocity = 0;
+      dragDist = 0;
+      track.classList.add('dragging');
+    }
+    function onDragMove(x) {
+      if (!dragging) return;
+      velocity = x - lastX;
+      dragDist += Math.abs(velocity);
+      lastX = x;
+      pos = wrap(dragStartPos + (x - dragStartX));
+    }
+    function onDragEnd() {
+      if (!dragging) return;
+      dragging = false;
+      track.classList.remove('dragging');
+      // hand off momentum to speed
+      speed = Math.max(0.4, Math.min(3, -velocity * 0.6)) || 1.1;
+      // ease speed back to default
+      (function decay() {
+        if (Math.abs(speed - 1.1) > 0.05) {
+          speed += (1.1 - speed) * 0.05;
+          requestAnimationFrame(decay);
+        } else { speed = 1.1; }
+      })();
+    }
+
+    var wrap2 = track.parentElement;
+    // mouse
+    wrap2.addEventListener('mousedown', function(e) { onDragStart(e.clientX); });
+    document.addEventListener('mousemove', function(e) { onDragMove(e.clientX); });
+    document.addEventListener('mouseup', onDragEnd);
+    // touch
+    wrap2.addEventListener('touchstart', function(e) { onDragStart(e.touches[0].clientX); }, { passive: true });
+    wrap2.addEventListener('touchmove', function(e) { e.preventDefault(); onDragMove(e.touches[0].clientX); }, { passive: false });
+    wrap2.addEventListener('touchend', onDragEnd);
+  })();
+
+  function openRedesModal() {
+    document.getElementById('redesModal').classList.add('active');
+  }
+  function closeRedesModal(e) {
+    if (!e || e.target === document.getElementById('redesModal')) {
+      document.getElementById('redesModal').classList.remove('active');
+    }
+  }
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeRedesModal();
+  });
+
+  setTimeout(function() {
+    var el  = document.getElementById('counter-num');
+    var cta = document.getElementById('counter-cta');
+    var target = 135, duration = 1500, start = null;
+    function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    function step(ts) {
+      if (!start) start = ts;
+      var p = Math.min((ts - start) / duration, 1);
+      el.textContent = Math.floor(ease(p) * target);
+      if (p < 1) { requestAnimationFrame(step); }
+      else {
+        el.textContent = target;
+        setTimeout(function() { cta.classList.add('visible'); }, 350);
+      }
+    }
+    requestAnimationFrame(step);
+  }, 900);
+</script>
+</body>
+</html>
