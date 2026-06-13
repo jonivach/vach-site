@@ -209,6 +209,7 @@
 <div id="vach-cursor"></div>
 <script>
 (function(){
+  if (window.matchMedia('(hover: none)').matches) return;
   var el = document.getElementById('vach-cursor');
   document.addEventListener('mousemove', function(e){
     el.style.left = e.clientX + 'px';
