@@ -78,6 +78,50 @@
     @media (max-width: 480px) {
       .product-card.featured { grid-column: span 1; }
     }
+  
+    /* ── STATS SECTION ── */
+    .stats-section {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 4rem;
+    }
+    @media (max-width: 640px) {
+      .stats-section { grid-template-columns: 1fr; }
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+    .stat-card--highlight {
+      border-color: rgba(245,200,0,0.3);
+      background: rgba(245,200,0,0.05);
+    }
+    .stat-label {
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 0.75rem;
+    }
+    .stat-card--highlight .stat-label { color: #F5C800; }
+    .stat-num {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card--highlight .stat-num { color: #F5C800; }
+    .stat-desc {
+      font-size: 0.78rem;
+      color: #888;
+      line-height: 1.4;
+    }
+
   </style>
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
@@ -135,6 +179,24 @@
     <div class="hero-label"><span class="dot"></span>Merchandising</div>
     <h1>Hecho a<br>tu <em>medida.</em></h1>
     <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+  </div>
+
+  <div class="stats-section">
+    <div class="stat-card">
+      <div class="stat-label">AGENCIAS ÚNICAS · 2025+2026</div>
+      <div class="stat-num">65</div>
+      <div class="stat-desc">Agencias distintas que trabajaron en ambos años</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">MARCAS ÚNICAS · 2025+2026</div>
+      <div class="stat-num">109</div>
+      <div class="stat-desc">Marcas/clientes finales distintos atendidos</div>
+    </div>
+    <div class="stat-card stat-card--highlight">
+      <div class="stat-label">PROYECTOS TOTALES · 2025+2026</div>
+      <div class="stat-num">202</div>
+      <div class="stat-desc">Proyectos realizados</div>
+    </div>
   </div>
 
   <div class="section-title">Lo que podemos crear</div>
