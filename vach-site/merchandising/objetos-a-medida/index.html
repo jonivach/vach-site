@@ -352,7 +352,9 @@
 (function(){
   if (window.matchMedia('(hover: none)').matches) return;
   var el = document.getElementById('vach-cursor');
+  el.style.display = 'none';
   document.addEventListener('mousemove', function(e){
+    el.style.display = 'block';
     el.style.left = e.clientX + 'px';
     el.style.top  = e.clientY + 'px';
   });
