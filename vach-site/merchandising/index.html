@@ -81,13 +81,40 @@
   
 
   
-    .stats-line {
-      font-size: 0.85rem;
-      color: #888;
-      margin-bottom: 3rem;
-      margin-top: -2rem;
+    .hero-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      gap: 2rem;
     }
-    .stats-line strong { color: #fff; font-weight: 600; }
+    .hero-wrap .hero {
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      text-align: right;
+      flex-shrink: 0;
+      padding-bottom: 0.5rem;
+    }
+    .hero-stat-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .hero-stat-label {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 0.1rem;
+    }
+    @media (max-width: 640px) {
+      .hero-wrap { flex-direction: column; }
+      .hero-stats { text-align: left; flex-direction: row; gap: 1.5rem; }
+    }
 
   </style>
   <!-- Microsoft Clarity -->
@@ -142,13 +169,27 @@
     <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
   </nav>
 
-  <div class="hero">
-    <div class="hero-label"><span class="dot"></span>Merchandising</div>
-    <h1>Hecho a<br>tu <em>medida.</em></h1>
-    <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+  <div class="hero-wrap">
+    <div class="hero">
+      <div class="hero-label"><span class="dot"></span>Merchandising</div>
+      <h1>Hecho a<br>tu <em>medida.</em></h1>
+      <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">65</div>
+        <div class="hero-stat-label">agencias</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">109</div>
+        <div class="hero-stat-label">marcas</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">202</div>
+        <div class="hero-stat-label">proyectos</div>
+      </div>
+    </div>
   </div>
-
-  <p class="stats-line"><strong>65</strong> agencias · <strong>109</strong> marcas · <strong>202</strong> proyectos</p>
 
   <div class="section-title">Lo que podemos crear</div>
   <div class="products">
