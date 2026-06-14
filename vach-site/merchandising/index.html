@@ -90,6 +90,38 @@
 
 
 
+  
+    .hero-outer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4rem;
+      gap: 2rem;
+    }
+    .hero-outer .hero { margin-bottom: 0; flex: 1; }
+    .hero-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .hero-stat-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .hero-stat-label {
+      font-size: 0.7rem;
+      color: #888;
+      margin-top: 0.1rem;
+    }
+    @media (max-width: 640px) {
+      .hero-outer { flex-direction: column; }
+      .hero-stats { text-align: left; flex-direction: row; gap: 1.5rem; }
+    }
+
   </style>
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
@@ -144,9 +176,25 @@
   </nav>
 
   <div class="hero-label"><span class="dot"></span>Merchandising</div>
-  <div class="hero">
-    <h1>Hecho a<br>tu <em>medida.</em></h1>
-    <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+  <div class="hero-outer">
+    <div class="hero">
+      <h1>Hecho a<br>tu <em>medida.</em></h1>
+      <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">65</div>
+        <div class="hero-stat-label">agencias</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">109</div>
+        <div class="hero-stat-label">marcas</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">202</div>
+        <div class="hero-stat-label">proyectos</div>
+      </div>
+    </div>
   </div>
 
   <div class="section-title">Lo que podemos crear</div>
