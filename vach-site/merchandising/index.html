@@ -88,7 +88,20 @@
       margin-bottom: 4rem;
       gap: 2rem;
     }
-    .hero-wrap h1 { flex: 1; margin-bottom: 0; }
+
+    .hero-wrap h1 {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 0.92;
+      letter-spacing: -0.03em;
+      margin: 0;
+      flex: 1;
+    }
+    .hero-wrap h1 em {
+      font-style: normal;
+      color: var(--yellow, #F5C800);
+    }
+
     .hero-p { font-size: 1.1rem; color: var(--lgray, #AAAAAA); max-width: 560px; line-height: 1.65; margin-bottom: 4rem; }
     .hero-stats {
       display: flex;
