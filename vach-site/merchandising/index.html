@@ -91,18 +91,33 @@
 
 
   
+    .hero-outer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4rem;
+      gap: 2rem;
+    }
+    .hero-outer .hero { margin-bottom: 0; flex: 1; }
     .hero-stats {
       display: flex;
-      flex-direction: row;
-      gap: 0.5rem;
-      align-items: baseline;
-      margin-top: 1.2rem;
+      flex-direction: column;
+      gap: 1.2rem;
+      text-align: right;
+      flex-shrink: 0;
+      margin-top: -90px;
       font-size: 0.8rem;
       color: #888;
     }
-    .hero-stat-item { display: flex; gap: 0.25rem; align-items: baseline; }
+    .hero-stat-item { display: flex; gap: 0.25rem; align-items: baseline; justify-content: flex-end; }
     .hero-stat-num { font-size: 1rem; font-weight: 700; color: #fff; }
-    .hero-stat-sep { color: #555; }
+    .hero-stat-sep { display: none; }
+    @media (max-width: 768px) {
+      .hero-outer { flex-direction: column; }
+      .hero-stats { flex-direction: row; text-align: left; gap: 0.5rem; margin-top: 1rem; align-items: baseline; }
+      .hero-stat-item { justify-content: flex-start; }
+      .hero-stat-sep { display: inline; color: #555; }
+    }
 
   
     .hero p { max-width: 780px; }
@@ -161,9 +176,11 @@
   </nav>
 
   <div class="hero-label"><span class="dot"></span>Merchandising</div>
-  <div class="hero">
-    <h1>Hecho a<br>tu <em>medida.</em></h1>
-    <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+  <div class="hero-outer">
+    <div class="hero">
+      <h1>Hecho a<br>tu <em>medida.</em></h1>
+      <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
+    </div>
     <div class="hero-stats">
       <span class="hero-stat-item"><span class="hero-stat-num">65</span> agencias</span>
       <span class="hero-stat-sep">·</span>
