@@ -215,7 +215,7 @@ nav {
   color: var(--yellow);
 }
 .hero p {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: var(--lgray);
   max-width: 560px;
   line-height: 1.65;
