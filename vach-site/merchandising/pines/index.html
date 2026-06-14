@@ -233,6 +233,19 @@
     document.body.style.touchAction = '';
     document.getElementById('lightbox-img').src = '';
   }
+  function flipItem(e, btn) {
+    e.stopPropagation();
+    var item = btn.closest('.gallery-flip');
+    var img = item.querySelector('img');
+    var showingFront = img.getAttribute('src') === item.dataset.front;
+    if (showingFront) {
+      img.setAttribute('src', item.dataset.back);
+      img.setAttribute('alt', item.dataset.backAlt);
+    } else {
+      img.setAttribute('src', item.dataset.front);
+      img.setAttribute('alt', item.dataset.frontAlt);
+    }
+  }
   document.getElementById('lightbox').addEventListener('click', function(e){
     if (e.target === this) closeLightbox();
   });
