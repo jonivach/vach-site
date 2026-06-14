@@ -109,13 +109,16 @@
       font-size: 0.8rem;
       color: #888;
     }
-    .hero-stat-item { display: flex; gap: 0.25rem; align-items: baseline; justify-content: flex-end; }
-    .hero-stat-num { font-size: 1rem; font-weight: 700; color: #fff; }
+    .hero-stat-item { display: flex; flex-direction: column; align-items: flex-end; }
+    .hero-stat-num { font-size: 1.6rem; font-weight: 700; color: #fff; line-height: 1; letter-spacing: -0.02em; }
+    .hero-stat-label-text { font-size: 0.7rem; color: #888; margin-top: 0.1rem; }
     .hero-stat-sep { display: none; }
     @media (max-width: 768px) {
       .hero-outer { flex-direction: column; }
       .hero-stats { flex-direction: row; text-align: left; gap: 0.5rem; margin-top: 1rem; align-items: baseline; }
-      .hero-stat-item { justify-content: flex-start; }
+      .hero-stat-item { flex-direction: row; gap: 0.25rem; align-items: baseline; }
+      .hero-stat-num { font-size: 1rem; }
+      .hero-stat-label-text { font-size: 0.8rem; margin-top: 0; }
       .hero-stat-sep { display: inline; color: #555; }
     }
 
@@ -182,11 +185,20 @@
       <p>Productos personalizados en el material que te imagines para tu marca o evento. Realizaciones, regalos corporativos, press kit, merch y mucho más.</p>
     </div>
     <div class="hero-stats">
-      <span class="hero-stat-item"><span class="hero-stat-num">65</span> agencias</span>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">65</span>
+        <span class="hero-stat-label-text">agencias</span>
+      </div>
       <span class="hero-stat-sep">·</span>
-      <span class="hero-stat-item"><span class="hero-stat-num">109</span> marcas</span>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">109</span>
+        <span class="hero-stat-label-text">marcas</span>
+      </div>
       <span class="hero-stat-sep">·</span>
-      <span class="hero-stat-item"><span class="hero-stat-num">202</span> proyectos</span>
+      <div class="hero-stat-item">
+        <span class="hero-stat-num">202</span>
+        <span class="hero-stat-label-text">proyectos</span>
+      </div>
     </div>
   </div>
 
