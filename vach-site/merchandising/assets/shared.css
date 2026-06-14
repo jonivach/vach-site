@@ -121,6 +121,42 @@ html, body {
 .cat-nav-side a:hover + a { transform: scale(0.85); }
 .cat-nav-side a:has(+ a:hover) { transform: scale(0.85); }
 .cat-nav-side a.active { opacity: 1; background: rgba(255,255,255,0.1); }
+
+/* CAT-NAV-SIDE TOOLTIP */
+.cat-nav-side a {
+  position: relative;
+}
+.cat-nav-side a::after {
+  content: attr(title);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(10,10,10,0.9);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.cat-nav-side a:hover::after {
+  opacity: 1;
+}
+@media (max-width: 768px) {
+  .cat-nav-side a::after {
+    left: 50%;
+    top: auto;
+    bottom: calc(100% + 8px);
+    transform: translateX(-50%);
+  }
+}
+
 @media (max-width: 768px) {
   .cat-nav-side {
     top: auto;
