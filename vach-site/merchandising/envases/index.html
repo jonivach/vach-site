@@ -196,14 +196,17 @@
   });
 
   // Swipe para navegar lightbox en mobile
-  var _lbTouchX = null;
+  var _lbTouchX = null, _lbTouchY = null;
   document.getElementById('lightbox').addEventListener('touchstart', function(e){
     _lbTouchX = e.touches[0].clientX;
+    _lbTouchY = e.touches[0].clientY;
   }, { passive: true });
   document.getElementById('lightbox').addEventListener('touchend', function(e){
     if (_lbTouchX === null) return;
     var dx = e.changedTouches[0].clientX - _lbTouchX;
-    _lbTouchX = null;
+    var dy = e.changedTouches[0].clientY - _lbTouchY;
+    _lbTouchX = null; _lbTouchY = null;
+    if (Math.abs(dy) > Math.abs(dx) && dy > 80) { closeLightbox(); return; }
     if (Math.abs(dx) > 50) lightboxNav(dx < 0 ? 1 : -1);
   }, { passive: true });
 
