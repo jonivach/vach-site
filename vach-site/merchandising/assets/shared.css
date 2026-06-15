@@ -674,8 +674,7 @@ footer {
 /* VOLVER ARRIBA */
 #back-to-top {
   position: fixed;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 2rem;
   right: 1.5rem;
   width: 40px;
   height: 40px;
