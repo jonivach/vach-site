@@ -8,6 +8,7 @@ const PRECACHE = [
   '/manifest.json',
   '/merchandising/',
   '/merchandising/assets/shared.css',
+  '/merchandising/assets/watermark.png',
   '/icons/icon-192.png',
   '/icons/icon-512.png',
   '/offline.html'
