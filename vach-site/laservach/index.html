@@ -10,7 +10,7 @@
   gtag('config', 'G-LRYPFDGZPC');
 </script>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#0A0A0A" />
   <link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
@@ -71,7 +71,7 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      padding: 1.25rem 2.5rem;
+      padding: calc(1.25rem + env(safe-area-inset-top)) 2.5rem 1.25rem;
       background: rgba(10,10,10,0.82);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
