@@ -1,0 +1,16 @@
+{
+  "appId": "com.vach.app",
+  "appName": "VACH*",
+  "webDir": "../vach-site",
+  "backgroundColor": "#0A0A0A",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#0A0A0A"
+  },
+  "ios": {
+    "backgroundColor": "#0A0A0A",
+    "contentInset": "automatic"
+  }
+}
