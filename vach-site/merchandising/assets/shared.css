@@ -589,7 +589,7 @@ footer {
 }
 .lightbox-close {
   position: fixed;
-  top: 1.5rem;
+  top: calc(1.5rem + env(safe-area-inset-top));
   right: 1.5rem;
   z-index: 1001;
   width: 42px;
