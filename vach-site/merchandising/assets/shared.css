@@ -564,15 +564,7 @@ footer {
   to   { opacity: 1; }
 }
 .lightbox-wrap img.lightbox-watermark {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  max-height: none;
-  object-fit: cover;
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 .lightbox-footer {
   position: absolute;
