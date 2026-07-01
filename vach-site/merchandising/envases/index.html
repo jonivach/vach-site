@@ -140,11 +140,6 @@
 <script>
   var _lbImgs = [];
   var _lbIdx  = 0;
-    var wmImg = new Image();
-    wmImg.onload = function(){ _lbWatermarkImg = wmImg; cb(wmImg); };
-    wmImg.onerror = function(){};
-    wmImg.src = '/merchandising/assets/watermark.png';
-  }
   function _lbSetImage(imgEl, src, alt) {
     imgEl.src = src;
     imgEl.alt = alt;
