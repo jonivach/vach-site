@@ -2,7 +2,7 @@
 // Cachea el shell del sitio para que la PWA instale rápido y funcione offline
 // para las páginas ya visitadas.
 
-const VERSION = 'vach-v1';
+const VERSION = 'vach-v2';
 const PRECACHE = [
   '/',
   '/manifest.json',
