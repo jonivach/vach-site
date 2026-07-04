@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /offline.html
+Disallow: /laservach/full-landing.html
+
+Sitemap: https://vach.com.ar/sitemap.xml
