@@ -54,6 +54,31 @@
       opacity: 0.35;
     }
 
+    /* ambient gradient — same as main site */
+    .bg-ambient {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.10) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(28,196,160,0.07) 0%, transparent 55%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* nav logo centered */
+    .nav-logo-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+    }
+    .nav-logo-center img {
+      height: 20px;
+      width: auto;
+      display: block;
+    }
+
     /* ═══════════════════════════════════════
        NAV
     ═══════════════════════════════════════ */
@@ -398,7 +423,7 @@
     /* ═══════════════════════════════════════
        EL SERVICIO
     ═══════════════════════════════════════ */
-    #servicio { background: var(--dark); border-top: 1px solid var(--border); }
+    #servicio { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
 
     .servicio-grid {
       display: grid;
@@ -411,7 +436,8 @@
     .feature-list { display: flex; flex-direction: column; gap: 1.25rem; }
 
     .feature-card {
-      background: var(--dark2);
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: 16px;
       padding: 1.5rem;
@@ -469,7 +495,8 @@
 
     /* steps panel */
     .steps-panel {
-      background: #0C0C1E;
+      background: rgba(123,79,255,0.06);
+      backdrop-filter: blur(8px);
       border: 1px solid rgba(123,79,255,0.2);
       border-radius: 20px;
       padding: 2.25rem;
@@ -542,7 +569,7 @@
     /* ═══════════════════════════════════════
        PAQUETES
     ═══════════════════════════════════════ */
-    #paquetes { background: var(--dark); border-top: 1px solid var(--border); }
+    #paquetes { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
 
     .paquetes-grid {
       display: grid;
@@ -596,7 +623,7 @@
     /* ═══════════════════════════════════════
        CONTACTO
     ═══════════════════════════════════════ */
-    #contacto { border-top: 1px solid var(--border); background: var(--dark2); }
+    #contacto { border-top: 1px solid var(--border); background: transparent; }
 
     .contact-grid {
       display: grid;
@@ -746,27 +773,11 @@
       y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window,document,"clarity","script","x4zb3rb3a2");
   </script>
-<style id="cursor-style">
-  /* ── CUSTOM CURSOR ── */
-  *, *::before, *::after { cursor: none !important; }
-  #vach-cursor {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 16px; height: 16px;
-    background: transparent;
-    background: rgba(0,0,0,0.35);
-    box-shadow: 0 0 0 1.5px #fff;
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: 99999;
-    transition: transform 0.08s ease, opacity 0.2s;
-  }
-</style>
 </head>
 <body>
 
+<!-- ambient gradient -->
+<div class="bg-ambient"></div>
 <!-- animated grid canvas -->
 <canvas id="grid-canvas"></canvas>
 
@@ -777,6 +788,9 @@
       <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Volver
     </a>
+  </div>
+  <div class="nav-logo-center">
+    <a href="/"><img src="/logo.png" alt="VACH*"></a>
   </div>
   <ul class="nav-links">
     <li><a href="#servicio">El servicio</a></li>
@@ -1338,19 +1352,5 @@ hero.addEventListener('mouseleave', function() {
 });
 </script>
 
-<div id="vach-cursor"></div>
-<script>
-(function(){
-  if (window.matchMedia('(hover: none)').matches) return;
-  var el = document.getElementById('vach-cursor');
-  document.addEventListener('mousemove', function(e){
-    el.style.display = 'block';
-    el.style.left = e.clientX + 'px';
-    el.style.top  = e.clientY + 'px';
-  });
-  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
-})();
-</script>
 </body>
 </html>
