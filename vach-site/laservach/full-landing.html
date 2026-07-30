@@ -43,25 +43,25 @@
       overflow-x: hidden;
     }
 
-    /* ═══════════════════════════════════════
-       ANIMATED GRID CANVAS
-    ═══════════════════════════════════════ */
-    #grid-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.35;
-    }
-
-    /* ambient gradient — same as main site */
-    .bg-ambient {
+    /* fixed background — igual que el home */
+    .bg {
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.10) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(28,196,160,0.07) 0%, transparent 55%);
+        radial-gradient(ellipse 80% 60% at 20% 20%, rgba(123,79,255,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(28,196,160,0.08) 0%, transparent 55%),
+        #0A0A0A;
       z-index: 0;
+    }
+    /* static grid overlay — igual que el home */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
       pointer-events: none;
     }
 
@@ -82,11 +82,6 @@
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
     }
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 1.25rem;
-    }
     .back {
       display: flex;
       align-items: center;
@@ -98,51 +93,6 @@
       transition: color 0.2s;
     }
     .back:hover { color: var(--white); }
-    .nav-logo {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--white);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .nav-logo .logo-dot {
-      display: inline-block;
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--teal);
-      box-shadow: 0 0 8px var(--teal);
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { box-shadow: 0 0 6px var(--teal); }
-      50%      { box-shadow: 0 0 14px var(--teal), 0 0 28px rgba(28,196,160,0.4); }
-    }
-    .nav-links {
-      display: flex; gap: 2rem; list-style: none;
-    }
-    .nav-links a {
-      font-size: 0.82rem; font-weight: 500;
-      color: var(--lgray); text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--white); }
-    .nav-cta {
-      font-size: 0.82rem; font-weight: 700;
-      padding: 0.5rem 1.25rem;
-      border-radius: 100px;
-      background: var(--teal);
-      color: var(--black);
-      text-decoration: none;
-      transition: box-shadow 0.2s, opacity 0.2s;
-    }
-    .nav-cta:hover {
-      box-shadow: 0 0 20px rgba(28,196,160,0.5);
-      opacity: 0.9;
-    }
 
     /* ═══════════════════════════════════════
        HERO
@@ -155,32 +105,7 @@
       justify-content: center;
       padding: 100px 2rem 5rem;
       overflow: hidden;
-      z-index: 1;
-    }
-
-    /* rotating gradient bg */
-    .hero-glow {
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      filter: blur(80px);
-      opacity: 0.15;
-      animation: float-glow 8s ease-in-out infinite;
-    }
-    .hero-glow-1 {
-      width: 600px; height: 600px;
-      background: var(--purple);
-      top: -100px; right: -100px;
-    }
-    .hero-glow-2 {
-      width: 400px; height: 400px;
-      background: var(--teal);
-      bottom: 0; right: 30%;
-      animation-delay: -3s;
-    }
-    @keyframes float-glow {
-      0%,100% { transform: translate(0,0) scale(1); }
-      50%      { transform: translate(20px,-30px) scale(1.08); }
+      z-index: 2;
     }
 
     .hero-inner {
@@ -387,7 +312,7 @@
     /* ═══════════════════════════════════════
        SECTION COMMONS
     ═══════════════════════════════════════ */
-    section { position: relative; z-index: 1; }
+    section { position: relative; z-index: 2; }
 
     .section-pad { padding: 6rem 2rem; }
     .section-inner { max-width: 1100px; margin: 0 auto; }
@@ -763,33 +688,20 @@
 </head>
 <body>
 
-<!-- ambient gradient -->
-<div class="bg-ambient"></div>
-<!-- animated grid canvas -->
-<canvas id="grid-canvas"></canvas>
+<div class="bg"></div>
+<div class="grid-overlay"></div>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-left">
-    <a href="/" class="back">
-      <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Volver
-    </a>
-    <span style="width:1px;height:16px;background:rgba(255,255,255,0.12);display:inline-block;"></span>
-    <a href="/"><img src="/logo.png" alt="VACH*" style="height:18px;width:auto;display:block;opacity:0.9;"></a>
-  </div>
-  <ul class="nav-links">
-    <li><a href="#servicio">El servicio</a></li>
-    <li><a href="#paquetes">Paquetes</a></li>
-    <li><a href="#contacto">Contacto</a></li>
-  </ul>
-  <a href="#contacto" class="nav-cta">Hablemos ↗</a>
+  <a href="/" class="back">
+    <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Volver
+  </a>
+  <a href="/"><img src="/logo.png" alt="VACH*" style="height:22px;width:auto;display:block;"></a>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
-  <div class="hero-glow hero-glow-1"></div>
-  <div class="hero-glow hero-glow-2"></div>
 
   <div class="hero-inner">
     <span class="hero-tag">Grabado láser en vivo · Argentina</span>
@@ -1219,56 +1131,6 @@
 </footer>
 
 <script>
-// ── ANIMATED GRID CANVAS ──────────────────────────────────
-(function() {
-  const canvas = document.getElementById('grid-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H, cols, rows, cells;
-  const CELL = 80;
-
-  function resize() {
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-    cols = Math.ceil(W / CELL) + 1;
-    rows = Math.ceil(H / CELL) + 1;
-    cells = [];
-    for (let r = 0; r < rows; r++) {
-      for (let c = 0; c < cols; c++) {
-        if (Math.random() < 0.04) {
-          cells.push({ r, c, alpha: Math.random(), speed: 0.005 + Math.random() * 0.01 });
-        }
-      }
-    }
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    // grid lines
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x <= W; x += CELL) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 0; y <= H; y += CELL) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
-    // glowing cells
-    cells.forEach(cell => {
-      cell.alpha += cell.speed;
-      if (cell.alpha > 1 || cell.alpha < 0) cell.speed *= -1;
-      const x = cell.c * CELL;
-      const y = cell.r * CELL;
-      ctx.fillStyle = `rgba(28,196,160,${cell.alpha * 0.12})`;
-      ctx.fillRect(x, y, CELL, CELL);
-    });
-    requestAnimationFrame(draw);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  draw();
-})();
-
 // ── SPARK PARTICLES ───────────────────────────────────────
 document.addEventListener('click', function(e) {
   const colors = ['#1CC4A0','#7B4FFF','#F5C800','#FFFFFF'];
