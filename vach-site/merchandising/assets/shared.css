@@ -16,12 +16,21 @@
 }
 
 :root {
+  /* ── Colores ── */
   --black:  #0A0A0A;
+  --teal:   #1CC4A0;
+  --purple: #7B4FFF;
   --yellow: #F5C800;
   --white:  #FFFFFF;
-  --gray:   #888;
+  --gray:   #888888;
   --lgray:  #AAAAAA;
   --border: rgba(255,255,255,0.08);
+
+  /* ── Radio ── */
+  --r-sm:   10px;
+  --r-md:   16px;
+  --r-lg:   20px;
+  --r-pill: 100px;
 }
 
 html, body {
@@ -100,7 +109,7 @@ html, body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 100px;
+  border-radius: var(--r-pill);
   padding: 0.6rem 0.4rem;
   width: auto;
   right: auto;
@@ -165,7 +174,7 @@ html, body {
     transform: translateX(-50%);
     flex-direction: row;
     padding: 0.4rem 0.6rem;
-    border-radius: 100px;
+    border-radius: var(--r-pill);
   }
 }
 
@@ -244,7 +253,7 @@ nav {
   text-transform: uppercase;
   color: var(--lgray);
   border: 1px solid var(--border);
-  border-radius: 100px;
+  border-radius: var(--r-pill);
   padding: 0.35rem 1rem;
   background: rgba(255,255,255,0.03);
 }
@@ -278,7 +287,7 @@ nav {
 }
 .product-card {
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--r-md);
   padding: 1.5rem;
   background: rgba(255,255,255,0.03);
   transition: border-color 0.25s, background 0.25s, transform 0.25s;
@@ -325,14 +334,14 @@ nav {
   text-transform: uppercase;
   color: var(--yellow);
   border: 1px solid rgba(245,200,0,0.25);
-  border-radius: 100px;
+  border-radius: var(--r-pill);
   padding: 0.2rem 0.6rem;
 }
 
 /* EMPTY STATE CARD */
 .empty-card {
   border: 1px solid var(--border);
-  border-radius: 16px;
+  border-radius: var(--r-md);
   padding: 2.5rem;
   background: rgba(255,255,255,0.03);
   margin-bottom: 4rem;
@@ -349,7 +358,7 @@ nav {
 }
 .gallery-item {
   position: relative;
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   overflow: hidden;
   aspect-ratio: 3 / 4;
   border: 1px solid var(--border);
@@ -373,7 +382,7 @@ nav {
   background-size: 200% 100%;
   animation: skeleton-shine 1.4s infinite;
   z-index: 0;
-  border-radius: 14px;
+  border-radius: var(--r-sm);
   transition: opacity 0.3s ease;
 }
 .gallery-item.img-loaded::before { opacity: 0; pointer-events: none; }
@@ -411,7 +420,7 @@ nav {
   align-items: center;
   gap: 0.25rem;
   padding: 0.2rem 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--r-pill);
   font-size: 0.65rem;
   font-weight: 700;
   color: #1a1a1a;
@@ -449,7 +458,7 @@ nav {
   color: var(--white);
   background: rgba(0,0,0,0.55);
   border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 100px;
+  border-radius: var(--r-pill);
   padding: 0.3rem 0.65rem;
   cursor: pointer;
   backdrop-filter: blur(4px);
@@ -494,7 +503,7 @@ hr {
   font-size: 0.875rem;
   font-weight: 700;
   padding: 0.75rem 1.5rem;
-  border-radius: 100px;
+  border-radius: var(--r-pill);
   text-decoration: none;
   transition: box-shadow 0.2s;
   cursor: pointer;
