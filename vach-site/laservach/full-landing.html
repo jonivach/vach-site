@@ -453,6 +453,42 @@
     .step-body h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.2rem; }
     .step-body p { font-size: 0.8rem; color: var(--lgray); line-height: 1.5; }
 
+    /* GIF placeholder */
+    .gif-placeholder {
+      border-radius: var(--r-lg);
+      border: 1.5px dashed rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.02);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 280px;
+    }
+    .gif-placeholder-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      text-align: center;
+    }
+    .gif-icon {
+      font-size: 2rem;
+      opacity: 0.2;
+    }
+    .gif-placeholder-inner p {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--lgray);
+    }
+    .gif-note {
+      font-size: 0.7rem;
+      color: var(--gray);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* Cuando tengas el GIF: reemplazar .gif-placeholder por: */
+    /* .gif-placeholder img { width:100%; border-radius: var(--r-lg); display:block; } */
+
     /* ═══════════════════════════════════════
        LASER ILLUSTRATION (CSS)
     ═══════════════════════════════════════ */
@@ -801,7 +837,8 @@
       Llevamos los equipos al evento. Los invitados personalizan su pieza desde el teléfono sin filas ni papeles.
     </p>
 
-    <div class="steps-panel reveal reveal-delay-1" style="margin-top:2rem; max-width:680px;">
+    <div class="servicio-grid" style="margin-top:2rem; align-items:stretch;">
+      <div class="steps-panel reveal reveal-delay-1">
       <div class="steps-list">
         <div class="step">
           <div class="step-num" style="background:var(--teal);color:var(--black)">1</div>
@@ -832,6 +869,17 @@
           </div>
         </div>
       </div>
+    </div>
+
+      <!-- GIF placeholder — reemplazar con <img src="webapp.gif"> cuando esté listo -->
+      <div class="gif-placeholder reveal reveal-delay-2">
+        <div class="gif-placeholder-inner">
+          <span class="gif-icon">▶</span>
+          <p>Demo de la webapp</p>
+          <span class="gif-note">próximamente</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
