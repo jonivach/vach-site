@@ -676,6 +676,21 @@
       .hero-stats { display: grid; grid-template-columns: 1fr 1fr; border: none; gap: 0.5rem; }
       .hstat { border: 1px solid var(--border); border-radius: var(--r-sm); }
     }
+  /* ── CUSTOM CURSOR ── */
+  *, *::before, *::after { cursor: none !important; }
+  #vach-cursor {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 16px; height: 16px;
+    background: rgba(0,0,0,0.35);
+    box-shadow: 0 0 0 1.5px #fff;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    transition: transform 0.08s ease, opacity 0.2s;
+  }
   </style>
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
@@ -1189,6 +1204,21 @@ setTimeout(() => {
 }, 1800);
 
 
+</script>
+
+<div id="vach-cursor"></div>
+<script>
+(function(){
+  if (window.matchMedia('(hover: none)').matches) return;
+  var el = document.getElementById('vach-cursor');
+  document.addEventListener('mousemove', function(e){
+    el.style.display = 'block';
+    el.style.left = e.clientX + 'px';
+    el.style.top  = e.clientY + 'px';
+  });
+  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
+  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
+})();
 </script>
 
 </body>
