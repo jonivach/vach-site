@@ -107,8 +107,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      padding: calc(6rem + env(safe-area-inset-top)) 0 4rem;
+      justify-content: flex-start;
+      padding: calc(5rem + env(safe-area-inset-top)) 0 4rem;
       overflow: hidden;
       z-index: 2;
     }
@@ -141,38 +141,23 @@
       flex-shrink: 0;
     }
 
-    /* hero outer — 2 columnas: título izq, stats der */
-    .hero-outer {
+    /* stats en fila horizontal al pie del hero */
+    .hero-stats-row {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
       gap: 3rem;
-    }
-    .hero-content { flex: 1; }
-
-    /* stats lado derecho — igual que merchandising */
-    .hero-stats-side {
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-      text-align: right;
-      flex-shrink: 0;
-      padding-top: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
       opacity: 0;
       animation: fadeUp 0.6s ease 1.5s forwards;
     }
-    .hstat-item { display: flex; flex-direction: column; align-items: flex-end; }
+    .hstat-item { display: flex; flex-direction: column; }
     .hstat-num  { font-size: 1.6rem; font-weight: 700; line-height: 1; letter-spacing: -0.02em; }
-    .hstat-lbl  { font-size: 0.7rem; color: var(--lgray); margin-top: 0.15rem; }
+    .hstat-lbl  { font-size: 0.7rem; color: var(--lgray); margin-top: 0.2rem; }
 
     @media (max-width: 768px) {
-      .hero-outer { flex-direction: column; }
-      .hero-stats-side {
-        flex-direction: row; flex-wrap: wrap;
-        text-align: left; gap: 1rem;
-        animation: fadeUp 0.6s ease 1.3s forwards;
-      }
-      .hstat-item { align-items: flex-start; }
+      .hero-stats-row { gap: 1.5rem; }
     }
 
     /* LASER ENGRAVE TITLE EFFECT */
@@ -724,46 +709,42 @@
       LaserVach · Grabado láser en vivo · Argentina
     </div>
 
-    <div class="hero-outer">
-      <div class="hero-content">
-        <h1 class="hero-title">
-          <div class="laser-beam"></div>
-          <div class="engrave-word"><span class="word-inner">Grabado</span></div>&nbsp;
-          <div class="engrave-word"><span class="word-inner">láser</span></div><br>
-          <div class="engrave-word"><span class="word-inner">en vivo.</span></div>
-        </h1>
+    <h1 class="hero-title">
+      <div class="laser-beam"></div>
+      <div class="engrave-word"><span class="word-inner">Grabado</span></div>&nbsp;
+      <div class="engrave-word"><span class="word-inner">láser</span></div><br>
+      <div class="engrave-word"><span class="word-inner">en vivo.</span></div>
+    </h1>
 
-        <p class="hero-sub">
-          Llevamos el equipo a tu evento. Los invitados diseñan desde el teléfono
-          y reciben su pieza grabada en minutos. 100% on-site.
-        </p>
+    <p class="hero-sub">
+      Llevamos el equipo a tu evento. Los invitados diseñan desde el teléfono
+      y reciben su pieza grabada en minutos. 100% on-site.
+    </p>
 
-        <div class="hero-actions">
-          <a href="#contacto" class="btn-primary">
-            Cotizá tu evento
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </a>
-          <a href="#servicio" class="btn-ghost">¿Cómo funciona? ↓</a>
-        </div>
+    <div class="hero-actions">
+      <a href="#contacto" class="btn-primary">
+        Cotizá tu evento
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </a>
+      <a href="#servicio" class="btn-ghost">¿Cómo funciona? ↓</a>
+    </div>
+
+    <div class="hero-stats-row">
+      <div class="hstat-item">
+        <span class="hstat-num" style="color:var(--teal)" data-count="2" data-suffix="'">0'</span>
+        <span class="hstat-lbl">Por pieza grabada</span>
       </div>
-
-      <div class="hero-stats-side">
-        <div class="hstat-item">
-          <span class="hstat-num" style="color:var(--teal)" data-count="2" data-suffix="'">0'</span>
-          <span class="hstat-lbl">Por pieza grabada</span>
-        </div>
-        <div class="hstat-item">
-          <span class="hstat-num" style="color:var(--yellow)" data-count="6" data-prefix="+">+0</span>
-          <span class="hstat-lbl">Materiales</span>
-        </div>
-        <div class="hstat-item">
-          <span class="hstat-num" style="color:var(--purple)">30W</span>
-          <span class="hstat-lbl">Láser Fibra</span>
-        </div>
-        <div class="hstat-item">
-          <span class="hstat-num" data-count="100" data-suffix="%">0%</span>
-          <span class="hstat-lbl">On-site · sin taller</span>
-        </div>
+      <div class="hstat-item">
+        <span class="hstat-num" style="color:var(--yellow)" data-count="6" data-prefix="+">+0</span>
+        <span class="hstat-lbl">Materiales</span>
+      </div>
+      <div class="hstat-item">
+        <span class="hstat-num" style="color:var(--purple)">30W</span>
+        <span class="hstat-lbl">Láser Fibra</span>
+      </div>
+      <div class="hstat-item">
+        <span class="hstat-num" data-count="100" data-suffix="%">0%</span>
+        <span class="hstat-lbl">On-site · sin taller</span>
       </div>
     </div>
   </div>
