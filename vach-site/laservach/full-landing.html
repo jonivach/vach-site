@@ -108,7 +108,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 100px 2rem 5rem;
+      padding: calc(6rem + env(safe-area-inset-top)) 2.5rem 4rem;
       overflow: hidden;
       z-index: 2;
     }
@@ -176,11 +176,11 @@
 
     /* LASER ENGRAVE TITLE EFFECT */
     .hero-title {
-      font-size: clamp(3.5rem, 9vw, 8.5rem);
+      font-size: clamp(3rem, 8vw, 7rem);
       font-weight: 700;
       line-height: 0.92;
-      letter-spacing: -0.025em;
-      margin-bottom: 2rem;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
       position: relative;
     }
     .engrave-word {
