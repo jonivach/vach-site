@@ -295,18 +295,22 @@
       to   { transform: translateX(-50%); }
     }
     .marquee-item {
-      display: inline-flex; align-items: center; gap: 1rem;
+      position: relative;
+      display: inline-block;
       padding: 0 2rem;
       font-size: 0.75rem; font-weight: 600;
       letter-spacing: 0.1em; text-transform: uppercase;
       color: var(--lgray);
     }
-    .marquee-item .dot {
+    .marquee-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 50%;
+      transform: translate(-50%, -50%);
       width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--teal);
       box-shadow: 0 0 6px var(--teal);
-      flex-shrink: 0;
     }
 
     /* ═══════════════════════════════════════
@@ -763,20 +767,20 @@
 <!-- MARQUEE -->
 <div class="marquee-wrap">
   <div class="marquee-track" aria-hidden="true">
-    <span class="marquee-item">Acero inoxidable <span class="dot"></span></span>
-    <span class="marquee-item">Aluminio <span class="dot"></span></span>
-    <span class="marquee-item">Cuero <span class="dot"></span></span>
-    <span class="marquee-item">TPU <span class="dot"></span></span>
-    <span class="marquee-item">Acrílico <span class="dot"></span></span>
-    <span class="marquee-item">Madera barnizada <span class="dot"></span></span>
-    <span class="marquee-item">Textil <span class="dot"></span></span>
-    <span class="marquee-item">Acero inoxidable <span class="dot"></span></span>
-    <span class="marquee-item">Aluminio <span class="dot"></span></span>
-    <span class="marquee-item">Cuero <span class="dot"></span></span>
-    <span class="marquee-item">TPU <span class="dot"></span></span>
-    <span class="marquee-item">Acrílico <span class="dot"></span></span>
-    <span class="marquee-item">Madera barnizada <span class="dot"></span></span>
-    <span class="marquee-item">Textil <span class="dot"></span></span>
+    <span class="marquee-item">Acero inoxidable</span>
+    <span class="marquee-item">Aluminio</span>
+    <span class="marquee-item">Cuero</span>
+    <span class="marquee-item">TPU</span>
+    <span class="marquee-item">Acrílico</span>
+    <span class="marquee-item">Madera barnizada</span>
+    <span class="marquee-item">Textil</span>
+    <span class="marquee-item">Acero inoxidable</span>
+    <span class="marquee-item">Aluminio</span>
+    <span class="marquee-item">Cuero</span>
+    <span class="marquee-item">TPU</span>
+    <span class="marquee-item">Acrílico</span>
+    <span class="marquee-item">Madera barnizada</span>
+    <span class="marquee-item">Textil</span>
   </div>
 </div>
 
