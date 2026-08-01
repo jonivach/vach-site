@@ -339,25 +339,33 @@
     /* ═══════════════════════════════════════
        EL SERVICIO
     ═══════════════════════════════════════ */
-    #servicio { background: rgba(255,255,255,0.01); border-top: 1px solid var(--border); }
+    #servicio {
+      background: rgba(255,255,255,0.01);
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 2rem;
+    }
+    #servicio .section-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: 0.75rem;
+    }
 
     .servicio-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 3.5rem;
-      margin-top: 4rem;
+      gap: 2rem;
+      margin-top: 2rem;
       align-items: start;
     }
 
-    .feature-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .feature-list { display: flex; flex-direction: column; gap: 0.75rem; }
 
     .feature-card {
       background: rgba(255,255,255,0.04);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: var(--r-md);
-      padding: 1.5rem;
-      display: flex; gap: 1rem; align-items: flex-start;
+      padding: 1rem;
+      display: flex; gap: 0.85rem; align-items: flex-start;
       transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
       cursor: default;
     }
@@ -367,7 +375,7 @@
       transform: translateY(-2px);
     }
     .feature-icon {
-      width: 38px; height: 38px; border-radius: var(--r-sm);
+      width: 32px; height: 32px; border-radius: var(--r-sm);
       background: rgba(123,79,255,0.2);
       border: 1px solid rgba(123,79,255,0.3);
       display: flex; align-items: center; justify-content: center;
@@ -415,7 +423,7 @@
       backdrop-filter: blur(8px);
       border: 1px solid rgba(123,79,255,0.2);
       border-radius: var(--r-lg);
-      padding: 2.25rem;
+      padding: 1.5rem;
       position: relative; overflow: hidden;
     }
     .steps-panel::before {
@@ -426,24 +434,24 @@
       pointer-events: none;
     }
     .steps-panel h3 {
-      font-size: 1.05rem; font-weight: 700; margin-bottom: 2rem;
+      font-size: 1rem; font-weight: 700; margin-bottom: 1rem;
     }
-    .steps-list { display: flex; flex-direction: column; gap: 1.4rem; }
+    .steps-list { display: flex; flex-direction: column; gap: 0.75rem; }
     .step {
-      display: flex; gap: 1rem; align-items: flex-start;
-      padding-bottom: 1.4rem;
+      display: flex; gap: 0.85rem; align-items: flex-start;
+      padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--border);
     }
     .step:last-child { border-bottom: none; padding-bottom: 0; }
     .step-num {
-      width: 32px; height: 32px; border-radius: 50%;
+      width: 28px; height: 28px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 700; flex-shrink: 0;
+      font-size: 0.75rem; font-weight: 700; flex-shrink: 0;
       transition: box-shadow 0.25s;
     }
     .step:hover .step-num { box-shadow: 0 0 16px currentColor; }
-    .step-body h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-    .step-body p { font-size: 0.85rem; color: var(--lgray); line-height: 1.55; }
+    .step-body h4 { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .step-body p { font-size: 0.8rem; color: var(--lgray); line-height: 1.5; }
 
     /* ═══════════════════════════════════════
        LASER ILLUSTRATION (CSS)
@@ -794,7 +802,7 @@
       desde el teléfono sin filas, sin papeles.
     </p>
 
-    <div class="servicio-grid" style="margin-top:3.5rem">
+    <div class="servicio-grid">
       <div class="feature-list">
         <div class="feature-card reveal">
           <div class="feature-icon">✦</div>
