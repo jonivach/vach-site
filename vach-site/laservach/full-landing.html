@@ -501,23 +501,36 @@
     }
     .laser-demo-text .section-desc { margin-top: 1rem; margin-bottom: 2rem; }
 
-    .material-pills {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      margin-top: 1.5rem;
+    .material-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin-top: 1.75rem;
     }
-    .mpill {
-      display: inline-flex; align-items: center; gap: 0.4rem;
-      font-size: 0.78rem; font-weight: 600;
-      padding: 0.45rem 1rem; border-radius: var(--r-pill);
+    .mat-card {
+      background: rgba(255,255,255,0.04);
       border: 1px solid var(--border);
-      color: var(--lgray);
-      transition: border-color 0.2s, color 0.2s, box-shadow 0.2s;
+      border-radius: var(--r-md);
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      cursor: default;
     }
-    .mpill:hover {
-      border-color: var(--teal); color: var(--teal);
-      box-shadow: 0 0 12px rgba(28,196,160,0.2);
+    .mat-card:hover {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.07);
+      transform: translateY(-1px);
     }
-    .mpill .star { font-size: 0.65rem; }
+    .mat-name { font-size: 0.85rem; font-weight: 600; color: var(--white); }
+    .mat-dots { display: flex; gap: 3px; margin-top: 0.1rem; }
+    .mat-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--teal);
+    }
+    .mat-dot.off { background: rgba(255,255,255,0.12); }
+    .mat-desc { font-size: 0.72rem; color: var(--gray); margin-top: 0.15rem; line-height: 1.4; }
 
     /* SVG laser machine illustration */
     .laser-svg-wrap {
@@ -894,13 +907,37 @@
         Trabajamos con tus objetos o llevamos stock propio.
         La marca puede traer los suyos — nosotros asesoramos.
       </p>
-      <div class="material-pills reveal reveal-delay-3">
-        <span class="mpill"><span class="star">★★★★★</span> Acero inoxidable</span>
-        <span class="mpill"><span class="star">★★★★★</span> Aluminio</span>
-        <span class="mpill"><span class="star">★★★★</span> Cuero / TPU</span>
-        <span class="mpill"><span class="star">★★★★</span> Acrílico</span>
-        <span class="mpill"><span class="star">★★★</span> Madera barnizada</span>
-        <span class="mpill"><span class="star">★★★</span> Textil</span>
+      <div class="material-grid reveal reveal-delay-3">
+        <div class="mat-card">
+          <span class="mat-name">Acero inoxidable</span>
+          <div class="mat-dots"><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span></div>
+          <span class="mat-desc">Máximo detalle y durabilidad</span>
+        </div>
+        <div class="mat-card">
+          <span class="mat-name">Aluminio</span>
+          <div class="mat-dots"><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span></div>
+          <span class="mat-desc">Ligero, nítido y resistente</span>
+        </div>
+        <div class="mat-card">
+          <span class="mat-name">Cuero / TPU</span>
+          <div class="mat-dots"><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot off"></span></div>
+          <span class="mat-desc">Cálido, táctil y premium</span>
+        </div>
+        <div class="mat-card">
+          <span class="mat-name">Acrílico</span>
+          <div class="mat-dots"><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot off"></span></div>
+          <span class="mat-desc">Colores vivos, bordes limpios</span>
+        </div>
+        <div class="mat-card">
+          <span class="mat-name">Madera barnizada</span>
+          <div class="mat-dots"><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot off"></span><span class="mat-dot off"></span></div>
+          <span class="mat-desc">Rústico y orgánico</span>
+        </div>
+        <div class="mat-card">
+          <span class="mat-name">Textil</span>
+          <div class="mat-dots"><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot"></span><span class="mat-dot off"></span><span class="mat-dot off"></span></div>
+          <span class="mat-desc">Suave, flexible y versátil</span>
+        </div>
       </div>
     </div>
 
