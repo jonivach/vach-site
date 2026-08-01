@@ -1185,17 +1185,7 @@ setTimeout(() => {
   document.querySelectorAll('[data-count]').forEach(animateCount);
 }, 1800);
 
-// ── CURSOR GLOW on hero ───────────────────────────────────
-const hero = document.getElementById('hero');
-hero.addEventListener('mousemove', function(e) {
-  const rect = hero.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  hero.style.background = `radial-gradient(600px circle at ${x}px ${y}px, rgba(123,79,255,0.06) 0%, transparent 50%)`;
-});
-hero.addEventListener('mouseleave', function() {
-  hero.style.background = '';
-});
+
 </script>
 
 </body>
