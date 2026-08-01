@@ -75,27 +75,29 @@
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
-      z-index: 200;
-      height: 60px;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 2rem;
-      background: rgba(10,10,10,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
+      padding: calc(1.25rem + env(safe-area-inset-top)) 2.5rem 1.25rem;
+      background: rgba(10,10,10,0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .back {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.5rem;
       font-size: 0.8rem;
       font-weight: 600;
-      color: var(--lgray);
+      color: var(--gray);
       text-decoration: none;
       transition: color 0.2s;
     }
     .back:hover { color: var(--white); }
+    .logo { text-decoration: none; }
+    .logo img { height: 24px; width: auto; display: block; }
 
     /* ═══════════════════════════════════════
        HERO
@@ -709,7 +711,7 @@
     <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
     Volver
   </a>
-  <a href="/"><img src="/logo.png" alt="VACH*" style="height:22px;width:auto;display:block;"></a>
+  <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
 </nav>
 
 <!-- HERO -->
