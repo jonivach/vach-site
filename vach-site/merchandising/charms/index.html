@@ -120,6 +120,11 @@
     <div class="gallery-item"><img src="/merchandising/gallery/charm-aperol.webp" alt="Charm personalizado Aperol Spritz" loading="lazy"><span class="gallery-cap">Pulsera · Aperol</span></div>
     <div class="gallery-item"><img src="/merchandising/gallery/charm-santander.webp" alt="Charm personalizado Santander" loading="lazy"><span class="gallery-cap">Dijes · Santander</span></div>
     <div class="gallery-item"><img src="/merchandising/gallery/charm-bathandbody.webp" alt="Charms personalizados Bath & Body Works" loading="lazy"><span class="gallery-cap">Dijes · Bath & Body Works</span></div>
+    <div class="gallery-item gallery-multi" data-photos="/merchandising/gallery/charm-dove-1.webp|/merchandising/gallery/charm-dove-2.webp|/merchandising/gallery/charm-dove-3.webp">
+      <img src="/merchandising/gallery/charm-dove-1.webp" alt="Charm personalizado Dove Beauty Scrub" loading="lazy">
+      <button class="flip-btn" type="button" aria-label="Ver más fotos de esta pieza" onclick="nextPhoto(event, this)">+ fotos <span class="multi-count">1/3</span></button>
+      <span class="gallery-cap">Dove</span>
+    </div>
   </div>
 
 
@@ -153,6 +158,7 @@
   <button class="lightbox-next" aria-label="Siguiente" onclick="lightboxNav(1)">&#8594;</button>
   <div class="lightbox-wrap">
     <img src="" alt="" id="lightbox-img">
+    <button class="lightbox-flip" id="lightbox-flip" type="button" aria-label="Ver otra foto">&#8635;</button>
     <img class="lightbox-watermark" src="/merchandising/assets/watermark.png" alt="">
     <div class="lightbox-footer">
       <span class="lightbox-caption" id="lightbox-caption"></span>
@@ -206,6 +212,8 @@
       }
     }
     document.getElementById('lightbox-caption').textContent = capText;
+    currentMultiItem = (item && item.classList.contains('gallery-multi')) ? item : null;
+    document.getElementById('lightbox-flip').classList.toggle('visible', !!currentMultiItem);
     document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
     document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
   }
@@ -219,6 +227,27 @@
     document.body.style.touchAction = '';
     document.getElementById('lightbox-img').src = '';
   }
+  var currentMultiItem = null;
+  function nextPhoto(e, btn) {
+    e.stopPropagation();
+    cyclePhoto(btn.closest('.gallery-multi'));
+  }
+  function cyclePhoto(item) {
+    var photos = item.dataset.photos.split('|');
+    var img = item.querySelector('img');
+    var i = photos.indexOf(img.getAttribute('src'));
+    var n = (i + 1) % photos.length;
+    img.setAttribute('src', photos[n]);
+    var c = item.querySelector('.multi-count');
+    if (c) c.textContent = (n + 1) + '/' + photos.length;
+    if (currentMultiItem === item && document.getElementById('lightbox').classList.contains('active')) {
+      _lbSetImage(document.getElementById('lightbox-img'), img.src, img.alt);
+    }
+  }
+  document.getElementById('lightbox-flip').addEventListener('click', function(e){
+    e.stopPropagation();
+    if (currentMultiItem) cyclePhoto(currentMultiItem);
+  });
   document.getElementById('lightbox').addEventListener('click', function(e){
     if (e.target === this) closeLightbox();
   });
