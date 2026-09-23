@@ -131,6 +131,11 @@
       <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-f5.webp" alt="Llavero 3D personalizado F5" loading="lazy"><span class="gallery-cap">F5</span></div>
       <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-nivea.webp" alt="Llavero 3D circular Nivea" loading="lazy"><span class="gallery-cap">Nivea</span></div>
       <div class="gallery-item"><img src="/merchandising/gallery/llavero3d-rexona.webp" alt="Llavero 3D personalizado Rexona" loading="lazy"><span class="gallery-cap">Rexona</span></div>
+      <div class="gallery-item gallery-multi" data-photos="/merchandising/gallery/llavero3d-patagonia-1.webp|/merchandising/gallery/llavero3d-patagonia-2.webp">
+        <img src="/merchandising/gallery/llavero3d-patagonia-1.webp" alt="Llavero 3D corazón Banco Patagonia y VISA" loading="lazy">
+        <button class="flip-btn" type="button" aria-label="Ver la otra cara de esta pieza" onclick="nextPhoto(event, this)">⟳ otra cara</button>
+        <span class="gallery-cap">Banco Patagonia</span>
+      </div>
     </div>
   </div>
 
@@ -148,6 +153,8 @@
       <div class="gallery-item"><img src="/merchandising/gallery/llaveroacrilico-sedal.webp" alt="Llavero acrílico Cosquín Rock x Sedal" loading="lazy"><span class="gallery-cap">Sedal</span></div>
       <div class="gallery-item"><img src="/merchandising/gallery/llaveroacrilico-personal.webp" alt="Llavero acrílico Personal" loading="lazy"><span class="gallery-cap">Personal</span></div>
       <div class="gallery-item"><img src="/merchandising/gallery/llaveracrilico-moov.webp" alt="Llavero acrílico MOOV" loading="lazy"><span class="gallery-cap">MOOV</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/llaveroacrilico-mg.webp" alt="Llavero acrílico MG" loading="lazy"><span class="gallery-cap">MG</span></div>
+      <div class="gallery-item"><img src="/merchandising/gallery/llaveroacrilico-brahma.webp" alt="Llavero acrílico Brahma" loading="lazy"><span class="gallery-cap">Brahma</span></div>
     </div>
   </div>
 
@@ -195,6 +202,7 @@
   <button class="lightbox-next" aria-label="Siguiente" onclick="lightboxNav(1)">&#8594;</button>
   <div class="lightbox-wrap">
     <img src="" alt="" id="lightbox-img">
+    <button class="lightbox-flip" id="lightbox-flip" type="button" aria-label="Ver otra foto">&#8635;</button>
     <img class="lightbox-watermark" src="/merchandising/assets/watermark.png" alt="">
     <div class="lightbox-footer">
       <span class="lightbox-caption" id="lightbox-caption"></span>
@@ -248,6 +256,8 @@
       }
     }
     document.getElementById('lightbox-caption').textContent = capText;
+    currentMultiItem = (item && item.classList.contains('gallery-multi')) ? item : null;
+    document.getElementById('lightbox-flip').classList.toggle('visible', !!currentMultiItem);
     document.querySelector('.lightbox-prev').style.visibility = _lbIdx > 0 ? '' : 'hidden';
     document.querySelector('.lightbox-next').style.visibility = _lbIdx < _lbImgs.length - 1 ? '' : 'hidden';
   }
@@ -261,6 +271,27 @@
     document.body.style.touchAction = '';
     document.getElementById('lightbox-img').src = '';
   }
+  var currentMultiItem = null;
+  function nextPhoto(e, btn) {
+    e.stopPropagation();
+    cyclePhoto(btn.closest('.gallery-multi'));
+  }
+  function cyclePhoto(item) {
+    var photos = item.dataset.photos.split('|');
+    var img = item.querySelector('img');
+    var i = photos.indexOf(img.getAttribute('src'));
+    var n = (i + 1) % photos.length;
+    img.setAttribute('src', photos[n]);
+    var c = item.querySelector('.multi-count');
+    if (c) c.textContent = (n + 1) + '/' + photos.length;
+    if (currentMultiItem === item && document.getElementById('lightbox').classList.contains('active')) {
+      _lbSetImage(document.getElementById('lightbox-img'), img.src, img.alt);
+    }
+  }
+  document.getElementById('lightbox-flip').addEventListener('click', function(e){
+    e.stopPropagation();
+    if (currentMultiItem) cyclePhoto(currentMultiItem);
+  });
   document.getElementById('lightbox').addEventListener('click', function(e){
     if (e.target === this) closeLightbox();
   });
