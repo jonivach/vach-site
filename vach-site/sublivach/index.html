@@ -1494,13 +1494,14 @@ function armarLamina(){
       var ww = W * 0.82, wh = ww * logo.naturalHeight / logo.naturalWidth;
       c.globalAlpha = 0.05; c.drawImage(logo, (W - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
     }
+    // una sola card para todas las prendas
+    c.fillStyle = 'rgba(255,255,255,.035)'; rrect(c, pad, top, W - pad*2, ph, 22); c.fill();
+    c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2; c.stroke();
     prs.forEach(function(p, k){
       var x0 = pad + k * (pw + gap), m = mockOf(p.id), vb = m.vb.split(' ').map(Number), im = prendaIm[k];
-      c.fillStyle = 'rgba(255,255,255,.035)'; rrect(c, x0, top, pw, ph, 22); c.fill();
-      c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2; c.stroke();
       var mg = 0.07, sc = Math.min(pw * (1 - 2*mg) / vb[2], ph * (1 - 2*mg) / vb[3]);
       var ox = x0 + (pw - vb[2]*sc) / 2, oy = top + (ph - vb[3]*sc) / 2;
-      c.save(); rrect(c, x0, top, pw, ph, 22); c.clip();
+      c.save(); rrect(c, pad, top, W - pad*2, ph, 22); c.clip();
       if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
       var LL = lugaresLamina(p.id);
       if (!LL.length) {         // todavía sin diseño: muestra dónde iría y de qué tamaño
@@ -1522,11 +1523,11 @@ function armarLamina(){
       });
       c.restore();
       // texto debajo
-      c.textAlign = 'left'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
-      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]), pw), x0 + 4, top + ph + 42);
+      var cx0 = x0 + pw/2; c.textAlign = 'center'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
+      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]), pw), cx0, top + ph + 42);
       c.fillStyle = '#AAAAAA'; c.font = '400 21px '+F;
-      c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), x0 + 4, top + ph + 74);
-      if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), x0 + 4, top + ph + 100);
+      c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), cx0, top + ph + 74);
+      if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), cx0, top + ph + 100);
     });
     // pie
     c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, H - pad - 40); c.lineTo(W - pad, H - pad - 40); c.stroke();
