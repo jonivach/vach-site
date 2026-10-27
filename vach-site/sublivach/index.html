@@ -60,17 +60,17 @@
   .back:hover { color: var(--white); }
   .logo img { height: 24px; display: block; }
 
-  .wrap { position: relative; z-index: 2; max-width: 1120px; margin: 0 auto; padding: 3.5rem 2.5rem 4rem; }
+  .wrap { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; padding: calc(6rem - 65px) 2.5rem 4rem; }
 
   .demo-flag { display: inline-flex; gap: .5rem; align-items: center; font-size: .72rem; font-weight: 700;
     letter-spacing: .08em; text-transform: uppercase; color: #FFC94D; background: rgba(255,201,77,.1);
     border: 1px solid rgba(255,201,77,.3); padding: .4rem .9rem; border-radius: 100px; margin-bottom: 1.5rem; }
 
-  .hero { margin-bottom: 3rem; }
+  .hero { margin-bottom: 4rem; }
   .label { font-size: var(--fs-label); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--purple); margin-bottom: .9rem; }
-  h1 { font-size: clamp(2.3rem, 5vw, 3.9rem); font-weight: 700; line-height: .95; letter-spacing: -.025em; margin-bottom: 1.2rem; }
+  h1 { font-size: var(--fs-display); font-weight: 700; line-height: .92; letter-spacing: -.03em; margin-bottom: 1.5rem; }
   h1 em { font-style: normal; color: var(--purple); }
-  .hero p { font-size: var(--fs-lead); color: var(--lgray); max-width: 760px; line-height: 1.65; }
+  .hero p { font-size: var(--fs-lead); color: var(--lgray); max-width: 780px; line-height: 1.65; }
 
   .grid { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 2rem; align-items: start; }
 
@@ -406,7 +406,10 @@
   @media (max-width: 900px) {
     .grid { grid-template-columns: 1fr; }
     .summary { position: static; max-height: none; overflow: visible; }
-    .wrap { padding: 2.5rem 1rem 7rem; }
+    .wrap { padding-bottom: 7rem; }
+  }
+  @media (max-width: 768px) {
+    .wrap { padding: calc(5rem - 57px) 1.5rem 7rem; }
     nav { padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 1rem; }
     .products { grid-template-columns: 1fr; }
     .et-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
@@ -474,7 +477,7 @@
 <main class="wrap">
   <header class="hero">
     <h1>Cotizá tu evento<br><em>en 1 minuto.</em></h1>
-    <p>Elegí las prendas, cuántos diseños querés ofrecer y cuántas horas dura la activación.<br class="br-desk">Te enviamos el precio al instante y lo confirmás por WhatsApp.</p>
+    <p>Elegí las prendas, cuántos diseños querés ofrecer y cuántas horas dura la activación. <br class="br-desk">Te enviamos el precio al instante y lo confirmás por WhatsApp.</p>
   </header>
 
   <div class="grid">
