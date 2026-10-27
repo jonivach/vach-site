@@ -296,6 +296,16 @@
   .sizes.show { max-height: 320px; opacity: 1; margin-top: 1rem; padding-top: 1.1rem !important; padding-bottom: 1.1rem !important; border-width: 1px !important; }
   .sizes-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .9rem; flex-wrap: wrap; }
   .sizes-title { font-weight: 600; font-size: .92rem; }
+  .corte-chips { display: flex; gap: .45rem; }
+  .corte-chips .chip { min-width: 104px; text-align: center; }
+  /* botones de corte dentro de la card de Remera (aparecen al elegir remeras) */
+  .prod { position: relative; }
+  .prod .corte { position: absolute; top: 1.1rem; right: 1.1rem; display: none; flex-direction: column; gap: .35rem; }
+  .prod.active .corte { display: flex; }
+  .corte button { padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--lgray);
+    font: inherit; font-size: .72rem; font-weight: 600; cursor: pointer; text-align: center; transition: border-color .2s, background .2s, color .2s; }
+  .corte button:hover { color: var(--white); }
+  .corte button.active { border-color: var(--purple); background: var(--purple-soft); color: var(--white); }
   .sizes-title small { display: block; font-weight: 400; font-size: .76rem; color: var(--gray); margin-top: .15rem; }
   .sizes-count { font-size: .8rem; font-weight: 600; color: #FFC94D; }
   .sizes-count.ok { color: #7CE3A1; }
@@ -426,6 +436,8 @@
     .prod { display: grid; grid-template-columns: 36px minmax(0,1fr) 124px; align-items: center; gap: .9rem; }
     .prod svg { margin: 0; }
     .prod-name { margin: 0; }
+    .prod .corte { position: static; grid-row: 2; grid-column: 1 / -1; flex-direction: row; }
+    .prod .corte button { flex: 1; padding: .5rem .7rem; font-size: .8rem; }
     .fields { grid-template-columns: 1fr; }
     .mobile-bar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; align-items: center; justify-content: space-between;
       gap: 1rem; padding: .85rem 1rem calc(.85rem + env(safe-area-inset-bottom)); background: rgba(10,10,10,.92); backdrop-filter: blur(14px);
@@ -569,6 +581,7 @@
     <p class="sub">Sumá uno o varios diseños a la prenda, elegí la medida máxima de cada uno y movelos para ubicarlos.</p>
     <div class="scale-tools">
       <div class="tool"><span class="tool-l">Prenda</span><div class="chips mini" id="scalePrendas"></div></div>
+      <div class="tool" id="corteTool"><span class="tool-l">Corte</span><div class="chips mini corte-chips" id="corteChipsModal"></div></div>
       <div class="tool"><span class="tool-l">Diseños en la prenda</span><div class="design-pick" id="designPick"></div></div>
     </div>
     <div class="scale-tools sel-tools" id="selTools">
@@ -634,12 +647,13 @@ var PRECIOS = {
     { id: 'gorra',  nombre: 'Gorra',    precio: 9000,  icon: 'cap',   tamanios: ['s','m'] }
   ],
   minimoPrendas: 50,
-  tablaTalles: {            // cm — reemplazar por las medidas reales de la remera que usan
-    XS: { ancho: 46, largo: 66 },
-    S:  { ancho: 49, largo: 69 },
-    M:  { ancho: 52, largo: 72 },
-    L:  { ancho: 55, largo: 74 },
-    XL: { ancho: 58, largo: 76 }
+  cortes: [                 // corte de la remera; precio = remera sola
+    { id: 'regular',  nombre: 'Regular',  precio: 10000 },
+    { id: 'oversize', nombre: 'Oversize', precio: 10000 }
+  ],
+  tablaTalles: {            // cm — reemplazar por las medidas reales de las remeras que usan
+    regular:  { XS: { ancho: 46, largo: 66 }, S: { ancho: 49, largo: 69 }, M: { ancho: 52, largo: 72 }, L: { ancho: 55, largo: 74 }, XL: { ancho: 58, largo: 76 } },
+    oversize: { XS: { ancho: 52, largo: 68 }, S: { ancho: 55, largo: 70 }, M: { ancho: 58, largo: 72 }, L: { ancho: 61, largo: 74 }, XL: { ancho: 64, largo: 76 } }
   },
   plancha: { ancho: 100, alto: 57, margen: 0.5 },   // cm — para estimar planchas / m²
   estampas: {                       // precio por cada estampa, según tamaño
@@ -674,7 +688,10 @@ var ICONS = {
   cap:   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 30a16 16 0 0 1 32 0z"/><path d="M40 30c4 0 6 1 6 3s-3 3-8 3H8"/><circle cx="24" cy="13" r="1.5" fill="currentColor"/></svg>'
 };
 
-var state = { qty: {}, est: {}, disenios: 1, designs: [], pos: {}, horas: 3, zona: 'caba' };
+var state = { qty: {}, est: {}, disenios: 1, designs: [], pos: {}, horas: 3, zona: 'caba', corte: 'regular' };
+function corteOf(){ return PRECIOS.cortes.filter(function(c){ return c.id === state.corte; })[0]; }
+function precioDe(p){ return p.id === 'remera' ? corteOf().precio : p.precio; }
+function nombreDe(p, q){ return p.nombre + (q > 1 ? 's' : '') + (p.id === 'remera' ? ' ' + corteOf().nombre.toLowerCase() : ''); }
 PRECIOS.prendas.forEach(function(p){
   state.qty[p.id] = 0;
   state.est[p.id] = { cant: {}, auto: true, def: p.tamanios[p.tamanios.length > 2 ? 1 : 0] };   // auto: sigue a la cantidad de prendas hasta que el cliente la cambie
@@ -690,13 +707,14 @@ var $ = function(id){ return document.getElementById(id); };
 /* render productos */
 $('products').innerHTML = PRECIOS.prendas.map(function(p){
   return '<div class="prod" data-id="'+p.id+'">' + ICONS[p.icon] +
+    (p.id === 'remera' ? '<div class="corte" id="corteChips" role="group" aria-label="Corte de remera"></div>' : '') +
     '<div><div class="prod-name">'+p.nombre+'</div></div>' +
     '<div class="stepper"><button type="button" data-d="-10" aria-label="Restar">−</button>' +
     '<input type="number" min="0" step="1" inputmode="numeric" value="'+state.qty[p.id]+'" aria-label="Cantidad de '+p.nombre+'">' +
     '<button type="button" data-d="10" aria-label="Sumar">+</button></div></div>';
 }).join('');
 $('products').addEventListener('click', function(e){
-  var b = e.target.closest('button'); if (!b) return;
+  var b = e.target.closest('button'); if (!b || b.dataset.c) return;
   var card = b.closest('.prod'), id = card.dataset.id;
   var cur = state.qty[id] || 0, d = parseInt(b.dataset.d,10), M = PRECIOS.minimoPrendas;
   if (d > 0) state.qty[id] = cur < M ? M : cur + d;          // primer + salta al mínimo
@@ -767,10 +785,13 @@ $('prints').addEventListener('input', function(e){
 $('prints').addEventListener('focusout', function(){ setTimeout(function(){ if (!document.activeElement.closest('#prints')) renderPrints(); }, 0); });
 /* modal de escala real */
 var MOCKS = {   // medidas en cm
-  remera: { vb: '0 0 89 97.6', img: '/sublivach/remera.webp', cx: 44.4, cy: function(d){ return d > 12 ? 34 : 26; }, area: [17.5, 17, 71, 92] },
+  // fotos calibradas: el ancho del cuerpo (talle L) define la escala
+  remera_oversize: { vb: '0 0 89 97.6',   img: '/sublivach/remera.webp',    cx: 44.4, cy: function(d){ return d > 12 ? 34 : 26; }, area: [17.5, 17, 71, 92] },   // cuerpo 56 cm
+  remera_regular:  { vb: '0 0 93.6 97.4', img: '/sublivach/remera-regular.webp', cx: 45.7, cy: function(d){ return d > 12 ? 30 : 22; }, area: [22, 14, 71.5, 92] }, // cuerpo 52 cm
   tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
   gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
 };
+function mockOf(id){ return id === 'remera' ? MOCKS['remera_' + state.corte] : MOCKS[id]; }
 var scaleId = 'remera', scaleSel = 0, calib = 1;
 try { calib = (+localStorage.getItem('sv-calib')) || 1; } catch (e) {}
 state.place = {};   // por prenda: [{ d: índice de diseño (-1 = muestra), t: tamaño, x, y (centro en cm) }]
@@ -786,12 +807,12 @@ function fmtCm(n){ return (Math.round(n * 10) / 10).toString().replace('.', ',')
 function placesOf(id){ return state.place[id] || (state.place[id] = []); }
 function defaultT(id){ var c = state.est[id].cant, pt = prendaOf(id).tamanios; return pt.filter(function(t){ return c[t]; })[0] || state.est[id].def; }
 function clampOne(id, pl){
-  var b = MOCKS[id].area, s = dimsOf(pl), hw = s.w / 2, hh = s.h / 2;
+  var b = mockOf(id).area, s = dimsOf(pl), hw = s.w / 2, hh = s.h / 2;
   pl.x = (b[0] + hw > b[2] - hw) ? (b[0] + b[2]) / 2 : Math.min(b[2] - hw, Math.max(b[0] + hw, pl.x));
   pl.y = (b[1] + hh > b[3] - hh) ? (b[1] + b[3]) / 2 : Math.min(b[3] - hh, Math.max(b[1] + hh, pl.y));
 }
 function layout(id){          // ordena los diseños en columna (o en fila si no entran) sin superponerse
-  var L = placesOf(id), m = MOCKS[id], b = m.area, n = L.length, gap = 1.2; if (!n) return;
+  var L = placesOf(id), m = mockOf(id), b = m.area, n = L.length, gap = 1.2; if (!n) return;
   var dm = L.map(dimsOf);
   var totalH = dm.reduce(function(a, s){ return a + s.h; }, 0) + gap * (n - 1);
   if (totalH <= b[3] - b[1]) {
@@ -819,7 +840,24 @@ function removeDesignEverywhere(i){
 function renderPrendaTabs(){
   $('scalePrendas').innerHTML = PRECIOS.prendas.map(function(p){
     return '<button type="button" class="chip'+(p.id===scaleId?' active':'')+'" data-p="'+p.id+'">'+p.nombre+'</button>'; }).join('');
+  $('corteTool').hidden = scaleId !== 'remera';
 }
+function renderCortes(){
+  var h = PRECIOS.cortes.map(function(c){ return '<button type="button" class="chip'+(c.id===state.corte?' active':'')+'" data-c="'+c.id+'" aria-pressed="'+(c.id===state.corte)+'">'+c.nombre+'</button>'; }).join('');
+  $('corteChips').innerHTML = h.replace(/class="chip/g, 'class="'); $('corteChipsModal').innerHTML = h;
+  $('chartTitle').textContent = 'Tabla de talles · Remera ' + corteOf().nombre.toLowerCase();
+  var tt = PRECIOS.tablaTalles[state.corte];
+  $('chartTable').innerHTML = '<tr><th>Talle</th><th>Ancho</th><th>Largo</th></tr>' +
+    PRECIOS.talles.map(function(t){ var m = tt[t]; return '<tr><td>'+t+'</td><td>'+m.ancho+' cm</td><td>'+m.largo+' cm</td></tr>'; }).join('');
+}
+function setCorte(id){
+  if (id === state.corte) return;
+  state.corte = id; renderCortes();
+  placesOf('remera').forEach(function(pl){ clampOne('remera', pl); });
+  if ($('scaleModal').classList.contains('open') && scaleId === 'remera') renderScale();
+  update();
+}
+['corteChips','corteChipsModal'].forEach(function(k){ $(k).addEventListener('click', function(e){ var b = e.target.closest('[data-c]'); if (b) setCorte(b.dataset.c); }); });
 $('scalePrendas').addEventListener('click', function(e){
   var b = e.target.closest('[data-p]'); if (!b) return; scaleId = b.dataset.p; scaleSel = 0; renderScale();
 });
@@ -949,7 +987,7 @@ $('calibOk').addEventListener('click', closeCalib);
 $('calibReset').addEventListener('click', function(){ setCalib(1); });
 $('calibModal').addEventListener('click', function(e){ if (e.target === this) closeCalib(); });
 function renderScale(){
-  var p = prendaOf(scaleId), m = MOCKS[p.id];
+  var p = prendaOf(scaleId), m = mockOf(p.id);
   state.place[p.id] = placesOf(p.id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
   placesOf(p.id).forEach(function(pl){ if (p.tamanios.indexOf(pl.t) < 0) { pl.t = p.tamanios[p.tamanios.length - 1]; clampOne(p.id, pl); } });
   ensurePlaceholder(p.id);
@@ -1200,7 +1238,7 @@ function resumenDetalle(desc){
     '</div><div class="sg"><div class="sh">Prendas</div>';
   PRECIOS.prendas.forEach(function(p){
     var q = state.qty[p.id]; if (!q) return;
-    h += '<div class="sp"><div class="sp-t">'+q+' '+p.nombre+(q>1?'s':'')+'</div>' +
+    h += '<div class="sp"><div class="sp-t">'+q+' '+nombreDe(p, q)+'</div>' +
          '<div class="sp-d">Estampas: '+estTxt(p)+'</div>' +
          (p.id === 'remera' ? '<div class="sp-d">Talles: '+tallesTxt(' · ', ' ')+'</div>' : '') + '</div>';
   });
@@ -1213,8 +1251,8 @@ function update(){
   PRECIOS.prendas.forEach(function(p){
     var q = state.qty[p.id] || 0; totalQty += q;
     document.querySelector('.prod[data-id="'+p.id+'"]').classList.toggle('active', q > 0);
-    if (q > 0) { var c = state.est[p.id].cant, s = q * p.precio; for (var t in c) s += c[t] * PRECIOS.estampas[t].precio; prendasSub += s;
-      lines.push(['line', q+' × '+p.nombre, '', fmt(s)]); lines.push(['line note', 'Estampas: '+estTxt(p), '']); }
+    if (q > 0) { var c = state.est[p.id].cant, s = q * precioDe(p); for (var t in c) s += c[t] * PRECIOS.estampas[t].precio; prendasSub += s;
+      lines.push(['line', q+' × '+nombreDe(p, 1), '', fmt(s)]); lines.push(['line note', 'Estampas: '+estTxt(p), '']); }
     if (q > 0 && p.id === 'remera') lines.push(['line note', 'Talles: '+tallesTxt(' · ', ' '), '']);
   });
   total += prendasSub;
@@ -1268,7 +1306,7 @@ function update(){
   var msg = ['Hola SubliVach! Quiero cotizar un evento:', ''];
   PRECIOS.prendas.forEach(function(p){
     if (!state.qty[p.id]) return;
-    var l = '• '+state.qty[p.id]+' '+p.nombre+(state.qty[p.id]>1?'s':'');
+    var l = '• '+state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]);
     if (p.id === 'remera') l += ' (talles: '+tallesTxt(', ', ' ')+')';
     msg.push(l, '   Estampas: '+estTxt(p));
   });
@@ -1310,8 +1348,7 @@ function renderMail(){
 }
 $('colorLink').href = 'https://wa.me/'+PRECIOS.whatsapp+'?text='+encodeURIComponent('Hola SubliVach! Quería consultar disponibilidad de colores de prendas para sublimar.');
 /* tabla de talles */
-$('chartTable').innerHTML = '<tr><th>Talle</th><th>Ancho</th><th>Largo</th></tr>' +
-  PRECIOS.talles.map(function(t){ var m = PRECIOS.tablaTalles[t]; return '<tr><td>'+t+'</td><td>'+m.ancho+' cm</td><td>'+m.largo+' cm</td></tr>'; }).join('');
+renderCortes();
 $('openChart').addEventListener('click', function(){ $('chartModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
 function closeChart(){ $('chartModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('chartClose').addEventListener('click', closeChart);
