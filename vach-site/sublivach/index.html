@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="theme-color" content="#0A0A0A" />
+<link rel="icon" href="/icons/favicon-32.png" sizes="32x32" />
+<link rel="icon" href="/icons/favicon-16.png" sizes="16x16" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<title>SubliVach — Cotizá tu evento · VACH*</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black: #0A0A0A;
+    --card: #121214;
+    --card2: #18181B;
+    --purple: #7B4FFF;
+    --purple-soft: rgba(123,79,255,0.15);
+    --purple-line: rgba(123,79,255,0.35);
+    --white: #FFFFFF;
+    --gray: #888;
+    --lgray: #AAAAAA;
+    --border: rgba(255,255,255,0.08);
+    --green: #25D366;
+  }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .bg { position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 10%, rgba(123,79,255,0.16) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 85% 90%, rgba(123,79,255,0.08) 0%, transparent 55%), #0A0A0A; }
+  .grid-overlay { position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 80px 80px; }
+
+  nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
+    padding: calc(1.1rem + env(safe-area-inset-top)) 2.5rem 1.1rem;
+    background: rgba(10,10,10,0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,0.06); }
+  .back { font-size: 0.8rem; font-weight: 600; color: var(--gray); text-decoration: none; }
+  .back:hover { color: var(--white); }
+  .logo img { height: 24px; display: block; }
+
+  .wrap { position: relative; z-index: 2; max-width: 1120px; margin: 0 auto; padding: 3.5rem 2.5rem 4rem; }
+
+  .demo-flag { display: inline-flex; gap: .5rem; align-items: center; font-size: .72rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: #FFC94D; background: rgba(255,201,77,.1);
+    border: 1px solid rgba(255,201,77,.3); padding: .4rem .9rem; border-radius: 100px; margin-bottom: 1.5rem; }
+
+  .hero { margin-bottom: 3rem; }
+  .label { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--purple); margin-bottom: .9rem; }
+  h1 { font-size: clamp(2.6rem, 6.5vw, 5.2rem); font-weight: 700; line-height: .95; letter-spacing: -.025em; margin-bottom: 1.2rem; }
+  h1 em { font-style: normal; color: var(--purple); }
+  .hero p { color: var(--lgray); max-width: 760px; line-height: 1.65; }
+
+  .grid { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 2rem; align-items: start; }
+
+  .step { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem; margin-bottom: 1.25rem; }
+  .step-head { display: flex; align-items: baseline; gap: .8rem; margin-bottom: 1.2rem; }
+  .step-num { font-size: .72rem; font-weight: 700; color: var(--purple); letter-spacing: .1em; }
+  .step-title { font-size: 1.15rem; font-weight: 600; }
+  .step-sub { font-size: .85rem; color: var(--gray); margin: -.6rem 0 1.2rem; line-height: 1.5; }
+
+  /* productos */
+  .products { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .9rem; }
+  .prod { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1.1rem; transition: border-color .2s, background .2s; }
+  .prod.active { border-color: var(--purple-line); background: linear-gradient(180deg, rgba(123,79,255,.12), rgba(123,79,255,.03)); }
+  .prod svg { width: 40px; height: 40px; color: var(--lgray); margin-bottom: .7rem; }
+  .prod.active svg { color: var(--purple); }
+  .prod-name { font-weight: 600; margin-bottom: .9rem; }
+  .prod-price { font-size: .8rem; color: var(--gray); margin-bottom: .9rem; }
+  .stepper { display: flex; align-items: center; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .stepper button { width: 38px; height: 38px; background: transparent; border: 0; color: var(--white); font: inherit; font-size: 1.1rem; cursor: pointer; }
+  .stepper button:hover { background: rgba(255,255,255,.06); }
+  .stepper input { flex: 1; min-width: 0; width: 100%; height: 38px; text-align: center; background: transparent; border: 0;
+    border-left: 1px solid var(--border); border-right: 1px solid var(--border); color: var(--white); font: inherit; font-weight: 600; }
+  .stepper input:focus { outline: none; background: rgba(123,79,255,.08); }
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+
+  .hint { margin-top: 1rem; font-size: .8rem; color: var(--gray); display: flex; flex-wrap: nowrap; align-items: center; gap: .5rem; white-space: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .hint::-webkit-scrollbar { display: none; }
+  .tier { flex: 0 0 auto; }
+  .tier { padding: .3rem .65rem; border-radius: 100px; border: 1px solid var(--border); }
+  .tier.on { border-color: var(--purple-line); color: var(--white); background: var(--purple-soft); }
+  .warn { margin-top: .9rem; font-size: .82rem; color: #FFC94D; display: none; }
+  .warn.show { display: block; }
+
+  /* estampas */
+  .print-empty { font-size: .85rem; color: var(--gray); padding: .9rem 1rem; border: 1px dashed var(--border); border-radius: 12px; }
+  .print-row { display: grid; grid-template-columns: 140px minmax(0,1fr); gap: .9rem; align-items: center; padding: 1rem 0; border-top: 1px solid var(--border); }
+  .print-row:first-child { border-top: 0; padding-top: 0; }
+  .print-row:last-child { padding-bottom: 0; }
+  .print-name { display: flex; align-items: center; gap: .6rem; font-weight: 600; background: none; border: 0; color: var(--white); font: inherit; font-weight: 600; text-align: left; cursor: pointer; padding: 0; }
+  .view-link { display: block; font-size: .72rem; font-weight: 600; color: var(--purple); margin-top: .2rem; }
+  .print-name:hover .view-link { color: #a68bff; }
+
+  /* diseños */
+  .design-slots { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: .6rem; margin-top: 1rem; }
+  .slot { position: relative; aspect-ratio: 1; border-radius: 12px; border: 1px dashed var(--purple-line); background: rgba(123,79,255,.05);
+    color: var(--lgray); font: inherit; font-size: .74rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .2rem; padding: .4rem; }
+  .slot:hover { background: rgba(123,79,255,.12); color: var(--white); }
+  .slot b { font-size: 1.3rem; color: var(--purple); line-height: 1; }
+  .slot.filled { border-style: solid; background: #fff center / contain no-repeat; background-origin: content-box; padding: .5rem; }
+  .slot .x, .slot-wrap .x { position: absolute; top: 6px; right: 6px; z-index: 2; width: 24px; height: 24px; border-radius: 50%; border: 0; padding: 0; background: #FF2E9A; color: #fff; font: inherit; font-size: .85rem; font-weight: 700; line-height: 24px; text-align: center; cursor: pointer; opacity: .45; transition: opacity .15s; }
+  .slot .x:hover, .slot-wrap .x:hover, .slot .x:focus-visible, .slot-wrap .x:focus-visible { opacity: 1; }
+  .design-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: .7rem; }
+  .design-foot .upload-note { margin: 0; }
+  .view-all { padding: .65rem 1.1rem; border-radius: 10px; border: 0; background: var(--purple); color: #fff; font: inherit; font-weight: 700; font-size: .85rem; cursor: pointer; }
+  .view-all:hover { background: #8d66ff; }
+  .slot-wrap { position: relative; aspect-ratio: 1; min-width: 0; }
+  .slot-wrap .slot { width: 100%; height: 100%; }
+  .slot-add { border-style: dashed; border-color: var(--border); background: transparent; color: var(--gray); text-align: center; line-height: 1.3; }
+  .slot-add b { color: var(--lgray); }
+  .slot-view { position: absolute; left: 6px; right: 6px; bottom: 6px; padding: .35rem .3rem; border-radius: 8px; border: 0; background: var(--purple); color: #fff;
+    font: inherit; font-size: .68rem; font-weight: 700; cursor: pointer; }
+  .slot-view:hover { background: #8d66ff; }
+  .slot.filled .n { display: none; }
+  .slot .n { position: absolute; left: 6px; bottom: 4px; font-size: .62rem; color: #333; font-weight: 700; }
+  .design-pick { display: flex; gap: .45rem; flex-wrap: wrap; align-items: center; }
+  .tool { display: flex; flex-direction: column; gap: .35rem; }
+  .tool-l { font-size: .7rem; color: var(--gray); }
+  .chips.mini .chip { padding: .55rem .9rem; font-size: .85rem; }
+  .sel-tools { align-items: flex-end; margin-top: .3rem; }
+  .sel-tools .size-chips { width: 330px; max-width: 100%; }
+  .dp { position: relative; }
+  .dp.on::after { content: '✓'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--purple); color: #fff; font-size: .62rem; display: flex; align-items: center; justify-content: center; }
+  .art { cursor: grab; }
+  .art.dragging { cursor: grabbing; }
+  .dp { width: 46px; height: 46px; border-radius: 10px; border: 1px solid var(--border); background: var(--card2) center / contain no-repeat; background-origin: content-box; padding: 4px;
+    color: var(--lgray); font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
+  .dp.filled { background-color: #fff; }
+  .dp.active { border-color: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
+  .dp-label { font-size: .72rem; color: var(--gray); margin-right: .2rem; }
+  .t-link { float: right; font-size: .72rem; letter-spacing: 0; text-transform: none; }
+  .mock svg { touch-action: none; user-select: none; -webkit-user-select: none; }
+  .calib { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; font-size: .72rem; color: var(--gray); margin-top: .5rem; }
+  .calib input { flex: 1; min-width: 120px; height: 4px; }
+  .calib b { color: var(--white); min-width: 3em; }
+
+  /* envío */
+  .send-label { display: block; font-size: .75rem; color: var(--gray); margin: .4rem 0 .35rem; }
+  .send input { width: 100%; height: 46px; padding: 0 .9rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card2); color: var(--white); font: inherit; margin-bottom: .7rem; }
+  .send input:focus { outline: none; border-color: var(--purple-line); }
+  .send input.err { border-color: #ff7a7a; }
+  .send-btn { width: 100%; padding: 1rem; border-radius: 12px; border: 0; background: var(--purple); color: #fff; font: inherit; font-weight: 700; font-size: .95rem; cursor: pointer; transition: opacity .15s, transform .15s; }
+  .send-btn:hover { transform: translateY(-1px); }
+  .send-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+  .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
+  .send-msg:empty { display: none; }
+  .send-msg.err { color: #ff7a7a; }
+  .sent { padding: 1rem; border-radius: 12px; background: rgba(124,227,161,.08); border: 1px solid rgba(124,227,161,.35); }
+  .sent-ok { color: #7CE3A1; font-weight: 600; font-size: .9rem; margin-bottom: .35rem; word-break: break-word; }
+  .sent p { font-size: .8rem; color: var(--lgray); margin-bottom: .6rem; }
+  .mail-preview { margin-top: .8rem; background: #fff; color: #111; border-radius: 10px; padding: 1rem; font-size: .8rem; line-height: 1.5; }
+  .mail-preview h5 { font-size: .9rem; margin-bottom: .5rem; }
+  .mail-preview .r { display: flex; justify-content: space-between; gap: .8rem; }
+  .mail-preview .r.sub { color: #666; font-size: .74rem; }
+  .mail-preview .tt { border-top: 1px solid #ddd; margin-top: .5rem; padding-top: .5rem; font-weight: 700; font-size: .95rem; }
+  .wa.wa-sec { margin-top: .9rem; background: none; border: 0; padding: 0; color: #7CE3A1; font-size: .85rem; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .wa.wa-sec:hover { transform: none; color: #a6f0c2; }
+  .wa.wa-sec svg { display: none; }
+  .fine-link { color: #7CE3A1; text-decoration: underline; text-underline-offset: 2px; }
+  .fine-link:hover { color: #a6f0c2; }
+  .lines .line b:empty { display: none; }
+
+  .modal-box.chart-box { width: min(460px, 100%); }
+  .chart { width: 100%; border-collapse: collapse; margin: .4rem 0 .2rem; font-size: .9rem; }
+  .chart th, .chart td { padding: .65rem .5rem; text-align: center; border-bottom: 1px solid var(--border); }
+  .chart th { font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; color: var(--gray); font-weight: 700; }
+  .chart td:first-child { font-weight: 700; color: var(--purple); }
+  .sizes-title .link-btn { font-size: .76rem; }
+
+  /* modal escala */
+  .modal { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem;
+    background: rgba(0,0,0,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .modal.open { display: flex; }
+  .modal-box { position: relative; width: min(980px, 100%); max-height: calc(100vh - 2rem); overflow: auto; background: var(--card);
+    border: 1px solid var(--purple-line); border-radius: 18px; padding: 1.5rem; }
+  .modal-close { position: absolute; top: .9rem; right: .9rem; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+    background: var(--card2); color: var(--white); font-size: 1.2rem; cursor: pointer; }
+  .modal h4 { font-size: 1.15rem; margin-bottom: .25rem; padding-right: 3rem; }
+  .modal .sub { font-size: .82rem; color: var(--gray); margin-bottom: 1rem; }
+  .scale-tools { display: flex; flex-wrap: wrap; gap: .9rem 1.2rem; align-items: center; margin-bottom: .5rem; }
+  .modal .size-chips { width: 360px; max-width: 100%; }
+  .upload { display: flex; align-items: center; gap: .9rem; }
+  .upload-btn { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1.1rem; border-radius: 12px; border: 1px dashed var(--purple);
+    background: var(--purple-soft); color: var(--white); font-weight: 600; font-size: .88rem; cursor: pointer; }
+  .upload-btn:hover { background: rgba(123,79,255,.25); }
+  .upload-note { font-size: .76rem; color: var(--gray); margin-bottom: 1.1rem; }
+  .upload-note.err { color: #ff7a7a; }
+  .upload-note b { color: var(--lgray); }
+  .real-dims { font-size: .78rem; font-weight: 600; color: var(--white); margin: .6rem 0 0 1.2rem; }
+  .real-box.has-img { border-radius: 4px; background: #F4F4F2 center / 100% 100% no-repeat; color: transparent; }
+  .scale-grid { display: grid; grid-template-columns: 260px minmax(0,1fr); gap: 1.2rem; }
+  .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: 500px; display: flex; flex-direction: column; min-width: 0; }
+  .scale-card .t { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
+  .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+  .mock svg { width: 100%; max-height: 100%; height: auto; display: block; }
+  .real { flex: 1; min-height: 0; overflow: hidden; }
+  .real-area { position: relative; padding: 1.2rem 0 0 1.2rem; display: inline-block; }
+  .real-box { border: 2px dashed var(--purple); border-radius: 50%; background: rgba(123,79,255,.12); display: flex; align-items: center; justify-content: center;
+    color: var(--white); font-weight: 700; font-size: .9rem; }
+  .ruler-x { position: absolute; top: 0; left: 1.2rem; height: 1rem; border-bottom: 1px solid var(--lgray);
+    background: repeating-linear-gradient(90deg, var(--lgray) 0 1px, transparent 1px var(--tick,1cm)); background-size: var(--tick,1cm) 40%; background-repeat: repeat-x; background-position: bottom left; }
+  .ruler-y { position: absolute; left: 0; top: 1.2rem; width: 1rem; border-right: 1px solid var(--lgray);
+    background: repeating-linear-gradient(180deg, var(--lgray) 0 1px, transparent 1px var(--tick,1cm)); background-size: 40% var(--tick,1cm); background-repeat: repeat-y; background-position: top right; }
+  .fine-note { font-size: .74rem; color: var(--gray); margin-top: .8rem; line-height: 1.5; }
+  @media (max-width: 700px) { .scale-grid { grid-template-columns: 1fr; } .scale-card { height: 340px; } .mock svg { max-width: 240px; } }
+  .print-name svg { width: 26px; height: 26px; color: var(--purple); flex: 0 0 auto; }
+  .print-name small { display: block; font-weight: 400; font-size: .74rem; color: var(--gray); }
+  .mini-label { display: block; font-size: .7rem; color: var(--gray); margin-bottom: .35rem; letter-spacing: .02em; }
+  .counters { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: .6rem; }
+  .counter .mini-label b { color: var(--white); font-weight: 700; }
+  .print-row .stepper button { width: 32px; height: 36px; }
+  .est-total { margin-top: 1rem; padding: .8rem 1rem; border-radius: 12px; background: var(--card2); border: 1px solid var(--border); font-size: .84rem; color: var(--lgray); }
+  .et-head { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
+  .et-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .6rem; }
+  .et { border: 1px solid var(--border); border-radius: 10px; padding: .7rem .8rem; background: var(--card); }
+  .et b { display: block; font-size: 1.5rem; font-weight: 700; color: var(--white); line-height: 1.1; }
+  .et span { display: block; font-size: .72rem; color: var(--gray); margin-top: .2rem; line-height: 1.3; }
+  .et.zero b { color: #555; }
+  .et.sum { border-color: var(--purple-line); background: var(--purple-soft); }
+  .et.sum b { color: #c9b8ff; }
+  .est-warn { color: #FFC94D; font-size: .8rem; margin-top: .45rem; }
+  .print-row .stepper input { height: 36px; }
+  .size-chips { display: flex; gap: .45rem; flex-wrap: wrap; }
+  .size-chips { flex-wrap: nowrap; }
+  .size-chips .chip { flex: 1 1 0; min-width: 0; padding: .45rem .5rem; font-size: .85rem; text-align: center; }
+  .size-chips .chip small { font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; margin: 0 0 .1rem; }
+
+  /* talles */
+  .sizes { display: block; max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; padding-top: 0 !important; padding-bottom: 0 !important; border-width: 0 !important;
+    transition: max-height .35s ease, opacity .25s ease, margin-top .35s ease, padding .35s ease;
+    margin-top: 0; padding: 1.1rem; border-radius: 14px; border: 1px dashed var(--purple-line); background: rgba(123,79,255,.05); }
+  .sizes.show { max-height: 320px; opacity: 1; margin-top: 1rem; padding-top: 1.1rem !important; padding-bottom: 1.1rem !important; border-width: 1px !important; }
+  .sizes-head { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: .9rem; flex-wrap: wrap; }
+  .sizes-title { font-weight: 600; font-size: .92rem; }
+  .sizes-title small { display: block; font-weight: 400; font-size: .76rem; color: var(--gray); margin-top: .15rem; }
+  .sizes-count { font-size: .8rem; font-weight: 600; color: #FFC94D; }
+  .sizes-count.ok { color: #7CE3A1; }
+  .link-btn { background: none; border: 0; color: var(--purple); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; padding: 0; }
+  .link-btn:hover { color: #a68bff; }
+  .size-grid { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: .6rem; }
+  .size { text-align: center; }
+  .size label { display: block; font-size: .75rem; font-weight: 700; color: var(--lgray); margin-bottom: .35rem; letter-spacing: .04em; }
+  .size input { width: 100%; height: 42px; text-align: center; border-radius: 10px; border: 1px solid var(--border); background: var(--card2);
+    color: var(--white); font: inherit; font-weight: 600; }
+  .size input:focus { outline: none; border-color: var(--purple-line); }
+
+  /* chips */
+  .chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .chip { padding: .7rem 1.1rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card2); color: var(--lgray);
+    font: inherit; font-weight: 600; cursor: pointer; transition: all .15s; }
+  .chip:hover { color: var(--white); }
+  .chip.active { border-color: var(--purple); background: var(--purple-soft); color: var(--white); }
+  .chip small { display: block; font-weight: 400; font-size: .72rem; color: var(--gray); margin-top: .15rem; }
+
+  /* horas */
+  .range-row { display: flex; align-items: center; gap: 1.2rem; }
+  .range-val { min-width: 84px; font-size: 1.6rem; font-weight: 700; }
+  .range-val span { font-size: .85rem; color: var(--gray); font-weight: 500; }
+  input[type=range] { flex: 1; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 6px; background: #26262b; outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--purple); border: 3px solid #fff; cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--purple); border: 3px solid #fff; cursor: pointer; }
+
+  /* datos */
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+  .field label { display: block; font-size: .75rem; color: var(--gray); margin-bottom: .35rem; }
+  .field input, .field select { width: 100%; height: 44px; padding: 0 .9rem; border-radius: 10px; border: 1px solid var(--border);
+    background: var(--card2); color: var(--white); font: inherit; color-scheme: dark; }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--purple-line); }
+  .field-full { grid-column: 1 / -1; }
+  #zones { margin-bottom: 1.1rem; }
+  .loc { max-height: 0; opacity: 0; overflow: hidden; margin: 0; transition: max-height .3s ease, opacity .25s ease, margin .3s ease; }
+  .loc.show { max-height: 120px; opacity: 1; margin: -.2rem 0 1.1rem; }
+  .field-hint { display: block; font-size: .75rem; color: var(--purple); margin-top: .35rem; min-height: 1em; }
+
+  /* resumen */
+  .summary { max-height: calc(100vh - 104px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(123,79,255,.5) transparent;
+    position: sticky; top: 88px; background: var(--card); border: 1px solid var(--purple-line); border-radius: 18px; padding: 1.6rem;
+    box-shadow: 0 20px 60px -30px rgba(123,79,255,.5); }
+  .summary::-webkit-scrollbar { width: 6px; }
+  .summary::-webkit-scrollbar-thumb { background: rgba(123,79,255,.5); border-radius: 6px; }
+  .summary h3 { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--purple); margin-bottom: 1.1rem; }
+  .lines { display: flex; flex-direction: column; margin-bottom: 1.1rem; min-height: 40px; }
+  .sg { display: flex; flex-direction: column; gap: .45rem; }
+  .sg + .sg { border-top: 1px solid var(--border); padding-top: 1rem; }
+  .sum-kpis { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: .4rem; }
+  .sum-kpis div { background: var(--card2); border: 1px solid var(--border); border-radius: 10px; padding: .55rem .4rem; text-align: center; }
+  .sum-kpis b { display: block; font-size: 1.15rem; font-weight: 700; color: var(--white); line-height: 1.1; }
+  .sum-kpis span { font-size: .66rem; color: var(--gray); }
+  .sum-meta { font-size: .8rem; color: var(--lgray); margin-top: .7rem; }
+  .sum-meta.ok { color: #7CE3A1; margin-top: .2rem; }
+  .sum-miss { font-size: .75rem; color: #FFC94D; margin-top: .3rem; }
+  .sum-toggle { align-self: flex-start; margin-top: .55rem; background: none; border: 0; padding: 0; color: var(--purple); font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; }
+  .sum-toggle:hover { color: #a68bff; }
+  .sum-detail { margin-top: .8rem; padding-top: .9rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 1rem; }
+  .sum-detail[hidden] { display: none; }
+  .sh { font-size: .66rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .1rem; }
+  .sp + .sp { margin-top: .35rem; }
+  .sp-t { font-size: .92rem; font-weight: 600; color: var(--white); }
+  .sp-d { font-size: .78rem; color: var(--gray); line-height: 1.45; }
+  .sr { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-size: .84rem; color: var(--gray); }
+  .sr b { color: var(--white); font-weight: 600; text-align: right; overflow-wrap: anywhere; }
+  .sr b i { font-style: normal; font-weight: 400; color: #5d5d63; }
+  .sr.ok b { color: #7CE3A1; }
+  .line { display: flex; justify-content: space-between; gap: 1rem; font-size: .88rem; color: var(--lgray); }
+  .line b { color: var(--white); font-weight: 600; white-space: nowrap; }
+  .line.disc b { color: #7CE3A1; }
+  .line.note { color: var(--gray); font-size: .8rem; }
+  .empty { font-size: .85rem; color: var(--gray); }
+  .total { border-top: 1px solid var(--border); padding-top: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: .3rem; }
+  .total span { color: var(--lgray); font-size: .9rem; }
+  .total strong { font-size: 2rem; font-weight: 700; letter-spacing: -.02em; }
+  .per { text-align: right; font-size: .78rem; color: var(--gray); margin-bottom: 1.3rem; }
+  .wa { display: flex; align-items: center; justify-content: center; gap: .6rem; width: 100%; padding: 1rem; border-radius: 12px; border: 0;
+    background: var(--green); color: #062b14; font: inherit; font-weight: 700; font-size: .95rem; text-decoration: none; cursor: pointer; transition: transform .15s, opacity .15s; }
+  .wa:hover { transform: translateY(-1px); }
+  .wa.disabled { opacity: .35; pointer-events: none; }
+  .wa svg { width: 20px; height: 20px; }
+  .fine { font-size: .74rem; color: var(--gray); line-height: 1.5; margin-top: .9rem; }
+
+  .mobile-bar { display: none; }
+
+  footer { position: relative; z-index: 2; text-align: center; font-size: .72rem; color: var(--gray); padding: 0 1rem 2.5rem; }
+
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .summary { position: static; max-height: none; overflow: visible; }
+    .wrap { padding: 2.5rem 1rem 7rem; }
+    nav { padding-left: 1rem; padding-right: 1rem; }
+    .products { grid-template-columns: 1fr; }
+    .et-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .design-slots { grid-template-columns: repeat(3, minmax(0,1fr)); }
+    .br-desk { display: none; }
+    .print-row { grid-template-columns: 1fr; }
+    .counters { gap: .4rem; }
+    .print-row .stepper button { width: 28px; }
+    .hint { font-size: .74rem; gap: .35rem; }
+    .hint .tw { display: none; }
+    .tier { padding: .3rem .55rem; }
+    .size-grid { gap: .4rem; }
+    .prod { display: grid; grid-template-columns: 36px minmax(0,1fr) 124px; align-items: center; gap: .9rem; }
+    .prod svg { margin: 0; }
+    .prod-name { margin: 0; }
+    .fields { grid-template-columns: 1fr; }
+    .mobile-bar { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; align-items: center; justify-content: space-between;
+      gap: 1rem; padding: .85rem 1rem calc(.85rem + env(safe-area-inset-bottom)); background: rgba(10,10,10,.92); backdrop-filter: blur(14px);
+      border-top: 1px solid var(--purple-line); }
+    .mobile-bar .mt span { display: block; font-size: .7rem; color: var(--gray); }
+    .mobile-bar .mt strong { font-size: .95rem; }
+    .mobile-bar a { padding: .75rem 1.1rem; border-radius: 10px; background: var(--purple); color: #fff; text-decoration: none; font-weight: 700; font-size: .85rem; }
+  }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="grid-overlay"></div>
+
+<nav>
+  <a href="/" class="back">← Volver</a>
+  <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
+</nav>
+
+<main class="wrap">
+  <header class="hero">
+    <p class="label">↗ SubliVach</p>
+    <h1>Cotizá tu evento<br><em>en 1 minuto.</em></h1>
+    <p>Elegí las prendas, cuántos diseños querés ofrecer y cuántas horas dura la activación.<br class="br-desk">Te enviamos el precio al instante y lo confirmás por mail o WhatsApp.</p>
+  </header>
+
+  <div class="grid">
+    <div>
+      <!-- 1 PRENDAS -->
+      <section class="step">
+        <div class="step-head"><span class="step-num">01</span><span class="step-title">¿Qué prendas querés sublimar?</span></div>
+        <p class="step-sub">Prenda incluida, lista para sublimar en el momento. Podés combinar.</p>
+        <div class="products" id="products"></div>
+        <div class="sizes" id="sizes">
+          <div class="sizes-head">
+            <div class="sizes-title">Talles de remeras<small>Indicá cuántas remeras querés de cada talle. <button type="button" class="link-btn" id="openChart">Ver tabla de talles</button></small></div>
+            <span class="sizes-count" id="sizesCount"></span>
+          </div>
+          <div class="size-grid" id="sizeGrid"></div>
+        </div>
+        <div class="warn" id="minWarn"></div>
+      </section>
+
+      <!-- 2 ESTAMPAS -->
+      <section class="step">
+        <div class="step-head"><span class="step-num">02</span><span class="step-title">¿Cuántas estampas de cada tamaño?</span></div>
+        <p class="step-sub">Indicá cuántas estampas querés de cada medida máxima, por prenda. Por ejemplo: 100 de 5 cm y 10 de 10 cm.</p>
+        <div id="prints"></div>
+      </section>
+
+      <!-- 3 DISEÑOS -->
+      <section class="step">
+        <div class="step-head"><span class="step-num">03</span><span class="step-title">¿Cuántos diseños para elegir?</span></div>
+        <p class="step-sub">Es el catálogo de opciones que van a ver tus invitados para elegir qué estampar.</p>
+        <div class="chips" id="designs"></div>
+        <div class="design-slots" id="designSlots"></div>
+        <div class="design-foot">
+          <p class="upload-note" id="designNote">Opcional: subí tus diseños en PNG <b>a modo de ejemplo</b>, para ver cómo quedan sobre las prendas. El arte final lo coordinamos después.</p>
+          <button type="button" class="view-all" id="viewAll" hidden>Ver en tamaño real</button>
+        </div>
+        <input type="file" id="designFile" accept="image/png" hidden />
+      </section>
+
+      <!-- 4 HORAS -->
+      <section class="step">
+        <div class="step-head"><span class="step-num">04</span><span class="step-title">¿Cuántas horas de servicio?</span></div>
+        <p class="step-sub">Incluye operador y equipo de sublimado en el lugar. Mínimo <span id="minH"></span> horas.</p>
+        <div class="range-row">
+          <div class="range-val"><b id="hoursVal">3</b> <span>hs</span></div>
+          <input type="range" id="hours" step="1" />
+        </div>
+      </section>
+
+      <!-- 5 LUGAR Y FECHA -->
+      <section class="step">
+        <div class="step-head"><span class="step-num">05</span><span class="step-title">¿Dónde y cuándo?</span></div>
+        <div class="chips" id="zones"></div>
+        <div class="field loc" id="locWrap"><label for="loc">Ubicación del evento</label><input type="text" id="loc" autocomplete="street-address" placeholder="Dirección o localidad · Ej.: Pilar, Buenos Aires" /></div>
+        <div class="fields">
+          <div class="field"><label for="date">Fecha del evento</label><input type="date" id="date" /></div>
+          <div class="field"><label for="start">Horario de la activación</label><input type="time" id="start" step="900" /><span class="field-hint" id="endHint"></span></div>
+          <div class="field"><label for="name">Tu nombre</label><input type="text" id="name" autocomplete="name" placeholder="Ej.: Sofía Pérez" /></div>
+          <div class="field"><label for="brand">Agencia o marca</label><input type="text" id="brand" autocomplete="organization" placeholder="Ej.: Agencia X / Marca Y" /></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- RESUMEN -->
+    <aside class="summary" id="summary">
+      <h3>Tu cotización</h3>
+      <div class="lines" id="lines"></div>
+      <div class="send" id="sendBox">
+        <label for="email" class="send-label">Tu mail</label>
+        <input type="email" id="email" autocomplete="email" placeholder="nombre@empresa.com" />
+        <button type="button" class="send-btn" id="sendBtn" disabled>Enviar cotización</button>
+        <p class="send-msg" id="sendMsg"></p>
+      </div>
+      <div class="sent" id="sentBox" hidden>
+        <div class="sent-ok">✓ ¡Listo! Te enviamos la cotización a <b id="sentTo"></b></div>
+        <p>Revisá tu casilla (y spam). Para confirmar la fecha, <a class="fine-link" id="waAfter" target="_blank" rel="noopener">escribinos por WhatsApp</a>.</p>
+        <button type="button" class="link-btn" id="previewBtn">Ver el mail de ejemplo (solo en esta muestra)</button>
+        <div class="mail-preview" id="mailPreview" hidden></div>
+      </div>
+      <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br>Prendas blancas aptas para sublimación; <a class="fine-link" id="colorLink" target="_blank" rel="noopener">consultá disponibilidad de colores</a>.</p>
+    </aside>
+  </div>
+</main>
+
+<div class="modal" id="scaleModal" role="dialog" aria-modal="true" aria-labelledby="scaleTitle">
+  <div class="modal-box">
+    <button type="button" class="modal-close" id="scaleClose" aria-label="Cerrar">×</button>
+    <h4 id="scaleTitle">Probá tus diseños</h4>
+    <p class="sub">Sumá uno o varios diseños a la prenda, elegí la medida máxima de cada uno y movelos para ubicarlos.</p>
+    <div class="scale-tools">
+      <div class="tool"><span class="tool-l">Prenda</span><div class="chips mini" id="scalePrendas"></div></div>
+      <div class="tool"><span class="tool-l">Diseños en la prenda</span><div class="design-pick" id="designPick"></div></div>
+    </div>
+    <div class="scale-tools sel-tools" id="selTools">
+      <div class="tool"><span class="tool-l" id="selLabel">Medida máxima del diseño seleccionado</span><div class="size-chips" id="scaleChips"></div></div>
+      <button type="button" class="link-btn" id="removeSel">Quitar de la prenda</button>
+    </div>
+    <p class="upload-note" id="logoNote"></p>
+    <div class="scale-grid">
+      <div class="scale-card"><div class="t">Sobre la prenda <button type="button" class="link-btn t-link" id="centerBtn">Centrar</button></div><div class="mock" id="scaleMock"></div>
+        <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo. Tocá uno para seleccionarlo.</p></div>
+      <div class="scale-card"><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div>
+        <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
+        <div class="calib"><span>¿La regla no coincide? Medí 1 cm con una regla y ajustá:</span><input type="range" id="calib" min="80" max="120" step="1" value="100" aria-label="Calibrar escala"><b id="calibVal">100%</b></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="chartModal" role="dialog" aria-modal="true" aria-labelledby="chartTitle">
+  <div class="modal-box chart-box">
+    <button type="button" class="modal-close" id="chartClose" aria-label="Cerrar">×</button>
+    <h4 id="chartTitle">Tabla de talles · Remera</h4>
+    <p class="sub">Medidas de la prenda en centímetros, tomadas con la remera apoyada sobre una mesa.</p>
+    <table class="chart" id="chartTable"></table>
+    <p class="fine-note">Ancho: de axila a axila. Largo: desde el hombro hasta el borde inferior. Puede variar ±1 cm.</p>
+  </div>
+</div>
+
+<div class="mobile-bar">
+  <div class="mt"><span>Tu pedido</span><strong id="mTotal">Sin prendas</strong></div>
+  <a href="#summary">Pedir cotización</a>
+</div>
+
+<footer>© 2026 VACH* · Buenos Aires, Argentina</footer>
+
+<script>
+/* ===========================================================
+   PRECIOS — editar solo este bloque
+   =========================================================== */
+var PRECIOS = {
+  prendas: [
+    // precio = prenda sola; las estampas se suman aparte
+    { id: 'remera', nombre: 'Remera',   precio: 10000, icon: 'shirt', tamanios: ['s','m','l'] },
+    { id: 'tote',   nombre: 'Tote bag', precio: 6500,  icon: 'bag',   tamanios: ['s','m','l'] },
+    { id: 'gorra',  nombre: 'Gorra',    precio: 9000,  icon: 'cap',   tamanios: ['s','m'] }
+  ],
+  minimoPrendas: 50,
+  tablaTalles: {            // cm — reemplazar por las medidas reales de la remera que usan
+    XS: { ancho: 46, largo: 66 },
+    S:  { ancho: 49, largo: 69 },
+    M:  { ancho: 52, largo: 72 },
+    L:  { ancho: 55, largo: 74 },
+    XL: { ancho: 58, largo: 76 }
+  },
+  plancha: { ancho: 100, alto: 57, margen: 0.5 },   // cm — para estimar planchas / m²
+  estampas: {                       // precio por cada estampa, según tamaño
+    s: { nombre: '5 cm',  cm: 5,  precio: 1500 },   // medida máxima
+    m: { nombre: '10 cm', cm: 10, precio: 2500 },
+    l: { nombre: '20 cm', cm: 20, precio: 4500 }
+  },
+  talles: ['XS','S','M','L','XL'],
+  descuentos: [            // por cantidad total de prendas
+    { desde: 100, pct: 10 },
+    { desde: 250, pct: 15 },
+    { desde: 500, pct: 20 }
+  ],
+  diseniosIncluidos: 1,
+  precioDisenioExtra: 25000,
+  maxDisenios: 5,          // botones rápidos; con "+" se pueden sumar más
+  topeDisenios: 20,
+  precioHora: 60000,
+  horasMin: 2,
+  horasMax: 8,
+  zonas: [
+    { id: 'caba',  nombre: 'CABA',           detalle: 'Traslado incluido',  extra: 0 },
+    { id: 'fuera', nombre: 'Fuera de CABA',  detalle: 'Traslado a cotizar', extra: null }
+  ],
+  whatsapp: '5491149477845'
+};
+/* =========================================================== */
+
+var ICONS = {
+  shirt: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M17 6l-9 5-4 10 7 3v18h26V24l7-3-4-10-9-5c-1 3-4 5-7 5s-6-2-7-5z"/></svg>',
+  bag:   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 16h30l-2 26H11L9 16z"/><path d="M17 20v-7a7 7 0 0 1 14 0v7"/></svg>',
+  cap:   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 30a16 16 0 0 1 32 0z"/><path d="M40 30c4 0 6 1 6 3s-3 3-8 3H8"/><circle cx="24" cy="13" r="1.5" fill="currentColor"/></svg>'
+};
+
+var state = { qty: {}, est: {}, disenios: 1, designs: [], pos: {}, horas: 3, zona: 'caba' };
+PRECIOS.prendas.forEach(function(p){
+  state.qty[p.id] = 0;
+  state.est[p.id] = { cant: {}, auto: true, def: p.tamanios[p.tamanios.length > 2 ? 1 : 0] };   // auto: sigue a la cantidad de prendas hasta que el cliente la cambie
+  p.tamanios.forEach(function(t){ state.est[p.id].cant[t] = 0; });
+});
+function syncEst(id){ var e = state.est[id]; if (!e.auto) return; for (var t in e.cant) e.cant[t] = 0; e.cant[e.def] = state.qty[id]; }
+state.talles = {};
+PRECIOS.talles.forEach(function(t){ state.talles[t] = 0; });
+
+var fmt = function(n){ return '$' + Math.round(n).toLocaleString('es-AR'); };
+var $ = function(id){ return document.getElementById(id); };
+
+/* render productos */
+$('products').innerHTML = PRECIOS.prendas.map(function(p){
+  return '<div class="prod" data-id="'+p.id+'">' + ICONS[p.icon] +
+    '<div><div class="prod-name">'+p.nombre+'</div></div>' +
+    '<div class="stepper"><button type="button" data-d="-10" aria-label="Restar">−</button>' +
+    '<input type="number" min="0" step="1" inputmode="numeric" value="'+state.qty[p.id]+'" aria-label="Cantidad de '+p.nombre+'">' +
+    '<button type="button" data-d="10" aria-label="Sumar">+</button></div></div>';
+}).join('');
+$('products').addEventListener('click', function(e){
+  var b = e.target.closest('button'); if (!b) return;
+  var card = b.closest('.prod'), id = card.dataset.id;
+  var cur = state.qty[id] || 0, d = parseInt(b.dataset.d,10), M = PRECIOS.minimoPrendas;
+  if (d > 0) state.qty[id] = cur < M ? M : cur + d;          // primer + salta al mínimo
+  else       state.qty[id] = cur <= M ? 0 : Math.max(M, cur + d);
+  card.querySelector('input').value = state.qty[id]; update();
+});
+$('products').addEventListener('input', function(e){
+  if (e.target.tagName !== 'INPUT') return;
+  var id = e.target.closest('.prod').dataset.id;
+  state.qty[id] = Math.max(0, parseInt(e.target.value,10) || 0);
+  update();
+});
+$('products').addEventListener('change', function(e){      // al salir del campo: mínimo 50
+  if (e.target.tagName !== 'INPUT') return;
+  var id = e.target.closest('.prod').dataset.id, v = state.qty[id];
+  if (v > 0 && v < PRECIOS.minimoPrendas) { state.qty[id] = PRECIOS.minimoPrendas; e.target.value = PRECIOS.minimoPrendas; update(); }
+});
+
+/* talles */
+function renderSizes(){
+  $('sizeGrid').innerHTML = PRECIOS.talles.map(function(k){
+    return '<div class="size"><label for="t-'+k+'">'+k+'</label><input type="number" min="0" inputmode="numeric" id="t-'+k+'" data-t="'+k+'" value="'+(state.talles[k]||0)+'"></div>';
+  }).join('');
+}
+renderSizes();
+
+/* estampas */
+function renderPrints(){
+  var sel = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; });
+  if (!sel.length) { $('prints').innerHTML = '<div class="print-empty">Primero elegí las prendas en el paso 1.</div>'; return; }
+  $('prints').innerHTML = sel.map(function(p){
+    var e = state.est[p.id];
+    return '<div class="print-row" data-id="'+p.id+'">' +
+      '<button type="button" class="print-name" data-view="'+p.id+'">'+ICONS[p.icon]+'<div>'+p.nombre+'<small>'+state.qty[p.id]+' unidades</small><span class="view-link">Ver tamaño real</span></div></button>' +
+      '<div class="counters">' + PRECIOS.prendas.filter(function(x){return x.id===p.id;})[0].tamanios.map(function(t){
+        return '<div class="counter"><span class="mini-label">Hasta <b>'+PRECIOS.estampas[t].nombre+'</b></span><div class="stepper">' +
+          '<button type="button" data-t="'+t+'" data-e="-10" aria-label="Menos estampas de '+PRECIOS.estampas[t].nombre+'">−</button>' +
+          '<input type="number" min="0" inputmode="numeric" data-t="'+t+'" value="'+e.cant[t]+'" aria-label="Estampas de '+PRECIOS.estampas[t].nombre+' para '+p.nombre+'">' +
+          '<button type="button" data-t="'+t+'" data-e="10" aria-label="Más estampas de '+PRECIOS.estampas[t].nombre+'">+</button></div></div>';
+      }).join('') + '</div></div>';
+  }).join('') + '<div class="est-total" id="estTotal"></div>';
+  renderEstTotal();
+}
+function renderEstTotal(){
+  if (!$('estTotal')) return;
+  var t = estTotales(), warn = [];
+  PRECIOS.prendas.forEach(function(p){ var q = state.qty[p.id]; if (q && estDe(p.id) < q) warn.push(p.nombre+': '+estDe(p.id)+' estampas para '+q+' unidades'); });
+  var all = 0, tiles = ['s','m','l'].map(function(k){ var n = t[k] || 0; all += n;
+    return '<div class="et'+(n?'':' zero')+'"><b>'+n+'</b><span>estampas de<br>hasta '+PRECIOS.estampas[k].nombre+'</span></div>'; }).join('');
+  $('estTotal').innerHTML = '<div class="et-head">Total del evento</div><div class="et-grid">'+tiles+
+    '<div class="et sum"><b>'+all+'</b><span>estampas<br>en total</span></div></div>' +
+    (warn.length ? '<div class="est-warn">Ojo: '+warn.join(' · ')+'. Cada prenda lleva al menos una estampa.</div>' : '');
+}
+$('prints').addEventListener('click', function(e){
+  var row = e.target.closest('.print-row'); if (!row) return;
+  var b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.view) { openScale(b.dataset.view); return; }
+  var st = state.est[row.dataset.id];
+  if (b.dataset.e) { st.auto = false; st.cant[b.dataset.t] = Math.max(0, (st.cant[b.dataset.t]||0) + (+b.dataset.e)); }
+  renderPrints(); update();
+});
+$('prints').addEventListener('input', function(e){
+  var row = e.target.closest('.print-row'); if (!row || e.target.tagName !== 'INPUT') return;
+  var st = state.est[row.dataset.id]; st.auto = false;
+  st.cant[e.target.dataset.t] = Math.max(0, parseInt(e.target.value,10) || 0);
+  renderEstTotal(); update();
+});
+$('prints').addEventListener('focusout', function(){ setTimeout(function(){ if (!document.activeElement.closest('#prints')) renderPrints(); }, 0); });
+/* modal de escala real */
+var MOCKS = {   // medidas en cm
+  remera: { vb: '0 0 70 76', path: 'M24 4 L10 9 L0 24 L9 29 L12 26 L12 74 L58 74 L58 26 L61 29 L70 24 L60 9 L46 4 C44 8 40 10 35 10 C30 10 26 8 24 4 Z', cx: 35, cy: function(d){ return d > 12 ? 36 : 26; }, area: [13, 11, 57, 73] },
+  tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
+  gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
+};
+var scaleId = 'remera', scaleSel = 0, calib = 1;
+try { calib = (+localStorage.getItem('sv-calib')) || 1; } catch (e) {}
+state.place = {};   // por prenda: [{ d: índice de diseño (-1 = muestra), t: tamaño, x, y (centro en cm) }]
+function prendaOf(id){ return PRECIOS.prendas.filter(function(x){ return x.id === id; })[0]; }
+function cmOf(t){ return PRECIOS.estampas[t].cm; }
+state.ar = [];   // proporción ancho/alto de cada diseño (sin bordes transparentes)
+function dimsOf(pl){
+  var d = cmOf(pl.t), ar = pl.d >= 0 ? (state.ar[pl.d] || 1) : 1;
+  return ar >= 1 ? { w: d, h: d / ar } : { w: d * ar, h: d };
+}
+function fmtCm(n){ return (Math.round(n * 10) / 10).toString().replace('.', ','); }
+function placesOf(id){ return state.place[id] || (state.place[id] = []); }
+function defaultT(id){ var c = state.est[id].cant, pt = prendaOf(id).tamanios; return pt.filter(function(t){ return c[t]; })[0] || state.est[id].def; }
+function clampOne(id, pl){
+  var b = MOCKS[id].area, s = dimsOf(pl), hw = s.w / 2, hh = s.h / 2;
+  pl.x = (b[0] + hw > b[2] - hw) ? (b[0] + b[2]) / 2 : Math.min(b[2] - hw, Math.max(b[0] + hw, pl.x));
+  pl.y = (b[1] + hh > b[3] - hh) ? (b[1] + b[3]) / 2 : Math.min(b[3] - hh, Math.max(b[1] + hh, pl.y));
+}
+function layout(id){          // ordena los diseños en columna (o en fila si no entran) sin superponerse
+  var L = placesOf(id), m = MOCKS[id], b = m.area, n = L.length, gap = 1.2; if (!n) return;
+  var dm = L.map(dimsOf);
+  var totalH = dm.reduce(function(a, s){ return a + s.h; }, 0) + gap * (n - 1);
+  if (totalH <= b[3] - b[1]) {
+    var y = Math.max(b[1], Math.min(m.cy(cmOf(L[0].t)) - dm[0].h / 2, b[3] - totalH));
+    L.forEach(function(pl, i){ pl.x = m.cx; pl.y = y + dm[i].h / 2; y += dm[i].h + gap; clampOne(id, pl); });
+  } else {
+    var totalW = dm.reduce(function(a, s){ return a + s.w; }, 0) + gap * (n - 1), x = m.cx - totalW / 2;
+    L.forEach(function(pl, i){ pl.x = x + dm[i].w / 2; pl.y = m.cy(cmOf(pl.t)); x += dm[i].w + gap; clampOne(id, pl); });
+  }
+}
+function ensurePlaceholder(id){
+  var L = placesOf(id);
+  if (!L.length) { L.push({ d: -1, t: defaultT(id), x: 0, y: 0 }); layout(id); scaleSel = 0; }
+}
+function addDesign(id, i){
+  var L = placesOf(id), at = L.findIndex(function(pl){ return pl.d === i; });
+  if (at >= 0) { scaleSel = at; return; }
+  if (L.length === 1 && L[0].d === -1) L.length = 0;          // reemplaza la muestra
+  var t = L.length ? L[L.length - 1].t : defaultT(id);
+  L.push({ d: i, t: t, x: 0, y: 0 }); layout(id); scaleSel = L.length - 1;
+}
+function removeDesignEverywhere(i){
+  for (var id in state.place) state.place[id] = state.place[id].filter(function(pl){ return pl.d !== i; });
+}
+function renderPrendaTabs(){
+  $('scalePrendas').innerHTML = PRECIOS.prendas.map(function(p){
+    return '<button type="button" class="chip'+(p.id===scaleId?' active':'')+'" data-p="'+p.id+'">'+p.nombre+'</button>'; }).join('');
+}
+$('scalePrendas').addEventListener('click', function(e){
+  var b = e.target.closest('[data-p]'); if (!b) return; scaleId = b.dataset.p; scaleSel = 0; renderScale();
+});
+function renderPick(){
+  var L = placesOf(scaleId), h = '';
+  for (var i = 0; i < state.disenios; i++) {
+    var u = state.designs[i], on = L.some(function(pl){ return pl.d === i; }), sel = L[scaleSel] && L[scaleSel].d === i;
+    h += '<button type="button" class="dp'+(u?' filled':'')+(on?' on':'')+(sel?' active':'')+'" data-d="'+i+'" title="'+(u?(on?'Diseño '+(i+1)+' (en la prenda)':'Sumar diseño '+(i+1)):'Subir diseño '+(i+1))+'"'+(u?' style="background-image:url('+u+')"':'')+'>'+(u?'':'+ '+(i+1))+'</button>';
+  }
+  $('designPick').innerHTML = h;
+  var any = state.designs.slice(0, state.disenios).some(function(u){ return !!u; });
+  $('logoNote').textContent = any ? 'Tocá un diseño para sumarlo a la prenda. Es solo a modo de ejemplo: las imágenes no se envían, solo se ven en tu pantalla.'
+                                  : 'Tocá un "+" para subir tu diseño en PNG y probarlo a modo de ejemplo. Las imágenes no se envían, solo se ven en tu pantalla.';
+}
+$('designPick').addEventListener('click', function(e){
+  var b = e.target.closest('[data-d]'); if (!b) return; var i = +b.dataset.d;
+  if (!state.designs[i]) { pickDesign(i, function(){ addDesign(scaleId, i); renderScale(); }); return; }
+  addDesign(scaleId, i); renderScale();
+});
+$('removeSel').addEventListener('click', function(){
+  var L = placesOf(scaleId); L.splice(scaleSel, 1); scaleSel = Math.max(0, scaleSel - 1); renderScale();
+});
+/* arrastrar */
+var drag = null;
+function svgPt(svg, e){ var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
+$('scaleMock').addEventListener('pointerdown', function(e){
+  var art = e.target.closest('.art'); if (!art) return;
+  var i = +art.dataset.i, pl = placesOf(scaleId)[i], p0 = svgPt(art.ownerSVGElement, e);
+  if (scaleSel !== i) { scaleSel = i; renderScale(); art = $('scaleMock').querySelector('.art[data-i="'+i+'"]'); }
+  drag = { svg: art.ownerSVGElement, x: p0.x, y: p0.y, ox: pl.x, oy: pl.y, art: art, pl: pl };
+  art.classList.add('dragging'); try { art.setPointerCapture(e.pointerId); } catch (err) {} e.preventDefault();
+});
+$('scaleMock').addEventListener('pointermove', function(e){
+  if (!drag) return;
+  var p = svgPt(drag.svg, e), pl = drag.pl;
+  pl.x = drag.ox + (p.x - drag.x); pl.y = drag.oy + (p.y - drag.y); clampOne(scaleId, pl);
+  var s = dimsOf(pl); drag.art.setAttribute('transform', 'translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')');
+});
+['pointerup','pointercancel'].forEach(function(ev){ $('scaleMock').addEventListener(ev, function(){ if (drag) { drag.art.classList.remove('dragging'); drag = null; } }); });
+$('centerBtn').addEventListener('click', function(){ layout(scaleId); renderScale(); });
+$('calib').addEventListener('input', function(){
+  calib = this.value / 100; $('calibVal').textContent = this.value + '%';
+  try { localStorage.setItem('sv-calib', calib); } catch (e) {}
+  var pl = placesOf(scaleId)[scaleSel]; if (pl) drawReal(pl);
+});
+function renderScale(){
+  var p = prendaOf(scaleId), m = MOCKS[p.id];
+  state.place[p.id] = placesOf(p.id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
+  placesOf(p.id).forEach(function(pl){ if (p.tamanios.indexOf(pl.t) < 0) { pl.t = p.tamanios[p.tamanios.length - 1]; clampOne(p.id, pl); } });
+  ensurePlaceholder(p.id);
+  var L = placesOf(p.id);
+  if (scaleSel >= L.length) scaleSel = L.length - 1;
+  var sel = L[scaleSel];
+  renderPrendaTabs(); renderPick();
+  $('selLabel').textContent = L.length > 1 ? 'Medida máxima del diseño seleccionado' : 'Medida máxima del diseño';
+  $('removeSel').hidden = sel.d < 0;
+  $('scaleChips').innerHTML = p.tamanios.map(function(t){
+    return '<button type="button" class="chip'+(sel.t===t?' active':'')+'" data-t="'+t+'"><small>hasta</small>'+PRECIOS.estampas[t].nombre+'</button>'; }).join('');
+  var arts = L.map(function(pl, i){
+    var d = cmOf(pl.t), s = dimsOf(pl), u = pl.d >= 0 ? state.designs[pl.d] : null, on = i === scaleSel && L.length > 1;
+    return '<g class="art" data-i="'+i+'" transform="translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')">' +
+      (u ? '<rect width="'+s.w+'" height="'+s.h+'" fill="rgba(0,0,0,0)" stroke="'+(on || L.length === 1 ? '#7B4FFF' : 'rgba(170,170,170,.45)')+'" stroke-width="'+(on?.32:.2)+'" stroke-dasharray="1 .7"/>' +
+           '<image href="'+u+'" width="'+s.w+'" height="'+s.h+'" preserveAspectRatio="xMidYMid meet"/>'
+         : '<circle cx="'+(d/2)+'" cy="'+(d/2)+'" r="'+(d/2)+'" fill="rgba(123,79,255,.25)" stroke="#7B4FFF" stroke-width=".35" stroke-dasharray="1 .7"/>' +
+           '<text x="'+(d/2)+'" y="'+(d/2+Math.min(1.2, d/8))+'" text-anchor="middle" font-size="'+Math.max(1.6, Math.min(3.2, d/4))+'" font-weight="700" fill="#fff">'+d+' cm</text>') +
+      '</g>';
+  });
+  if (arts.length > 1) arts.push(arts.splice(scaleSel, 1)[0]);   // el seleccionado queda arriba
+  arts = arts.join('');
+  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'"><path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>'+arts+'</svg>';
+  drawReal(sel);
+}
+function drawReal(pl){
+  var d = cmOf(pl.t), dm = dimsOf(pl), logoURL = pl.d >= 0 ? state.designs[pl.d] : null;
+  var r = $('scaleReal'), CM = 96 / 2.54 * calib;               // px por cm en CSS (ajustable)
+  $('calib').value = Math.round(calib*100); $('calibVal').textContent = Math.round(calib*100)+'%';
+  r.innerHTML = '';
+  function fit(){ return Math.min(1, (r.clientWidth - 24) / (dm.w*CM), (r.clientHeight - 24) / (dm.h*CM)); }
+  var k = fit();
+  $('scrollHint').textContent = k < 1 ? ' A '+d+' cm no entra completa en tu pantalla: la mostramos reducida al '+Math.round(k*100)+'%.' : '';
+  k = fit();
+  var W = dm.w * CM * k, H = dm.h * CM * k, tick = CM * k;
+  r.innerHTML = '<div class="real-area" style="--tick:'+tick+'px"><div class="ruler-x" style="width:'+W+'px"></div><div class="ruler-y" style="height:'+H+'px"></div>' +
+    '<div class="real-box'+(logoURL?' has-img':'')+'" style="width:'+W+'px;height:'+H+'px'+(logoURL?';background-image:url('+logoURL+')':'')+'">'+d+' cm</div></div>' +
+    (logoURL ? '<div class="real-dims">Tu diseño: '+fmtCm(dm.w)+' × '+fmtCm(dm.h)+' cm</div>' : '');
+  $('realTitle').textContent = (k < 1 ? 'Tamaño reducido · 1 marca = 1 cm' : 'Tamaño real') + (placesOf(scaleId).length > 1 ? ' · diseño seleccionado' : '');
+  if (k < 1) $('scrollHint').textContent = ' A '+d+' cm no entra completa en tu pantalla: la mostramos reducida al '+Math.round(k*100)+'%.';
+}
+function openScale(id, designIdx){
+  scaleId = id || PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; }).map(function(p){ return p.id; })[0] || 'remera';
+  scaleSel = 0;
+  if (designIdx == null) {   // desde el paso 02: si la prenda está vacía, suma el primer diseño cargado
+    var first = state.designs.slice(0, state.disenios).findIndex(function(u){ return !!u; }), L = placesOf(scaleId);
+    if (first >= 0 && (!L.length || (L.length === 1 && L[0].d === -1))) addDesign(scaleId, first);
+  } else if (designIdx >= 0) addDesign(scaleId, designIdx);
+  $('scaleModal').classList.add('open'); document.body.style.overflow = 'hidden'; renderScale();
+}
+window.addEventListener('resize', function(){ if ($('scaleModal').classList.contains('open')) renderScale(); });
+function closeScale(){ $('scaleModal').classList.remove('open'); document.body.style.overflow = ''; }
+$('scaleClose').addEventListener('click', closeScale);
+$('scaleModal').addEventListener('click', function(e){ if (e.target === this) closeScale(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeScale(); });
+$('scaleChips').addEventListener('click', function(e){
+  var b = e.target.closest('.chip'); if (!b) return;
+  var pl = placesOf(scaleId)[scaleSel]; pl.t = b.dataset.t; clampOne(scaleId, pl); renderScale();
+});
+
+function estDe(id){ var c = state.est[id].cant, n = 0; for (var t in c) n += c[t]; return n; }
+function estTxt(p){
+  var c = state.est[p.id].cant;
+  return p.tamanios.filter(function(t){ return c[t]; }).map(function(t){ return c[t]+' de hasta '+PRECIOS.estampas[t].nombre; }).join(', ') || 'sin estampas';
+}
+function estTotales(){
+  var tot = {};
+  PRECIOS.prendas.forEach(function(p){ if (!state.qty[p.id]) return; var c = state.est[p.id].cant; for (var t in c) tot[t] = (tot[t]||0) + c[t]; });
+  return tot;
+}
+function estResumen(sep, x){
+  var tot = estTotales();
+  return ['s','m','l'].filter(function(t){ return tot[t]; }).map(function(t){ return tot[t]+x+PRECIOS.estampas[t].nombre; }).join(sep);
+}
+function planchas(){            // estimación: cuántas entran de cada medida en una plancha
+  var P = PRECIOS.plancha, tot = estTotales(), uso = 0;
+  for (var t in tot) {
+    var d = PRECIOS.estampas[t].cm + P.margen;
+    var porPlancha = Math.floor(P.ancho / d) * Math.floor(P.alto / d);
+    uso += tot[t] / porPlancha;
+  }
+  return { n: Math.ceil(uso), m2: Math.ceil(uso) * P.ancho * P.alto / 10000 };
+}
+
+$('sizeGrid').addEventListener('input', function(e){
+  var k = e.target.dataset.t; if (!k) return;
+  var otros = PRECIOS.talles.reduce(function(a,t){ return a + (t === k ? 0 : (state.talles[t]||0)); }, 0);
+  var max = Math.max(0, state.qty.remera - otros), v = Math.max(0, parseInt(e.target.value,10) || 0);
+  if (v > max) { v = max; e.target.value = v; }          // tope: no deja pasarse del total de remeras
+  state.talles[k] = v;
+  update();
+});
+
+
+/* diseños */
+var dHtml = '';
+for (var i = 1; i <= PRECIOS.maxDisenios; i++) {
+  var extra = Math.max(0, i - PRECIOS.diseniosIncluidos) * PRECIOS.precioDisenioExtra;
+  dHtml += '<button type="button" class="chip" data-n="'+i+'">'+i+(i===1?' diseño':' diseños')+'</button>';
+}
+dHtml += '<button type="button" class="chip chip-more" id="moreDesigns">+ Más</button>';
+$('designs').innerHTML = dHtml;
+function setDisenios(n){ state.disenios = Math.max(1, Math.min(PRECIOS.topeDisenios, n)); renderSlots(); update(); }
+$('designs').addEventListener('click', function(e){
+  var b = e.target.closest('.chip'); if (!b) return;
+  if (b.id === 'moreDesigns') setDisenios(Math.max(PRECIOS.maxDisenios + 1, state.disenios + 1)); else setDisenios(+b.dataset.n);
+});
+var pendingSlot = 0, afterUpload = null;
+function renderSlots(){
+  var h = '';
+  for (var i = 0; i < state.disenios; i++) {
+    var u = state.designs[i];
+    var x = state.disenios > 1 ? '<button type="button" class="x" data-del="'+i+'" aria-label="Eliminar diseño '+(i+1)+'">×</button>' : '';
+    h += u ? '<div class="slot filled" style="background-image:url('+u+')"><span class="n">'+(i+1)+'</span>'+x+'</div>'
+           : '<div class="slot-wrap"><button type="button" class="slot" data-slot="'+i+'"><b>+</b>Diseño '+(i+1)+'<span style="font-weight:400;color:var(--gray)">PNG</span></button>'+x+'</div>';
+  }
+  if (state.disenios < PRECIOS.topeDisenios) h += '<button type="button" class="slot slot-add" id="addSlot"><b>+</b>Agregar<br>otro diseño</button>';
+  $('designSlots').innerHTML = h;
+  var big = state.disenios > PRECIOS.maxDisenios;
+  $('moreDesigns').textContent = big ? state.disenios+' diseños' : '+ Más';
+  $('moreDesigns').classList.toggle('active', big);
+  $('viewAll').hidden = !state.designs.slice(0, state.disenios).some(function(u){ return !!u; });
+}
+function deleteSlot(i){        // elimina el diseño y su casillero; los siguientes se corren
+  if (state.disenios <= 1) return;
+  var u = state.designs[i]; if (u && u.indexOf('blob:') === 0) URL.revokeObjectURL(u);
+  state.designs.splice(i, 1); state.ar.splice(i, 1);
+  for (var id in state.place) state.place[id] = state.place[id].filter(function(pl){ return pl.d !== i; }).map(function(pl){ if (pl.d > i) pl.d--; return pl; });
+  setDisenios(state.disenios - 1);
+}
+function pickDesign(i, cb){ pendingSlot = i; afterUpload = cb || null; $('designFile').click(); }
+$('designSlots').addEventListener('click', function(e){
+  var d = e.target.closest('[data-del]'); if (d) { deleteSlot(+d.dataset.del); return; }
+  if (e.target.closest('#addSlot')) { setDisenios(state.disenios + 1); return; }
+  var b = e.target.closest('[data-slot]'); if (b) pickDesign(+b.dataset.slot);
+});
+$('designFile').addEventListener('change', function(){
+  var f = this.files[0]; this.value = ''; if (!f) return;
+  var note = $('scaleModal').classList.contains('open') ? $('logoNote') : $('designNote');
+  if (f.type !== 'image/png') { note.textContent = 'El archivo tiene que ser PNG.'; note.classList.add('err'); return; }
+  note.classList.remove('err');
+  var slot = pendingSlot, cb = afterUpload, raw = URL.createObjectURL(f), img = new Image();
+  img.onload = function(){
+    var url = raw, ar = img.naturalWidth / img.naturalHeight;
+    try {   // recorta el borde transparente para que la medida sea la del dibujo
+      var sc = Math.min(1, 600 / Math.max(img.naturalWidth, img.naturalHeight)), cw = Math.max(1, Math.round(img.naturalWidth*sc)), ch = Math.max(1, Math.round(img.naturalHeight*sc));
+      var c = document.createElement('canvas'); c.width = cw; c.height = ch; var x = c.getContext('2d'); x.drawImage(img, 0, 0, cw, ch);
+      var a = x.getImageData(0, 0, cw, ch).data, x0 = cw, y0 = ch, x1 = -1, y1 = -1;
+      for (var yy = 0; yy < ch; yy++) for (var xx = 0; xx < cw; xx++) if (a[(yy*cw+xx)*4+3] > 8) { if (xx<x0)x0=xx; if (xx>x1)x1=xx; if (yy<y0)y0=yy; if (yy>y1)y1=yy; }
+      if (x1 >= 0 && (x0 > 0 || y0 > 0 || x1 < cw-1 || y1 < ch-1)) {
+        var sx = x0/sc, sy = y0/sc, sw = (x1-x0+1)/sc, sh = (y1-y0+1)/sc, o = document.createElement('canvas');
+        o.width = Math.round(sw); o.height = Math.round(sh); o.getContext('2d').drawImage(img, sx, sy, sw, sh, 0, 0, o.width, o.height);
+        url = o.toDataURL('image/png'); ar = sw / sh; URL.revokeObjectURL(raw);
+      }
+    } catch (err) {}
+    if (state.designs[slot] && state.designs[slot].indexOf('blob:') === 0) URL.revokeObjectURL(state.designs[slot]);
+    state.designs[slot] = url; state.ar[slot] = ar;
+    renderSlots(); if (cb) cb(slot);
+  };
+  img.onerror = function(){ note.textContent = 'No pudimos leer la imagen.'; note.classList.add('err'); };
+  img.src = raw;
+});
+renderSlots();
+$('viewAll').addEventListener('click', function(){   // abre con todos los diseños cargados en la prenda
+  var id = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; }).map(function(p){ return p.id; })[0] || 'remera';
+  state.designs.slice(0, state.disenios).forEach(function(u, i){ if (u) addDesign(id, i); });
+  layout(id); openScale(id, -1);
+});
+
+/* horas */
+var r = $('hours'); r.min = PRECIOS.horasMin; r.max = PRECIOS.horasMax; r.value = state.horas;
+$('minH').textContent = PRECIOS.horasMin;
+r.addEventListener('input', function(){ state.horas = +r.value; update(); });
+
+/* zonas */
+$('zones').innerHTML = PRECIOS.zonas.map(function(z){
+  return '<button type="button" class="chip" data-z="'+z.id+'">'+z.nombre+'<small>'+z.detalle+'</small></button>';
+}).join('');
+$('zones').addEventListener('click', function(e){
+  var b = e.target.closest('.chip'); if (!b) return; state.zona = b.dataset.z; update();
+  if (state.zona === 'fuera') setTimeout(function(){ $('loc').focus(); }, 250);
+});
+['date','start','name','brand','loc'].forEach(function(id){ $(id).addEventListener('input', update); });
+
+
+function tallesTxt(sep, kv){
+  var parts = PRECIOS.talles.filter(function(t){ return state.talles[t]; }).map(function(t){ return t+kv+state.talles[t]; });
+  var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0);
+  if (state.qty.remera - asig > 0) parts.push(asig ? 'sin definir'+kv+(state.qty.remera - asig) : 'sin definir');
+  return parts.join(sep);
+}
+function horario(){
+  var v = $('start').value; if (!v) return '';
+  var t = v.split(':'), m = (+t[0])*60 + (+t[1]) + state.horas*60;
+  var end = ('0'+Math.floor(m/60)%24).slice(-2)+':'+('0'+m%60).slice(-2);
+  return v+' a '+end+' hs';
+}
+var lastQuote = null, waMsg = '';
+function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
+function fechaTxt(){ var v = $('date').value; if (!v) return ''; var d = v.split('-'); return d[2]+'/'+d[1]+'/'+d[0]; }
+function lugarTxt(){ return state.zona === 'fuera' ? ($('loc').value.trim() || 'Fuera de CABA') : 'CABA'; }
+var detalleAbierto = false;
+function resumenHTML(desc){
+  var nP = 0, nE = 0;
+  PRECIOS.prendas.forEach(function(p){ if (state.qty[p.id]) { nP += state.qty[p.id]; nE += estDe(p.id); } });
+  var faltan = [!fechaTxt() && 'fecha', !horario() && 'horario', !$('name').value.trim() && 'nombre'].filter(Boolean);
+  var head = '<div class="sum-kpis">' +
+      '<div><b>'+nP+'</b><span>prendas</span></div><div><b>'+nE+'</b><span>estampas</span></div>' +
+      '<div><b>'+state.disenios+'</b><span>diseños</span></div><div><b>'+state.horas+'</b><span>horas</span></div></div>' +
+    '<div class="sum-meta">'+[fechaTxt() || 'Sin fecha', horario() || 'Sin horario', esc(lugarTxt())].join(' · ')+'</div>' +
+    (desc ? '<div class="sum-meta ok">−'+desc.pct+'% de descuento por cantidad</div>' : '') +
+    (faltan.length ? '<div class="sum-miss">Falta completar: '+faltan.join(', ')+'</div>' : '') +
+    '<button type="button" class="sum-toggle" id="sumToggle" aria-expanded="'+detalleAbierto+'">'+(detalleAbierto ? 'Ocultar detalle ▴' : 'Ver detalle ▾')+'</button>';
+  return head + '<div class="sum-detail"'+(detalleAbierto ? '' : ' hidden')+'>' + resumenDetalle(desc) + '</div>';
+}
+function resumenDetalle(desc){
+  var row = function(k, v, cls){ return '<div class="sr'+(cls?' '+cls:'')+'"><span>'+k+'</span><b>'+v+'</b></div>'; };
+  var pend = '<i>a completar</i>';
+  var h = '<div class="sg"><div class="sh">Contacto</div>' +
+    row('Nombre', esc($('name').value.trim()) || pend) +
+    row('Agencia o marca', esc($('brand').value.trim()) || pend) +
+    '</div><div class="sg"><div class="sh">Evento</div>' +
+    row('Fecha', fechaTxt() || pend) +
+    row('Horario', horario() || pend) +
+    row('Lugar', esc(lugarTxt())) +
+    row('Traslado', state.zona === 'fuera' ? 'A cotizar' : 'Incluido') +
+    row('Servicio', state.horas+' hs') +
+    '</div><div class="sg"><div class="sh">Prendas</div>';
+  PRECIOS.prendas.forEach(function(p){
+    var q = state.qty[p.id]; if (!q) return;
+    h += '<div class="sp"><div class="sp-t">'+q+' '+p.nombre+(q>1?'s':'')+'</div>' +
+         '<div class="sp-d">Estampas: '+estTxt(p)+'</div>' +
+         (p.id === 'remera' ? '<div class="sp-d">Talles: '+tallesTxt(' · ', ' ')+'</div>' : '') + '</div>';
+  });
+  if (desc) h += row('Descuento por cantidad', desc.pct+'%', 'ok');
+  return h + '</div>';
+}
+function update(){
+  PRECIOS.prendas.forEach(function(p){ syncEst(p.id); });
+  var lines = [], total = 0, totalQty = 0, prendasSub = 0;
+  PRECIOS.prendas.forEach(function(p){
+    var q = state.qty[p.id] || 0; totalQty += q;
+    document.querySelector('.prod[data-id="'+p.id+'"]').classList.toggle('active', q > 0);
+    if (q > 0) { var c = state.est[p.id].cant, s = q * p.precio; for (var t in c) s += c[t] * PRECIOS.estampas[t].precio; prendasSub += s;
+      lines.push(['line', q+' × '+p.nombre, '', fmt(s)]); lines.push(['line note', 'Estampas: '+estTxt(p), '']); }
+    if (q > 0 && p.id === 'remera') lines.push(['line note', 'Talles: '+tallesTxt(' · ', ' '), '']);
+  });
+  total += prendasSub;
+
+  var desc = null;
+  PRECIOS.descuentos.forEach(function(d){ if (totalQty >= d.desde) desc = d; });
+  if (desc) { var dm = prendasSub * desc.pct / 100; total -= dm; lines.push(['line disc', 'Descuento por cantidad', desc.pct+'%', '−'+fmt(dm)]); }
+
+  var extraD = Math.max(0, state.disenios - PRECIOS.diseniosIncluidos);
+  if (extraD) { var ds = extraD * PRECIOS.precioDisenioExtra; total += ds; lines.push(['line', state.disenios+' diseños', '', fmt(ds)]); }
+  else lines.push(['line', '1 diseño', '', 'Incluido']);
+
+  var hs = state.horas * PRECIOS.precioHora; total += hs;
+  lines.push(['line', state.horas+' hs de servicio', '', fmt(hs)]);
+
+  var zona = PRECIOS.zonas.filter(function(z){ return z.id === state.zona; })[0];
+  if (zona.extra === null) lines.push(['line note', 'Traslado fuera de CABA', 'A cotizar']);
+  else if (zona.extra > 0) { total += zona.extra; lines.push(['line', 'Traslado', '', fmt(zona.extra)]); }
+  else lines.push(['line note', 'Traslado CABA', 'Incluido']);
+
+  if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
+  $('sizes').classList.toggle('show', state.qty.remera > 0);
+  var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
+  if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
+    for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
+    asig = state.qty.remera; renderSizes();
+  }
+  $('sizesCount').textContent = dif === 0 ? '✓ '+asig+' de '+state.qty.remera : 'Faltan '+dif+' por asignar';
+  $('sizesCount').classList.toggle('ok', dif === 0);
+  var ok = totalQty > 0 && PRECIOS.prendas.every(function(p){ var q = state.qty[p.id]||0; return q === 0 || q >= PRECIOS.minimoPrendas; });
+  $('minWarn').textContent = 'El mínimo es de '+PRECIOS.minimoPrendas+' unidades por prenda.';
+  $('minWarn').classList.toggle('show', !ok && totalQty > 0);
+
+  $('lines').innerHTML = totalQty ? resumenHTML(desc) : '<div class="empty">Detalle</div>';
+  var estN = 0; PRECIOS.prendas.forEach(function(p){ if (state.qty[p.id]) estN += estDe(p.id); });
+  if ($('sumToggle')) $('sumToggle').onclick = function(){ detalleAbierto = !detalleAbierto; update(); };
+  $('mTotal').textContent = totalQty ? totalQty+' prendas · '+estN+' estampas' : 'Sin prendas';
+  lastQuote = { lines: lines, total: total, zona: zona };
+  $('sendBtn').disabled = !ok;
+  if (!ok && totalQty) { $('sendMsg').textContent = 'El mínimo es de '+PRECIOS.minimoPrendas+' unidades por prenda.'; }
+  else if (!$('sendMsg').classList.contains('err')) $('sendMsg').textContent = '';
+
+  document.querySelectorAll('#designs .chip[data-n]').forEach(function(c){ c.classList.toggle('active', +c.dataset.n === state.disenios); });
+  document.querySelectorAll('#zones .chip').forEach(function(c){ c.classList.toggle('active', c.dataset.z === state.zona); });
+  $('locWrap').classList.toggle('show', state.zona === 'fuera');
+  $('hoursVal').textContent = state.horas;
+  $('endHint').textContent = horario() ? 'De '+horario() : '';
+
+  /* WhatsApp */
+  var msg = ['Hola SubliVach! Quiero cotizar un evento:', ''];
+  PRECIOS.prendas.forEach(function(p){
+    if (!state.qty[p.id]) return;
+    var l = '• '+state.qty[p.id]+' '+p.nombre+(state.qty[p.id]>1?'s':'');
+    if (p.id === 'remera') l += ' (talles: '+tallesTxt(', ', ' ')+')';
+    msg.push(l, '   Estampas: '+estTxt(p));
+  });
+  var pl = planchas();
+  if (estResumen('', '')) msg.push('• Total estampas: '+estResumen(' · ', ' × ')+' ('+pl.n+(pl.n===1?' plancha':' planchas')+' de '+PRECIOS.plancha.ancho+'×'+PRECIOS.plancha.alto+' cm ≈ '+pl.m2.toFixed(2).replace('.',',')+' m²)');
+  msg.push('• '+state.disenios+(state.disenios===1?' diseño':' diseños'));
+  msg.push('• '+state.horas+' hs de servicio');
+  msg.push('• Lugar: '+lugarTxt());
+  if ($('date').value) { var d = $('date').value.split('-'); msg.push('• Fecha: '+d[2]+'/'+d[1]+'/'+d[0]); }
+  if (horario()) msg.push('• Horario: '+horario());
+  if ($('name').value.trim()) msg.push('• Nombre: '+$('name').value.trim());
+  if ($('brand').value.trim()) msg.push('• Agencia o marca: '+$('brand').value.trim());
+  if ($('email').value.trim()) msg.push('• Mail: '+$('email').value.trim());
+  msg.push('', '¿Me pasan el precio?');
+  waMsg = msg.join('\n');   // se usa si se vuelve a agregar un botón de WhatsApp
+}
+
+/* enviar cotización (en la muestra se simula el envío) */
+$('email').addEventListener('input', function(){ this.classList.remove('err'); $('sendMsg').classList.remove('err'); update(); });
+$('sendBtn').addEventListener('click', function(){
+  var em = $('email').value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) {
+    $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
+  }
+  $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
+  $('waAfter').href = 'https://wa.me/'+PRECIOS.whatsapp+'?text='+encodeURIComponent(waMsg.replace('¿Me pasan el precio?', 'Ya recibí la cotización por mail, quiero confirmar la fecha.'));
+});
+$('previewBtn').addEventListener('click', function(){ var mp = $('mailPreview'); mp.hidden = !mp.hidden; this.textContent = mp.hidden ? 'Ver el mail de ejemplo (solo en esta muestra)' : 'Ocultar el mail de ejemplo'; });
+function renderMail(){
+  var q = lastQuote; if (!q) return;
+  var rows = q.lines.map(function(l){
+    var val = l[3] || l[2];
+    return '<div class="r'+(l[0].indexOf('note')>=0?' sub':'')+'"><span>'+l[1]+'</span><span>'+(val||'')+'</span></div>';
+  }).join('');
+  $('mailPreview').innerHTML = '<h5>Tu cotización SubliVach</h5>' + rows +
+    '<div class="r tt"><span>Total</span><span>'+fmt(q.total)+' + IVA</span></div>' +
+    '<div class="r sub" style="margin-top:.5rem"><span>Fecha / horario</span><span>'+(fechaTxt() || '—')+(horario() ? ' · '+horario() : '')+'</span></div>' +
+    '<div class="r sub"><span>Lugar</span><span>'+esc(lugarTxt())+'</span></div>' +
+    '<div class="r sub"><span>Contacto</span><span>'+(esc($('name').value.trim()) || '—')+(($('brand').value.trim()) ? ' · '+esc($('brand').value.trim()) : '')+'</span></div>' +
+    '<p style="margin-top:.6rem;color:#666;font-size:.72rem">Para reservar la fecha respondé este mail o escribinos por WhatsApp. La fecha se confirma con la seña.</p>';
+}
+$('colorLink').href = 'https://wa.me/'+PRECIOS.whatsapp+'?text='+encodeURIComponent('Hola SubliVach! Quería consultar disponibilidad de colores de prendas para sublimar.');
+/* tabla de talles */
+$('chartTable').innerHTML = '<tr><th>Talle</th><th>Ancho</th><th>Largo</th></tr>' +
+  PRECIOS.talles.map(function(t){ var m = PRECIOS.tablaTalles[t]; return '<tr><td>'+t+'</td><td>'+m.ancho+' cm</td><td>'+m.largo+' cm</td></tr>'; }).join('');
+$('openChart').addEventListener('click', function(){ $('chartModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
+function closeChart(){ $('chartModal').classList.remove('open'); document.body.style.overflow = ''; }
+$('chartClose').addEventListener('click', closeChart);
+$('chartModal').addEventListener('click', function(e){ if (e.target === this) closeChart(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeChart(); });
+update();
+</script>
+</body>
+</html>

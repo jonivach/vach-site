@@ -3,5 +3,6 @@ Allow: /
 
 Disallow: /offline.html
 Disallow: /laservach/full-landing.html
+Disallow: /sublivach/
 
 Sitemap: https://vach.com.ar/sitemap.xml
