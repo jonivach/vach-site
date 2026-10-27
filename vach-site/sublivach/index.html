@@ -191,15 +191,20 @@
     border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; transition: background .2s, opacity .2s; }
   .lam-btn:hover { background: rgba(123,79,255,.28); }
   .lam-btn:disabled { opacity: .35; cursor: not-allowed; }
-  .modal-box.lam-box { width: min(920px, 100%); }
-  .lam-prev { border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid var(--border); min-height: 220px; display: flex; align-items: center; justify-content: center; }
-  .lam-prev img { display: block; width: 100%; height: auto; }
+  .modal-box.lam-box { width: min(920px, 100%); max-height: calc(100dvh - 2rem); display: flex; flex-direction: column; overflow: hidden; }
+  #lamModal { align-items: center; overflow: hidden; }
+  #lamModal .modal-box { max-height: calc(100dvh - 2rem); overflow: hidden; padding: 1.4rem; }
+  #lamModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
+  .lam-prev { flex: 1 1 auto; min-height: 160px; border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+  .lam-prev img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
   .lam-wait { font-size: .85rem; color: var(--gray); }
-  .lam-actions { display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+  .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+  #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
+  #lamModal .sub { padding-right: 2.8rem; }
   .lam-actions .send-btn { width: auto; padding: .9rem 1.6rem; }
   .lam-share { padding: .9rem 1.6rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card2); color: var(--white); font: inherit; font-weight: 600; font-size: var(--fs-btn); cursor: pointer; }
   .lam-share[hidden] { display: none; }
-  @media (max-width: 700px) { .lam-actions > * { flex: 1 1 100%; } }
+  @media (max-width: 700px) { .lam-actions > * { flex: 1 1 0; } #lamModal { padding: .75rem; } #lamModal .modal-box { padding: 1.1rem 1rem; } }
   .send-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
@@ -375,6 +380,10 @@
   .summary::-webkit-scrollbar { width: 6px; }
   .summary::-webkit-scrollbar-thumb { background: rgba(123,79,255,.5); border-radius: 6px; }
   .summary h3 { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--purple); margin-bottom: 1.1rem; }
+  .sum-head { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
+  .lam-link { background: none; border: 0; padding: 0; font: inherit; font-size: .76rem; font-weight: 500; color: var(--lgray); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .lam-link:hover { color: var(--white); }
+  .lam-link:disabled { display: none; }
   .lines { display: flex; flex-direction: column; margin-bottom: 1.1rem; min-height: 40px; }
   .sg { display: flex; flex-direction: column; gap: .45rem; }
   .sg + .sg { border-top: 1px solid var(--border); padding-top: 1rem; }
@@ -572,9 +581,8 @@
 
     <!-- RESUMEN -->
     <aside class="summary" id="summary">
-      <h3>Tu cotización</h3>
+      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link" id="lamBtn" disabled>Ver imagen de tus prendas</button></div>
       <div class="lines" id="lines"></div>
-      <button type="button" class="lam-btn" id="lamBtn" disabled><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Ver imagen de tus prendas</button>
       <div class="send" id="sendBox">
         <label for="email" class="send-label">Tu mail</label>
         <input type="email" id="email" autocomplete="email" placeholder="nombre@empresa.com" />
@@ -1482,6 +1490,10 @@ function armarLamina(){
       var mg = 0.07, sc = Math.min(pw * (1 - 2*mg) / vb[2], ph * (1 - 2*mg) / vb[3]);
       var ox = x0 + (pw - vb[2]*sc) / 2, oy = top + (ph - vb[3]*sc) / 2;
       c.save(); rrect(c, x0, top, pw, ph, 22); c.clip();
+      if (logo) {               // marca de agua detrás de la prenda
+        var ww = pw * 0.86, wh = ww * logo.naturalHeight / logo.naturalWidth;
+        c.globalAlpha = 0.08; c.drawImage(logo, x0 + (pw - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
+      }
       if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
       lugaresLamina(p.id).forEach(function(pl){
         var di = disIm[pl.d]; if (!di) return; var s = dimsOf(pl);
