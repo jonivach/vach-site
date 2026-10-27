@@ -208,7 +208,8 @@
   .upload-note { font-size: .76rem; color: var(--gray); margin-bottom: 1.1rem; }
   .upload-note.err { color: #ff7a7a; }
   .upload-note b { color: var(--lgray); }
-  .real-dims { font-size: .78rem; font-weight: 600; color: var(--white); margin: .6rem 0 0 1.2rem; }
+  .real-dims { font-size: .82rem; font-weight: 700; color: var(--white); margin-top: .6rem; }
+  .real-dims:empty { display: none; }
   .real-box.has-img { border-radius: 4px; background: #F4F4F2 center / 100% 100% no-repeat; color: transparent; }
   .scale-grid { display: grid; grid-template-columns: 260px minmax(0,1fr); gap: 1.2rem; }
   .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: 500px; display: flex; flex-direction: column; min-width: 0; }
@@ -549,7 +550,7 @@
     <div class="scale-grid">
       <div class="scale-card"><div class="t">Sobre la prenda <button type="button" class="link-btn t-link" id="centerBtn">Centrar</button></div><div class="mock" id="scaleMock"></div>
         <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo. Tocá uno para seleccionarlo.</p></div>
-      <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div>
+      <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div><div class="real-dims" id="realDims"></div>
         <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
         <div class="calib"><span>¿La regla no coincide? Medí 1 cm con una regla y ajustá:</span><input type="range" id="calib" min="80" max="120" step="1" value="100" aria-label="Calibrar escala"><b id="calibVal">100%</b></div></div>
     </div>
@@ -920,8 +921,8 @@ function drawReal(pl){
   k = fit();
   var W = dm.w * CM * k, H = dm.h * CM * k, tick = CM * k;
   r.innerHTML = '<div class="real-area" style="--tick:'+tick+'px"><div class="ruler-x" style="width:'+W+'px"></div><div class="ruler-y" style="height:'+H+'px"></div>' +
-    '<div class="real-box'+(logoURL?' has-img':'')+'" style="width:'+W+'px;height:'+H+'px'+(logoURL?';background-image:url('+logoURL+')':'')+'">'+d+' cm</div></div>' +
-    (logoURL ? '<div class="real-dims">Tu diseño: '+fmtCm(dm.w)+' × '+fmtCm(dm.h)+' cm</div>' : '');
+    '<div class="real-box'+(logoURL?' has-img':'')+'" style="width:'+W+'px;height:'+H+'px'+(logoURL?';background-image:url('+logoURL+')':'')+'">'+d+' cm</div></div>';
+  $('realDims').textContent = logoURL ? 'Tu diseño: '+fmtCm(dm.w)+' × '+fmtCm(dm.h)+' cm' : '';
   $('realTitle').textContent = (k < 1 ? 'Tamaño reducido · 1 marca = 1 cm' : 'Tamaño real') + (placesOf(scaleId).length > 1 ? ' · diseño seleccionado' : '');
   if (k < 1) $('scrollHint').textContent = ' A '+d+' cm no entra completa en tu pantalla: la mostramos reducida al '+Math.round(k*100)+'%.';
 }
