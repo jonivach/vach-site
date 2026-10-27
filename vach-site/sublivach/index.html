@@ -159,6 +159,7 @@
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
   .send-msg.err { color: #ff7a7a; }
+  .send-btn:disabled + .send-msg { color: #FFC94D; }
   .sent { padding: 1rem; border-radius: 12px; background: rgba(124,227,161,.08); border: 1px solid rgba(124,227,161,.35); }
   .sent-ok { color: #7CE3A1; font-weight: 600; font-size: .9rem; margin-bottom: .35rem; word-break: break-word; }
   .sent p { font-size: .8rem; color: var(--lgray); margin-bottom: .6rem; }
@@ -1002,6 +1003,22 @@ function horario(){
   return v+' a '+end+' hs';
 }
 var lastQuote = null, waMsg = '';
+var MAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function faltantes(){   // todo lo obligatorio para poder enviar
+  var f = [], totalQty = 0;
+  PRECIOS.prendas.forEach(function(p){ totalQty += state.qty[p.id] || 0; });
+  if (!totalQty) f.push('prendas');
+  PRECIOS.prendas.forEach(function(p){ var q = state.qty[p.id] || 0; if (q && q < PRECIOS.minimoPrendas) f.push('mínimo '+PRECIOS.minimoPrendas+' '+p.nombre.toLowerCase()+'s'); });
+  if (state.qty.remera) { var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0); if (asig !== state.qty.remera) f.push('talles de remeras'); }
+  PRECIOS.prendas.forEach(function(p){ var q = state.qty[p.id] || 0; if (q && estDe(p.id) < q) f.push('estampas de '+p.nombre.toLowerCase()+'s'); });
+  if (!fechaTxt()) f.push('fecha');
+  if (!horario()) f.push('horario');
+  if (state.zona === 'fuera' && !$('loc').value.trim()) f.push('ubicación');
+  if (!$('name').value.trim()) f.push('nombre');
+  if (!$('brand').value.trim()) f.push('agencia o marca');
+  if (!MAIL_RE.test($('email').value.trim())) f.push('mail');
+  return f;
+}
 function esc(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]; }); }
 function fechaTxt(){ var v = $('date').value; if (!v) return ''; var d = v.split('-'); return d[2]+'/'+d[1]+'/'+d[0]; }
 function lugarTxt(){ return state.zona === 'fuera' ? ($('loc').value.trim() || 'Fuera de CABA') : 'CABA'; }
@@ -1009,7 +1026,7 @@ var detalleAbierto = false;
 function resumenHTML(desc){
   var nP = 0, nE = 0;
   PRECIOS.prendas.forEach(function(p){ if (state.qty[p.id]) { nP += state.qty[p.id]; nE += estDe(p.id); } });
-  var faltan = [!fechaTxt() && 'fecha', !horario() && 'horario', !$('name').value.trim() && 'nombre'].filter(Boolean);
+  var faltan = faltantes().filter(function(x){ return x !== 'mail'; });
   var head = '<div class="sum-kpis">' +
       '<div><b>'+nP+'</b><span>prendas</span></div><div><b>'+nE+'</b><span>estampas</span></div>' +
       '<div><b>'+state.disenios+'</b><span>diseños</span></div><div><b>'+state.horas+'</b><span>horas</span></div></div>' +
@@ -1087,9 +1104,10 @@ function update(){
   if ($('sumToggle')) $('sumToggle').onclick = function(){ detalleAbierto = !detalleAbierto; update(); };
   $('mTotal').textContent = totalQty ? totalQty+' prendas · '+estN+' estampas' : 'Sin prendas';
   lastQuote = { lines: lines, total: total, zona: zona };
-  $('sendBtn').disabled = !ok;
-  if (!ok && totalQty) { $('sendMsg').textContent = 'El mínimo es de '+PRECIOS.minimoPrendas+' unidades por prenda.'; }
-  else if (!$('sendMsg').classList.contains('err')) $('sendMsg').textContent = '';
+  var falta = faltantes();
+  $('sendBtn').disabled = falta.length > 0;
+  $('sendMsg').classList.remove('err');
+  $('sendMsg').textContent = falta.length ? 'Para enviar falta completar: ' + falta.join(', ') + '.' : '';
 
   document.querySelectorAll('#designs .chip[data-n]').forEach(function(c){ c.classList.toggle('active', +c.dataset.n === state.disenios); });
   document.querySelectorAll('#zones .chip').forEach(function(c){ c.classList.toggle('active', c.dataset.z === state.zona); });
@@ -1123,7 +1141,7 @@ function update(){
 $('email').addEventListener('input', function(){ this.classList.remove('err'); $('sendMsg').classList.remove('err'); update(); });
 $('sendBtn').addEventListener('click', function(){
   var em = $('email').value.trim();
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)) {
+  if (faltantes().length || !MAIL_RE.test(em)) {
     $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
   }
   $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
