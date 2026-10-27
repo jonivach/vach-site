@@ -1452,7 +1452,7 @@ function update(){
   // render: solo con al menos un diseño cargado (nunca con círculos de muestra) y, si RENDER_TRAS_ENVIO, después de enviar
   var renderOk = hayDisenios() && PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; }) && (!RENDER_TRAS_ENVIO || state.enviada);
   $('lamBtn').classList.toggle('off', !renderOk); $('lamBtn').setAttribute('aria-disabled', !renderOk);
-  $('lamBtn2').hidden = !renderOk;
+  $('lamBtn2').textContent = hayDisenios() ? 'Ver render de tus prendas' : 'Cargá tu diseño para ver el render de tus prendas';
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
@@ -1619,7 +1619,13 @@ function nombreArchivo(){
   var b = ($('brand').value.trim() || $('name').value.trim() || 'evento').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   return 'sublivach-' + (b || 'evento') + '.jpg';
 }
-$('lamBtn2').addEventListener('click', function(){ $('lamBtn').click(); });
+$('lamBtn2').addEventListener('click', function(){
+  if (hayDisenios()) { $('lamBtn').click(); return; }
+  // sin diseños: abre el selector de archivos y, al subirlo, muestra el render
+  var libre = state.designs.slice(0, state.disenios).findIndex(function(u){ return !u; });
+  if (libre < 0) libre = 0;
+  pickDesign(libre, function(){ $('lamBtn').click(); });
+});
 function hayDisenios(){ return state.disElegido && state.designs.slice(0, state.disenios).some(function(u){ return !!u; }); }
 $('lamBtn').addEventListener('click', function(){
   if (this.classList.contains('off')) { this.classList.add('tip-on'); var b = this; clearTimeout(b._t); b._t = setTimeout(function(){ b.classList.remove('tip-on'); }, 2600); return; }
