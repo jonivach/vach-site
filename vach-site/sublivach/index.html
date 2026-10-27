@@ -653,7 +653,10 @@ var PRECIOS = {
       { id: 'oversize', nombre: 'Oversize', sufijo: 'oversize', precio: 10000 } ] },
     tote:   { titulo: 'Tela', opciones: [
       { id: 'lienzo',    nombre: 'Lienzo',    sufijo: 'de lienzo',    precio: 6500 },
-      { id: 'gabardina', nombre: 'Gabardina', sufijo: 'de gabardina', precio: 6500 } ] }
+      { id: 'gabardina', nombre: 'Gabardina', sufijo: 'de gabardina', precio: 6500 } ] },
+    gorra:  { titulo: 'Tela', opciones: [
+      { id: 'algodon',   nombre: 'Algodón',   sufijo: 'de algodón',   precio: 9000 },
+      { id: 'gabardina', nombre: 'Gabardina', sufijo: 'de gabardina', precio: 9000 } ] }
   },
   tablaTalles: {            // cm — reemplazar por las medidas reales de las remeras que usan
     regular:  { XS: { ancho: 46, largo: 66 }, S: { ancho: 49, largo: 69 }, M: { ancho: 52, largo: 72 }, L: { ancho: 55, largo: 74 }, XL: { ancho: 58, largo: 76 } },
@@ -796,6 +799,8 @@ var MOCKS = {   // medidas en cm
   tote_lienzo:    { vb: '0 0 38.55 59.39', img: '/sublivach/tote-lienzo.webp', cx: 19.3, cy: function(){ return 41; }, area: [1.8, 26, 36.7, 57.5] },   // cuerpo 38 cm
   tote_gabardina: { vb: '0 0 39.41 62.41', img: '/sublivach/tote-gabardina.webp',    cx: 19.8, cy: function(){ return 42; }, area: [2.3, 26.8, 37.3, 60.7] }, // cuerpo 38 × 40 cm
   tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
+  gorra_algodon:   { vb: '0 0 20 17.38', img: '/sublivach/gorra-algodon.webp', cx: 10.1, cy: function(){ return 5.8; }, area: [3.5, 1.6, 16.5, 9.6] },   // 20 cm de ancho
+  gorra_gabardina: { vb: '0 0 20 17.42', img: '/sublivach/gorra-gabardina.webp', cx: 9.9,  cy: function(){ return 6.3; }, area: [3.5, 1.5, 16.5, 10.8] },
   gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
 };
 function mockOf(id){ return MOCKS[id + '_' + state.variante[id]] || MOCKS[id]; }
