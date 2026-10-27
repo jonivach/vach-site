@@ -207,7 +207,7 @@
   .modal { position: fixed; inset: 0; z-index: 200; display: none; align-items: center; justify-content: center; padding: 1rem;
     background: rgba(0,0,0,.72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
   .modal.open { display: flex; }
-  .modal-box { position: relative; width: min(980px, 100%); max-height: calc(100vh - 2rem); overflow: auto; background: var(--card);
+  .modal-box { position: relative; width: min(980px, 100%); max-height: calc(100vh - 2rem); overflow: auto; overscroll-behavior: contain; background: var(--card);
     border: 1px solid var(--purple-line); border-radius: 18px; padding: 1.5rem; }
   .modal-close { position: absolute; top: .9rem; right: .9rem; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
     background: var(--card2); color: var(--white); font-size: 1.2rem; cursor: pointer; }
@@ -226,7 +226,7 @@
   .real-dims:empty { display: none; }
   .real-box.has-img { border-radius: 4px; background: #F4F4F2 center / 100% 100% no-repeat; color: transparent; }
   .scale-grid { display: grid; grid-template-columns: 260px minmax(0,1fr); gap: 1.2rem; }
-  .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: 500px; display: flex; flex-direction: column; min-width: 0; }
+  .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: clamp(260px, calc(100vh - 350px), 520px); display: flex; flex-direction: column; min-width: 0; }
   .scale-card .t { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
   .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
   .mock svg { width: 100%; max-height: 100%; height: auto; display: block; }
