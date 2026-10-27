@@ -74,7 +74,12 @@
 
   .grid { display: grid; grid-template-columns: minmax(0,1fr) 360px; gap: 2rem; align-items: start; }
 
-  .step { background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem; margin-bottom: 1.25rem; }
+  .step { position: relative; background: var(--card); border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem; margin-bottom: 1.25rem; transition: opacity .3s; }
+  /* pasos bloqueados hasta completar el anterior */
+  .step.locked > *:not(.step-head) { opacity: .3; pointer-events: none; user-select: none; }
+  .step.locked .step-head { opacity: .55; }
+  .step-lock { display: none; margin: -.2rem 0 .9rem; font-size: .78rem; font-weight: 600; color: #FFC94D; }
+  .step.locked .step-lock { display: flex; align-items: center; gap: .4rem; opacity: 1; }
   .step-head { display: flex; align-items: baseline; gap: .8rem; margin-bottom: 1.2rem; }
   .step-num { font-size: .72rem; font-weight: 700; color: var(--purple); letter-spacing: .1em; }
   .step-title { font-size: var(--fs-h3); font-weight: 600; }
@@ -368,6 +373,8 @@
   .range-val span { font-size: .85rem; color: var(--gray); font-weight: 500; }
   input[type=range] { flex: 1; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 6px; background: #26262b; outline: none; }
   input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--purple); border: 3px solid #fff; cursor: pointer; }
+  input[type=range].unset::-webkit-slider-thumb { background: #3a3a40; }
+  input[type=range].unset::-moz-range-thumb { background: #3a3a40; }
   input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--purple); border: 3px solid #fff; cursor: pointer; }
 
   /* datos */
@@ -534,7 +541,7 @@
   <div class="grid">
     <div>
       <!-- 1 PRENDAS -->
-      <section class="step">
+      <section class="step" id="step1">
         <div class="step-head"><span class="step-num">01</span><span class="step-title">¿Qué prendas querés sublimar?</span></div>
         <p class="step-sub">Prenda incluida, lista para sublimar en el momento. Podés combinar.<br>Mínimo <span id="minP">50</span> unidades por prenda.</p>
         <div class="products" id="products"></div>
@@ -549,15 +556,17 @@
       </section>
 
       <!-- 2 ESTAMPAS -->
-      <section class="step">
+      <section class="step" id="step2">
         <div class="step-head"><span class="step-num">02</span><span class="step-title">¿Cuántas estampas de cada tamaño?</span></div>
+        <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
         <p class="step-sub">Indicá cuántas estampas querés de cada medida máxima, por prenda. Por ejemplo: 100 de 5 cm y 10 de 10 cm.</p>
         <div id="prints"></div>
       </section>
 
       <!-- 3 DISEÑOS -->
-      <section class="step">
+      <section class="step" id="step3">
         <div class="step-head"><span class="step-num">03</span><span class="step-title">¿Cuántos diseños para elegir?</span></div>
+        <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
         <p class="step-sub">Es el catálogo de opciones que van a ver tus invitados para elegir qué estampar.</p>
         <div class="chips" id="designs"></div>
         <div class="design-slots" id="designSlots"></div>
@@ -569,18 +578,20 @@
       </section>
 
       <!-- 4 HORAS -->
-      <section class="step">
+      <section class="step" id="step4">
         <div class="step-head"><span class="step-num">04</span><span class="step-title">¿Cuántas horas de servicio?</span></div>
+        <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
         <p class="step-sub">Incluye operador y equipo de sublimado en el lugar. Mínimo <span id="minH"></span> horas.</p>
         <div class="range-row">
-          <div class="range-val"><b id="hoursVal">3</b> <span>hs</span></div>
+          <div class="range-val"><b id="hoursVal">–</b> <span>hs</span></div>
           <input type="range" id="hours" step="1" />
         </div>
       </section>
 
       <!-- 5 LUGAR Y FECHA -->
-      <section class="step">
+      <section class="step" id="step5">
         <div class="step-head"><span class="step-num">05</span><span class="step-title">¿Dónde y cuándo?</span></div>
+        <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
         <div class="chips" id="zones"></div>
         <div class="field loc" id="locWrap"><label for="loc">Ubicación del evento</label><input type="text" id="loc" autocomplete="street-address" placeholder="Dirección o localidad · Ej.: Pilar, Buenos Aires" /></div>
         <div class="fields">
@@ -748,7 +759,7 @@ var ICONS = {
   cap:   '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M8 30a16 16 0 0 1 32 0z"/><path d="M40 30c4 0 6 1 6 3s-3 3-8 3H8"/><circle cx="24" cy="13" r="1.5" fill="currentColor"/></svg>'
 };
 
-var state = { qty: {}, est: {}, disenios: 1, designs: [], pos: {}, horas: 3, zona: 'caba', variante: {} };
+var state = { qty: {}, est: {}, disenios: 1, designs: [], pos: {}, horas: null, zona: 'caba', variante: {} };
 Object.keys(PRECIOS.variantes).forEach(function(id){ state.variante[id] = PRECIOS.variantes[id].opciones[0].id; });
 function varOf(id){ var v = PRECIOS.variantes[id]; return v ? v.opciones.filter(function(o){ return o.id === state.variante[id]; })[0] : null; }
 function precioDe(p){ var v = varOf(p.id); return v ? v.precio : p.precio; }
@@ -1298,9 +1309,9 @@ $('viewAll').addEventListener('click', function(){   // abre con todos los dise�
 });
 
 /* horas */
-var r = $('hours'); r.min = PRECIOS.horasMin; r.max = PRECIOS.horasMax; r.value = state.horas;
+var r = $('hours'); r.min = PRECIOS.horasMin; r.max = PRECIOS.horasMax; r.value = PRECIOS.horasMin; r.classList.add('unset');
 $('minH').textContent = PRECIOS.horasMin;
-r.addEventListener('input', function(){ state.horas = +r.value; update(); });
+['input','change','pointerup','keyup'].forEach(function(ev){ r.addEventListener(ev, function(){ if ($('step4').classList.contains('locked')) return; r.classList.remove('unset'); if (state.horas !== +r.value) { state.horas = +r.value; update(); } }); });
 
 /* zonas */
 $('zones').innerHTML = PRECIOS.zonas.map(function(z){
@@ -1321,6 +1332,7 @@ function tallesTxt(sep, kv){
 }
 function horario(){
   var v = $('start').value; if (!v) return '';
+  if (!state.horas) return v+' hs';
   var t = v.split(':'), m = (+t[0])*60 + (+t[1]) + state.horas*60;
   var end = ('0'+Math.floor(m/60)%24).slice(-2)+':'+('0'+m%60).slice(-2);
   return v+' a '+end+' hs';
@@ -1334,6 +1346,7 @@ function faltantes(){   // todo lo obligatorio para poder enviar
   PRECIOS.prendas.forEach(function(p){ var q = state.qty[p.id] || 0; if (q && q < PRECIOS.minimoPrendas) f.push('mínimo '+PRECIOS.minimoPrendas+' '+p.nombre.toLowerCase()+'s'); });
   if (state.qty.remera) { var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0); if (asig !== state.qty.remera) f.push('talles de remeras'); }
   PRECIOS.prendas.forEach(function(p){ var q = state.qty[p.id] || 0; if (q && estDe(p.id) < q) f.push('estampas de '+p.nombre.toLowerCase()+'s'); });
+  if (!state.horas) f.push('horas');
   if (!fechaTxt()) f.push('fecha');
   if (!horario()) f.push('horario');
   if (state.zona === 'fuera' && !$('loc').value.trim()) f.push('ubicación');
@@ -1351,7 +1364,7 @@ function resumenHTML(desc){
   PRECIOS.prendas.forEach(function(p){ if (state.qty[p.id]) { nP += state.qty[p.id]; nE += estDe(p.id); } });
   var head = '<div class="sum-kpis">' +
       '<div><b>'+nP+'</b><span>prendas</span></div><div><b>'+nE+'</b><span>estampas</span></div>' +
-      '<div><b>'+state.disenios+'</b><span>diseños</span></div><div><b>'+state.horas+'</b><span>horas</span></div></div>' +
+      '<div><b>'+state.disenios+'</b><span>diseños</span></div><div><b>'+(state.horas || '–')+'</b><span>horas</span></div></div>' +
     '<div class="sum-meta">'+[fechaTxt() || 'Sin fecha', horario() || 'Sin horario', esc(lugarTxt())].join(' · ')+'</div>' +
     (desc ? '<div class="sum-meta ok">−'+desc.pct+'% de descuento por cantidad</div>' : '') +
     '<button type="button" class="sum-toggle" id="sumToggle" aria-expanded="'+detalleAbierto+'">'+(detalleAbierto ? 'Ocultar detalle ▴' : 'Ver detalle ▾')+'</button>';
@@ -1368,7 +1381,7 @@ function resumenDetalle(desc){
     row('Horario', horario() || pend) +
     row('Lugar', esc(lugarTxt())) +
     row('Traslado', state.zona === 'fuera' ? 'A cotizar' : 'Incluido') +
-    row('Servicio', state.horas+' hs') +
+    row('Servicio', state.horas ? state.horas+' hs' : pend) +
     '</div><div class="sg"><div class="sh">Prendas</div>';
   PRECIOS.prendas.forEach(function(p){
     var q = state.qty[p.id]; if (!q) return;
@@ -1378,6 +1391,19 @@ function resumenDetalle(desc){
   });
   if (desc) h += row('Descuento por cantidad', desc.pct+'%', 'ok');
   return h + '</div>';
+}
+function pasosOk(){
+  var hay = PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
+  var min = PRECIOS.prendas.every(function(p){ var q = state.qty[p.id] || 0; return !q || q >= PRECIOS.minimoPrendas; });
+  var talles = !state.qty.remera || PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0) === state.qty.remera;
+  var p1 = hay && min && talles;
+  var p2 = p1 && PRECIOS.prendas.every(function(p){ var q = state.qty[p.id] || 0; return !q || estDe(p.id) >= q; });
+  var p4 = p2 && !!state.horas;
+  return { 2: p1, 3: p2, 4: p2, 5: p4 };
+}
+function bloquearPasos(){
+  var ok = pasosOk();
+  [2,3,4,5].forEach(function(n){ var el = $('step'+n), lock = !ok[n]; el.classList.toggle('locked', lock); el.setAttribute('aria-disabled', lock); });
 }
 function update(){
   PRECIOS.prendas.forEach(function(p){ syncEst(p.id); });
@@ -1399,8 +1425,8 @@ function update(){
   if (extraD) { var ds = extraD * PRECIOS.precioDisenioExtra; total += ds; lines.push(['line', state.disenios+' diseños', '', fmt(ds)]); }
   else lines.push(['line', '1 diseño', '', 'Incluido']);
 
-  var hs = state.horas * PRECIOS.precioHora; total += hs;
-  lines.push(['line', state.horas+' hs de servicio', '', fmt(hs)]);
+  var hs = (state.horas || 0) * PRECIOS.precioHora; total += hs;
+  if (state.horas) lines.push(['line', state.horas+' hs de servicio', '', fmt(hs)]);
 
   var zona = PRECIOS.zonas.filter(function(z){ return z.id === state.zona; })[0];
   if (zona.extra === null) lines.push(['line note', 'Traslado fuera de CABA', 'A cotizar']);
@@ -1409,6 +1435,7 @@ function update(){
 
   if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
   $('sizes').classList.toggle('show', state.qty.remera > 0);
+  bloquearPasos();
   // en prueba: se puede ver siempre. Para pedir primero el envío, poner RENDER_TRAS_ENVIO = true
   $('lamBtn').disabled = RENDER_TRAS_ENVIO && !state.enviada;
   $('lamBtn').title = $('lamBtn').disabled && RENDER_TRAS_ENVIO ? 'Disponible después de enviar la cotización' : '';
@@ -1436,7 +1463,7 @@ function update(){
   document.querySelectorAll('#designs .chip[data-n]').forEach(function(c){ c.classList.toggle('active', +c.dataset.n === state.disenios); });
   document.querySelectorAll('#zones .chip').forEach(function(c){ c.classList.toggle('active', c.dataset.z === state.zona); });
   $('locWrap').classList.toggle('show', state.zona === 'fuera');
-  $('hoursVal').textContent = state.horas;
+  $('hoursVal').textContent = state.horas || '–';
   $('endHint').textContent = horario() ? 'De '+horario() : '';
 
   /* WhatsApp */
@@ -1450,7 +1477,7 @@ function update(){
   var pl = planchas();
   if (estResumen('', '')) msg.push('• Total estampas: '+estResumen(' · ', ' × ')+' ('+pl.n+(pl.n===1?' plancha':' planchas')+' de '+PRECIOS.plancha.ancho+'×'+PRECIOS.plancha.alto+' cm ≈ '+pl.m2.toFixed(2).replace('.',',')+' m²)');
   msg.push('• '+state.disenios+(state.disenios===1?' diseño':' diseños'));
-  msg.push('• '+state.horas+' hs de servicio');
+  if (state.horas) msg.push('• '+state.horas+' hs de servicio');
   msg.push('• Lugar: '+lugarTxt());
   if ($('date').value) { var d = $('date').value.split('-'); msg.push('• Fecha: '+d[2]+'/'+d[1]+'/'+d[0]); }
   if (horario()) msg.push('• Horario: '+horario());
