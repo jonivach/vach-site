@@ -1022,7 +1022,7 @@ function renderScale(){
   var arts = L.map(function(pl, i){
     var d = cmOf(pl.t), s = dimsOf(pl), u = pl.d >= 0 ? state.designs[pl.d] : null, on = i === scaleSel && L.length > 1;
     return '<g class="art" data-i="'+i+'" transform="translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')">' +
-      (u ? '<rect width="'+s.w+'" height="'+s.h+'" fill="rgba(0,0,0,0)" stroke="'+(on || L.length === 1 ? '#7B4FFF' : 'rgba(170,170,170,.45)')+'" stroke-width="'+(on?.32:.2)+'" stroke-dasharray="1 .7"/>' +
+      (u ? '<rect width="'+s.w+'" height="'+s.h+'" fill="rgba(0,0,0,0)" stroke="'+(on || L.length === 1 ? '#7B4FFF' : 'rgba(170,170,170,.45)')+'" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>' +
            '<image href="'+u+'" width="'+s.w+'" height="'+s.h+'" preserveAspectRatio="xMidYMid meet"/>'
          : '<circle cx="'+(d/2)+'" cy="'+(d/2)+'" r="'+(d/2)+'" fill="rgba(123,79,255,.25)" stroke="#7B4FFF" stroke-width=".35" stroke-dasharray="1 .7"/>' +
            '<text x="'+(d/2)+'" y="'+(d/2+Math.min(1.2, d/8))+'" text-anchor="middle" font-size="'+Math.max(1.6, Math.min(3.2, d/4))+'" font-weight="700" fill="#fff">'+d+' cm</text>') +
