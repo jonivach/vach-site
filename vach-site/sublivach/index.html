@@ -241,6 +241,7 @@
   .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
   .mock svg { width: 100%; max-height: 100%; height: auto; display: block; }
   .mock svg.photo .art image { mix-blend-mode: multiply; }
+  .mock svg.photo.color .art image { mix-blend-mode: normal; }
   .real { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(123,79,255,.5) transparent; }
   .real-area { padding-right: 12px; padding-bottom: 12px; }
   .real-area { position: relative; padding: 1.2rem 0 0 1.2rem; display: inline-block; }
@@ -569,7 +570,7 @@
         <p>Revisá tu casilla (y spam). Para confirmar la fecha, escribinos por WhatsApp.</p>
         <div class="mail-preview" id="mailPreview" hidden></div>
       </div>
-      <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br>Prendas blancas aptas para sublimación; <a class="fine-link" id="colorLink" target="_blank" rel="noopener">consultá disponibilidad de colores</a>.</p>
+      <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br><a class="fine-link" id="colorLink" target="_blank" rel="noopener">Consultá por disponibilidad de colores</a>.</p>
     </aside>
   </div>
 </main>
@@ -799,8 +800,8 @@ var MOCKS = {   // medidas en cm
   tote_lienzo:    { vb: '0 0 38.55 59.39', img: '/sublivach/tote-lienzo.webp', cx: 19.3, cy: function(){ return 41; }, area: [1.8, 26, 36.7, 57.5] },   // cuerpo 38 cm
   tote_gabardina: { vb: '0 0 39.41 62.41', img: '/sublivach/tote-gabardina.webp',    cx: 19.8, cy: function(){ return 42; }, area: [2.3, 26.8, 37.3, 60.7] }, // cuerpo 38 × 40 cm
   tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
-  gorra_algodon:   { vb: '0 0 20 17.38', img: '/sublivach/gorra-algodon.webp', cx: 10.1, cy: function(){ return 5.8; }, area: [3.5, 1.6, 16.5, 9.6] },   // 20 cm de ancho
-  gorra_gabardina: { vb: '0 0 20 17.42', img: '/sublivach/gorra-gabardina.webp', cx: 9.9,  cy: function(){ return 6.3; }, area: [3.5, 1.5, 16.5, 10.8] },
+  gorra_algodon:   { vb: '0 0 20 17.38', img: '/sublivach/gorra-algodon.webp', color: true, cx: 10.1, cy: function(){ return 5.8; }, area: [3.5, 1.6, 16.5, 9.6] },   // 20 cm de ancho
+  gorra_gabardina: { vb: '0 0 20 17.42', img: '/sublivach/gorra-gabardina.webp', color: true, cx: 9.9,  cy: function(){ return 6.3; }, area: [3.5, 1.5, 16.5, 10.8] },
   gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
 };
 function mockOf(id){ return MOCKS[id + '_' + state.variante[id]] || MOCKS[id]; }
@@ -1032,7 +1033,7 @@ function renderScale(){
   var vb = m.vb.split(' ');
   var base = m.img ? '<image href="'+m.img+'" x="0" y="0" width="'+vb[2]+'" height="'+vb[3]+'" preserveAspectRatio="none"/>'
                    : '<path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>';
-  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+'">'+base+arts+'</svg>';
+  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+(m.color ? ' color' : '')+'">'+base+arts+'</svg>';
   drawReal(sel);
 }
 function drawReal(pl){         // siempre a escala real; si no entra, se desplaza dentro del recuadro
