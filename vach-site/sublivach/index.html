@@ -221,7 +221,8 @@
   .scale-card .t { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
   .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
   .mock svg { width: 100%; max-height: 100%; height: auto; display: block; }
-  .real { flex: 1; min-height: 0; overflow: hidden; }
+  .real { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(123,79,255,.5) transparent; }
+  .real-area { padding-right: 12px; padding-bottom: 12px; }
   .real-area { position: relative; padding: 1.2rem 0 0 1.2rem; display: inline-block; }
   .real-box { border: 2px dashed var(--purple); border-radius: 50%; background: rgba(123,79,255,.12); display: flex; align-items: center; justify-content: center;
     color: var(--white); font-weight: 700; font-size: .9rem; }
@@ -923,21 +924,18 @@ function renderScale(){
   $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'"><path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>'+arts+'</svg>';
   drawReal(sel);
 }
-function drawReal(pl){
+function drawReal(pl){         // siempre a escala real; si no entra, se desplaza dentro del recuadro
   var d = cmOf(pl.t), dm = dimsOf(pl), logoURL = pl.d >= 0 ? state.designs[pl.d] : null;
   var r = $('scaleReal'), CM = 96 / 2.54 * calib;               // px por cm en CSS (ajustable)
   $('calib').value = Math.round(calib*100); $('calibVal').textContent = Math.round(calib*100)+'%';
-  r.innerHTML = '';
-  function fit(){ return Math.min(1, (r.clientWidth - 24) / (dm.w*CM), (r.clientHeight - 24) / (dm.h*CM)); }
-  var k = fit();
-  $('scrollHint').textContent = k < 1 ? ' A '+d+' cm no entra completa en tu pantalla: la mostramos reducida al '+Math.round(k*100)+'%.' : '';
-  k = fit();
-  var W = dm.w * CM * k, H = dm.h * CM * k, tick = CM * k;
-  r.innerHTML = '<div class="real-area" style="--tick:'+tick+'px"><div class="ruler-x" style="width:'+W+'px"></div><div class="ruler-y" style="height:'+H+'px"></div>' +
+  var W = dm.w * CM, H = dm.h * CM;
+  r.innerHTML = '<div class="real-area" style="--tick:'+CM+'px"><div class="ruler-x" style="width:'+W+'px"></div><div class="ruler-y" style="height:'+H+'px"></div>' +
     '<div class="real-box'+(logoURL?' has-img':'')+'" style="width:'+W+'px;height:'+H+'px'+(logoURL?';background-image:url('+logoURL+')':'')+'">'+d+' cm</div></div>';
+  r.scrollTop = 0; r.scrollLeft = 0;
   $('realDims').textContent = logoURL ? 'Tu diseño: '+fmtCm(dm.w)+' × '+fmtCm(dm.h)+' cm' : '';
-  $('realTitle').textContent = (k < 1 ? 'Tamaño reducido · 1 marca = 1 cm' : 'Tamaño real') + (placesOf(scaleId).length > 1 ? ' · diseño seleccionado' : '');
-  if (k < 1) $('scrollHint').textContent = ' A '+d+' cm no entra completa en tu pantalla: la mostramos reducida al '+Math.round(k*100)+'%.';
+  $('realTitle').textContent = 'Tamaño real' + (placesOf(scaleId).length > 1 ? ' · diseño seleccionado' : '');
+  var sobra = r.scrollHeight > r.clientHeight + 2 || r.scrollWidth > r.clientWidth + 2;
+  $('scrollHint').textContent = sobra ? ' No entra completo en tu pantalla: desplazate dentro del recuadro para verlo entero.' : '';
 }
 function openScale(id, designIdx){
   $('scaleModal').scrollTop = 0;
