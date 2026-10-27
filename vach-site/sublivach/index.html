@@ -1369,7 +1369,7 @@ function update(){
   if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
   $('sizes').classList.toggle('show', state.qty.remera > 0);
   // en prueba: se puede ver siempre. Para pedir primero el envío, poner RENDER_TRAS_ENVIO = true
-  $('lamBtn').disabled = (RENDER_TRAS_ENVIO && !state.enviada) || !PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
+  $('lamBtn').disabled = RENDER_TRAS_ENVIO && !state.enviada;
   $('lamBtn').title = $('lamBtn').disabled && RENDER_TRAS_ENVIO ? 'Disponible después de enviar la cotización' : '';
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
@@ -1543,6 +1543,9 @@ $('lamBtn2').addEventListener('click', function(){ $('lamBtn').click(); });
 $('lamBtn').addEventListener('click', function(){
   $('lamModal').classList.add('open'); document.body.style.overflow = 'hidden'; $('lamModal').scrollTop = 0;
   $('lamPrev').innerHTML = '<span class="lam-wait">Armando la imagen…</span>'; $('lamDl').disabled = true; $('lamShare').hidden = true;
+  if (!PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; })) {
+    $('lamPrev').innerHTML = '<span class="lam-wait">Elegí al menos una prenda en el paso 1 para ver el render.</span>'; return;
+  }
   armarLamina().then(function(blob){
     if (!blob) throw new Error('sin imagen');
     if (lamURL) URL.revokeObjectURL(lamURL);
