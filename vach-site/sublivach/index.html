@@ -240,6 +240,7 @@
   .scale-card .t { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
   .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
   .mock svg { width: 100%; max-height: 100%; height: auto; display: block; }
+  .mock svg.photo .art image { mix-blend-mode: multiply; }
   .real { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: rgba(123,79,255,.5) transparent; }
   .real-area { padding-right: 12px; padding-bottom: 12px; }
   .real-area { position: relative; padding: 1.2rem 0 0 1.2rem; display: inline-block; }
@@ -766,7 +767,7 @@ $('prints').addEventListener('input', function(e){
 $('prints').addEventListener('focusout', function(){ setTimeout(function(){ if (!document.activeElement.closest('#prints')) renderPrints(); }, 0); });
 /* modal de escala real */
 var MOCKS = {   // medidas en cm
-  remera: { vb: '0 0 70 76', path: 'M24 4 L10 9 L0 24 L9 29 L12 26 L12 74 L58 74 L58 26 L61 29 L70 24 L60 9 L46 4 C44 8 40 10 35 10 C30 10 26 8 24 4 Z', cx: 35, cy: function(d){ return d > 12 ? 36 : 26; }, area: [13, 11, 57, 73] },
+  remera: { vb: '0 0 89 97.6', img: '/sublivach/remera.webp', cx: 44.4, cy: function(d){ return d > 12 ? 34 : 26; }, area: [17.5, 17, 71, 92] },
   tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
   gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
 };
@@ -973,7 +974,10 @@ function renderScale(){
   });
   if (arts.length > 1) arts.push(arts.splice(scaleSel, 1)[0]);   // el seleccionado queda arriba
   arts = arts.join('');
-  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'"><path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>'+arts+'</svg>';
+  var vb = m.vb.split(' ');
+  var base = m.img ? '<image href="'+m.img+'" x="0" y="0" width="'+vb[2]+'" height="'+vb[3]+'" preserveAspectRatio="none"/>'
+                   : '<path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>';
+  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+'">'+base+arts+'</svg>';
   drawReal(sel);
 }
 function drawReal(pl){         // siempre a escala real; si no entra, se desplaza dentro del recuadro
