@@ -202,10 +202,12 @@
     border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; transition: background .2s, opacity .2s; }
   .lam-btn:hover { background: rgba(123,79,255,.28); }
   .lam-btn:disabled { opacity: .35; cursor: not-allowed; }
-  .modal-box.ask-box { width: min(460px, 100%); }
-  #askModal { align-items: center; }
-  #askModal .modal-box { max-height: none; overflow: visible; }
-  #askModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
+  .ask-inline { padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,201,77,.45); background: rgba(255,201,77,.08); }
+  .ask-inline[hidden], .send-btn[hidden] { display: none; }
+  .ask-inline p { font-size: .82rem; color: #FFC94D; line-height: 1.45; margin-bottom: .8rem; }
+  .ask-inline .ask-actions { margin-top: 0; }
+  .ask-inline .ask-actions { display: flex; gap: .6rem; }
+  .ask-inline .ask-actions > * { flex: 1 1 0; min-width: 0; width: auto; padding: .8rem .5rem; font-size: .88rem; white-space: nowrap; }
   .ask-actions { display: flex; gap: .7rem; margin-top: 1.2rem; }
   .ask-actions > * { flex: 1 1 0; white-space: nowrap; padding: .9rem 1rem; }
   .modal-box.lam-box { width: min(920px, 100%); max-height: calc(100dvh - 2rem); display: flex; flex-direction: column; overflow: hidden; }
@@ -410,6 +412,7 @@
   .sum-head { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
   .lam-link { background: none; border: 0; padding: 0; font: inherit; font-size: .76rem; font-weight: 500; color: var(--lgray); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .lam-link:hover { color: var(--white); }
+  .sent-lam[hidden] { display: none; }
   .sent-lam { display: block; margin-top: -.2rem; color: #7CE3A1; }
   .lam-link.off { opacity: .4; cursor: not-allowed; text-decoration: none; position: relative; }
   .lam-link.off:hover, .lam-link.off.tip-on { color: var(--lgray); }
@@ -627,6 +630,13 @@
         <label for="email" class="send-label">Tu mail</label>
         <input type="email" id="email" autocomplete="email" placeholder="nombre@empresa.com" />
         <button type="button" class="send-btn" id="sendBtn" disabled>Enviar cotización</button>
+        <div class="ask-inline" id="askInline" hidden>
+          <p>No cargaste ningún diseño, así que no podemos armar el render de tus prendas.</p>
+          <div class="ask-actions">
+            <button type="button" class="send-btn" id="askRender">Quiero un render</button>
+            <button type="button" class="lam-share" id="askSkip">Continuar así</button>
+          </div>
+        </div>
         <p class="send-msg" id="sendMsg"></p>
       </div>
       <div class="sent" id="sentBox" hidden>
@@ -639,18 +649,6 @@
     </aside>
   </div>
 </main>
-
-<div class="modal" id="askModal" role="dialog" aria-modal="true" aria-labelledby="askTitle">
-  <div class="modal-box ask-box">
-    <button type="button" class="modal-close" id="askClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <h4 id="askTitle">¿Querés ver un render de tus prendas?</h4>
-    <p class="sub">Subí tu diseño en PNG y te mostramos cómo quedan las prendas, listo para descargar o compartir.</p>
-    <div class="ask-actions">
-      <button type="button" class="send-btn" id="askRender">Quiero un render</button>
-      <button type="button" class="lam-share" id="askSkip">Continuar así</button>
-    </div>
-  </div>
-</div>
 
 <div class="modal" id="lamModal" role="dialog" aria-modal="true" aria-labelledby="lamTitle">
   <div class="modal-box lam-box">
@@ -1470,7 +1468,7 @@ function update(){
   // render: solo con al menos un diseño cargado (nunca con círculos de muestra) y, si RENDER_TRAS_ENVIO, después de enviar
   var renderOk = hayDisenios() && PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; }) && (!RENDER_TRAS_ENVIO || state.enviada);
   $('lamBtn').classList.toggle('off', !renderOk); $('lamBtn').setAttribute('aria-disabled', !renderOk);
-  $('lamBtn2').textContent = hayDisenios() ? 'Ver render de tus prendas' : 'Cargá tu diseño para ver el render de tus prendas';
+  $('lamBtn2').hidden = !hayDisenios();
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
@@ -1489,6 +1487,8 @@ function update(){
   lastQuote = { lines: lines, total: total, zona: zona };
   var falta = faltantes();
   $('sendBtn').disabled = falta.length > 0;
+  var pedirRender = !falta.length && !hayDisenios();            // todo completo pero sin diseños
+  $('sendBtn').hidden = pedirRender; $('askInline').hidden = !pedirRender;
   $('sendMsg').classList.remove('err');
   $('sendMsg').textContent = falta.length ? 'Para enviar falta completar: ' + falta.join(', ') + '.' : '';
 
@@ -1529,7 +1529,7 @@ $('sendBtn').addEventListener('click', function(){
   if (faltantes().length || !MAIL_RE.test(em)) {
     $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
   }
-  if (!hayDisenios()) { abrirAsk(); return; }       // sin diseños: antes de enviar, ofrece el render
+  if (!hayDisenios()) return;                       // sin diseños se usa "Quiero un render" / "Continuar así"
   enviarCotizacion();
 });
 function enviarCotizacion(){
@@ -1538,17 +1538,16 @@ function enviarCotizacion(){
   state.enviada = true; update();
   if (hayDisenios()) armarLamina().then(function(b){ state.laminaPNG = b; });   // queda lista para adjuntarla al mail (Resend)
 }
-/* ¿render antes de enviar? (solo si no cargó diseños) */
-function abrirAsk(){ $('askModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
-function cerrarAsk(){ $('askModal').classList.remove('open'); document.body.style.overflow = ''; }
+/* sin diseños: "Quiero un render" abre "Probá tus diseños" para cargarlos; "Continuar así" envía sin render */
 $('askRender').addEventListener('click', function(){
-  cerrarAsk();
-  var libre = state.designs.slice(0, state.disenios).findIndex(function(u){ return !u; }); if (libre < 0) libre = 0;
-  pickDesign(libre, function(){ enviarCotizacion(); $('lamBtn').click(); });   // al subir el PNG: envía y muestra el render
+  var id = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; }).map(function(p){ return p.id; })[0] || 'remera';
+  openScale(id);
 });
-$('askSkip').addEventListener('click', function(){ cerrarAsk(); enviarCotizacion(); });
-$('askClose').addEventListener('click', cerrarAsk);
-$('askModal').addEventListener('click', function(e){ if (e.target === this) cerrarAsk(); });
+$('askSkip').addEventListener('click', function(){
+  var em = $('email').value.trim();
+  if (faltantes().length || !MAIL_RE.test(em)) return;
+  enviarCotizacion();
+});
 function renderMail(){
   var q = lastQuote; if (!q) return;
   var rows = q.lines.map(function(l){
@@ -1653,13 +1652,7 @@ function nombreArchivo(){
   var b = ($('brand').value.trim() || $('name').value.trim() || 'evento').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   return 'sublivach-' + (b || 'evento') + '.jpg';
 }
-$('lamBtn2').addEventListener('click', function(){
-  if (hayDisenios()) { $('lamBtn').click(); return; }
-  // sin diseños: abre el selector de archivos y, al subirlo, muestra el render
-  var libre = state.designs.slice(0, state.disenios).findIndex(function(u){ return !u; });
-  if (libre < 0) libre = 0;
-  pickDesign(libre, function(){ $('lamBtn').click(); });
-});
+$('lamBtn2').addEventListener('click', function(){ $('lamBtn').click(); });
 function hayDisenios(){ return state.disElegido && state.designs.slice(0, state.disenios).some(function(u){ return !!u; }); }
 $('lamBtn').addEventListener('click', function(){
   if (this.classList.contains('off')) { this.classList.add('tip-on'); var b = this; clearTimeout(b._t); b._t = setTimeout(function(){ b.classList.remove('tip-on'); }, 2600); return; }
@@ -1702,7 +1695,7 @@ window.addEventListener('resize', fitLam);
 function closeLam(){ $('lamModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('lamClose').addEventListener('click', closeLam);
 $('lamModal').addEventListener('click', function(e){ if (e.target === this) closeLam(); });
-document.addEventListener('keydown', function(e){ if (e.key !== 'Escape') return; if ($('lamModal').classList.contains('open')) closeLam(); if ($('askModal').classList.contains('open')) cerrarAsk(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('lamModal').classList.contains('open')) closeLam(); });
 $('openChart').addEventListener('click', function(){ $('chartModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
 function closeChart(){ $('chartModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('chartClose').addEventListener('click', closeChart);
