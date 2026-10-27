@@ -157,8 +157,17 @@
   .t-link { float: right; font-size: .72rem; letter-spacing: 0; text-transform: none; }
   .mock svg { touch-action: none; user-select: none; -webkit-user-select: none; }
   .calib { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; font-size: .72rem; color: var(--gray); margin-top: .5rem; }
-  .calib input { flex: 1; min-width: 120px; height: 4px; }
-  .calib b { color: var(--white); min-width: 3em; }
+  .calib b { color: var(--gray); font-weight: 400; margin-left: auto; }
+  .modal-box.calib-box { width: min(520px, 100%); z-index: 1; }
+  #calibModal { z-index: 210; }
+  .card-stage { display: flex; align-items: center; justify-content: center; min-height: 260px; margin: .5rem 0 1rem; overflow: hidden; }
+  .card-ref { flex: 0 0 auto; border-radius: 10px; border: 2px solid var(--purple); background: linear-gradient(135deg, rgba(123,79,255,.25), rgba(123,79,255,.08));
+    display: flex; align-items: flex-end; justify-content: flex-end; padding: .5rem .7rem; font-size: .72rem; color: var(--lgray); }
+  .calib-ctrl { display: flex; align-items: center; gap: .8rem; }
+  .calib-ctrl input { flex: 1; }
+  .cbtn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--border); background: var(--card2); color: #fff; font: inherit; font-size: 1.2rem; cursor: pointer; }
+  .calib-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1.2rem; }
+  .send-btn.calib-ok { width: auto; padding: .8rem 1.8rem; }
 
   /* envío */
   .send-label { display: block; font-size: .75rem; color: var(--gray); margin: .4rem 0 .35rem; }
@@ -558,9 +567,24 @@
         <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo. Tocá uno para seleccionarlo.</p></div>
       <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div><div class="real-dims" id="realDims"></div>
         <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
-        <div class="calib"><span>¿La regla no coincide? Medí 1 cm con una regla y ajustá:</span><input type="range" id="calib" min="80" max="120" step="1" value="100" aria-label="Calibrar escala"><b id="calibVal">100%</b></div></div>
+        <div class="calib"><span>¿No coincide con una regla?</span><button type="button" class="link-btn" id="openCalib">Calibrar con una tarjeta</button><b id="calibVal">100%</b></div></div>
     </div>
     <button type="button" class="modal-done" id="scaleDone">Listo, cerrar</button>
+  </div>
+</div>
+
+<div class="modal" id="calibModal" role="dialog" aria-modal="true" aria-labelledby="calibTitle">
+  <div class="modal-box calib-box">
+    <button type="button" class="modal-close" id="calibClose" aria-label="Cerrar">×</button>
+    <h4 id="calibTitle">Calibrá tu pantalla</h4>
+    <p class="sub">Apoyá una tarjeta (de crédito, débito o SUBE) sobre el rectángulo y ajustá hasta que coincidan los bordes.</p>
+    <div class="card-stage"><div class="card-ref" id="cardRef"><span>8,56 × 5,4 cm</span></div></div>
+    <div class="calib-ctrl">
+      <button type="button" class="cbtn" data-c="-1" aria-label="Achicar">−</button>
+      <input type="range" id="calib" min="70" max="140" step="0.5" value="100" aria-label="Tamaño del rectángulo">
+      <button type="button" class="cbtn" data-c="1" aria-label="Agrandar">+</button>
+    </div>
+    <div class="calib-foot"><button type="button" class="link-btn" id="calibReset">Volver al valor original</button><button type="button" class="send-btn calib-ok" id="calibOk">Listo</button></div>
   </div>
 </div>
 
@@ -890,11 +914,23 @@ $('scaleMock').addEventListener('pointermove', function(e){
 });
 ['pointerup','pointercancel'].forEach(function(ev){ $('scaleMock').addEventListener(ev, function(){ if (drag) { drag.art.classList.remove('dragging'); drag = null; } }); });
 $('centerBtn').addEventListener('click', function(){ layout(scaleId); renderScale(); });
-$('calib').addEventListener('input', function(){
-  calib = this.value / 100; $('calibVal').textContent = this.value + '%';
+/* calibración con una tarjeta (medida estándar ISO: 8,56 × 5,398 cm) */
+function setCalib(v){
+  calib = Math.min(1.4, Math.max(0.7, v));
   try { localStorage.setItem('sv-calib', calib); } catch (e) {}
-  var pl = placesOf(scaleId)[scaleSel]; if (pl) drawReal(pl);
-});
+  var CM = 96 / 2.54 * calib;
+  $('cardRef').style.width = (8.56 * CM) + 'px'; $('cardRef').style.height = (5.398 * CM) + 'px';
+  $('calib').value = (calib * 100).toFixed(1);
+  var pl = placesOf(scaleId)[scaleSel]; if (pl && $('scaleModal').classList.contains('open')) drawReal(pl);
+}
+$('calib').addEventListener('input', function(){ setCalib(this.value / 100); });
+$('calibModal').addEventListener('click', function(e){ var b = e.target.closest('[data-c]'); if (b) setCalib(calib + (+b.dataset.c) * 0.005); });
+$('openCalib').addEventListener('click', function(){ $('calibModal').classList.add('open'); setCalib(calib); });
+function closeCalib(){ $('calibModal').classList.remove('open'); }
+$('calibClose').addEventListener('click', closeCalib);
+$('calibOk').addEventListener('click', closeCalib);
+$('calibReset').addEventListener('click', function(){ setCalib(1); });
+$('calibModal').addEventListener('click', function(e){ if (e.target === this) closeCalib(); });
 function renderScale(){
   var p = prendaOf(scaleId), m = MOCKS[p.id];
   state.place[p.id] = placesOf(p.id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
@@ -927,7 +963,7 @@ function renderScale(){
 function drawReal(pl){         // siempre a escala real; si no entra, se desplaza dentro del recuadro
   var d = cmOf(pl.t), dm = dimsOf(pl), logoURL = pl.d >= 0 ? state.designs[pl.d] : null;
   var r = $('scaleReal'), CM = 96 / 2.54 * calib;               // px por cm en CSS (ajustable)
-  $('calib').value = Math.round(calib*100); $('calibVal').textContent = Math.round(calib*100)+'%';
+  $('calibVal').textContent = Math.abs(calib - 1) < 0.001 ? 'Sin calibrar' : 'Calibrado (' + Math.round(calib*100) + '%)';
   var W = dm.w * CM, H = dm.h * CM;
   r.innerHTML = '<div class="real-area" style="--tick:'+CM+'px"><div class="ruler-x" style="width:'+W+'px"></div><div class="ruler-y" style="height:'+H+'px"></div>' +
     '<div class="real-box'+(logoURL?' has-img':'')+'" style="width:'+W+'px;height:'+H+'px'+(logoURL?';background-image:url('+logoURL+')':'')+'">'+d+' cm</div></div>';
@@ -952,7 +988,7 @@ function closeScale(){ $('scaleModal').classList.remove('open'); document.body.s
 $('scaleClose').addEventListener('click', closeScale);
 $('scaleDone').addEventListener('click', closeScale);
 $('scaleModal').addEventListener('click', function(e){ if (e.target === this) closeScale(); });
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeScale(); });
+document.addEventListener('keydown', function(e){ if (e.key !== 'Escape') return; if ($('calibModal').classList.contains('open')) { closeCalib(); return; } closeScale(); });
 $('scaleChips').addEventListener('click', function(e){
   var b = e.target.closest('.chip'); if (!b) return;
   var pl = placesOf(scaleId)[scaleSel]; pl.t = b.dataset.t; clampOne(scaleId, pl); renderScale();
