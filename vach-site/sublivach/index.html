@@ -155,6 +155,8 @@
   .dp.on::after { content: '✓'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--purple); color: #fff; font-size: .62rem; display: flex; align-items: center; justify-content: center; }
   .art { cursor: grab; }
   .art.dragging { cursor: grabbing; }
+  .rot { cursor: grab; }
+  .rot.dragging { cursor: grabbing; }
   .dp { width: 46px; height: 46px; border-radius: 10px; border: 1px solid var(--border); background: var(--card2) center / contain no-repeat; background-origin: content-box; padding: 4px;
     color: var(--lgray); font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
   .dp.filled { background-color: #fff; }
@@ -819,8 +821,13 @@ function dimsOf(pl){
 function fmtCm(n){ return (Math.round(n * 10) / 10).toString().replace('.', ','); }
 function placesOf(id){ return state.place[id] || (state.place[id] = []); }
 function defaultT(id){ var c = state.est[id].cant, pt = prendaOf(id).tamanios; return pt.filter(function(t){ return c[t]; })[0] || state.est[id].def; }
+function boxOf(pl){            // medio ancho / medio alto del diseño ya girado
+  var s = dimsOf(pl), a = (pl.r || 0) * Math.PI / 180, c = Math.abs(Math.cos(a)), n = Math.abs(Math.sin(a));
+  return { hw: (s.w * c + s.h * n) / 2, hh: (s.w * n + s.h * c) / 2 };
+}
+function artTf(pl){ var s = dimsOf(pl); return 'translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')' + (pl.r ? ' rotate('+pl.r+' '+(s.w/2)+' '+(s.h/2)+')' : ''); }
 function clampOne(id, pl){
-  var b = mockOf(id).area, s = dimsOf(pl), hw = s.w / 2, hh = s.h / 2;
+  var b = mockOf(id).area, bx = boxOf(pl), hw = bx.hw, hh = bx.hh;
   pl.x = (b[0] + hw > b[2] - hw) ? (b[0] + b[2]) / 2 : Math.min(b[2] - hw, Math.max(b[0] + hw, pl.x));
   pl.y = (b[1] + hh > b[3] - hh) ? (b[1] + b[3]) / 2 : Math.min(b[3] - hh, Math.max(b[1] + hh, pl.y));
 }
@@ -971,8 +978,30 @@ $('removeSel').addEventListener('click', function(){
 });
 /* arrastrar */
 var drag = null;
+var ROT_ICON = '<path d="M20 11a8 8 0 1 1-2.6-5.9" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round"/><path d="M20 3.5v5h-5" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
+function placeRot(){          // botón redondo debajo del diseño seleccionado
+  var g = $('rotHandle'); if (!g) return;
+  var L = placesOf(scaleId), pl = L[scaleSel];
+  if (!pl || pl.d < 0) { g.innerHTML = ''; return; }
+  var svg = g.ownerSVGElement, vb = svg.viewBox.baseVal, px = svg.getBoundingClientRect().width / vb.width;   // px por cm
+  if (!px) return;
+  var R = 15 / px, gap = 10 / px, bx = boxOf(pl), y = pl.y + bx.hh + gap + R;
+  if (y + R > vb.height) y = pl.y - bx.hh - gap - R;                                  // si no entra abajo, va arriba
+  g.setAttribute('transform', 'translate('+pl.x+' '+y+')');
+  g.innerHTML = '<title>Girar</title><circle r="'+R+'" fill="#fff" stroke="rgba(0,0,0,.18)" stroke-width="1" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))"/>' +
+    '<svg x="'+(-R*.62)+'" y="'+(-R*.62)+'" width="'+(R*1.24)+'" height="'+(R*1.24)+'" viewBox="0 0 24 24">'+ROT_ICON+'</svg>' +
+    (pl.r ? (function(){ var t = Math.round(pl.r)+'°', bw = (t.length * 6.6 + 12) / px, bh = 18 / px, ty = R + 6/px;
+      return '<rect x="'+(-bw/2)+'" y="'+ty+'" width="'+bw+'" height="'+bh+'" rx="'+(bh/2)+'" fill="rgba(17,17,17,.88)"/>' +
+             '<text y="'+(ty + bh/2 + 4/px)+'" text-anchor="middle" font-size="'+(11/px)+'" font-weight="700" fill="#fff">'+t+'</text>'; })() : '');
+}
 function svgPt(svg, e){ var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
 $('scaleMock').addEventListener('pointerdown', function(e){
+  var rh = e.target.closest('.rot');
+  if (rh) {                     // girar: el ángulo sigue al puntero alrededor del centro del diseño
+    var plr = placesOf(scaleId)[scaleSel], svg = rh.ownerSVGElement, q = svgPt(svg, e);
+    drag = { rot: true, svg: svg, pl: plr, a0: Math.atan2(q.y - plr.y, q.x - plr.x), r0: plr.r || 0, art: $('scaleMock').querySelector('.art[data-i="'+scaleSel+'"]'), g: rh };
+    rh.classList.add('dragging'); try { rh.setPointerCapture(e.pointerId); } catch (err) {} e.preventDefault(); return;
+  }
   var art = e.target.closest('.art'); if (!art) return;
   var i = +art.dataset.i, pl = placesOf(scaleId)[i], p0 = svgPt(art.ownerSVGElement, e);
   if (scaleSel !== i) { scaleSel = i; renderScale(); art = $('scaleMock').querySelector('.art[data-i="'+i+'"]'); }
@@ -981,11 +1010,18 @@ $('scaleMock').addEventListener('pointerdown', function(e){
 });
 $('scaleMock').addEventListener('pointermove', function(e){
   if (!drag) return;
+  if (drag.rot) {
+    var q = svgPt(drag.svg, e), pr = drag.pl, a = drag.r0 + (Math.atan2(q.y - pr.y, q.x - pr.x) - drag.a0) * 180 / Math.PI;
+    a = ((a % 360) + 540) % 360 - 180;                                   // entre -180 y 180
+    var snap = Math.round(a / 45) * 45; if (Math.abs(a - snap) < 5) a = snap;   // se "pega" a 0°, 45°, 90°…
+    pr.r = a === -180 ? 180 : a; clampOne(scaleId, pr);
+    drag.art.setAttribute('transform', artTf(pr)); placeRot(); return;
+  }
   var p = svgPt(drag.svg, e), pl = drag.pl;
   pl.x = drag.ox + (p.x - drag.x); pl.y = drag.oy + (p.y - drag.y); clampOne(scaleId, pl);
-  var s = dimsOf(pl); drag.art.setAttribute('transform', 'translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')');
+  drag.art.setAttribute('transform', artTf(pl)); placeRot();
 });
-['pointerup','pointercancel'].forEach(function(ev){ $('scaleMock').addEventListener(ev, function(){ if (drag) { drag.art.classList.remove('dragging'); drag = null; } }); });
+['pointerup','pointercancel'].forEach(function(ev){ $('scaleMock').addEventListener(ev, function(){ if (drag) { (drag.g || drag.art).classList.remove('dragging'); drag = null; } }); });
 $('centerBtn').addEventListener('click', function(){ layout(scaleId); renderScale(); });
 /* calibración con una tarjeta (medida estándar ISO: 8,56 × 5,398 cm) */
 function setCalib(v){
@@ -1021,7 +1057,7 @@ function renderScale(){
     return '<button type="button" class="chip'+(sel.t===t?' active':'')+'" data-t="'+t+'"><small>hasta</small>'+PRECIOS.estampas[t].nombre+'</button>'; }).join('');
   var arts = L.map(function(pl, i){
     var d = cmOf(pl.t), s = dimsOf(pl), u = pl.d >= 0 ? state.designs[pl.d] : null, on = i === scaleSel && L.length > 1;
-    return '<g class="art" data-i="'+i+'" transform="translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')">' +
+    return '<g class="art" data-i="'+i+'" transform="'+artTf(pl)+'">' +
       (u ? '<rect width="'+s.w+'" height="'+s.h+'" fill="rgba(0,0,0,0)" stroke="'+(on || L.length === 1 ? '#7B4FFF' : 'rgba(170,170,170,.45)')+'" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>' +
            '<image href="'+u+'" width="'+s.w+'" height="'+s.h+'" preserveAspectRatio="xMidYMid meet"/>'
          : '<circle cx="'+(d/2)+'" cy="'+(d/2)+'" r="'+(d/2)+'" fill="rgba(123,79,255,.25)" stroke="#7B4FFF" stroke-width=".35" stroke-dasharray="1 .7"/>' +
@@ -1033,7 +1069,8 @@ function renderScale(){
   var vb = m.vb.split(' ');
   var base = m.img ? '<image href="'+m.img+'" x="0" y="0" width="'+vb[2]+'" height="'+vb[3]+'" preserveAspectRatio="none"/>'
                    : '<path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>';
-  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+(m.color ? ' color' : '')+'">'+base+arts+'</svg>';
+  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+(m.color ? ' color' : '')+'">'+base+arts+'<g class="rot" id="rotHandle"></g></svg>';
+  placeRot();
   drawReal(sel);
 }
 function drawReal(pl){         // siempre a escala real; si no entra, se desplaza dentro del recuadro
