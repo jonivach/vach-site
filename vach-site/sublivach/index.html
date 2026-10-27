@@ -165,7 +165,11 @@
   .dp-add:hover { background: var(--purple-soft); }
   .dp.active { border-color: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
   .dp-label { font-size: .72rem; color: var(--gray); margin-right: .2rem; }
-  .t-link { float: right; font-size: .72rem; letter-spacing: 0; text-transform: none; }
+  .scale-card .t { display: flex; align-items: center; justify-content: space-between; gap: .6rem; }
+  .lado-tabs { display: inline-flex; gap: .3rem; }
+  .lado-tabs button { padding: .3rem .7rem; border-radius: 999px; border: 1px solid var(--border); background: var(--card); color: var(--lgray);
+    font: inherit; font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+  .lado-tabs button.active { border-color: var(--purple); background: var(--purple-soft); color: var(--white); }
   .mock svg { touch-action: none; user-select: none; -webkit-user-select: none; }
   .calib { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; font-size: .72rem; color: var(--gray); margin-top: .5rem; }
   .calib b { color: var(--gray); font-weight: 400; margin-left: auto; }
@@ -633,7 +637,7 @@
     </div>
     <p class="upload-note" id="logoNote"></p>
     <div class="scale-grid">
-      <div class="scale-card"><div class="t">Sobre la prenda <button type="button" class="link-btn t-link" id="centerBtn">Centrar</button></div><div class="mock" id="scaleMock"></div>
+      <div class="scale-card"><div class="t">Sobre la prenda <span class="lado-tabs" id="ladoTabs"></span></div><div class="mock" id="scaleMock"></div>
         <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo. Tocá uno para seleccionarlo.</p></div>
       <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div><div class="real-dims" id="realDims"></div>
         <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
@@ -835,8 +839,15 @@ $('prints').addEventListener('focusout', function(){ setTimeout(function(){ if (
 /* modal de escala real */
 var MOCKS = {   // medidas en cm
   // fotos calibradas: el ancho del cuerpo (talle L) define la escala
-  remera_oversize: { vb: '0 0 89 97.6',   img: '/sublivach/remera.webp',    cx: 44.4, cy: function(d){ return d > 12 ? 34 : 26; }, area: [17.5, 17, 71, 92] },   // cuerpo 56 cm
-  remera_regular:  { vb: '0 0 93.6 97.4', img: '/sublivach/remera-regular.webp', cx: 45.7, cy: function(d){ return d > 12 ? 30 : 22; }, area: [22, 14, 71.5, 92] }, // cuerpo 52 cm
+  // mangas: zonas extra donde se puede ubicar un diseño (el centro del diseño se queda dentro de la zona más cercana)
+  remera_oversize: { vb: '0 0 89 97.6',   img: '/sublivach/remera.webp',    cx: 44.4, cy: function(d){ return d > 12 ? 34 : 26; }, area: [17.5, 17, 71, 92],   // cuerpo 56 cm
+                     mangas: [[7.8, 35.2, 16, 45], [73, 35.2, 81.2, 45]] },
+  remera_regular:  { vb: '0 0 93.6 97.4', img: '/sublivach/remera-regular.webp', cx: 45.7, cy: function(d){ return d > 12 ? 30 : 22; }, area: [22, 14, 71.5, 92],   // cuerpo 52 cm
+                     mangas: [[9.2, 27.5, 19.5, 40], [74.1, 27.5, 84.4, 40]] },
+  remera_oversize_trasero: { vb: '0 0 89 97.6',   img: '/sublivach/remera-trasero.webp',     cx: 42.9, cy: function(d){ return d > 12 ? 30 : 22; }, area: [18, 13, 71.5, 92],
+                     mangas: [[7.8, 35.2, 16, 45], [73, 35.2, 81.2, 45]] },
+  remera_regular_trasero:  { vb: '0 0 93.6 97.4', img: '/sublivach/remera-regular-trasero.webp', cx: 47.0, cy: function(d){ return d > 12 ? 24 : 16; }, area: [22.1, 9, 71.6, 92],
+                     mangas: [[9.2, 27.5, 19.5, 40], [74.1, 27.5, 84.4, 40]] },
   tote_lienzo:    { vb: '0 0 38.55 59.39', img: '/sublivach/tote-lienzo.webp', cx: 19.3, cy: function(){ return 41; }, area: [1.8, 26, 36.7, 57.5] },   // cuerpo 38 cm
   tote_gabardina: { vb: '0 0 39.41 62.41', img: '/sublivach/tote-gabardina.webp',    cx: 19.8, cy: function(){ return 42; }, area: [2.3, 26.8, 37.3, 60.7] }, // cuerpo 38 × 40 cm
   tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
@@ -844,7 +855,9 @@ var MOCKS = {   // medidas en cm
   gorra_gabardina: { vb: '0 0 20 17.42', img: '/sublivach/gorra-gabardina.webp', color: true, cx: 9.9,  cy: function(){ return 6.3; }, area: [3.5, 1.5, 16.5, 10.8] },
   gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
 };
-function mockOf(id){ return MOCKS[id + '_' + state.variante[id]] || MOCKS[id]; }
+state.lado = 'frente';           // vista de la remera: frente / trasero
+function ladoDe(id, lado){ return id === 'remera' ? (lado || state.lado) : 'frente'; }
+function mockOf(id, lado){ var t = ladoDe(id, lado) === 'trasero' ? '_trasero' : ''; return MOCKS[id + '_' + state.variante[id] + t] || MOCKS[id + '_' + state.variante[id]] || MOCKS[id]; }
 var scaleId = 'remera', scaleSel = 0, calib = 1;
 try { calib = (+localStorage.getItem('sv-calib')) || 1; } catch (e) {}
 state.place = {};   // por prenda: [{ d: índice de diseño (-1 = muestra), t: tamaño, x, y (centro en cm) }]
@@ -857,7 +870,8 @@ function dimsOf(pl){
   return ar >= 1 ? { w: d, h: d / ar } : { w: d * ar, h: d };
 }
 function fmtCm(n){ return (Math.round(n * 10) / 10).toString().replace('.', ','); }
-function placesOf(id){ return state.place[id] || (state.place[id] = []); }
+function placeKey(id, lado){ return ladoDe(id, lado) === 'trasero' ? id + '_trasero' : id; }
+function placesOf(id, lado){ var k = placeKey(id, lado); return state.place[k] || (state.place[k] = []); }
 function defaultT(id){ var c = state.est[id].cant, pt = prendaOf(id).tamanios; return pt.filter(function(t){ return c[t]; })[0] || state.est[id].def; }
 function boxOf(pl){            // medio ancho / medio alto del diseño ya girado
   var s = dimsOf(pl), a = (pl.r || 0) * Math.PI / 180, c = Math.abs(Math.cos(a)), n = Math.abs(Math.sin(a));
@@ -865,7 +879,12 @@ function boxOf(pl){            // medio ancho / medio alto del diseño ya girado
 }
 function artTf(pl){ var s = dimsOf(pl); return 'translate('+(pl.x - s.w/2)+' '+(pl.y - s.h/2)+')' + (pl.r ? ' rotate('+pl.r+' '+(s.w/2)+' '+(s.h/2)+')' : ''); }
 function clampOne(id, pl){
-  var b = mockOf(id).area, bx = boxOf(pl), hw = bx.hw, hh = bx.hh;
+  var m = mockOf(id), zonas = [m.area].concat(m.mangas || []), b = m.area, best = Infinity;
+  zonas.forEach(function(z){      // zona más cercana al centro del diseño
+    var dx = Math.max(z[0] - pl.x, 0, pl.x - z[2]), dy = Math.max(z[1] - pl.y, 0, pl.y - z[3]), dd = dx*dx + dy*dy;
+    if (dd < best) { best = dd; b = z; }
+  });
+  var bx = boxOf(pl), hw = bx.hw, hh = bx.hh;
   pl.x = (b[0] + hw > b[2] - hw) ? (b[0] + b[2]) / 2 : Math.min(b[2] - hw, Math.max(b[0] + hw, pl.x));
   pl.y = (b[1] + hh > b[3] - hh) ? (b[1] + b[3]) / 2 : Math.min(b[3] - hh, Math.max(b[1] + hh, pl.y));
 }
@@ -1060,7 +1079,10 @@ $('scaleMock').addEventListener('pointermove', function(e){
   drag.art.setAttribute('transform', artTf(pl)); placeRot();
 });
 ['pointerup','pointercancel'].forEach(function(ev){ $('scaleMock').addEventListener(ev, function(){ if (drag) { (drag.g || drag.art).classList.remove('dragging'); drag = null; } }); });
-$('centerBtn').addEventListener('click', function(){ layout(scaleId); renderScale(); });
+$('ladoTabs').addEventListener('click', function(e){
+  var b = e.target.closest('[data-lado]'); if (!b || b.dataset.lado === state.lado) return;
+  state.lado = b.dataset.lado; scaleSel = 0; renderScale();
+});
 /* calibración con una tarjeta (medida estándar ISO: 8,56 × 5,398 cm) */
 function setCalib(v){
   calib = Math.min(1.4, Math.max(0.7, v));
@@ -1080,13 +1102,14 @@ $('calibReset').addEventListener('click', function(){ setCalib(1); });
 $('calibModal').addEventListener('click', function(e){ if (e.target === this) closeCalib(); });
 function renderScale(){
   var p = prendaOf(scaleId), m = mockOf(p.id);
-  state.place[p.id] = placesOf(p.id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
+  state.place[placeKey(p.id)] = placesOf(p.id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
   placesOf(p.id).forEach(function(pl){ if (p.tamanios.indexOf(pl.t) < 0) { pl.t = p.tamanios[p.tamanios.length - 1]; clampOne(p.id, pl); } });
   ensurePlaceholder(p.id);
   var L = placesOf(p.id);
   if (scaleSel >= L.length) scaleSel = L.length - 1;
   var sel = L[scaleSel];
   renderPrendaTabs(); renderPick();
+  $('ladoTabs').innerHTML = p.id === 'remera' ? ['frente','trasero'].map(function(l){ return '<button type="button" data-lado="'+l+'" class="'+(state.lado===l?'active':'')+'">'+(l==='frente'?'Frente':'Trasero')+'</button>'; }).join('') : '';
   $('selLabel').textContent = L.length > 1 ? 'Medida máxima del diseño seleccionado' : 'Medida máxima del diseño';
   $('removeSel').hidden = sel.d < 0;
   $('bgBtn').hidden = sel.d < 0;
@@ -1451,24 +1474,31 @@ renderCortes();
 /* ---------- imagen de las prendas (lámina para compartir) ---------- */
 var lamFile = null, lamURL = null;
 function cargarImg(src){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = function(){ ok(null); }; im.src = src; }); }
-function lugaresLamina(id){     // diseños puestos en la prenda; si no abrió "Probá tus diseños", usa el primero cargado
-  var L = placesOf(id).filter(function(pl){ return pl.d >= 0 && pl.d < state.disenios && state.designs[pl.d]; });
-  if (L.length) return L;
+function lugaresLamina(id, lado){     // diseños puestos en la prenda; si no abrió "Probá tus diseños", usa el primero cargado
+  var L = placesOf(id, lado || 'frente').filter(function(pl){ return pl.d >= 0 && pl.d < state.disenios && state.designs[pl.d]; });
+  if (L.length || lado === 'trasero') return L;
   var first = state.designs.slice(0, state.disenios).findIndex(function(u){ return !!u; });
   if (first < 0) return [];
-  var m = mockOf(id), pl = { d: first, t: defaultT(id), x: m.cx, y: 0, r: 0 }; pl.y = m.cy(cmOf(pl.t)); clampOne(id, pl);
+  var m = mockOf(id, 'frente'), pl = { d: first, t: defaultT(id), x: m.cx, y: 0, r: 0 }; pl.y = m.cy(cmOf(pl.t));
+  var guard = state.lado; state.lado = 'frente'; clampOne(id, pl); state.lado = guard;
   return [pl];
 }
 function rrect(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x+r, y); c.arcTo(x+w, y, x+w, y+h, r); c.arcTo(x+w, y+h, x, y+h, r); c.arcTo(x, y+h, x, y, r); c.arcTo(x, y, x+w, y, r); c.closePath(); }
 function ajustarTexto(c, t, max){ if (c.measureText(t).width <= max) return t; while (t.length > 1 && c.measureText(t+'…').width > max) t = t.slice(0, -1); return t+'…'; }
 function armarLamina(){
-  var prs = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; });
+  var prs = [];
+  PRECIOS.prendas.forEach(function(p){
+    if (!(state.qty[p.id] > 0)) return;
+    var tr = p.id === 'remera' && placesOf('remera', 'trasero').some(function(pl){ return pl.d >= 0 && pl.d < state.disenios && state.designs[pl.d]; });
+    prs.push({ p: p, lado: 'frente', doble: tr });
+    if (tr) prs.push({ p: p, lado: 'trasero', doble: true });
+  });
   var W = 1600, H = 1000, pad = 56, gap = 24, n = prs.length, pw = (W - pad*2 - gap*(n-1)) / n, capH = 104, headH = 104, footH = 52;
   var ph = H - pad*2 - headH - 24 - capH - footH;
   var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
   var F = "'Space Grotesk', system-ui, sans-serif";
   var srcs = [document.querySelector('nav .logo img').src];
-  prs.forEach(function(p){ srcs.push(mockOf(p.id).img || ''); });
+  prs.forEach(function(it){ srcs.push(mockOf(it.p.id, it.lado).img || ''); });
   state.designs.forEach(function(u){ srcs.push(u || ''); });
   return (document.fonts ? document.fonts.ready : Promise.resolve()).then(function(){
     return Promise.all(srcs.map(function(u){ return u ? cargarImg(u) : null; }));
@@ -1497,13 +1527,13 @@ function armarLamina(){
     // una sola card para todas las prendas
     c.fillStyle = 'rgba(255,255,255,.035)'; rrect(c, pad, top, W - pad*2, ph, 22); c.fill();
     c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2; c.stroke();
-    prs.forEach(function(p, k){
-      var x0 = pad + k * (pw + gap), m = mockOf(p.id), vb = m.vb.split(' ').map(Number), im = prendaIm[k];
+    prs.forEach(function(it, k){
+      var p = it.p, x0 = pad + k * (pw + gap), m = mockOf(p.id, it.lado), vb = m.vb.split(' ').map(Number), im = prendaIm[k];
       var mg = 0.07, sc = Math.min(pw * (1 - 2*mg) / vb[2], ph * (1 - 2*mg) / vb[3]);
       var ox = x0 + (pw - vb[2]*sc) / 2, oy = top + (ph - vb[3]*sc) / 2;
       c.save(); rrect(c, pad, top, W - pad*2, ph, 22); c.clip();
       if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
-      var LL = lugaresLamina(p.id);
+      var LL = lugaresLamina(p.id, it.lado);
       if (!LL.length) {         // todavía sin diseño: muestra dónde iría y de qué tamaño
         var dt = defaultT(p.id), dc = cmOf(dt), cyy = m.cy(dc), rr = dc * sc / 2;
         c.save(); c.beginPath(); c.arc(ox + m.cx*sc, oy + cyy*sc, rr, 0, Math.PI*2);
@@ -1524,7 +1554,7 @@ function armarLamina(){
       c.restore();
       // texto debajo
       var cx0 = x0 + pw/2; c.textAlign = 'center'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
-      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]), pw), cx0, top + ph + 42);
+      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]) + (it.doble ? (it.lado === 'trasero' ? ' · trasero' : ' · frente') : ''), pw), cx0, top + ph + 42);
       c.fillStyle = '#AAAAAA'; c.font = '400 21px '+F;
       c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), cx0, top + ph + 74);
       if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), cx0, top + ph + 100);
