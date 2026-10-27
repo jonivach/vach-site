@@ -1046,7 +1046,7 @@ function renderSlots(){
   var h = '';
   for (var i = 0; i < state.disenios; i++) {
     var u = state.designs[i];
-    var x = state.disenios > 1 ? '<button type="button" class="x" data-del="'+i+'" aria-label="Eliminar diseño '+(i+1)+'">×</button>' : '';
+    var x = (state.disenios > 1 || u) ? '<button type="button" class="x" data-del="'+i+'" aria-label="Eliminar diseño '+(i+1)+'">×</button>' : '';
     h += u ? '<div class="slot filled" style="background-image:url('+u+')"><span class="n">'+(i+1)+'</span>'+x+'</div>'
            : '<div class="slot-wrap"><button type="button" class="slot" data-slot="'+i+'"><b>+</b>Diseño '+(i+1)+'<span style="font-weight:400;color:var(--gray)">PNG</span></button>'+x+'</div>';
   }
@@ -1058,8 +1058,10 @@ function renderSlots(){
   $('viewAll').hidden = !state.designs.slice(0, state.disenios).some(function(u){ return !!u; });
 }
 function deleteSlot(i){        // elimina el diseño y su casillero; los siguientes se corren
-  if (state.disenios <= 1) return;
   var u = state.designs[i]; if (u && u.indexOf('blob:') === 0) URL.revokeObjectURL(u);
+  if (state.disenios <= 1) {   // si es el único, se vacía el casillero (siempre queda al menos 1)
+    state.designs[i] = null; state.ar[i] = null; state.orig[i] = null; removeDesignEverywhere(i); renderSlots(); update(); return;
+  }
   state.designs.splice(i, 1); state.ar.splice(i, 1); state.orig.splice(i, 1);
   for (var id in state.place) state.place[id] = state.place[id].filter(function(pl){ return pl.d !== i; }).map(function(pl){ if (pl.d > i) pl.d--; return pl; });
   setDisenios(state.disenios - 1);
