@@ -133,9 +133,11 @@
   @media (max-width: 700px) { .sel-tools .tool { width: 100%; } .sel-tools .size-chips { width: 100%; } .modal .size-chips .chip { padding: .45rem .3rem; } }
   .tool-l { font-size: .7rem; color: var(--gray); }
   .chips.mini .chip { padding: .55rem .9rem; font-size: .85rem; }
-  .sel-tools { align-items: flex-end; margin-top: .3rem; }
+  .scale-tools.sel-tools { align-items: flex-end; margin-top: .3rem; }
   .sel-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  .bg-btn { padding: .6rem 1rem; border-radius: 10px; border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; }
+  .modal .sel-tools .size-chips .chip { height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .sel-actions { height: 46px; }
+  .bg-btn { height: 46px; padding: 0 1.1rem; border-radius: 10px; border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; }
   .bg-btn:hover { background: rgba(123,79,255,.28); }
   .bg-btn:disabled { opacity: .5; cursor: wait; }
   .bg-btn[hidden] { display: none; }
@@ -147,6 +149,9 @@
   .dp { width: 46px; height: 46px; border-radius: 10px; border: 1px solid var(--border); background: var(--card2) center / contain no-repeat; background-origin: content-box; padding: 4px;
     color: var(--lgray); font: inherit; font-size: .62rem; font-weight: 700; cursor: pointer; }
   .dp.filled { background-color: #fff; }
+  .dp-add { border-style: dashed; border-color: var(--purple-line); color: var(--purple); font-size: 1.05rem; line-height: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .dp-add small { font-size: .52rem; color: var(--lgray); font-weight: 600; }
+  .dp-add:hover { background: var(--purple-soft); }
   .dp.active { border-color: var(--purple); box-shadow: 0 0 0 2px var(--purple); }
   .dp-label { font-size: .72rem; color: var(--gray); margin-right: .2rem; }
   .t-link { float: right; font-size: .72rem; letter-spacing: 0; text-transform: none; }
@@ -782,12 +787,20 @@ function renderPick(){
     var u = state.designs[i], on = L.some(function(pl){ return pl.d === i; }), sel = L[scaleSel] && L[scaleSel].d === i;
     h += '<button type="button" class="dp'+(u?' filled':'')+(on?' on':'')+(sel?' active':'')+'" data-d="'+i+'" title="'+(u?(on?'Diseño '+(i+1)+' (en la prenda)':'Sumar diseño '+(i+1)):'Subir diseño '+(i+1))+'"'+(u?' style="background-image:url('+u+')"':'')+'>'+(u?'':'+ '+(i+1))+'</button>';
   }
+  if (state.disenios < PRECIOS.topeDisenios || state.designs.slice(0, state.disenios).some(function(u){ return !u; }))
+    h += '<button type="button" class="dp dp-add" data-add="1" title="Agregar un diseño nuevo">+<small>Agregar</small></button>';
   $('designPick').innerHTML = h;
   var any = state.designs.slice(0, state.disenios).some(function(u){ return !!u; });
   $('logoNote').textContent = any ? 'Tocá un diseño para sumarlo a la prenda. Es solo a modo de ejemplo: las imágenes no se envían, solo se ven en tu pantalla.'
                                   : 'Tocá un "+" para subir tu diseño en PNG y probarlo a modo de ejemplo. Las imágenes no se envían, solo se ven en tu pantalla.';
 }
 $('designPick').addEventListener('click', function(e){
+  if (e.target.closest('[data-add]')) {           // subir un diseño nuevo desde acá
+    var libre = state.designs.slice(0, state.disenios).findIndex(function(u){ return !u; });
+    if (libre < 0) { libre = state.disenios; setDisenios(state.disenios + 1); }
+    pickDesign(libre, function(){ addDesign(scaleId, libre); renderScale(); });
+    return;
+  }
   var b = e.target.closest('[data-d]'); if (!b) return; var i = +b.dataset.d;
   if (!state.designs[i]) { pickDesign(i, function(){ addDesign(scaleId, i); renderScale(); }); return; }
   addDesign(scaleId, i); renderScale();
