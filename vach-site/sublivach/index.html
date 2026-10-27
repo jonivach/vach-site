@@ -1026,13 +1026,11 @@ var detalleAbierto = false;
 function resumenHTML(desc){
   var nP = 0, nE = 0;
   PRECIOS.prendas.forEach(function(p){ if (state.qty[p.id]) { nP += state.qty[p.id]; nE += estDe(p.id); } });
-  var faltan = faltantes().filter(function(x){ return x !== 'mail'; });
   var head = '<div class="sum-kpis">' +
       '<div><b>'+nP+'</b><span>prendas</span></div><div><b>'+nE+'</b><span>estampas</span></div>' +
       '<div><b>'+state.disenios+'</b><span>diseños</span></div><div><b>'+state.horas+'</b><span>horas</span></div></div>' +
     '<div class="sum-meta">'+[fechaTxt() || 'Sin fecha', horario() || 'Sin horario', esc(lugarTxt())].join(' · ')+'</div>' +
     (desc ? '<div class="sum-meta ok">−'+desc.pct+'% de descuento por cantidad</div>' : '') +
-    (faltan.length ? '<div class="sum-miss">Falta completar: '+faltan.join(', ')+'</div>' : '') +
     '<button type="button" class="sum-toggle" id="sumToggle" aria-expanded="'+detalleAbierto+'">'+(detalleAbierto ? 'Ocultar detalle ▴' : 'Ver detalle ▾')+'</button>';
   return head + '<div class="sum-detail"'+(detalleAbierto ? '' : ' hidden')+'>' + resumenDetalle(desc) + '</div>';
 }
