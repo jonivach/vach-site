@@ -202,7 +202,8 @@
     border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; transition: background .2s, opacity .2s; }
   .lam-btn:hover { background: rgba(123,79,255,.28); }
   .lam-btn:disabled { opacity: .35; cursor: not-allowed; }
-  .ask-inline { padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,201,77,.45); background: rgba(255,201,77,.08); }
+  .send-btn.naranja { background: #F5A524; color: #1a1205; }
+  .ask-inline { padding: 0; }
   .ask-inline[hidden], .send-btn[hidden] { display: none; }
   .ask-inline p { font-size: .82rem; color: #FFC94D; line-height: 1.45; margin-bottom: .8rem; }
   .ask-inline .ask-actions { margin-top: 0; }
@@ -1487,8 +1488,10 @@ function update(){
   lastQuote = { lines: lines, total: total, zona: zona };
   var falta = faltantes();
   $('sendBtn').disabled = falta.length > 0;
-  var pedirRender = !falta.length && !hayDisenios();            // todo completo pero sin diseños
-  $('sendBtn').hidden = pedirRender; $('askInline').hidden = !pedirRender;
+  var sinDis = !falta.length && !hayDisenios();                 // todo completo pero sin diseños: botón naranja
+  $('sendBtn').classList.toggle('naranja', sinDis);
+  if (!sinDis) state.preguntaRender = false;
+  $('sendBtn').hidden = sinDis && state.preguntaRender; $('askInline').hidden = !(sinDis && state.preguntaRender);
   $('sendMsg').classList.remove('err');
   $('sendMsg').textContent = falta.length ? 'Para enviar falta completar: ' + falta.join(', ') + '.' : '';
 
@@ -1529,7 +1532,7 @@ $('sendBtn').addEventListener('click', function(){
   if (faltantes().length || !MAIL_RE.test(em)) {
     $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
   }
-  if (!hayDisenios()) return;                       // sin diseños se usa "Quiero un render" / "Continuar así"
+  if (!hayDisenios()) { state.preguntaRender = true; update(); return; }   // sin diseños: muestra "Quiero un render" / "Continuar así"
   enviarCotizacion();
 });
 function enviarCotizacion(){
