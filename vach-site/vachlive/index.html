@@ -86,7 +86,7 @@
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .back { font-size: var(--fs-small); font-weight: 600; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .back { font-size: var(--fs-small); font-weight: 600; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color 0.2s; }
     .back:hover { color: var(--white); }
     .logo { text-decoration: none; display: flex; align-items: center; }
     .logo img { height: 24px; width: auto; display: block; }
@@ -116,6 +116,9 @@
     .back-link { display: block; margin-top: 0.5rem; font-size: var(--fs-small); color: var(--gray); text-decoration: none; transition: color 0.2s; }
     .back-link:hover { color: var(--white); }
     footer { text-align: center; font-size: var(--fs-label); color: var(--gray); }
+    @media (max-width: 768px) {
+      nav { padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 1rem; }
+    }
   </style>
   <!-- Microsoft Clarity -->
   <script type="text/javascript">
@@ -159,7 +162,7 @@
 <div class="grid-overlay"></div>
 <div class="layout">
   <nav>
-    <a href="/" class="back">← Volver</a>
+    <a href="/" class="back"><svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Volver</a>
     <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
   </nav>
   <div class="content">

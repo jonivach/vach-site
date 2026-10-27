@@ -53,10 +53,10 @@
     background-size: 80px 80px; }
 
   nav { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
-    padding: calc(1.1rem + env(safe-area-inset-top)) 2.5rem 1.1rem;
+    padding: calc(1.25rem + env(safe-area-inset-top)) 2.5rem 1.25rem;
     background: rgba(10,10,10,0.82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     border-bottom: 1px solid rgba(255,255,255,0.06); }
-  .back { font-size: var(--fs-small); font-weight: 600; color: var(--gray); text-decoration: none; }
+  .back { display: flex; align-items: center; gap: 0.5rem; font-size: var(--fs-small); font-weight: 600; color: var(--gray); text-decoration: none; transition: color 0.2s; }
   .back:hover { color: var(--white); }
   .logo img { height: 24px; display: block; }
 
@@ -407,7 +407,7 @@
     .grid { grid-template-columns: 1fr; }
     .summary { position: static; max-height: none; overflow: visible; }
     .wrap { padding: 2.5rem 1rem 7rem; }
-    nav { padding-left: 1rem; padding-right: 1rem; }
+    nav { padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 1rem; }
     .products { grid-template-columns: 1fr; }
     .et-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
     .design-slots { grid-template-columns: repeat(3, minmax(0,1fr)); }
@@ -467,7 +467,7 @@
 <div class="grid-overlay"></div>
 
 <nav>
-  <a href="/" class="back">← Volver</a>
+  <a href="/" class="back"><svg width="14" height="14" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M10 6H2M2 6L6 2M2 6L6 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Volver</a>
   <a href="/" class="logo"><img src="/logo.png" alt="VACH*" /></a>
 </nav>
 
