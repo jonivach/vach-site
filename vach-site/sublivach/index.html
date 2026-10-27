@@ -209,7 +209,7 @@
   .modal.open { display: flex; }
   .modal-box { position: relative; width: min(980px, 100%); max-height: calc(100vh - 2rem); overflow: auto; overscroll-behavior: contain; background: var(--card);
     border: 1px solid var(--purple-line); border-radius: 18px; padding: 1.5rem; }
-  .modal-close { position: absolute; top: .9rem; right: .9rem; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
+  .modal-close { display: flex; align-items: center; justify-content: center; padding: 0; line-height: 1; position: absolute; top: .9rem; right: .9rem; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--border);
     background: var(--card2); color: var(--white); font-size: 1.2rem; cursor: pointer; }
   .modal h4 { font-size: 1.15rem; margin-bottom: .25rem; padding-right: 3rem; }
   .modal .sub { font-size: .82rem; color: var(--gray); margin-bottom: 1rem; }
@@ -547,7 +547,7 @@
 
 <div class="modal" id="scaleModal" role="dialog" aria-modal="true" aria-labelledby="scaleTitle">
   <div class="modal-box">
-    <button type="button" class="modal-close" id="scaleClose" aria-label="Cerrar">×</button>
+    <button type="button" class="modal-close" id="scaleClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h4 id="scaleTitle">Probá tus diseños</h4>
     <p class="sub">Sumá uno o varios diseños a la prenda, elegí la medida máxima de cada uno y movelos para ubicarlos.</p>
     <div class="scale-tools">
@@ -575,7 +575,7 @@
 
 <div class="modal" id="calibModal" role="dialog" aria-modal="true" aria-labelledby="calibTitle">
   <div class="modal-box calib-box">
-    <button type="button" class="modal-close" id="calibClose" aria-label="Cerrar">×</button>
+    <button type="button" class="modal-close" id="calibClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h4 id="calibTitle">Calibrá tu pantalla</h4>
     <p class="sub">Apoyá una tarjeta (de crédito, débito o SUBE) sobre el rectángulo y ajustá hasta que coincidan los bordes.</p>
     <div class="card-stage"><div class="card-ref" id="cardRef"><span>8,56 × 5,4 cm</span></div></div>
@@ -590,7 +590,7 @@
 
 <div class="modal" id="chartModal" role="dialog" aria-modal="true" aria-labelledby="chartTitle">
   <div class="modal-box chart-box">
-    <button type="button" class="modal-close" id="chartClose" aria-label="Cerrar">×</button>
+    <button type="button" class="modal-close" id="chartClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h4 id="chartTitle">Tabla de talles · Remera</h4>
     <p class="sub">Medidas de la prenda en centímetros, tomadas con la remera apoyada sobre una mesa.</p>
     <table class="chart" id="chartTable"></table>
