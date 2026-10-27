@@ -71,7 +71,8 @@ function loginPage(error) {
   body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;font-family:'Space Grotesk',sans-serif;color:#fff;
     background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(123,79,255,.16) 0%,transparent 60%),#0A0A0A}
   .box{width:100%;max-width:380px;background:#121214;border:1px solid rgba(123,79,255,.35);border-radius:18px;padding:2rem}
-  img{height:24px;display:block;margin-bottom:1.6rem}
+  img{height:24px;display:block}
+  .home-logo{display:inline-block;margin-bottom:1.6rem}
   .label{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#7B4FFF;margin-bottom:.6rem}
   h1{font-size:1.5rem;line-height:1.15;margin-bottom:.5rem}
   p{font-size:.88rem;color:#AAA;line-height:1.5;margin-bottom:1.3rem}
@@ -82,7 +83,7 @@ function loginPage(error) {
   a{display:block;text-align:center;margin-top:1.2rem;font-size:.8rem;color:#888;text-decoration:none}
 </style></head>
 <body><form class="box" method="POST" action="/sublivach/">
-  <img src="/logo.png" alt="VACH*" />
+  <a href="/" class="home-logo" aria-label="Ir a la home de VACH"><img src="/logo.png" alt="VACH*" /></a>
   <div class="label">↗ SubliVach</div>
   <h1>Acceso privado</h1>
   <p>El cotizador está en prueba. Ingresá la clave de acceso para continuar.</p>
