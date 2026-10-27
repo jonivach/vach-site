@@ -32,7 +32,7 @@
   --r-lg:   20px;
   --r-pill: 100px;
   /* ── Tipografía (escala única de la web) ── */
-  --fs-display: clamp(3rem, 8vw, 7rem);      /* título grande de cada página */
+  --fs-display: clamp(2.6rem, 6.5vw, 5.2rem);      /* título grande de cada página */
   --fs-h2:      clamp(1.6rem, 3.5vw, 2.4rem); /* título de sección */
   --fs-h3:      1.15rem;                      /* título de tarjeta */
   --fs-lead:    1rem;                         /* bajada */
