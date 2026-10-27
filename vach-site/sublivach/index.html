@@ -202,6 +202,12 @@
     border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; transition: background .2s, opacity .2s; }
   .lam-btn:hover { background: rgba(123,79,255,.28); }
   .lam-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .modal-box.ask-box { width: min(460px, 100%); }
+  #askModal { align-items: center; }
+  #askModal .modal-box { max-height: none; overflow: visible; }
+  #askModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
+  .ask-actions { display: flex; gap: .7rem; margin-top: 1.2rem; }
+  .ask-actions > * { flex: 1 1 0; white-space: nowrap; padding: .9rem 1rem; }
   .modal-box.lam-box { width: min(920px, 100%); max-height: calc(100dvh - 2rem); display: flex; flex-direction: column; overflow: hidden; }
   #lamModal { align-items: center; overflow: hidden; }
   #lamModal .modal-box { max-height: calc(100dvh - 2rem); overflow: hidden; padding: 1.4rem; }
@@ -633,6 +639,18 @@
     </aside>
   </div>
 </main>
+
+<div class="modal" id="askModal" role="dialog" aria-modal="true" aria-labelledby="askTitle">
+  <div class="modal-box ask-box">
+    <button type="button" class="modal-close" id="askClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h4 id="askTitle">¿Querés ver un render de tus prendas?</h4>
+    <p class="sub">Subí tu diseño en PNG y te mostramos cómo quedan las prendas, listo para descargar o compartir.</p>
+    <div class="ask-actions">
+      <button type="button" class="send-btn" id="askRender">Quiero un render</button>
+      <button type="button" class="lam-share" id="askSkip">Continuar así</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="lamModal" role="dialog" aria-modal="true" aria-labelledby="lamTitle">
   <div class="modal-box lam-box">
@@ -1511,10 +1529,26 @@ $('sendBtn').addEventListener('click', function(){
   if (faltantes().length || !MAIL_RE.test(em)) {
     $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
   }
+  if (!hayDisenios()) { abrirAsk(); return; }       // sin diseños: antes de enviar, ofrece el render
+  enviarCotizacion();
+});
+function enviarCotizacion(){
+  var em = $('email').value.trim();
   $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
   state.enviada = true; update();
-  armarLamina().then(function(b){ state.laminaPNG = b; });   // queda lista para adjuntarla al mail (Resend)
+  if (hayDisenios()) armarLamina().then(function(b){ state.laminaPNG = b; });   // queda lista para adjuntarla al mail (Resend)
+}
+/* ¿render antes de enviar? (solo si no cargó diseños) */
+function abrirAsk(){ $('askModal').classList.add('open'); document.body.style.overflow = 'hidden'; }
+function cerrarAsk(){ $('askModal').classList.remove('open'); document.body.style.overflow = ''; }
+$('askRender').addEventListener('click', function(){
+  cerrarAsk();
+  var libre = state.designs.slice(0, state.disenios).findIndex(function(u){ return !u; }); if (libre < 0) libre = 0;
+  pickDesign(libre, function(){ enviarCotizacion(); $('lamBtn').click(); });   // al subir el PNG: envía y muestra el render
 });
+$('askSkip').addEventListener('click', function(){ cerrarAsk(); enviarCotizacion(); });
+$('askClose').addEventListener('click', cerrarAsk);
+$('askModal').addEventListener('click', function(e){ if (e.target === this) cerrarAsk(); });
 function renderMail(){
   var q = lastQuote; if (!q) return;
   var rows = q.lines.map(function(l){
@@ -1668,7 +1702,7 @@ window.addEventListener('resize', fitLam);
 function closeLam(){ $('lamModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('lamClose').addEventListener('click', closeLam);
 $('lamModal').addEventListener('click', function(e){ if (e.target === this) closeLam(); });
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('lamModal').classList.contains('open')) closeLam(); });
+document.addEventListener('keydown', function(e){ if (e.key !== 'Escape') return; if ($('lamModal').classList.contains('open')) closeLam(); if ($('askModal').classList.contains('open')) cerrarAsk(); });
 $('openChart').addEventListener('click', function(){ $('chartModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
 function closeChart(){ $('chartModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('chartClose').addEventListener('click', closeChart);
