@@ -203,10 +203,11 @@
   .lam-prev img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); }
   .lam-wrap { position: relative; width: 100%; }
   /* franja solo en la vista previa (si sacan captura, sale con la frase; la descarga va limpia) */
-  .lam-band { position: absolute; left: 1px; right: 1px; bottom: 1px; padding: .55rem .9rem; border-radius: 0 0 11px 11px;
-    background: rgba(123,79,255,.94); color: #fff; font-size: .76rem; line-height: 1.35; text-align: center; pointer-events: none; }
-  .lam-band b { font-weight: 700; }
-  @media (max-width: 700px) { .lam-band { font-size: .64rem; padding: .4rem .6rem; } }
+  .lam-wrap { container-type: inline-size; }
+  /* tapa el texto de abajo a la derecha del render (mismo lugar y tamaño) */
+  .lam-band { position: absolute; left: 30%; right: 1px; top: 90.8%; bottom: 3.6%; display: flex; align-items: center; justify-content: flex-end;
+    padding: 0 3.5% 0 0; background: #0B0B0D; color: #9A9A9A; font-size: max(1.25cqw, 6px); line-height: 1.1;
+    text-align: right; pointer-events: none; }
   .lam-wait { font-size: .85rem; color: var(--gray); }
   .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
   #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
@@ -616,7 +617,7 @@
   <div class="modal-box lam-box">
     <button type="button" class="modal-close" id="lamClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h4 id="lamTitle">Así quedan tus prendas</h4>
-    <p class="sub">Descargá la imagen para ver cómo queda. Es una imagen de referencia: se arma en tu pantalla y no se envía a ningún lado.</p>
+    <p class="sub">Descargá la imagen para ver cómo queda. Es una imagen de referencia, las medidas y colores son aproximados.</p>
     <div class="lam-prev" id="lamPrev"><span class="lam-wait">Armando la imagen…</span></div>
     <div class="lam-actions">
       <button type="button" class="send-btn lam-dl" id="lamDl" disabled>Descargar imagen</button>
@@ -1602,7 +1603,7 @@ $('lamBtn').addEventListener('click', function(){
     lamURL = URL.createObjectURL(blob);
     try { lamFile = new File([blob], nombreArchivo(), { type: 'image/jpeg' }); } catch (e) { lamFile = null; }
     $('lamPrev').innerHTML = '<div class="lam-wrap"><img src="'+lamURL+'" alt="Tus prendas con los diseños">' +
-      '<div class="lam-band"><b>Vista previa</b> · Para ofrecerte un render de calidad, te recomendamos descargar la imagen o compartirla. ¡Gracias!</div></div>';
+      '<div class="lam-band">Para ofrecerte un render de calidad, te recomendamos descargar la imagen o compartirla. ¡Gracias!</div></div>';
     var li = $('lamPrev').querySelector('img'); li.onload = fitLam; fitLam();
     $('lamDl').disabled = false;
     $('lamShare').hidden = !(lamFile && navigator.canShare && navigator.canShare({ files: [lamFile] }));
