@@ -201,6 +201,12 @@
   #lamModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
   .lam-prev { flex: 0 0 auto; min-height: 160px; display: flex; align-items: center; justify-content: center; }
   .lam-prev img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); }
+  .lam-wrap { position: relative; width: 100%; }
+  /* franja solo en la vista previa (si sacan captura, sale con la frase; la descarga va limpia) */
+  .lam-band { position: absolute; left: 1px; right: 1px; bottom: 1px; padding: .55rem .9rem; border-radius: 0 0 11px 11px;
+    background: rgba(123,79,255,.94); color: #fff; font-size: .76rem; line-height: 1.35; text-align: center; pointer-events: none; }
+  .lam-band b { font-weight: 700; }
+  @media (max-width: 700px) { .lam-band { font-size: .64rem; padding: .4rem .6rem; } }
   .lam-wait { font-size: .85rem; color: var(--gray); }
   .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
   #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
@@ -1595,7 +1601,8 @@ $('lamBtn').addEventListener('click', function(){
     if (lamURL) URL.revokeObjectURL(lamURL);
     lamURL = URL.createObjectURL(blob);
     try { lamFile = new File([blob], nombreArchivo(), { type: 'image/jpeg' }); } catch (e) { lamFile = null; }
-    $('lamPrev').innerHTML = '<img src="'+lamURL+'" alt="Tus prendas con los diseños">';
+    $('lamPrev').innerHTML = '<div class="lam-wrap"><img src="'+lamURL+'" alt="Tus prendas con los diseños">' +
+      '<div class="lam-band"><b>Vista previa</b> · Para ofrecerte un render de calidad, te recomendamos descargar la imagen o compartirla. ¡Gracias!</div></div>';
     var li = $('lamPrev').querySelector('img'); li.onload = fitLam; fitLam();
     $('lamDl').disabled = false;
     $('lamShare').hidden = !(lamFile && navigator.canShare && navigator.canShare({ files: [lamFile] }));
