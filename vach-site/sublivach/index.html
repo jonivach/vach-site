@@ -582,7 +582,7 @@
 
     <!-- RESUMEN -->
     <aside class="summary" id="summary">
-      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link" id="lamBtn" disabled title="Disponible después de enviar la cotización">Ver imagen de tus prendas</button></div>
+      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link" id="lamBtn" disabled>Ver render de tus prendas</button></div>
       <div class="lines" id="lines"></div>
       <div class="send" id="sendBox">
         <label for="email" class="send-label">Tu mail</label>
@@ -593,7 +593,7 @@
       <div class="sent" id="sentBox" hidden>
         <div class="sent-ok">✓ ¡Listo! Te enviamos la cotización a <b id="sentTo"></b></div>
         <p>Revisá tu casilla (y spam). Para confirmar la fecha, escribinos por WhatsApp.</p>
-        <button type="button" class="lam-link sent-lam" id="lamBtn2">Ver imagen de tus prendas</button>
+        <button type="button" class="lam-link sent-lam" id="lamBtn2">Ver render de tus prendas</button>
         <div class="mail-preview" id="mailPreview" hidden></div>
       </div>
       <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br><a class="fine-link" id="colorLink" target="_blank" rel="noopener">Consultá por disponibilidad de colores</a>.</p>
@@ -679,6 +679,7 @@
 /* ===========================================================
    PRECIOS — editar solo este bloque
    =========================================================== */
+var RENDER_TRAS_ENVIO = false;   // true = "Ver render de tus prendas" se habilita recién al enviar la cotización
 var PRECIOS = {
   prendas: [
     // precio = prenda sola; las estampas se suman aparte
@@ -1367,7 +1368,9 @@ function update(){
 
   if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
   $('sizes').classList.toggle('show', state.qty.remera > 0);
-  $('lamBtn').disabled = !state.enviada || !PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
+  // en prueba: se puede ver siempre. Para pedir primero el envío, poner RENDER_TRAS_ENVIO = true
+  $('lamBtn').disabled = (RENDER_TRAS_ENVIO && !state.enviada) || !PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
+  $('lamBtn').title = $('lamBtn').disabled && RENDER_TRAS_ENVIO ? 'Disponible después de enviar la cotización' : '';
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
@@ -1425,7 +1428,7 @@ $('sendBtn').addEventListener('click', function(){
     $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
   }
   $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
-  state.enviada = true; $('lamBtn').disabled = false; $('lamBtn').title = '';
+  state.enviada = true; update();
   armarLamina().then(function(b){ state.laminaPNG = b; });   // queda lista para adjuntarla al mail (Resend)
 });
 function renderMail(){
