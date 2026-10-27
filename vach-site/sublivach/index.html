@@ -195,8 +195,8 @@
   #lamModal { align-items: center; overflow: hidden; }
   #lamModal .modal-box { max-height: calc(100dvh - 2rem); overflow: hidden; padding: 1.4rem; }
   #lamModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
-  .lam-prev { flex: 0 0 auto; min-height: 160px; border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
-  .lam-prev img { display: block; max-width: 100%; width: auto; height: auto; }
+  .lam-prev { flex: 0 0 auto; min-height: 160px; display: flex; align-items: center; justify-content: center; }
+  .lam-prev img { display: block; max-width: 100%; width: auto; height: auto; border-radius: 12px; border: 1px solid var(--border); }
   .lam-wait { font-size: .85rem; color: var(--gray); }
   .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
   #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
@@ -1492,10 +1492,22 @@ function armarLamina(){
       c.save(); rrect(c, x0, top, pw, ph, 22); c.clip();
       if (logo) {               // marca de agua detrás de la prenda
         var ww = pw * 0.86, wh = ww * logo.naturalHeight / logo.naturalWidth;
-        c.globalAlpha = 0.08; c.drawImage(logo, x0 + (pw - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
+        c.globalAlpha = 0.045; c.drawImage(logo, x0 + (pw - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
       }
       if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
-      lugaresLamina(p.id).forEach(function(pl){
+      var LL = lugaresLamina(p.id);
+      if (!LL.length) {         // todavía sin diseño: muestra dónde iría y de qué tamaño
+        var dt = defaultT(p.id), dc = cmOf(dt), cyy = m.cy(dc), rr = dc * sc / 2;
+        c.save(); c.beginPath(); c.arc(ox + m.cx*sc, oy + cyy*sc, rr, 0, Math.PI*2);
+        c.fillStyle = 'rgba(123,79,255,.16)'; c.fill(); c.setLineDash([8, 6]); c.lineWidth = 3; c.strokeStyle = '#7B4FFF'; c.stroke(); c.setLineDash([]);
+        c.fillStyle = m.color ? '#FFFFFF' : '#5B35E0'; c.textAlign = 'center'; c.textBaseline = 'middle';
+        if (rr >= 70) {
+          c.font = '700 '+Math.min(26, rr/3.4)+'px '+F; c.fillText('Tu diseño', ox + m.cx*sc, oy + cyy*sc - rr/7);
+          c.font = '400 '+Math.min(20, rr/4.4)+'px '+F; c.fillText('hasta '+PRECIOS.estampas[dt].nombre, ox + m.cx*sc, oy + cyy*sc + rr/5);
+        } else { c.font = '700 '+Math.max(11, Math.min(20, rr/2.4))+'px '+F; c.fillText(PRECIOS.estampas[dt].nombre, ox + m.cx*sc, oy + cyy*sc); }
+        c.textBaseline = 'alphabetic'; c.restore();
+      }
+      LL.forEach(function(pl){
         var di = disIm[pl.d]; if (!di) return; var s = dimsOf(pl);
         c.save(); c.globalCompositeOperation = m.color ? 'source-over' : 'multiply';
         c.translate(ox + pl.x*sc, oy + pl.y*sc); c.rotate((pl.r || 0) * Math.PI / 180);
