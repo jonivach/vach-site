@@ -129,6 +129,8 @@
   .slot .n { position: absolute; left: 6px; bottom: 4px; font-size: .62rem; color: #333; font-weight: 700; }
   .design-pick { display: flex; gap: .45rem; flex-wrap: wrap; align-items: center; }
   .tool { display: flex; flex-direction: column; gap: .35rem; }
+  .tool { min-width: 0; max-width: 100%; }
+  @media (max-width: 700px) { .sel-tools .tool { width: 100%; } .sel-tools .size-chips { width: 100%; } .modal .size-chips .chip { padding: .45rem .3rem; } }
   .tool-l { font-size: .7rem; color: var(--gray); }
   .chips.mini .chip { padding: .55rem .9rem; font-size: .85rem; }
   .sel-tools { align-items: flex-end; margin-top: .3rem; }
