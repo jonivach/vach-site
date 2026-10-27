@@ -1511,7 +1511,7 @@ function armarLamina(){
     if (logo) { var lh = 44, lw = logo.naturalWidth * lh / logo.naturalHeight; c.drawImage(logo, pad, pad + 6, lw, lh); }
     c.textBaseline = 'alphabetic';
     c.fillStyle = '#7B4FFF'; c.font = '700 20px '+F; c.textAlign = 'left';
-    c.fillText('SUBLIVACH · PROPUESTA DE ESTAMPADO', pad, pad + headH - 14);
+    c.fillText('PROPUESTA DE ESTAMPADO', pad, pad + headH - 14);
     c.textAlign = 'right'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
     var quien = [$('brand').value.trim(), $('name').value.trim()].filter(Boolean).join(' · ');
     c.fillText(ajustarTexto(c, quien || 'Tu evento', W/2), W - pad, pad + 36);
