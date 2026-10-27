@@ -31,6 +31,16 @@
   --r-md:   16px;
   --r-lg:   20px;
   --r-pill: 100px;
+  /* ── Tipografía (escala única de la web) ── */
+  --fs-display: clamp(3rem, 8vw, 7rem);      /* título grande de cada página */
+  --fs-h2:      clamp(1.6rem, 3.5vw, 2.4rem); /* título de sección */
+  --fs-h3:      1.15rem;                      /* título de tarjeta */
+  --fs-lead:    1rem;                         /* bajada */
+  --fs-body:    0.9rem;                       /* texto */
+  --fs-small:   0.8rem;                       /* texto chico */
+  --fs-btn:     0.9rem;                       /* botones */
+  --fs-label:   0.72rem;                      /* etiquetas, pie, captions */
+
 }
 
 html, body {
@@ -213,7 +223,7 @@ nav {
   margin-bottom: 4rem;
 }
 .hero h1 {
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: var(--fs-display);
   font-weight: 700;
   line-height: 0.92;
   letter-spacing: -0.03em;
@@ -224,7 +234,7 @@ nav {
   color: var(--yellow);
 }
 .hero p {
-  font-size: 0.9rem;
+  font-size: var(--fs-lead);
   color: var(--lgray);
   max-width: 560px;
   line-height: 1.65;
@@ -260,7 +270,7 @@ nav {
 
 /* SECTION / SUBCATEGORY TITLES */
 .section-title {
-  font-size: 0.72rem;
+  font-size: var(--fs-label);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -270,7 +280,7 @@ nav {
 .subcat-block { margin-bottom: 2.25rem; }
 .subcat-block:last-of-type { margin-bottom: 4rem; }
 .subcat-title {
-  font-size: 0.85rem;
+  font-size: var(--fs-body);
   font-weight: 700;
   color: var(--yellow);
   margin-bottom: 0.85rem;
@@ -315,13 +325,13 @@ nav {
   display: block;
 }
 .product-name {
-  font-size: 1rem;
+  font-size: var(--fs-h3);
   font-weight: 700;
   margin-bottom: 0.4rem;
   line-height: 1.2;
 }
 .product-desc {
-  font-size: 0.8rem;
+  font-size: var(--fs-small);
   color: var(--lgray);
   line-height: 1.5;
 }
@@ -346,8 +356,8 @@ nav {
   background: rgba(255,255,255,0.03);
   margin-bottom: 4rem;
 }
-.empty-card h3 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.6rem; }
-.empty-card p { font-size: 0.92rem; color: var(--lgray); line-height: 1.6; max-width: 560px; }
+.empty-card h3 { font-size: var(--fs-h3); font-weight: 700; margin-bottom: 0.6rem; }
+.empty-card p { font-size: var(--fs-body); color: var(--lgray); line-height: 1.6; max-width: 560px; }
 
 /* GALLERY */
 .gallery {
@@ -395,7 +405,7 @@ nav {
   position: absolute;
   left: 0; right: 0; bottom: 0;
   padding: 0.6rem 0.75rem;
-  font-size: 0.7rem;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--white);
   background: none;
@@ -482,12 +492,12 @@ hr {
   gap: 1.5rem;
 }
 .cta-text h2 {
-  font-size: 1.6rem;
+  font-size: var(--fs-h2);
   font-weight: 700;
   margin-bottom: 0.4rem;
 }
 .cta-text p {
-  font-size: 0.88rem;
+  font-size: var(--fs-body);
   color: var(--lgray);
 }
 .cta-actions {
@@ -500,7 +510,7 @@ hr {
   align-items: center;
   gap: 0.5rem;
   font-family: inherit;
-  font-size: 0.875rem;
+  font-size: var(--fs-btn);
   font-weight: 700;
   padding: 0.75rem 1.5rem;
   border-radius: var(--r-pill);

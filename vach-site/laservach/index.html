@@ -24,7 +24,7 @@
   <meta name="description" content="LaserVach: grabado láser en vivo para eventos corporativos. Personalizamos productos al instante con tu marca. VACH* Productora Creativa." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -35,6 +35,15 @@
       --gray:   #888;
       --lgray:  #AAAAAA;
       --border: rgba(255,255,255,0.08);
+      /* Tipografía (escala única de la web) */
+      --fs-display: clamp(3rem, 8vw, 7rem);
+      --fs-h2:      clamp(1.6rem, 3.5vw, 2.4rem);
+      --fs-h3:      1.15rem;
+      --fs-lead:    1rem;
+      --fs-body:    0.9rem;
+      --fs-small:   0.8rem;
+      --fs-btn:     0.9rem;
+      --fs-label:   0.72rem;
     }
 
     html, body {
@@ -77,13 +86,13 @@
       -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .back { font-size: 0.8rem; font-weight: 600; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
+    .back { font-size: var(--fs-small); font-weight: 600; color: var(--gray); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; transition: color 0.2s; }
     .back:hover { color: var(--white); }
     .logo { text-decoration: none; display: flex; align-items: center; }
     .logo img { height: 24px; width: auto; display: block; }
     .content { text-align: center; }
-    .label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
-    h1 { font-size: clamp(3rem, 8vw, 7rem); font-weight: 700; line-height: 0.95; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
+    .label { font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; }
+    h1 { font-size: var(--fs-display); font-weight: 700; line-height: 0.95; letter-spacing: -0.025em; margin-bottom: 1.5rem; }
     h1 em { font-style: normal; color: var(--teal); }
     .soon {
       display: inline-flex; align-items: center; gap: 0.5rem;
@@ -103,10 +112,10 @@
       0%,100% { box-shadow: 0 0 0 0 rgba(28,196,160,0.4); }
       50%      { box-shadow: 0 0 0 6px rgba(28,196,160,0); }
     }
-    p { font-size: 1rem; color: var(--lgray); max-width: 400px; margin: 0 auto 2.5rem; line-height: 1.65; }
-    .back-link { display: block; margin-top: 0.5rem; font-size: 0.82rem; color: var(--gray); text-decoration: none; transition: color 0.2s; }
+    p { font-size: var(--fs-lead); color: var(--lgray); max-width: 400px; margin: 0 auto 2.5rem; line-height: 1.65; }
+    .back-link { display: block; margin-top: 0.5rem; font-size: var(--fs-small); color: var(--gray); text-decoration: none; transition: color 0.2s; }
     .back-link:hover { color: var(--white); }
-    footer { text-align: center; font-size: 0.72rem; color: var(--gray); }
+    footer { text-align: center; font-size: var(--fs-label); color: var(--gray); }
   </style>
   <!-- Microsoft Clarity -->
   <script type="text/javascript">

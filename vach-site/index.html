@@ -24,7 +24,7 @@
   <meta name="description" content="Merchandising personalizado para empresas y eventos en Buenos Aires. Llaveros, pines, centros de mesa, reconocimientos y más. VACH* Productora Creativa." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -41,6 +41,16 @@
       --r-md:   16px;
       --r-lg:   20px;
       --r-pill: 100px;
+  /* ── Tipografía (escala única de la web) ── */
+  --fs-display: clamp(3rem, 8vw, 7rem);      /* título grande de cada página */
+  --fs-h2:      clamp(1.6rem, 3.5vw, 2.4rem); /* título de sección */
+  --fs-h3:      1.15rem;                      /* título de tarjeta */
+  --fs-lead:    1rem;                         /* bajada */
+  --fs-body:    0.9rem;                       /* texto */
+  --fs-small:   0.8rem;                       /* texto chico */
+  --fs-btn:     0.9rem;                       /* botones */
+  --fs-label:   0.72rem;                      /* etiquetas, pie, captions */
+
     }
 
     html, body {
@@ -170,7 +180,7 @@
       padding: 0 1rem;
     }
     .tagline h1 {
-      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-size: var(--fs-display);
       font-weight: 700;
       line-height: 0.95;
       letter-spacing: -0.025em;
@@ -260,12 +270,12 @@
       gap: 0.4rem 0.5rem;
     }
     .card-name {
-      font-size: 1.15rem;
+      font-size: var(--fs-h3);
       font-weight: 700;
       line-height: 1.1;
     }
     .card-desc {
-      font-size: 0.8rem;
+      font-size: var(--fs-small);
       color: var(--lgray);
       line-height: 1.5;
       margin-top: 0.25rem;
@@ -402,7 +412,6 @@
     @media (max-width: 768px) {
       html, body { overflow: auto; }
       .layout { height: auto; min-height: 100vh; gap: 2rem; padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 1.5rem; }
-      .tagline h1 { font-size: 2.8rem; }
       .services { grid-template-columns: 1fr; gap: 0.6rem; }
       .service-card {
         flex-direction: row;
