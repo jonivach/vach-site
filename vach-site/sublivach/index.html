@@ -128,6 +128,7 @@
   .slot.filled { border-style: solid; background: #fff center / contain no-repeat; background-origin: content-box; padding: .5rem; }
   .slot .x, .slot-wrap .x { position: absolute; top: 6px; right: 6px; z-index: 2; width: 24px; height: 24px; border-radius: 50%; border: 0; padding: 0; background: #FF2E9A; color: #fff; font: inherit; font-size: .85rem; font-weight: 700; line-height: 24px; text-align: center; cursor: pointer; opacity: .45; transition: opacity .15s; }
   .slot .x:hover, .slot-wrap .x:hover, .slot .x:focus-visible, .slot-wrap .x:focus-visible { opacity: 1; }
+  .design-note { margin-top: .9rem; }
   .step.sin-elegir .design-slots, .step.sin-elegir .design-foot { display: none; }
   .design-foot { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-top: .7rem; }
   .design-foot .upload-note { margin: 0; }
@@ -544,7 +545,7 @@
       <!-- 1 PRENDAS -->
       <section class="step" id="step1">
         <div class="step-head"><span class="step-num">01</span><span class="step-title">¿Qué prendas querés sublimar?</span></div>
-        <p class="step-sub">Mínimo <span id="minP">50</span> unidades por prenda, podés combinarlas como vos quieras.<br>Remera oversize o regular, tote bag de lienzo o gabardina, gorra de algodón o gabardina.</p>
+        <p class="step-sub">Mínimo <span id="minP">50</span> unidades por prenda, podés combinarlas.<br>Remera oversize o regular, tote bag de lienzo o gabardina, gorra de algodón o gabardina.</p>
         <div class="products" id="products"></div>
         <div class="sizes" id="sizes">
           <div class="sizes-head">
@@ -560,7 +561,7 @@
       <section class="step" id="step2">
         <div class="step-head"><span class="step-num">02</span><span class="step-title">¿Cuántas estampas de cada tamaño?</span></div>
         <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
-        <p class="step-sub">Indicá cuántas estampas querés de cada medida máxima, por prenda. Por ejemplo: 100 de 5 cm y 10 de 10 cm.</p>
+        <p class="step-sub">Indicá cuántas estampas querés de cada medida máxima, por prenda.<br>Por ejemplo: 100 de 5 cm y 10 de 10 cm.</p>
         <div id="prints"></div>
       </section>
 
@@ -570,9 +571,9 @@
         <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
         <p class="step-sub">Es el catálogo de opciones que van a ver tus invitados para elegir qué estampar.</p>
         <div class="chips" id="designs"></div>
+        <p class="upload-note design-note" id="designNote">Opcional: subí tus diseños en PNG <b>a modo de ejemplo</b>, para ver cómo quedan sobre las prendas.<br>El arte final lo coordinamos después.</p>
         <div class="design-slots" id="designSlots"></div>
         <div class="design-foot">
-          <p class="upload-note" id="designNote">Opcional: subí tus diseños en PNG <b>a modo de ejemplo</b>, para ver cómo quedan sobre las prendas.<br>El arte final lo coordinamos después.</p>
           <button type="button" class="view-all" id="viewAll" hidden>Ver en tamaño real</button>
         </div>
         <input type="file" id="designFile" accept="image/png" hidden />
