@@ -205,10 +205,11 @@
   .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
   #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
   #lamModal .sub { padding-right: 2.8rem; }
-  .lam-actions .send-btn { width: auto; padding: .9rem 1.6rem; }
+  .lam-actions .send-btn { width: auto; padding: .9rem 1.6rem; white-space: nowrap; }
   .lam-share { padding: .9rem 1.6rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card2); color: var(--white); font: inherit; font-weight: 600; font-size: var(--fs-btn); cursor: pointer; }
   .lam-share[hidden] { display: none; }
-  @media (max-width: 700px) { .lam-actions > * { flex: 1 1 0; } #lamModal { padding: .75rem; } #lamModal .modal-box { padding: 1.1rem 1rem; } }
+  .lam-share { white-space: nowrap; }
+  @media (max-width: 700px) { .lam-actions { flex-wrap: nowrap; } .lam-actions > * { flex: 1 1 auto; padding-left: 1rem !important; padding-right: 1rem !important; } #lamModal { padding: .75rem; } #lamModal .modal-box { padding: 1.1rem 1rem; } }
   .send-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
@@ -971,45 +972,55 @@ $('designPick').addEventListener('click', function(e){
 function loadImg(url){ return new Promise(function(ok, ko){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = ko; im.src = url; }); }
 function quitarFondo(url){
   return loadImg(url).then(function(img){
-    var sc = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
-    var w = Math.max(1, Math.round(img.naturalWidth * sc)), h = Math.max(1, Math.round(img.naturalHeight * sc));
+    var W0 = img.naturalWidth, H0 = img.naturalHeight;
+    // 1) se analiza una copia chica (más estable para seguir degradés y bordes)
+    var sa = Math.min(1, 800 / Math.max(W0, H0)), w = Math.max(1, Math.round(W0 * sa)), h = Math.max(1, Math.round(H0 * sa));
     var c = document.createElement('canvas'); c.width = w; c.height = h;
     var x = c.getContext('2d'); x.drawImage(img, 0, 0, w, h);
-    var id = x.getImageData(0, 0, w, h), d = id.data;
-    // color de fondo: el más repetido en el borde
-    var cnt = {}, best = null, bestN = 0;
-    function sample(i){ if (d[i+3] < 20) return; var k = (d[i]>>4)+','+(d[i+1]>>4)+','+(d[i+2]>>4); cnt[k] = (cnt[k]||0) + 1; if (cnt[k] > bestN) { bestN = cnt[k]; best = i; } }
-    for (var xx = 0; xx < w; xx++) { sample(xx*4); sample(((h-1)*w+xx)*4); }
-    for (var yy = 0; yy < h; yy++) { sample((yy*w)*4); sample((yy*w+w-1)*4); }
-    if (best === null) return null;                        // el borde ya es transparente
-    var br = d[best], bg = d[best+1], bb = d[best+2], TOL = 48, SOFT = 80;
-    function dist(i){ var r = d[i]-br, g = d[i+1]-bg, b = d[i+2]-bb; return Math.sqrt(r*r + g*g + b*b); }
-    // relleno desde los bordes: solo borra el fondo conectado al borde (no el blanco de adentro del logo)
-    var seen = new Uint8Array(w*h), stack = [];
-    function push(px){ if (!seen[px]) { seen[px] = 1; stack.push(px); } }
-    for (xx = 0; xx < w; xx++) { push(xx); push((h-1)*w+xx); }
-    for (yy = 0; yy < h; yy++) { push(yy*w); push(yy*w+w-1); }
+    var d = x.getImageData(0, 0, w, h).data;
+    // colores de fondo: los que más se repiten en el borde (puede haber varios: franjas negras, fondo claro, degradé)
+    var cnt = {}, tot = 0, xx, yy;
+    function sample(i){ if (d[i+3] < 20) return; var k = (d[i]>>4)+','+(d[i+1]>>4)+','+(d[i+2]>>4); (cnt[k] = cnt[k] || { n: 0, r: 0, g: 0, b: 0 }); cnt[k].n++; cnt[k].r += d[i]; cnt[k].g += d[i+1]; cnt[k].b += d[i+2]; tot++; }
+    for (xx = 0; xx < w; xx++) { sample(xx*4); sample(((h-1)*w+xx)*4); }
+    for (yy = 0; yy < h; yy++) { sample((yy*w)*4); sample((yy*w+w-1)*4); }
+    if (!tot) return null;                                 // el borde ya es transparente
+    var seeds = Object.keys(cnt).map(function(k){ var c = cnt[k]; return { n: c.n, r: c.r/c.n, g: c.g/c.n, b: c.b/c.n }; })
+      .sort(function(a, b){ return b.n - a.n; }).filter(function(c, i){ return i === 0 || c.n >= tot * 0.04; }).slice(0, 6);
+    var TOL = 30, STEP = 8, MAXD = 60;
+    function dseed(i){ var m = 1e9; for (var s = 0; s < seeds.length; s++) { var r = d[i]-seeds[s].r, g = d[i+1]-seeds[s].g, b = d[i+2]-seeds[s].b, q = r*r+g*g+b*b; if (q < m) m = q; } return Math.sqrt(m); }
+    function dpx(i, j){ var r = d[i]-d[j], g = d[i+1]-d[j+1], b = d[i+2]-d[j+2]; return Math.sqrt(r*r+g*g+b*b); }
+    // 2) crecimiento desde los bordes: avanza mientras el color cambie de a poco (degradés, sombras suaves) y se parezca al fondo
+    var bg = new Uint8Array(w*h), stack = [];
+    function seed(px){ var i = px*4; if (!bg[px] && (d[i+3] < 20 || dseed(i) < TOL)) { bg[px] = 1; stack.push(px); } }
+    for (xx = 0; xx < w; xx++) { seed(xx); seed((h-1)*w+xx); }
+    for (yy = 0; yy < h; yy++) { seed(yy*w); seed(yy*w+w-1); }
     var removed = 0;
     while (stack.length) {
-      var px = stack.pop(), i = px*4;
-      if (d[i+3] < 20) { d[i+3] = 0; } else {
-        var ds = dist(i);
-        if (ds > SOFT) continue;
-        if (ds > TOL) { d[i+3] = Math.round(d[i+3] * (ds - TOL) / (SOFT - TOL)); continue; }   // borde suave
-        d[i+3] = 0;
+      var px = stack.pop(), i = px*4; removed++;
+      var px0 = px % w, py0 = (px - px0) / w, nb = [];
+      if (px0 > 0) nb.push(px-1); if (px0 < w-1) nb.push(px+1); if (py0 > 0) nb.push(px-w); if (py0 < h-1) nb.push(px+w);
+      for (var k = 0; k < nb.length; k++) {
+        var n = nb[k]; if (bg[n]) continue; var j = n*4;
+        if (d[j+3] < 20 || (dpx(i, j) < STEP && dseed(j) < MAXD)) { bg[n] = 1; stack.push(n); }
       }
-      removed++;
-      var px0 = px % w, py0 = (px - px0) / w;
-      if (px0 > 0) push(px-1); if (px0 < w-1) push(px+1); if (py0 > 0) push(px-w); if (py0 < h-1) push(px+w);
     }
     if (removed < w*h*0.02) return null;                   // casi no había fondo para sacar
-    x.putImageData(id, 0, 0);
-    // recorta lo transparente
-    var x0 = w, y0 = h, x1 = -1, y1 = -1;
-    for (yy = 0; yy < h; yy++) for (xx = 0; xx < w; xx++) if (d[(yy*w+xx)*4+3] > 8) { if (xx<x0)x0=xx; if (xx>x1)x1=xx; if (yy<y0)y0=yy; if (yy>y1)y1=yy; }
+    // 3) máscara a resolución completa (bordes suaves)
+    var mk = document.createElement('canvas'); mk.width = w; mk.height = h;
+    var mx = mk.getContext('2d'), md = mx.createImageData(w, h);
+    for (var p = 0; p < w*h; p++) { md.data[p*4+3] = bg[p] ? 0 : 255; }
+    mx.putImageData(md, 0, 0);
+    var sc = Math.min(1, 2400 / Math.max(W0, H0)), W = Math.max(1, Math.round(W0 * sc)), H = Math.max(1, Math.round(H0 * sc));
+    var full = document.createElement('canvas'); full.width = W; full.height = H;
+    var fx = full.getContext('2d'); fx.drawImage(img, 0, 0, W, H);
+    fx.globalCompositeOperation = 'destination-in'; fx.imageSmoothingEnabled = true; fx.imageSmoothingQuality = 'high';
+    fx.drawImage(mk, 0, 0, W, H); fx.globalCompositeOperation = 'source-over';
+    // 4) recorta lo transparente
+    var fd = fx.getImageData(0, 0, W, H).data, x0 = W, y0 = H, x1 = -1, y1 = -1;
+    for (yy = 0; yy < H; yy++) for (xx = 0; xx < W; xx++) if (fd[(yy*W+xx)*4+3] > 8) { if (xx<x0)x0=xx; if (xx>x1)x1=xx; if (yy<y0)y0=yy; if (yy>y1)y1=yy; }
     if (x1 < 0) return null;
     var o = document.createElement('canvas'); o.width = x1-x0+1; o.height = y1-y0+1;
-    o.getContext('2d').drawImage(c, x0, y0, o.width, o.height, 0, 0, o.width, o.height);
+    o.getContext('2d').drawImage(full, x0, y0, o.width, o.height, 0, 0, o.width, o.height);
     return { url: o.toDataURL('image/png'), ar: o.width / o.height };
   });
 }
@@ -1495,7 +1506,9 @@ function armarLamina(){
   });
   var W = 1600, H = 1000, pad = 56, gap = 24, n = prs.length, pw = (W - pad*2 - gap*(n-1)) / n, capH = 104, headH = 104, footH = 52;
   var ph = H - pad*2 - headH - 24 - capH - footH;
-  var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
+  var ESC = 2;                // doble resolución para que no se vea pixelada
+  var cv = document.createElement('canvas'); cv.width = W * ESC; cv.height = H * ESC; var c = cv.getContext('2d');
+  c.scale(ESC, ESC); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
   var F = "'Space Grotesk', system-ui, sans-serif";
   var srcs = [document.querySelector('nav .logo img').src];
   prs.forEach(function(it){ srcs.push(mockOf(it.p.id, it.lado).img || ''); });
@@ -1563,12 +1576,12 @@ function armarLamina(){
     c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, H - pad - 40); c.lineTo(W - pad, H - pad - 40); c.stroke();
     c.font = '700 22px '+F; c.fillStyle = '#FFFFFF'; c.textAlign = 'left'; c.fillText('vach.com.ar', pad, H - pad);
     c.font = '400 20px '+F; c.fillStyle = '#888888'; c.textAlign = 'right'; c.fillText('Imagen de referencia · medidas y colores aproximados', W - pad, H - pad);
-    return new Promise(function(ok){ cv.toBlob(ok, 'image/png'); });
+    return new Promise(function(ok){ cv.toBlob(ok, 'image/jpeg', 0.93); });
   });
 }
 function nombreArchivo(){
   var b = ($('brand').value.trim() || $('name').value.trim() || 'evento').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-  return 'sublivach-' + (b || 'evento') + '.png';
+  return 'sublivach-' + (b || 'evento') + '.jpg';
 }
 $('lamBtn2').addEventListener('click', function(){ $('lamBtn').click(); });
 $('lamBtn').addEventListener('click', function(){
@@ -1581,7 +1594,7 @@ $('lamBtn').addEventListener('click', function(){
     if (!blob) throw new Error('sin imagen');
     if (lamURL) URL.revokeObjectURL(lamURL);
     lamURL = URL.createObjectURL(blob);
-    try { lamFile = new File([blob], nombreArchivo(), { type: 'image/png' }); } catch (e) { lamFile = null; }
+    try { lamFile = new File([blob], nombreArchivo(), { type: 'image/jpeg' }); } catch (e) { lamFile = null; }
     $('lamPrev').innerHTML = '<img src="'+lamURL+'" alt="Tus prendas con los diseños">';
     var li = $('lamPrev').querySelector('img'); li.onload = fitLam; fitLam();
     $('lamDl').disabled = false;
