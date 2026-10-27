@@ -536,7 +536,7 @@
       <!-- 1 PRENDAS -->
       <section class="step">
         <div class="step-head"><span class="step-num">01</span><span class="step-title">¿Qué prendas querés sublimar?</span></div>
-        <p class="step-sub">Prenda incluida, lista para sublimar en el momento. Podés combinar.</p>
+        <p class="step-sub">Prenda incluida, lista para sublimar en el momento. Podés combinar.<br>Mínimo <span id="minP">50</span> unidades por prenda.</p>
         <div class="products" id="products"></div>
         <div class="sizes" id="sizes">
           <div class="sizes-head">
@@ -1485,6 +1485,7 @@ function renderMail(){
     '<div class="r sub"><span>Contacto</span><span>'+(esc($('name').value.trim()) || '—')+(($('brand').value.trim()) ? ' · '+esc($('brand').value.trim()) : '')+'</span></div>' +
     '<p style="margin-top:.6rem;color:#666;font-size:.72rem">Para reservar la fecha respondé este mail o escribinos por WhatsApp. La fecha se confirma con la seña.</p>';
 }
+$('minP').textContent = PRECIOS.minimoPrendas;
 $('colorLink').href = 'https://wa.me/'+PRECIOS.whatsapp+'?text='+encodeURIComponent('Hola SubliVach! Quería consultar disponibilidad de colores de prendas para sublimar.');
 /* tabla de talles */
 renderCortes();
