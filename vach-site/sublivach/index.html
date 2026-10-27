@@ -1513,7 +1513,7 @@ function armarLamina(){
   });
   var W = 1600, H = 1000, pad = 56, gap = 24, n = prs.length, pw = (W - pad*2 - gap*(n-1)) / n, capH = 104, headH = 104, footH = 52;
   var ph = H - pad*2 - headH - 24 - capH - footH;
-  var ESC = 2;                // doble resolución para que no se vea pixelada
+  var ESC = 2.5;              // alta resolución (4000 × 2500) para que no se vea pixelada
   var cv = document.createElement('canvas'); cv.width = W * ESC; cv.height = H * ESC; var c = cv.getContext('2d');
   c.scale(ESC, ESC); c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high';
   var F = "'Space Grotesk', system-ui, sans-serif";
@@ -1583,7 +1583,7 @@ function armarLamina(){
     c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, H - pad - 40); c.lineTo(W - pad, H - pad - 40); c.stroke();
     c.font = '700 22px '+F; c.fillStyle = '#FFFFFF'; c.textAlign = 'left'; c.fillText('vach.com.ar', pad, H - pad);
     c.font = '400 20px '+F; c.fillStyle = '#888888'; c.textAlign = 'right'; c.fillText('Imagen de referencia · medidas y colores aproximados', W - pad, H - pad);
-    return new Promise(function(ok){ cv.toBlob(ok, 'image/jpeg', 0.93); });
+    return new Promise(function(ok){ cv.toBlob(ok, 'image/jpeg', 0.95); });
   });
 }
 function nombreArchivo(){
