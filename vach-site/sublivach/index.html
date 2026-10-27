@@ -195,8 +195,8 @@
   #lamModal { align-items: center; overflow: hidden; }
   #lamModal .modal-box { max-height: calc(100dvh - 2rem); overflow: hidden; padding: 1.4rem; }
   #lamModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
-  .lam-prev { flex: 1 1 auto; min-height: 160px; border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
-  .lam-prev img { display: block; max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+  .lam-prev { flex: 0 0 auto; min-height: 160px; border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; }
+  .lam-prev img { display: block; max-width: 100%; width: auto; height: auto; }
   .lam-wait { font-size: .85rem; color: var(--gray); }
   .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
   #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
@@ -1529,6 +1529,7 @@ $('lamBtn').addEventListener('click', function(){
     lamURL = URL.createObjectURL(blob);
     try { lamFile = new File([blob], nombreArchivo(), { type: 'image/png' }); } catch (e) { lamFile = null; }
     $('lamPrev').innerHTML = '<img src="'+lamURL+'" alt="Tus prendas con los diseños">';
+    var li = $('lamPrev').querySelector('img'); li.onload = fitLam; fitLam();
     $('lamDl').disabled = false;
     $('lamShare').hidden = !(lamFile && navigator.canShare && navigator.canShare({ files: [lamFile] }));
   }).catch(function(){ $('lamPrev').innerHTML = '<span class="lam-wait">No pudimos armar la imagen. Probá de nuevo.</span>'; });
@@ -1540,6 +1541,14 @@ $('lamShare').addEventListener('click', function(){
   if (!lamFile) return;
   navigator.share({ files: [lamFile], title: 'SubliVach', text: 'Así quedan las prendas para el evento (SubliVach · vach.com.ar)' }).catch(function(){});
 });
+function fitLam(){             // la imagen entra entera en la pantalla, sin scroll ni recortes
+  var img = $('lamPrev').querySelector('img'); if (!img || !$('lamModal').classList.contains('open')) return;
+  img.style.maxHeight = '0px';
+  var box = $('lamModal').querySelector('.modal-box'), cs = getComputedStyle($('lamModal'));
+  var pv = $('lamPrev'), libre = window.innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - (box.offsetHeight - pv.offsetHeight) - 4;
+  img.style.maxHeight = Math.max(120, libre) + 'px';
+}
+window.addEventListener('resize', fitLam);
 function closeLam(){ $('lamModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('lamClose').addEventListener('click', closeLam);
 $('lamModal').addEventListener('click', function(e){ if (e.target === this) closeLam(); });
