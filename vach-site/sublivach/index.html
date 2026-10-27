@@ -196,7 +196,7 @@
   #lamModal .modal-box { max-height: calc(100dvh - 2rem); overflow: hidden; padding: 1.4rem; }
   #lamModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
   .lam-prev { flex: 0 0 auto; min-height: 160px; display: flex; align-items: center; justify-content: center; }
-  .lam-prev img { display: block; max-width: 100%; width: auto; height: auto; border-radius: 12px; border: 1px solid var(--border); }
+  .lam-prev img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--border); }
   .lam-wait { font-size: .85rem; color: var(--gray); }
   .lam-actions { flex: 0 0 auto; display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
   #lamModal h4, #lamModal .sub { flex: 0 0 auto; }
@@ -383,7 +383,8 @@
   .sum-head { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
   .lam-link { background: none; border: 0; padding: 0; font: inherit; font-size: .76rem; font-weight: 500; color: var(--lgray); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .lam-link:hover { color: var(--white); }
-  .lam-link:disabled { display: none; }
+  .sent-lam { display: block; margin-top: -.2rem; color: #7CE3A1; }
+  .lam-link:disabled { opacity: .35; cursor: not-allowed; text-decoration: none; }
   .lines { display: flex; flex-direction: column; margin-bottom: 1.1rem; min-height: 40px; }
   .sg { display: flex; flex-direction: column; gap: .45rem; }
   .sg + .sg { border-top: 1px solid var(--border); padding-top: 1rem; }
@@ -581,7 +582,7 @@
 
     <!-- RESUMEN -->
     <aside class="summary" id="summary">
-      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link" id="lamBtn" disabled>Ver imagen de tus prendas</button></div>
+      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link" id="lamBtn" disabled title="Disponible después de enviar la cotización">Ver imagen de tus prendas</button></div>
       <div class="lines" id="lines"></div>
       <div class="send" id="sendBox">
         <label for="email" class="send-label">Tu mail</label>
@@ -592,6 +593,7 @@
       <div class="sent" id="sentBox" hidden>
         <div class="sent-ok">✓ ¡Listo! Te enviamos la cotización a <b id="sentTo"></b></div>
         <p>Revisá tu casilla (y spam). Para confirmar la fecha, escribinos por WhatsApp.</p>
+        <button type="button" class="lam-link sent-lam" id="lamBtn2">Ver imagen de tus prendas</button>
         <div class="mail-preview" id="mailPreview" hidden></div>
       </div>
       <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br><a class="fine-link" id="colorLink" target="_blank" rel="noopener">Consultá por disponibilidad de colores</a>.</p>
@@ -603,7 +605,7 @@
   <div class="modal-box lam-box">
     <button type="button" class="modal-close" id="lamClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <h4 id="lamTitle">Así quedan tus prendas</h4>
-    <p class="sub">Descargala o compartila para mostrarle a la marca cómo quedan. Es una imagen de referencia: se arma en tu pantalla y no se envía a ningún lado.</p>
+    <p class="sub">Descargá la imagen para ver cómo queda. Es una imagen de referencia: se arma en tu pantalla y no se envía a ningún lado.</p>
     <div class="lam-prev" id="lamPrev"><span class="lam-wait">Armando la imagen…</span></div>
     <div class="lam-actions">
       <button type="button" class="send-btn lam-dl" id="lamDl" disabled>Descargar imagen</button>
@@ -1365,7 +1367,7 @@ function update(){
 
   if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
   $('sizes').classList.toggle('show', state.qty.remera > 0);
-  $('lamBtn').disabled = !PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
+  $('lamBtn').disabled = !state.enviada || !PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
@@ -1423,6 +1425,8 @@ $('sendBtn').addEventListener('click', function(){
     $('email').classList.add('err'); $('sendMsg').textContent = 'Revisá el mail: parece que falta algo.'; $('sendMsg').classList.add('err'); $('email').focus(); return;
   }
   $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
+  state.enviada = true; $('lamBtn').disabled = false; $('lamBtn').title = '';
+  armarLamina().then(function(b){ state.laminaPNG = b; });   // queda lista para adjuntarla al mail (Resend)
 });
 function renderMail(){
   var q = lastQuote; if (!q) return;
@@ -1456,8 +1460,8 @@ function rrect(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x+r, y); c.arcTo(x+w, 
 function ajustarTexto(c, t, max){ if (c.measureText(t).width <= max) return t; while (t.length > 1 && c.measureText(t+'…').width > max) t = t.slice(0, -1); return t+'…'; }
 function armarLamina(){
   var prs = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; });
-  var W = 1600, pad = 64, gap = 28, n = prs.length, pw = (W - pad*2 - gap*(n-1)) / n, ph = n === 1 ? 900 : 760, capH = 132, headH = 120;
-  var H = pad + headH + 36 + ph + capH + 64 + pad;
+  var W = 1600, H = 1000, pad = 56, gap = 24, n = prs.length, pw = (W - pad*2 - gap*(n-1)) / n, capH = 104, headH = 104, footH = 52;
+  var ph = H - pad*2 - headH - 24 - capH - footH;
   var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
   var F = "'Space Grotesk', system-ui, sans-serif";
   var srcs = [document.querySelector('nav .logo img').src];
@@ -1482,18 +1486,18 @@ function armarLamina(){
     var ev = [fechaTxt(), horario(), lugarTxt()].filter(Boolean).join(' · ');
     c.fillText(ajustarTexto(c, ev, W/2), W - pad, pad + 72);
     // prendas
-    var top = pad + headH + 36;
+    var top = pad + headH + 24;
+    if (logo) {                 // marca de agua: una sola, grande, detrás de todas las prendas
+      var ww = W * 0.82, wh = ww * logo.naturalHeight / logo.naturalWidth;
+      c.globalAlpha = 0.05; c.drawImage(logo, (W - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
+    }
     prs.forEach(function(p, k){
       var x0 = pad + k * (pw + gap), m = mockOf(p.id), vb = m.vb.split(' ').map(Number), im = prendaIm[k];
-      c.fillStyle = '#161618'; rrect(c, x0, top, pw, ph, 22); c.fill();
+      c.fillStyle = 'rgba(255,255,255,.035)'; rrect(c, x0, top, pw, ph, 22); c.fill();
       c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2; c.stroke();
       var mg = 0.07, sc = Math.min(pw * (1 - 2*mg) / vb[2], ph * (1 - 2*mg) / vb[3]);
       var ox = x0 + (pw - vb[2]*sc) / 2, oy = top + (ph - vb[3]*sc) / 2;
       c.save(); rrect(c, x0, top, pw, ph, 22); c.clip();
-      if (logo) {               // marca de agua detrás de la prenda
-        var ww = pw * 0.86, wh = ww * logo.naturalHeight / logo.naturalWidth;
-        c.globalAlpha = 0.045; c.drawImage(logo, x0 + (pw - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
-      }
       if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
       var LL = lugaresLamina(p.id);
       if (!LL.length) {         // todavía sin diseño: muestra dónde iría y de qué tamaño
@@ -1516,10 +1520,10 @@ function armarLamina(){
       c.restore();
       // texto debajo
       c.textAlign = 'left'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
-      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]), pw), x0 + 4, top + ph + 48);
+      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]), pw), x0 + 4, top + ph + 42);
       c.fillStyle = '#AAAAAA'; c.font = '400 21px '+F;
-      c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), x0 + 4, top + ph + 84);
-      if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), x0 + 4, top + ph + 116);
+      c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), x0 + 4, top + ph + 74);
+      if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), x0 + 4, top + ph + 100);
     });
     // pie
     c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, H - pad - 40); c.lineTo(W - pad, H - pad - 40); c.stroke();
@@ -1532,6 +1536,7 @@ function nombreArchivo(){
   var b = ($('brand').value.trim() || $('name').value.trim() || 'evento').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   return 'sublivach-' + (b || 'evento') + '.png';
 }
+$('lamBtn2').addEventListener('click', function(){ $('lamBtn').click(); });
 $('lamBtn').addEventListener('click', function(){
   $('lamModal').classList.add('open'); document.body.style.overflow = 'hidden'; $('lamModal').scrollTop = 0;
   $('lamPrev').innerHTML = '<span class="lam-wait">Armando la imagen…</span>'; $('lamDl').disabled = true; $('lamShare').hidden = true;
@@ -1557,7 +1562,11 @@ function fitLam(){             // la imagen entra entera en la pantalla, sin scr
   var img = $('lamPrev').querySelector('img'); if (!img || !$('lamModal').classList.contains('open')) return;
   img.style.maxHeight = '0px';
   var box = $('lamModal').querySelector('.modal-box'), cs = getComputedStyle($('lamModal'));
+  box.style.width = '';
   var pv = $('lamPrev'), libre = window.innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - (box.offsetHeight - pv.offsetHeight) - 4;
+  var bs = getComputedStyle(box), padX = parseFloat(bs.paddingLeft) + parseFloat(bs.paddingRight) + 2;
+  var anchoMax = box.clientWidth - padX + 2, ancho = Math.min(anchoMax, Math.max(200, libre) * 1.6);
+  if (ancho < anchoMax) box.style.width = (ancho + padX) + 'px';                    // achica el modal para que la imagen llegue a los márgenes
   img.style.maxHeight = Math.max(120, libre) + 'px';
 }
 window.addEventListener('resize', fitLam);
