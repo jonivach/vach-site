@@ -1,53 +1,17 @@
-// Accesos restringidos del sitio.
-//
-// 1) /laservach → usuario y clave (HTTP Basic Auth).
-//    La clave se configura en Vercel (Project Settings -> Environment Variables):
-//      LASERVACH_USER  (opcional, default "vach")
-//      LASERVACH_PASS  (obligatoria; si no está seteada, la página queda bloqueada para todos)
-//
-// 2) /sublivach → pantalla propia que pide una clave de acceso (cotizador en prueba).
-//    La clave se puede configurar en Vercel como SUBLIVACH_PASS.
-//    Si no está configurada, usa la clave de prueba de abajo.
+// Middleware de Vercel (Routing Middleware): protege /sublivach con una clave de acceso.
+// La clave se puede configurar en Vercel como variable de entorno SUBLIVACH_PASS.
+// Si no está configurada, usa la clave de prueba de abajo.
+// (LaserVach no se toca acá: hoy esa página es pública.)
 
 export const config = {
-  matcher: ['/laservach', '/laservach/:path*', '/sublivach', '/sublivach/:path*'],
+  matcher: ['/sublivach', '/sublivach/:path*'],
 };
 
 const SUBLIVACH_DEFAULT_PASS = 'PRUEBAvach';
 const SV_COOKIE = 'sv_access';
 
 export default async function middleware(request) {
-  const url = new URL(request.url);
-  if (url.pathname.startsWith('/sublivach')) return sublivach(request, url);
-  return laservach(request);
-}
-
-/* ---------------- LaserVach (sin cambios) ---------------- */
-function laservach(request) {
-  const validUser = process.env.LASERVACH_USER || 'vach';
-  const validPass = process.env.LASERVACH_PASS;
-
-  const auth = request.headers.get('authorization');
-  if (validPass && auth) {
-    const [scheme, encoded] = auth.split(' ');
-    if (scheme === 'Basic' && encoded) {
-      let user = '';
-      let pass = '';
-      try {
-        [user, pass] = atob(encoded).split(':');
-      } catch (e) {
-        // credenciales mal formadas, cae al 401 de abajo
-      }
-      if (user === validUser && pass === validPass) {
-        return; // credenciales correctas: deja pasar la request
-      }
-    }
-  }
-
-  return new Response('Acceso restringido', {
-    status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="LaserVach", charset="UTF-8"' },
-  });
+  return sublivach(request, new URL(request.url));
 }
 
 /* ---------------- SubliVach ---------------- */
@@ -82,7 +46,7 @@ async function sublivach(request, url) {
         status: 303,
         headers: {
           Location: '/sublivach/',
-          'Set-Cookie': `${SV_COOKIE}=${valid}; Path=/sublivach; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`,
+          'Set-Cookie': `${SV_COOKIE}=${valid}; Path=/sublivach; Max-Age=2592000; Secure; SameSite=Lax`,
           'Cache-Control': 'no-store',
         },
       });
