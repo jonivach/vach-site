@@ -1575,10 +1575,6 @@ function armarLamina(){
     c.fillText(ajustarTexto(c, ev, W/2), W - pad, pad + 72);
     // prendas
     var top = pad + headH + 24;
-    if (logo) {                 // marca de agua: una sola, grande, detrás de todas las prendas
-      var ww = W * 0.82, wh = ww * logo.naturalHeight / logo.naturalWidth;
-      c.globalAlpha = 0.05; c.drawImage(logo, (W - ww) / 2, top + (ph - wh) / 2, ww, wh); c.globalAlpha = 1;
-    }
     // una sola card para todas las prendas
     c.fillStyle = 'rgba(255,255,255,.035)'; rrect(c, pad, top, W - pad*2, ph, 22); c.fill();
     c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2; c.stroke();
