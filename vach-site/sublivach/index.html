@@ -509,7 +509,6 @@
       <div class="sent" id="sentBox" hidden>
         <div class="sent-ok">✓ ¡Listo! Te enviamos la cotización a <b id="sentTo"></b></div>
         <p>Revisá tu casilla (y spam). Para confirmar la fecha, <a class="fine-link" id="waAfter" target="_blank" rel="noopener">escribinos por WhatsApp</a>.</p>
-        <button type="button" class="link-btn" id="previewBtn">Ver el mail de ejemplo (solo en esta muestra)</button>
         <div class="mail-preview" id="mailPreview" hidden></div>
       </div>
       <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br>Prendas blancas aptas para sublimación; <a class="fine-link" id="colorLink" target="_blank" rel="noopener">consultá disponibilidad de colores</a>.</p>
@@ -1145,7 +1144,6 @@ $('sendBtn').addEventListener('click', function(){
   $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
   $('waAfter').href = 'https://wa.me/'+PRECIOS.whatsapp+'?text='+encodeURIComponent(waMsg.replace('¿Me pasan el precio?', 'Ya recibí la cotización por mail, quiero confirmar la fecha.'));
 });
-$('previewBtn').addEventListener('click', function(){ var mp = $('mailPreview'); mp.hidden = !mp.hidden; this.textContent = mp.hidden ? 'Ver el mail de ejemplo (solo en esta muestra)' : 'Ocultar el mail de ejemplo'; });
 function renderMail(){
   var q = lastQuote; if (!q) return;
   var rows = q.lines.map(function(l){
