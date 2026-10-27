@@ -405,7 +405,15 @@
   .lam-link { background: none; border: 0; padding: 0; font: inherit; font-size: .76rem; font-weight: 500; color: var(--lgray); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .lam-link:hover { color: var(--white); }
   .sent-lam { display: block; margin-top: -.2rem; color: #7CE3A1; }
-  .lam-link:disabled { opacity: .35; cursor: not-allowed; text-decoration: none; }
+  .lam-link.off { opacity: .4; cursor: not-allowed; text-decoration: none; position: relative; }
+  .lam-link.off:hover, .lam-link.off.tip-on { color: var(--lgray); }
+  .sum-head { position: relative; }
+  /* aviso al pasar el cursor (o al tocar en el celu) */
+  .lam-link.off::after { content: attr(data-tip); position: absolute; right: 0; top: calc(100% + 8px); width: 220px; padding: .55rem .7rem; border-radius: 10px;
+    background: #222226; border: 1px solid var(--border); color: var(--white); font-size: .74rem; font-weight: 500; line-height: 1.35; text-align: left;
+    box-shadow: 0 8px 24px rgba(0,0,0,.45); opacity: 0; visibility: hidden; transition: opacity .15s; z-index: 30; pointer-events: none; }
+  .lam-link.off:hover::after, .lam-link.off.tip-on::after, .lam-link.off:focus-visible::after { opacity: 1; visibility: visible; }
+  .lam-link.off { opacity: 1; color: rgba(170,170,170,.45); }
   .lines { display: flex; flex-direction: column; margin-bottom: 1.1rem; min-height: 40px; }
   .sg { display: flex; flex-direction: column; gap: .45rem; }
   .sg + .sg { border-top: 1px solid var(--border); padding-top: 1rem; }
@@ -607,7 +615,7 @@
 
     <!-- RESUMEN -->
     <aside class="summary" id="summary">
-      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link" id="lamBtn" disabled>Ver render de tus prendas</button></div>
+      <div class="sum-head"><h3>Tu cotización</h3><button type="button" class="lam-link off" id="lamBtn" aria-disabled="true" data-tip="Disponible después de cargar los diseños y enviar la cotización.">Ver render de tus prendas</button></div>
       <div class="lines" id="lines"></div>
       <div class="send" id="sendBox">
         <label for="email" class="send-label">Tu mail</label>
@@ -704,7 +712,7 @@
 /* ===========================================================
    PRECIOS — editar solo este bloque
    =========================================================== */
-var RENDER_TRAS_ENVIO = false;   // true = "Ver render de tus prendas" se habilita recién al enviar la cotización
+var RENDER_TRAS_ENVIO = true;    // true = "Ver render de tus prendas" se habilita recién al enviar la cotización (y con al menos un diseño cargado)
 var PRECIOS = {
   prendas: [
     // precio = prenda sola; las estampas se suman aparte
@@ -1299,7 +1307,7 @@ $('designFile').addEventListener('change', function(){
     } catch (err) {}
     if (state.designs[slot] && state.designs[slot].indexOf('blob:') === 0) URL.revokeObjectURL(state.designs[slot]);
     state.designs[slot] = url; state.ar[slot] = ar; state.orig[slot] = null;
-    renderSlots(); if (cb) cb(slot);
+    renderSlots(); update(); if (cb) cb(slot);
   };
   img.onerror = function(){ note.textContent = 'No pudimos leer la imagen.'; note.classList.add('err'); };
   img.src = raw;
@@ -1441,9 +1449,10 @@ function update(){
   if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
   $('sizes').classList.toggle('show', state.qty.remera > 0);
   bloquearPasos();
-  // en prueba: se puede ver siempre. Para pedir primero el envío, poner RENDER_TRAS_ENVIO = true
-  $('lamBtn').disabled = RENDER_TRAS_ENVIO && !state.enviada;
-  $('lamBtn').title = $('lamBtn').disabled && RENDER_TRAS_ENVIO ? 'Disponible después de enviar la cotización' : '';
+  // render: solo con al menos un diseño cargado (nunca con círculos de muestra) y, si RENDER_TRAS_ENVIO, después de enviar
+  var renderOk = hayDisenios() && PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; }) && (!RENDER_TRAS_ENVIO || state.enviada);
+  $('lamBtn').classList.toggle('off', !renderOk); $('lamBtn').setAttribute('aria-disabled', !renderOk);
+  $('lamBtn2').hidden = !renderOk;
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
@@ -1585,17 +1594,6 @@ function armarLamina(){
       c.save(); rrect(c, pad, top, W - pad*2, ph, 22); c.clip();
       if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
       var LL = lugaresLamina(p.id, it.lado);
-      if (!LL.length) {         // todavía sin diseño: muestra dónde iría y de qué tamaño
-        var dt = defaultT(p.id), dc = cmOf(dt), cyy = m.cy(dc), rr = dc * sc / 2;
-        c.save(); c.beginPath(); c.arc(ox + m.cx*sc, oy + cyy*sc, rr, 0, Math.PI*2);
-        c.fillStyle = 'rgba(123,79,255,.16)'; c.fill(); c.setLineDash([8, 6]); c.lineWidth = 3; c.strokeStyle = '#7B4FFF'; c.stroke(); c.setLineDash([]);
-        c.fillStyle = m.color ? '#FFFFFF' : '#5B35E0'; c.textAlign = 'center'; c.textBaseline = 'middle';
-        if (rr >= 70) {
-          c.font = '700 '+Math.min(26, rr/3.4)+'px '+F; c.fillText('Tu diseño', ox + m.cx*sc, oy + cyy*sc - rr/7);
-          c.font = '400 '+Math.min(20, rr/4.4)+'px '+F; c.fillText('hasta '+PRECIOS.estampas[dt].nombre, ox + m.cx*sc, oy + cyy*sc + rr/5);
-        } else { c.font = '700 '+Math.max(11, Math.min(20, rr/2.4))+'px '+F; c.fillText(PRECIOS.estampas[dt].nombre, ox + m.cx*sc, oy + cyy*sc); }
-        c.textBaseline = 'alphabetic'; c.restore();
-      }
       LL.forEach(function(pl){
         var di = disIm[pl.d]; if (!di) return; var s = dimsOf(pl);
         c.save(); c.globalCompositeOperation = m.color ? 'source-over' : 'multiply';
@@ -1622,7 +1620,9 @@ function nombreArchivo(){
   return 'sublivach-' + (b || 'evento') + '.jpg';
 }
 $('lamBtn2').addEventListener('click', function(){ $('lamBtn').click(); });
+function hayDisenios(){ return state.disElegido && state.designs.slice(0, state.disenios).some(function(u){ return !!u; }); }
 $('lamBtn').addEventListener('click', function(){
+  if (this.classList.contains('off')) { this.classList.add('tip-on'); var b = this; clearTimeout(b._t); b._t = setTimeout(function(){ b.classList.remove('tip-on'); }, 2600); return; }
   $('lamModal').classList.add('open'); document.body.style.overflow = 'hidden'; $('lamModal').scrollTop = 0;
   $('lamPrev').innerHTML = '<span class="lam-wait">Armando la imagen…</span>'; $('lamDl').disabled = true; $('lamShare').hidden = true;
   if (!PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; })) {
