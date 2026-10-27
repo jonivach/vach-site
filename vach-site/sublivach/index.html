@@ -187,6 +187,19 @@
   .send input.err { border-color: #ff7a7a; }
   .send-btn { width: 100%; padding: 1rem; border-radius: 12px; border: 0; background: var(--purple); color: #fff; font: inherit; font-weight: 700; font-size: var(--fs-btn); cursor: pointer; transition: opacity .15s, transform .15s; }
   .send-btn:hover { transform: translateY(-1px); }
+  .lam-btn { width: 100%; display: flex; align-items: center; justify-content: center; gap: .55rem; margin: 0 0 1.1rem; padding: .85rem 1rem; border-radius: 12px;
+    border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-weight: 600; font-size: .9rem; cursor: pointer; transition: background .2s, opacity .2s; }
+  .lam-btn:hover { background: rgba(123,79,255,.28); }
+  .lam-btn:disabled { opacity: .35; cursor: not-allowed; }
+  .modal-box.lam-box { width: min(920px, 100%); }
+  .lam-prev { border-radius: 12px; overflow: hidden; background: #0A0A0A; border: 1px solid var(--border); min-height: 220px; display: flex; align-items: center; justify-content: center; }
+  .lam-prev img { display: block; width: 100%; height: auto; }
+  .lam-wait { font-size: .85rem; color: var(--gray); }
+  .lam-actions { display: flex; gap: .7rem; margin-top: 1rem; justify-content: flex-end; flex-wrap: wrap; }
+  .lam-actions .send-btn { width: auto; padding: .9rem 1.6rem; }
+  .lam-share { padding: .9rem 1.6rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card2); color: var(--white); font: inherit; font-weight: 600; font-size: var(--fs-btn); cursor: pointer; }
+  .lam-share[hidden] { display: none; }
+  @media (max-width: 700px) { .lam-actions > * { flex: 1 1 100%; } }
   .send-btn:disabled { opacity: .35; cursor: not-allowed; transform: none; }
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
@@ -561,6 +574,7 @@
     <aside class="summary" id="summary">
       <h3>Tu cotización</h3>
       <div class="lines" id="lines"></div>
+      <button type="button" class="lam-btn" id="lamBtn" disabled><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></svg>Ver imagen de tus prendas</button>
       <div class="send" id="sendBox">
         <label for="email" class="send-label">Tu mail</label>
         <input type="email" id="email" autocomplete="email" placeholder="nombre@empresa.com" />
@@ -576,6 +590,19 @@
     </aside>
   </div>
 </main>
+
+<div class="modal" id="lamModal" role="dialog" aria-modal="true" aria-labelledby="lamTitle">
+  <div class="modal-box lam-box">
+    <button type="button" class="modal-close" id="lamClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h4 id="lamTitle">Así quedan tus prendas</h4>
+    <p class="sub">Descargala o compartila para mostrarle a la marca cómo quedan. Es una imagen de referencia: se arma en tu pantalla y no se envía a ningún lado.</p>
+    <div class="lam-prev" id="lamPrev"><span class="lam-wait">Armando la imagen…</span></div>
+    <div class="lam-actions">
+      <button type="button" class="send-btn lam-dl" id="lamDl" disabled>Descargar imagen</button>
+      <button type="button" class="lam-share" id="lamShare" hidden>Compartir</button>
+    </div>
+  </div>
+</div>
 
 <div class="modal" id="scaleModal" role="dialog" aria-modal="true" aria-labelledby="scaleTitle">
   <div class="modal-box">
@@ -1330,6 +1357,7 @@ function update(){
 
   if (!document.activeElement || !document.activeElement.closest || !document.activeElement.closest('#prints')) renderPrints();
   $('sizes').classList.toggle('show', state.qty.remera > 0);
+  $('lamBtn').disabled = !PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; });
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
@@ -1404,6 +1432,106 @@ function renderMail(){
 $('colorLink').href = 'https://wa.me/'+PRECIOS.whatsapp+'?text='+encodeURIComponent('Hola SubliVach! Quería consultar disponibilidad de colores de prendas para sublimar.');
 /* tabla de talles */
 renderCortes();
+
+/* ---------- imagen de las prendas (lámina para compartir) ---------- */
+var lamFile = null, lamURL = null;
+function cargarImg(src){ return new Promise(function(ok){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = function(){ ok(null); }; im.src = src; }); }
+function lugaresLamina(id){     // diseños puestos en la prenda; si no abrió "Probá tus diseños", usa el primero cargado
+  var L = placesOf(id).filter(function(pl){ return pl.d >= 0 && pl.d < state.disenios && state.designs[pl.d]; });
+  if (L.length) return L;
+  var first = state.designs.slice(0, state.disenios).findIndex(function(u){ return !!u; });
+  if (first < 0) return [];
+  var m = mockOf(id), pl = { d: first, t: defaultT(id), x: m.cx, y: 0, r: 0 }; pl.y = m.cy(cmOf(pl.t)); clampOne(id, pl);
+  return [pl];
+}
+function rrect(c, x, y, w, h, r){ c.beginPath(); c.moveTo(x+r, y); c.arcTo(x+w, y, x+w, y+h, r); c.arcTo(x+w, y+h, x, y+h, r); c.arcTo(x, y+h, x, y, r); c.arcTo(x, y, x+w, y, r); c.closePath(); }
+function ajustarTexto(c, t, max){ if (c.measureText(t).width <= max) return t; while (t.length > 1 && c.measureText(t+'…').width > max) t = t.slice(0, -1); return t+'…'; }
+function armarLamina(){
+  var prs = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; });
+  var W = 1600, pad = 64, gap = 28, n = prs.length, pw = (W - pad*2 - gap*(n-1)) / n, ph = n === 1 ? 900 : 760, capH = 132, headH = 120;
+  var H = pad + headH + 36 + ph + capH + 64 + pad;
+  var cv = document.createElement('canvas'); cv.width = W; cv.height = H; var c = cv.getContext('2d');
+  var F = "'Space Grotesk', system-ui, sans-serif";
+  var srcs = [document.querySelector('nav .logo img').src];
+  prs.forEach(function(p){ srcs.push(mockOf(p.id).img || ''); });
+  state.designs.forEach(function(u){ srcs.push(u || ''); });
+  return (document.fonts ? document.fonts.ready : Promise.resolve()).then(function(){
+    return Promise.all(srcs.map(function(u){ return u ? cargarImg(u) : null; }));
+  }).then(function(ims){
+    var logo = ims[0], prendaIm = ims.slice(1, 1 + n), disIm = ims.slice(1 + n);
+    c.fillStyle = '#0A0A0A'; c.fillRect(0, 0, W, H);
+    var gr = c.createRadialGradient(W*.15, 0, 0, W*.15, 0, W*.7); gr.addColorStop(0, 'rgba(123,79,255,.20)'); gr.addColorStop(1, 'rgba(123,79,255,0)');
+    c.fillStyle = gr; c.fillRect(0, 0, W, H);
+    // encabezado
+    if (logo) { var lh = 44, lw = logo.naturalWidth * lh / logo.naturalHeight; c.drawImage(logo, pad, pad + 6, lw, lh); }
+    c.textBaseline = 'alphabetic';
+    c.fillStyle = '#7B4FFF'; c.font = '700 20px '+F; c.textAlign = 'left';
+    c.fillText('SUBLIVACH · PROPUESTA DE ESTAMPADO', pad, pad + headH - 14);
+    c.textAlign = 'right'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
+    var quien = [$('brand').value.trim(), $('name').value.trim()].filter(Boolean).join(' · ');
+    c.fillText(ajustarTexto(c, quien || 'Tu evento', W/2), W - pad, pad + 36);
+    c.fillStyle = '#AAAAAA'; c.font = '400 22px '+F;
+    var ev = [fechaTxt(), horario(), lugarTxt()].filter(Boolean).join(' · ');
+    c.fillText(ajustarTexto(c, ev, W/2), W - pad, pad + 72);
+    // prendas
+    var top = pad + headH + 36;
+    prs.forEach(function(p, k){
+      var x0 = pad + k * (pw + gap), m = mockOf(p.id), vb = m.vb.split(' ').map(Number), im = prendaIm[k];
+      c.fillStyle = '#161618'; rrect(c, x0, top, pw, ph, 22); c.fill();
+      c.strokeStyle = 'rgba(255,255,255,.08)'; c.lineWidth = 2; c.stroke();
+      var mg = 0.07, sc = Math.min(pw * (1 - 2*mg) / vb[2], ph * (1 - 2*mg) / vb[3]);
+      var ox = x0 + (pw - vb[2]*sc) / 2, oy = top + (ph - vb[3]*sc) / 2;
+      c.save(); rrect(c, x0, top, pw, ph, 22); c.clip();
+      if (im) c.drawImage(im, ox, oy, vb[2]*sc, vb[3]*sc);
+      lugaresLamina(p.id).forEach(function(pl){
+        var di = disIm[pl.d]; if (!di) return; var s = dimsOf(pl);
+        c.save(); c.globalCompositeOperation = m.color ? 'source-over' : 'multiply';
+        c.translate(ox + pl.x*sc, oy + pl.y*sc); c.rotate((pl.r || 0) * Math.PI / 180);
+        c.drawImage(di, -s.w*sc/2, -s.h*sc/2, s.w*sc, s.h*sc); c.restore();
+      });
+      c.restore();
+      // texto debajo
+      c.textAlign = 'left'; c.fillStyle = '#FFFFFF'; c.font = '700 30px '+F;
+      c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]), pw), x0 + 4, top + ph + 48);
+      c.fillStyle = '#AAAAAA'; c.font = '400 21px '+F;
+      c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), x0 + 4, top + ph + 84);
+      if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), x0 + 4, top + ph + 116);
+    });
+    // pie
+    c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, H - pad - 40); c.lineTo(W - pad, H - pad - 40); c.stroke();
+    c.font = '700 22px '+F; c.fillStyle = '#FFFFFF'; c.textAlign = 'left'; c.fillText('vach.com.ar', pad, H - pad);
+    c.font = '400 20px '+F; c.fillStyle = '#888888'; c.textAlign = 'right'; c.fillText('Imagen de referencia · medidas y colores aproximados', W - pad, H - pad);
+    return new Promise(function(ok){ cv.toBlob(ok, 'image/png'); });
+  });
+}
+function nombreArchivo(){
+  var b = ($('brand').value.trim() || $('name').value.trim() || 'evento').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return 'sublivach-' + (b || 'evento') + '.png';
+}
+$('lamBtn').addEventListener('click', function(){
+  $('lamModal').classList.add('open'); document.body.style.overflow = 'hidden'; $('lamModal').scrollTop = 0;
+  $('lamPrev').innerHTML = '<span class="lam-wait">Armando la imagen…</span>'; $('lamDl').disabled = true; $('lamShare').hidden = true;
+  armarLamina().then(function(blob){
+    if (!blob) throw new Error('sin imagen');
+    if (lamURL) URL.revokeObjectURL(lamURL);
+    lamURL = URL.createObjectURL(blob);
+    try { lamFile = new File([blob], nombreArchivo(), { type: 'image/png' }); } catch (e) { lamFile = null; }
+    $('lamPrev').innerHTML = '<img src="'+lamURL+'" alt="Tus prendas con los diseños">';
+    $('lamDl').disabled = false;
+    $('lamShare').hidden = !(lamFile && navigator.canShare && navigator.canShare({ files: [lamFile] }));
+  }).catch(function(){ $('lamPrev').innerHTML = '<span class="lam-wait">No pudimos armar la imagen. Probá de nuevo.</span>'; });
+});
+$('lamDl').addEventListener('click', function(){
+  if (!lamURL) return; var a = document.createElement('a'); a.href = lamURL; a.download = nombreArchivo(); document.body.appendChild(a); a.click(); a.remove();
+});
+$('lamShare').addEventListener('click', function(){
+  if (!lamFile) return;
+  navigator.share({ files: [lamFile], title: 'SubliVach', text: 'Así quedan las prendas para el evento (SubliVach · vach.com.ar)' }).catch(function(){});
+});
+function closeLam(){ $('lamModal').classList.remove('open'); document.body.style.overflow = ''; }
+$('lamClose').addEventListener('click', closeLam);
+$('lamModal').addEventListener('click', function(e){ if (e.target === this) closeLam(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('lamModal').classList.contains('open')) closeLam(); });
 $('openChart').addEventListener('click', function(){ $('chartModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
 function closeChart(){ $('chartModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('chartClose').addEventListener('click', closeChart);
