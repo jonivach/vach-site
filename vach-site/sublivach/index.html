@@ -793,6 +793,8 @@ var MOCKS = {   // medidas en cm
   // fotos calibradas: el ancho del cuerpo (talle L) define la escala
   remera_oversize: { vb: '0 0 89 97.6',   img: '/sublivach/remera.webp',    cx: 44.4, cy: function(d){ return d > 12 ? 34 : 26; }, area: [17.5, 17, 71, 92] },   // cuerpo 56 cm
   remera_regular:  { vb: '0 0 93.6 97.4', img: '/sublivach/remera-regular.webp', cx: 45.7, cy: function(d){ return d > 12 ? 30 : 22; }, area: [22, 14, 71.5, 92] }, // cuerpo 52 cm
+  tote_lienzo:    { vb: '0 0 38.55 59.39', img: '/sublivach/tote-lienzo.webp', cx: 19.3, cy: function(){ return 41; }, area: [1.8, 26, 36.7, 57.5] },   // cuerpo 38 cm
+  tote_gabardina: { vb: '0 0 39.41 62.41', img: '/sublivach/tote-gabardina.webp',    cx: 19.8, cy: function(){ return 42; }, area: [2.3, 26.8, 37.3, 60.7] }, // cuerpo 38 × 40 cm
   tote:   { vb: '0 0 44 60', path: 'M3 18 L41 18 L41 58 L3 58 Z M13 18 L13 9 C13 2 31 2 31 9 L31 18', cx: 22, cy: function(){ return 38; }, area: [4, 19, 40, 57] },
   gorra:  { vb: '0 0 30 24', path: 'M3 16 C3 6 9 1 15 1 C21 1 27 6 27 16 Z M1 16 Q15 24 29 16 Q15 19.5 1 16 Z', cx: 15, cy: function(){ return 9.5; }, area: [5, 2.5, 25, 15.5] }
 };
