@@ -134,6 +134,11 @@
   .tool-l { font-size: .7rem; color: var(--gray); }
   .chips.mini .chip { padding: .55rem .9rem; font-size: .85rem; }
   .sel-tools { align-items: flex-end; margin-top: .3rem; }
+  .sel-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .bg-btn { padding: .6rem 1rem; border-radius: 10px; border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; }
+  .bg-btn:hover { background: rgba(123,79,255,.28); }
+  .bg-btn:disabled { opacity: .5; cursor: wait; }
+  .bg-btn[hidden] { display: none; }
   .sel-tools .size-chips { width: 330px; max-width: 100%; }
   .dp { position: relative; }
   .dp.on::after { content: '✓'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--purple); color: #fff; font-size: .62rem; display: flex; align-items: center; justify-content: center; }
@@ -535,7 +540,10 @@
     </div>
     <div class="scale-tools sel-tools" id="selTools">
       <div class="tool"><span class="tool-l" id="selLabel">Medida máxima del diseño seleccionado</span><div class="size-chips" id="scaleChips"></div></div>
-      <button type="button" class="link-btn" id="removeSel">Quitar de la prenda</button>
+      <div class="sel-actions">
+        <button type="button" class="bg-btn" id="bgBtn">Eliminar fondo</button>
+        <button type="button" class="link-btn" id="removeSel">Quitar de la prenda</button>
+      </div>
     </div>
     <p class="upload-note" id="logoNote"></p>
     <div class="scale-grid">
@@ -721,6 +729,7 @@ state.place = {};   // por prenda: [{ d: índice de diseño (-1 = muestra), t: t
 function prendaOf(id){ return PRECIOS.prendas.filter(function(x){ return x.id === id; })[0]; }
 function cmOf(t){ return PRECIOS.estampas[t].cm; }
 state.ar = [];   // proporción ancho/alto de cada diseño (sin bordes transparentes)
+state.orig = []; // original de cada diseño, para restaurar si se eliminó el fondo
 function dimsOf(pl){
   var d = cmOf(pl.t), ar = pl.d >= 0 ? (state.ar[pl.d] || 1) : 1;
   return ar >= 1 ? { w: d, h: d / ar } : { w: d * ar, h: d };
@@ -782,6 +791,69 @@ $('designPick').addEventListener('click', function(e){
   if (!state.designs[i]) { pickDesign(i, function(){ addDesign(scaleId, i); renderScale(); }); return; }
   addDesign(scaleId, i); renderScale();
 });
+/* eliminar fondo: detecta el color del borde y lo vuelve transparente (ideal para logos sobre fondo liso) */
+function loadImg(url){ return new Promise(function(ok, ko){ var im = new Image(); im.onload = function(){ ok(im); }; im.onerror = ko; im.src = url; }); }
+function quitarFondo(url){
+  return loadImg(url).then(function(img){
+    var sc = Math.min(1, 1600 / Math.max(img.naturalWidth, img.naturalHeight));
+    var w = Math.max(1, Math.round(img.naturalWidth * sc)), h = Math.max(1, Math.round(img.naturalHeight * sc));
+    var c = document.createElement('canvas'); c.width = w; c.height = h;
+    var x = c.getContext('2d'); x.drawImage(img, 0, 0, w, h);
+    var id = x.getImageData(0, 0, w, h), d = id.data;
+    // color de fondo: el más repetido en el borde
+    var cnt = {}, best = null, bestN = 0;
+    function sample(i){ if (d[i+3] < 20) return; var k = (d[i]>>4)+','+(d[i+1]>>4)+','+(d[i+2]>>4); cnt[k] = (cnt[k]||0) + 1; if (cnt[k] > bestN) { bestN = cnt[k]; best = i; } }
+    for (var xx = 0; xx < w; xx++) { sample(xx*4); sample(((h-1)*w+xx)*4); }
+    for (var yy = 0; yy < h; yy++) { sample((yy*w)*4); sample((yy*w+w-1)*4); }
+    if (best === null) return null;                        // el borde ya es transparente
+    var br = d[best], bg = d[best+1], bb = d[best+2], TOL = 48, SOFT = 80;
+    function dist(i){ var r = d[i]-br, g = d[i+1]-bg, b = d[i+2]-bb; return Math.sqrt(r*r + g*g + b*b); }
+    // relleno desde los bordes: solo borra el fondo conectado al borde (no el blanco de adentro del logo)
+    var seen = new Uint8Array(w*h), stack = [];
+    function push(px){ if (!seen[px]) { seen[px] = 1; stack.push(px); } }
+    for (xx = 0; xx < w; xx++) { push(xx); push((h-1)*w+xx); }
+    for (yy = 0; yy < h; yy++) { push(yy*w); push(yy*w+w-1); }
+    var removed = 0;
+    while (stack.length) {
+      var px = stack.pop(), i = px*4;
+      if (d[i+3] < 20) { d[i+3] = 0; } else {
+        var ds = dist(i);
+        if (ds > SOFT) continue;
+        if (ds > TOL) { d[i+3] = Math.round(d[i+3] * (ds - TOL) / (SOFT - TOL)); continue; }   // borde suave
+        d[i+3] = 0;
+      }
+      removed++;
+      var px0 = px % w, py0 = (px - px0) / w;
+      if (px0 > 0) push(px-1); if (px0 < w-1) push(px+1); if (py0 > 0) push(px-w); if (py0 < h-1) push(px+w);
+    }
+    if (removed < w*h*0.02) return null;                   // casi no había fondo para sacar
+    x.putImageData(id, 0, 0);
+    // recorta lo transparente
+    var x0 = w, y0 = h, x1 = -1, y1 = -1;
+    for (yy = 0; yy < h; yy++) for (xx = 0; xx < w; xx++) if (d[(yy*w+xx)*4+3] > 8) { if (xx<x0)x0=xx; if (xx>x1)x1=xx; if (yy<y0)y0=yy; if (yy>y1)y1=yy; }
+    if (x1 < 0) return null;
+    var o = document.createElement('canvas'); o.width = x1-x0+1; o.height = y1-y0+1;
+    o.getContext('2d').drawImage(c, x0, y0, o.width, o.height, 0, 0, o.width, o.height);
+    return { url: o.toDataURL('image/png'), ar: o.width / o.height };
+  });
+}
+$('bgBtn').addEventListener('click', function(){
+  var pl = placesOf(scaleId)[scaleSel]; if (!pl || pl.d < 0) return;
+  var i = pl.d, btn = this;
+  if (state.orig[i]) {                                     // restaurar
+    state.designs[i] = state.orig[i].url; state.ar[i] = state.orig[i].ar; state.orig[i] = null;
+    clampOne(scaleId, pl); renderSlots(); renderScale(); return;
+  }
+  btn.disabled = true; btn.textContent = 'Eliminando fondo…';
+  quitarFondo(state.designs[i]).then(function(res){
+    btn.disabled = false;
+    if (!res) { $('logoNote').textContent = 'No encontramos un fondo liso para eliminar en este diseño.'; btn.textContent = 'Eliminar fondo'; return; }
+    state.orig[i] = { url: state.designs[i], ar: state.ar[i] };
+    state.designs[i] = res.url; state.ar[i] = res.ar;
+    clampOne(scaleId, pl); renderSlots(); renderScale();
+    $('logoNote').textContent = 'Listo: eliminamos el fondo. Si no te convence, tocá "Restaurar fondo".';
+  }).catch(function(){ btn.disabled = false; btn.textContent = 'Eliminar fondo'; });
+});
 $('removeSel').addEventListener('click', function(){
   var L = placesOf(scaleId); L.splice(scaleSel, 1); scaleSel = Math.max(0, scaleSel - 1); renderScale();
 });
@@ -819,6 +891,8 @@ function renderScale(){
   renderPrendaTabs(); renderPick();
   $('selLabel').textContent = L.length > 1 ? 'Medida máxima del diseño seleccionado' : 'Medida máxima del diseño';
   $('removeSel').hidden = sel.d < 0;
+  $('bgBtn').hidden = sel.d < 0;
+  if (sel.d >= 0) $('bgBtn').textContent = state.orig[sel.d] ? 'Restaurar fondo' : 'Eliminar fondo';
   $('scaleChips').innerHTML = p.tamanios.map(function(t){
     return '<button type="button" class="chip'+(sel.t===t?' active':'')+'" data-t="'+t+'"><small>hasta</small>'+PRECIOS.estampas[t].nombre+'</button>'; }).join('');
   var arts = L.map(function(pl, i){
@@ -938,7 +1012,7 @@ function renderSlots(){
 function deleteSlot(i){        // elimina el diseño y su casillero; los siguientes se corren
   if (state.disenios <= 1) return;
   var u = state.designs[i]; if (u && u.indexOf('blob:') === 0) URL.revokeObjectURL(u);
-  state.designs.splice(i, 1); state.ar.splice(i, 1);
+  state.designs.splice(i, 1); state.ar.splice(i, 1); state.orig.splice(i, 1);
   for (var id in state.place) state.place[id] = state.place[id].filter(function(pl){ return pl.d !== i; }).map(function(pl){ if (pl.d > i) pl.d--; return pl; });
   setDisenios(state.disenios - 1);
 }
@@ -968,7 +1042,7 @@ $('designFile').addEventListener('change', function(){
       }
     } catch (err) {}
     if (state.designs[slot] && state.designs[slot].indexOf('blob:') === 0) URL.revokeObjectURL(state.designs[slot]);
-    state.designs[slot] = url; state.ar[slot] = ar;
+    state.designs[slot] = url; state.ar[slot] = ar; state.orig[slot] = null;
     renderSlots(); if (cb) cb(slot);
   };
   img.onerror = function(){ note.textContent = 'No pudimos leer la imagen.'; note.classList.add('err'); };
