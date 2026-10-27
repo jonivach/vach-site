@@ -309,6 +309,9 @@
 
   /* chips */
   .chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+  #designs { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: .5rem; }
+  #designs .chip { padding: .7rem .4rem; white-space: nowrap; text-align: center; }
+  @media (max-width: 700px) { #designs { grid-template-columns: repeat(3, minmax(0,1fr)); } }
   .chip { padding: .7rem 1.1rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card2); color: var(--lgray);
     font: inherit; font-weight: 600; cursor: pointer; transition: all .15s; }
   .chip:hover { color: var(--white); }
