@@ -225,6 +225,12 @@
     .modal-close { position: sticky; top: 0; float: right; margin: -.3rem -.3rem .3rem .5rem; z-index: 5; background: #222; }
     .modal-box .modal-done { display: block; }
   }
+  .real-mobile { display: none; }
+  @media (max-width: 700px) {
+    .real-card { height: auto; }
+    .real-card > *:not(.real-mobile) { display: none !important; }
+    .real-card .real-mobile { display: block; font-size: .85rem; color: var(--lgray); line-height: 1.5; text-align: center; padding: .4rem; }
+  }
   .modal-done { display: none; width: 100%; margin-top: 1rem; padding: .9rem; border-radius: 12px; border: 1px solid var(--border); background: var(--card2);
     color: var(--white); font: inherit; font-weight: 600; cursor: pointer; }
   .print-name svg { width: 26px; height: 26px; color: var(--purple); flex: 0 0 auto; }
@@ -533,7 +539,7 @@
     <div class="scale-grid">
       <div class="scale-card"><div class="t">Sobre la prenda <button type="button" class="link-btn t-link" id="centerBtn">Centrar</button></div><div class="mock" id="scaleMock"></div>
         <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo. Tocá uno para seleccionarlo.</p></div>
-      <div class="scale-card"><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div>
+      <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div>
         <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
         <div class="calib"><span>¿La regla no coincide? Medí 1 cm con una regla y ajustá:</span><input type="range" id="calib" min="80" max="120" step="1" value="100" aria-label="Calibrar escala"><b id="calibVal">100%</b></div></div>
     </div>
