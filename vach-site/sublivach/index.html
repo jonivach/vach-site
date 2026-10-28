@@ -1559,6 +1559,10 @@ function enviarCotizacion(){
 $('askRender').addEventListener('click', function(){
   var id = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; }).map(function(p){ return p.id; })[0] || 'remera';
   openScale(id);
+  // abre directo el selector de archivos; el diseño elegido se suma a la prenda (en el primer casillero libre)
+  var libre = -1; for (var k = 0; k < state.disenios; k++) if (!state.designs[k]) { libre = k; break; }
+  if (libre < 0) { libre = state.disenios; setDisenios(state.disenios + 1); }
+  pickDesign(libre, function(){ addDesign(scaleId, libre); renderScale(); });
 });
 $('askSkip').addEventListener('click', function(){
   var em = $('email').value.trim();
