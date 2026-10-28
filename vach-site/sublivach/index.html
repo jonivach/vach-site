@@ -237,7 +237,7 @@
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
   .send-msg.err { color: #ff7a7a; }
-  .send-msg.falta { color: #B5B5B5; font-weight: 400; }
+  .send-msg.falta { color: var(--gray); font-weight: 400; }
   .send-msg.falta b { color: #FF5C6C; font-weight: 700; }
   .sent-again { margin-top: .9rem; }
   .sent-again[hidden] { display: none; }
@@ -404,6 +404,8 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat; background-position: right .9rem center; }
   .field input.vacio, .field select.vacio { color: rgba(170,170,170,.38); }
+  .field input.hora24 { padding-right: 2.6rem; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23777' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 7v5l3 2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right .9rem center; }
   .field input::placeholder { color: rgba(170,170,170,.38); opacity: 1; }   /* nombre, agencia y ubicación: igual de tenues */   /* fecha y horario sin elegir: más tenues */
   .field select option { color: var(--white); background: #18181B; }
   .field input::-webkit-calendar-picker-indicator { opacity: .45; }
@@ -627,7 +629,7 @@
         <div class="field loc" id="locWrap"><label for="loc">Ubicación del evento</label><input type="text" id="loc" autocomplete="street-address" placeholder="Dirección o localidad · Ej.: Pilar, Buenos Aires" /></div>
         <div class="fields">
           <div class="field"><label for="date">Fecha del evento</label><input type="date" id="date" /></div>
-          <div class="field"><label for="start">Horario de inicio</label><input type="time" id="start" step="900" /><span class="field-hint" id="endHint"></span></div>
+          <div class="field"><label for="start">Horario de inicio</label><input type="text" id="start" class="hora24" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="hh:mm (ej.: 18:30)" /><span class="field-hint" id="endHint"></span></div>
           <div class="field"><label for="name">Tu nombre</label><input type="text" id="name" autocomplete="name" placeholder="Ej.: Sofía Pérez" /></div>
           <div class="field"><label for="brand">Agencia o marca</label><input type="text" id="brand" autocomplete="organization" placeholder="Ej.: Vach*" /></div>
         </div>
@@ -1364,6 +1366,20 @@ $('zones').addEventListener('click', function(e){
   var b = e.target.closest('.chip'); if (!b) return; state.zona = b.dataset.z; update();
   if (state.zona === 'fuera') setTimeout(function(){ $('loc').focus(); }, 250);
 });
+/* horario de inicio en 24 h: se escribe con números y los dos puntos se ponen solos */
+function horaOk(){ var v = $('start').value.trim(); return /^([01]\d|2[0-3]):[0-5]\d$/.test(v) ? v : ''; }
+$('start').addEventListener('input', function(){
+  var d = this.value.replace(/\D/g, '').slice(0, 4);
+  if (d.length >= 1 && +d[0] > 2) d = '0' + d;                       // "9" → "09"
+  if (d.length >= 2 && +d.slice(0, 2) > 23) d = d.slice(0, 1);          // no deja horas mayores a 23
+  if (d.length >= 3 && +d[2] > 5) d = d.slice(0, 2);                    // minutos hasta 59
+  this.value = d.length > 2 ? d.slice(0, 2) + ':' + d.slice(2) : d;
+  this.classList.toggle('err', this.value.length === 5 && !horaOk());
+});
+$('start').addEventListener('blur', function(){                          // "18" → "18:00"
+  if (/^\d{2}$/.test(this.value)) { this.value += ':00'; update(); }
+  else if (/^\d{2}:\d$/.test(this.value)) { this.value += '0'; update(); }
+});
 function marcarVacios(){ ['date','start'].forEach(function(id){ $(id).classList.toggle('vacio', !$(id).value); }); }
 ['date','start','name','brand','loc'].forEach(function(id){ $(id).addEventListener('input', update); $(id).addEventListener('change', update); });
 
@@ -1375,7 +1391,7 @@ function tallesTxt(sep, kv){
   return parts.join(sep);
 }
 function horario(){
-  var v = $('start').value; if (!v) return '';
+  var v = horaOk(); if (!v) return '';
   if (!state.horas) return v+' hs';
   var t = v.split(':'), m = (+t[0])*60 + (+t[1]) + state.horas*60;
   var end = ('0'+Math.floor(m/60)%24).slice(-2)+':'+('0'+m%60).slice(-2);
