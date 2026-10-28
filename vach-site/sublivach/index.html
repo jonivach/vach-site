@@ -1652,7 +1652,7 @@ function armarLamina(){
       c.fillText(ajustarTexto(c, state.qty[p.id]+' '+nombreDe(p, state.qty[p.id]) + (it.doble ? (it.lado === 'trasero' ? ' · trasero' : ' · frente') : ''), pw), cx0, top + ph + 42);
       c.fillStyle = '#AAAAAA'; c.font = '400 21px '+F;
       c.fillText(ajustarTexto(c, 'Estampas: '+estTxt(p), pw), cx0, top + ph + 74);
-      if (p.id === 'remera' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), cx0, top + ph + 100);
+      if (p.id === 'remera' && it.lado !== 'trasero' && PRECIOS.talles.some(function(t){ return state.talles[t]; })) c.fillText(ajustarTexto(c, 'Talles: '+tallesTxt(' · ', ' '), pw), cx0, top + ph + 100);
     });
     // pie
     c.strokeStyle = 'rgba(255,255,255,.1)'; c.lineWidth = 2; c.beginPath(); c.moveTo(pad, H - pad - 40); c.lineTo(W - pad, H - pad - 40); c.stroke();
