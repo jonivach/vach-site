@@ -415,6 +415,7 @@
   .sum-head { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
   .lam-link { background: none; border: 0; padding: 0; font: inherit; font-size: .76rem; font-weight: 500; color: var(--lgray); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
   .lam-link:hover { color: var(--white); }
+  .sum-head .lam-link[hidden] { display: none; }
   .sent .sent-lam[hidden] { display: none; }
   .sent .sent-lam { display: block; margin-top: -.2rem; color: #7CE3A1; }
   .lam-link.off { opacity: .4; cursor: not-allowed; text-decoration: none; position: relative; }
@@ -1473,6 +1474,7 @@ function update(){
   var renderOk = hayDisenios() && PRECIOS.prendas.some(function(p){ return state.qty[p.id] > 0; }) && (!RENDER_TRAS_ENVIO || state.enviada);
   $('lamBtn').classList.toggle('off', !renderOk); $('lamBtn').setAttribute('aria-disabled', !renderOk);
   $('lamBtn2').hidden = !hayDisenios();
+  $('lamBtn').hidden = !!state.enviada;   // ya enviada: el link queda solo en el cartel verde
   var asig = PRECIOS.talles.reduce(function(a,t){ return a + (state.talles[t]||0); }, 0), dif = state.qty.remera - asig;
   if (dif < 0) {   // si bajaron las remeras, recorta los talles desde el más grande
     for (var ti = PRECIOS.talles.length - 1; ti >= 0 && dif < 0; ti--) { var tk = PRECIOS.talles[ti], quita = Math.min(state.talles[tk]||0, -dif); state.talles[tk] -= quita; dif += quita; }
