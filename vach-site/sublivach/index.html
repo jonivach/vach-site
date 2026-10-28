@@ -153,8 +153,8 @@
   .sel-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .modal .sel-tools .size-chips .chip { height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .sel-actions { height: 46px; }
-  .bg-btn { height: 46px; padding: 0 1.1rem; border-radius: 10px; border: 1px solid var(--purple-line); background: var(--purple-soft); color: var(--white); font: inherit; font-size: .84rem; font-weight: 600; cursor: pointer; }
-  .bg-btn:hover { background: rgba(123,79,255,.28); }
+  .bg-btn { height: 46px; padding: 0 1.1rem; border-radius: 10px; border: 0; background: #F5C800; color: #111; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(245,200,0,.22); }
+  .bg-btn:hover { background: #FFD62E; }
   .bg-btn:disabled { opacity: .5; cursor: wait; }
   .bg-btn[hidden] { display: none; }
   .sel-tools .size-chips { width: 330px; max-width: 100%; }
@@ -286,8 +286,22 @@
   .real-dims { font-size: .82rem; font-weight: 700; color: var(--white); margin-top: .6rem; }
   .real-dims:empty { display: none; }
   .real-box.has-img { border-radius: 4px; background: #F4F4F2 center / 100% 100% no-repeat; color: transparent; }
-  .scale-grid { display: grid; grid-template-columns: 260px minmax(0,1fr); gap: 1.2rem; }
-  .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: clamp(260px, calc(100vh - 350px), 520px); display: flex; flex-direction: column; min-width: 0; }
+  .scale-grid { display: grid; grid-template-columns: repeat(var(--n, 1), minmax(0, 1fr)); gap: 1rem; }
+  .scale-grid .scale-card { cursor: pointer; transition: border-color .2s, box-shadow .2s; }
+  .scale-grid .scale-card.on { border-color: var(--purple); box-shadow: 0 0 0 1px var(--purple), 0 0 24px rgba(123,79,255,.18); cursor: default; }
+  .scale-grid .scale-card .t b { color: var(--white); letter-spacing: .06em; }
+  .scale-grid .scale-card.on .t b { color: var(--purple); }
+  .scale-foot { display: flex; justify-content: flex-end; margin-top: 1rem; }
+  .scale-foot .modal-done { display: block !important; width: auto; margin: 0; padding: .9rem 2rem; background: var(--purple); border: 0; color: #fff; font-weight: 700; }
+  .rot-field { display: flex; align-items: center; gap: .35rem; height: 46px; padding: 0 .8rem; border-radius: 10px; border: 1px solid var(--border); background: var(--card2); }
+  .rot-field input { width: 3.6rem; background: none; border: 0; color: var(--white); font: inherit; font-size: .95rem; font-weight: 600; text-align: right; -moz-appearance: textfield; }
+  .rot-field input::-webkit-outer-spin-button, .rot-field input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .rot-field input:focus { outline: none; }
+  .rot-field:focus-within { border-color: var(--purple-line); }
+  .rot-field span { color: var(--gray); }
+  .rot-tool[hidden] { display: none; }
+  .rot-tool .rot-field { width: max-content; }
+  .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: clamp(260px, calc(100vh - 430px), 520px); display: flex; flex-direction: column; min-width: 0; }
   .scale-card .t { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
   .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
   .mock svg { width: 100%; max-height: 100%; height: auto; display: block; }
@@ -303,7 +317,7 @@
   .ruler-y { position: absolute; left: 0; top: 1.2rem; width: 1rem; border-right: 1px solid var(--lgray);
     background: repeating-linear-gradient(180deg, var(--lgray) 0 1px, transparent 1px var(--tick,1cm)); background-size: 40% var(--tick,1cm); background-repeat: repeat-y; background-position: top right; }
   .fine-note { font-size: .74rem; color: var(--gray); margin-top: .8rem; line-height: 1.5; }
-  @media (max-width: 700px) { .scale-grid { grid-template-columns: 1fr; } .scale-card { height: 340px; } .mock svg { max-width: 240px; } }
+  @media (max-width: 700px) { .scale-grid { grid-template-columns: 1fr; } .scale-card { height: 360px; } .mock svg { max-width: 260px; } .scale-foot .modal-done { width: 100%; } }
   @media (max-width: 900px) {
     .modal { align-items: flex-start; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
       padding: calc(.75rem + env(safe-area-inset-top)) .75rem calc(1.5rem + env(safe-area-inset-bottom)); }
@@ -419,6 +433,10 @@
     box-shadow: 0 20px 60px -30px rgba(123,79,255,.5); }
   .summary::-webkit-scrollbar { width: 6px; }
   .summary::-webkit-scrollbar-thumb { background: rgba(123,79,255,.5); border-radius: 6px; }
+  @keyframes svGlow { 0%,100% { box-shadow: 0 0 0 1px rgba(123,79,255,.55), 0 0 18px rgba(123,79,255,.25); } 50% { box-shadow: 0 0 0 2px rgba(123,79,255,.95), 0 0 42px rgba(123,79,255,.55); } }
+  .summary.glow { border-color: var(--purple) !important; animation: svGlow 1.8s ease-in-out infinite; }
+  .send input.glow { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(123,79,255,.25); }
+  @media (prefers-reduced-motion: reduce) { .summary.glow { animation: none; box-shadow: 0 0 0 2px var(--purple), 0 0 30px rgba(123,79,255,.4); } }
   .summary h3 { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--purple); margin-bottom: 1.1rem; }
   .sum-head { display: flex; align-items: baseline; justify-content: space-between; gap: .8rem; flex-wrap: wrap; }
   .lam-link { background: none; border: 0; padding: 0; font: inherit; font-size: .76rem; font-weight: 500; color: var(--lgray); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
@@ -603,7 +621,7 @@
         <p class="upload-note design-note" id="designNote"><u><b>Opcional</b></u>: subí tus diseños en PNG <b>a modo de ejemplo</b>, para ver cómo quedan sobre las prendas.<br>El arte final lo coordinamos después.</p>
         <div class="design-slots" id="designSlots"></div>
         <div class="design-foot">
-          <button type="button" class="view-all" id="viewAll" hidden>Ver en tamaño real</button>
+          <button type="button" class="view-all" id="viewAll" hidden>Ver en las prendas</button>
         </div>
         <input type="file" id="designFile" accept="image/png" hidden />
       </section>
@@ -688,20 +706,21 @@
     </div>
     <div class="scale-tools sel-tools" id="selTools">
       <div class="tool"><span class="tool-l" id="selLabel">Medida máxima del diseño seleccionado</span><div class="size-chips" id="scaleChips"></div></div>
+      <div class="tool rot-tool" id="rotTool"><span class="tool-l">Giro</span><div class="rot-field"><input type="number" id="rotInput" min="-180" max="180" step="1" inputmode="numeric" aria-label="Giro en grados"><span>°</span></div></div>
       <div class="sel-actions">
         <button type="button" class="bg-btn" id="bgBtn">Eliminar fondo</button>
         <button type="button" class="link-btn" id="removeSel">Quitar de la prenda</button>
       </div>
     </div>
     <p class="upload-note" id="logoNote"></p>
-    <div class="scale-grid">
-      <div class="scale-card"><div class="t">Sobre la prenda <span class="lado-tabs" id="ladoTabs"></span></div><div class="mock" id="scaleMock"></div>
-        <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo. Tocá uno para seleccionarlo.</p></div>
+    <div class="scale-grid" id="scaleMock"></div>
+    <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo y usá el botón redondo (o el campo «Giro») para rotarlo. Tocá una prenda para editarla.</p>
+    <div class="scale-hidden" hidden>
       <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div><div class="real-dims" id="realDims"></div>
         <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
         <div class="calib"><span>¿No coincide con una regla?</span><button type="button" class="link-btn" id="openCalib">Calibrar con una tarjeta</button><b id="calibVal">100%</b></div></div>
     </div>
-    <button type="button" class="modal-done" id="scaleDone">Listo, cerrar</button>
+    <div class="scale-foot"><button type="button" class="send-btn modal-done" id="scaleDone">Listo, continuar</button></div>
   </div>
 </div>
 
@@ -862,7 +881,7 @@ function renderPrints(){
   $('prints').innerHTML = sel.map(function(p){
     var e = state.est[p.id];
     return '<div class="print-row" data-id="'+p.id+'">' +
-      '<button type="button" class="print-name" data-view="'+p.id+'">'+ICONS[p.icon]+'<div>'+p.nombre+'<small>'+state.qty[p.id]+' unidades</small><span class="view-link">Ver tamaño real</span></div></button>' +
+      '<button type="button" class="print-name" data-view="'+p.id+'">'+ICONS[p.icon]+'<div>'+p.nombre+'<small>'+state.qty[p.id]+' unidades</small><span class="view-link">Ver en la prenda</span></div></button>' +
       '<div class="counters">' + PRECIOS.prendas.filter(function(x){return x.id===p.id;})[0].tamanios.map(function(t){
         return '<div class="counter"><span class="mini-label">Hasta <b>'+PRECIOS.estampas[t].nombre+'</b></span><div class="stepper">' +
           '<button type="button" data-t="'+t+'" data-e="-10" aria-label="Menos estampas de '+PRECIOS.estampas[t].nombre+'">−</button>' +
@@ -1124,15 +1143,23 @@ function placeRot(){          // botón redondo debajo del diseño seleccionado
 }
 function svgPt(svg, e){ var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
 $('scaleMock').addEventListener('pointerdown', function(e){
+  var card = e.target.closest('.scale-card[data-p]'); if (!card) return;
+  if (e.target.closest('[data-lado]')) return;
+  if (card.dataset.p !== scaleId) {                // tocar otra prenda la vuelve la activa
+    scaleId = card.dataset.p; var a0 = e.target.closest('.art'); scaleSel = a0 ? +a0.dataset.i : 0; renderScale();
+    if (!a0) return;
+  }
   var rh = e.target.closest('.rot');
   if (rh) {                     // girar: el ángulo sigue al puntero alrededor del centro del diseño
     var plr = placesOf(scaleId)[scaleSel], svg = rh.ownerSVGElement, q = svgPt(svg, e);
-    drag = { rot: true, svg: svg, pl: plr, a0: Math.atan2(q.y - plr.y, q.x - plr.x), r0: plr.r || 0, art: $('scaleMock').querySelector('.art[data-i="'+scaleSel+'"]'), g: rh };
+    drag = { rot: true, svg: svg, pl: plr, a0: Math.atan2(q.y - plr.y, q.x - plr.x), r0: plr.r || 0, art: svgActivo().querySelector('.art[data-i="'+scaleSel+'"]'), g: rh };
     rh.classList.add('dragging'); try { rh.setPointerCapture(e.pointerId); } catch (err) {} e.preventDefault(); return;
   }
-  var art = e.target.closest('.art'); if (!art) return;
+  var art = e.target.closest('.art');
+  if (art && !art.ownerSVGElement.closest('.scale-card.on')) art = svgActivo().querySelector('.art[data-i="'+art.dataset.i+'"]');
+  if (!art) return;
   var i = +art.dataset.i, pl = placesOf(scaleId)[i], p0 = svgPt(art.ownerSVGElement, e);
-  if (scaleSel !== i) { scaleSel = i; renderScale(); art = $('scaleMock').querySelector('.art[data-i="'+i+'"]'); }
+  if (scaleSel !== i) { scaleSel = i; renderScale(); art = svgActivo().querySelector('.art[data-i="'+i+'"]'); }
   drag = { svg: art.ownerSVGElement, x: p0.x, y: p0.y, ox: pl.x, oy: pl.y, art: art, pl: pl };
   art.classList.add('dragging'); try { art.setPointerCapture(e.pointerId); } catch (err) {} e.preventDefault();
 });
@@ -1143,15 +1170,17 @@ $('scaleMock').addEventListener('pointermove', function(e){
     a = ((a % 360) + 540) % 360 - 180;                                   // entre -180 y 180
     var snap = Math.round(a / 45) * 45; if (Math.abs(a - snap) < 5) a = snap;   // se "pega" a 0°, 45°, 90°…
     pr.r = a === -180 ? 180 : a; clampOne(scaleId, pr);
-    drag.art.setAttribute('transform', artTf(pr)); placeRot(); return;
+    drag.art.setAttribute('transform', artTf(pr)); placeRot(); $('rotInput').value = Math.round(pr.r); return;
   }
   var p = svgPt(drag.svg, e), pl = drag.pl;
   pl.x = drag.ox + (p.x - drag.x); pl.y = drag.oy + (p.y - drag.y); clampOne(scaleId, pl);
   drag.art.setAttribute('transform', artTf(pl)); placeRot();
 });
 ['pointerup','pointercancel'].forEach(function(ev){ $('scaleMock').addEventListener(ev, function(){ if (drag) { (drag.g || drag.art).classList.remove('dragging'); drag = null; } }); });
-$('ladoTabs').addEventListener('click', function(e){
-  var b = e.target.closest('[data-lado]'); if (!b || b.dataset.lado === state.lado) return;
+$('scaleMock').addEventListener('click', function(e){
+  var b = e.target.closest('[data-lado]'); if (!b) return;
+  if (scaleId !== 'remera') { scaleId = 'remera'; scaleSel = 0; }
+  if (b.dataset.lado === state.lado) { renderScale(); return; }
   state.lado = b.dataset.lado; scaleSel = 0; renderScale();
 });
 /* calibración con una tarjeta (medida estándar ISO: 8,56 × 5,398 cm) */
@@ -1171,41 +1200,60 @@ $('calibClose').addEventListener('click', closeCalib);
 $('calibOk').addEventListener('click', closeCalib);
 $('calibReset').addEventListener('click', function(){ setCalib(1); });
 $('calibModal').addEventListener('click', function(e){ if (e.target === this) closeCalib(); });
-function renderScale(){
-  var p = prendaOf(scaleId), m = mockOf(p.id);
-  state.place[placeKey(p.id)] = placesOf(p.id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
-  placesOf(p.id).forEach(function(pl){ if (p.tamanios.indexOf(pl.t) < 0) { pl.t = p.tamanios[p.tamanios.length - 1]; clampOne(p.id, pl); } });
-  ensurePlaceholder(p.id);
-  var L = placesOf(p.id);
-  if (scaleSel >= L.length) scaleSel = L.length - 1;
-  var sel = L[scaleSel];
-  renderPrendaTabs(); renderPick();
-  $('ladoTabs').innerHTML = p.id === 'remera' ? ['frente','trasero'].map(function(l){ return '<button type="button" data-lado="'+l+'" class="'+(state.lado===l?'active':'')+'">'+(l==='frente'?'Frente':'Trasero')+'</button>'; }).join('') : '';
-  $('selLabel').textContent = L.length > 1 ? 'Medida máxima del diseño seleccionado' : 'Medida máxima del diseño';
-  $('removeSel').hidden = sel.d < 0;
-  $('bgBtn').hidden = sel.d < 0;
-  if (sel.d >= 0) $('bgBtn').textContent = state.orig[sel.d] ? 'Restaurar fondo' : 'Eliminar fondo';
-  $('scaleChips').innerHTML = p.tamanios.map(function(t){
-    return '<button type="button" class="chip'+(sel.t===t?' active':'')+'" data-t="'+t+'"><small>hasta</small>'+PRECIOS.estampas[t].nombre+'</button>'; }).join('');
+function prendasEditor(){
+  var L = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; }).map(function(p){ return p.id; });
+  if (L.indexOf(scaleId) < 0) L.unshift(scaleId);
+  return L;
+}
+function svgPrenda(id, activa){
+  var m = mockOf(id), L = placesOf(id), vb = m.vb.split(' ');
   var arts = L.map(function(pl, i){
-    var d = cmOf(pl.t), s = dimsOf(pl), u = pl.d >= 0 ? state.designs[pl.d] : null, on = i === scaleSel && L.length > 1;
+    var d = cmOf(pl.t), s = dimsOf(pl), u = pl.d >= 0 ? state.designs[pl.d] : null, on = activa && i === scaleSel;
+    if (!u && !activa) return '';                 // en las prendas no activas no se muestra la muestra
     return '<g class="art" data-i="'+i+'" transform="'+artTf(pl)+'">' +
-      (u ? '<rect width="'+s.w+'" height="'+s.h+'" fill="rgba(0,0,0,0)" stroke="'+(on || L.length === 1 ? '#7B4FFF' : 'rgba(170,170,170,.45)')+'" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>' +
+      (u ? '<rect width="'+s.w+'" height="'+s.h+'" fill="rgba(0,0,0,0)" stroke="'+(on ? '#7B4FFF' : 'rgba(170,170,170,.45)')+'" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>' +
            '<image href="'+u+'" width="'+s.w+'" height="'+s.h+'" preserveAspectRatio="xMidYMid meet"/>'
          : '<circle cx="'+(d/2)+'" cy="'+(d/2)+'" r="'+(d/2)+'" fill="rgba(123,79,255,.25)" stroke="#7B4FFF" stroke-width=".35" stroke-dasharray="1 .7"/>' +
            '<text x="'+(d/2)+'" y="'+(d/2+Math.min(1.2, d/8))+'" text-anchor="middle" font-size="'+Math.max(1.6, Math.min(3.2, d/4))+'" font-weight="700" fill="#fff">'+d+' cm</text>') +
       '</g>';
   });
-  if (arts.length > 1) arts.push(arts.splice(scaleSel, 1)[0]);   // el seleccionado queda arriba
-  arts = arts.join('');
-  var vb = m.vb.split(' ');
+  if (activa && arts.length > 1) arts.push(arts.splice(scaleSel, 1)[0]);   // el seleccionado queda arriba
   var base = m.img ? '<image href="'+m.img+'" x="0" y="0" width="'+vb[2]+'" height="'+vb[3]+'" preserveAspectRatio="none"/>'
                    : '<path d="'+m.path+'" fill="#F4F4F2" stroke="#BDBDBD" stroke-width=".4" stroke-linejoin="round"/>';
-  $('scaleMock').innerHTML = '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+(m.color ? ' color' : '')+'">'+base+arts+'<g class="rot" id="rotHandle"></g></svg>';
-  placeRot();
-  drawReal(sel);
+  return '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+(m.color ? ' color' : '')+'">'+base+arts.join('')+(activa ? '<g class="rot" id="rotHandle"></g>' : '')+'</svg>';
 }
-function drawReal(pl){         // siempre a escala real; si no entra, se desplaza dentro del recuadro
+function renderScale(){
+  var ids = prendasEditor();
+  ids.forEach(function(id){
+    var p = prendaOf(id);
+    state.place[placeKey(id)] = placesOf(id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
+    placesOf(id).forEach(function(pl){ if (p.tamanios.indexOf(pl.t) < 0) { pl.t = p.tamanios[p.tamanios.length - 1]; clampOne(id, pl); } });
+    var keep = scaleSel; ensurePlaceholder(id); if (id !== scaleId) scaleSel = keep;
+  });
+  var p = prendaOf(scaleId), L = placesOf(scaleId);
+  if (scaleSel >= L.length) scaleSel = L.length - 1;
+  if (scaleSel < 0) scaleSel = 0;
+  var sel = L[scaleSel];
+  renderPrendaTabs(); renderPick();
+  $('selLabel').textContent = L.length > 1 ? 'Medida máxima del diseño seleccionado' : 'Medida máxima del diseño';
+  $('removeSel').hidden = sel.d < 0;
+  $('bgBtn').hidden = sel.d < 0;
+  $('rotTool').hidden = sel.d < 0;
+  if (document.activeElement !== $('rotInput')) $('rotInput').value = Math.round(sel.r || 0);
+  if (sel.d >= 0) $('bgBtn').textContent = state.orig[sel.d] ? 'Restaurar fondo' : 'Eliminar fondo';
+  $('scaleChips').innerHTML = p.tamanios.map(function(t){
+    return '<button type="button" class="chip'+(sel.t===t?' active':'')+'" data-t="'+t+'"><small>hasta</small>'+PRECIOS.estampas[t].nombre+'</button>'; }).join('');
+  var g = $('scaleMock'); g.style.setProperty('--n', Math.min(ids.length, 3));
+  g.innerHTML = ids.map(function(id){
+    var on = id === scaleId, pr = prendaOf(id), v = varOf(id);
+    var tabs = id === 'remera' ? '<span class="lado-tabs" id="ladoTabs">'+['frente','trasero'].map(function(l){ return '<button type="button" data-lado="'+l+'" class="'+(state.lado===l?'active':'')+'">'+(l==='frente'?'Frente':'Trasero')+'</button>'; }).join('')+'</span>' : '';
+    return '<div class="scale-card'+(on ? ' on' : '')+'" data-p="'+id+'"><div class="t"><b>'+pr.nombre+(v ? ' · '+v.nombre : '')+'</b>'+tabs+'</div><div class="mock">'+svgPrenda(id, on)+'</div></div>';
+  }).join('');
+  placeRot();
+}
+function svgActivo(){ return $('scaleMock').querySelector('.scale-card.on svg'); }
+function drawReal(pl){         // (vista de tamaño real: ya no se muestra)
+  if (!$('scaleReal') || $('scaleReal').closest('[hidden]')) return;
   var d = cmOf(pl.t), dm = dimsOf(pl), logoURL = pl.d >= 0 ? state.designs[pl.d] : null;
   var r = $('scaleReal'), CM = 96 / 2.54 * calib;               // px por cm en CSS (ajustable)
   $('calibVal').textContent = Math.abs(calib - 1) < 0.001 ? 'Sin calibrar' : 'Calibrado (' + Math.round(calib*100) + '%)';
@@ -1234,6 +1282,14 @@ $('scaleClose').addEventListener('click', closeScale);
 $('scaleDone').addEventListener('click', closeScale);
 $('scaleModal').addEventListener('click', function(e){ if (e.target === this) closeScale(); });
 document.addEventListener('keydown', function(e){ if (e.key !== 'Escape') return; if ($('calibModal').classList.contains('open')) { closeCalib(); return; } closeScale(); });
+$('rotInput').addEventListener('input', function(){
+  var pl = placesOf(scaleId)[scaleSel]; if (!pl || pl.d < 0) return;
+  var v = parseInt(this.value, 10); if (isNaN(v)) return;
+  v = ((v % 360) + 540) % 360 - 180; if (v === -180) v = 180;
+  pl.r = v; clampOne(scaleId, pl);
+  var art = svgActivo() && svgActivo().querySelector('.art[data-i="'+scaleSel+'"]'); if (art) art.setAttribute('transform', artTf(pl)); placeRot();
+});
+$('rotInput').addEventListener('blur', function(){ var pl = placesOf(scaleId)[scaleSel]; if (pl) this.value = Math.round(pl.r || 0); });
 $('scaleChips').addEventListener('click', function(e){
   var b = e.target.closest('.chip'); if (!b) return;
   var pl = placesOf(scaleId)[scaleSel]; pl.t = b.dataset.t; clampOne(scaleId, pl); renderScale();
@@ -1377,6 +1433,16 @@ $('start').addEventListener('input', function(){
 $('start').addEventListener('blur', function(){                          // "18" → "18:00"
   if (/^\d{2}$/.test(this.value)) { this.value += ':00'; update(); }
   else if (/^\d{2}:\d$/.test(this.value)) { this.value += '0'; update(); }
+});
+/* en los campos de cantidad, el 0 se borra al entrar y vuelve si se deja vacío */
+document.addEventListener('focusin', function(e){
+  var t = e.target; if (t.tagName !== 'INPUT' || t.type !== 'number' || t.id === 'rotInput') return;
+  if (t.value === '0') { t.value = ''; t.dataset.cero = '1'; }
+});
+document.addEventListener('focusout', function(e){
+  var t = e.target; if (t.tagName !== 'INPUT' || t.type !== 'number' || t.id === 'rotInput') return;
+  if (t.value === '' && t.dataset.cero) t.value = '0';
+  delete t.dataset.cero;
 });
 function marcarVacios(){ ['date','start'].forEach(function(id){ $(id).classList.toggle('vacio', !$(id).value); }); }
 ['date','start','name','brand','loc'].forEach(function(id){ $(id).addEventListener('input', update); $(id).addEventListener('change', update); });
@@ -1526,6 +1592,8 @@ function update(){
   $('sendMsg').classList.remove('err');
   $('sendMsg').innerHTML = falta.length ? 'Para enviar falta completar: <b>' + falta.map(esc).join(', ') + '</b>.' : '';
   $('sendMsg').classList.toggle('falta', falta.length > 0);
+  var soloMail = falta.length === 1 && falta[0] === 'mail' && !state.enviada;
+  $('summary').classList.toggle('glow', soloMail); $('email').classList.toggle('glow', soloMail);
   marcarVacios();
 
   document.querySelectorAll('#designs .chip[data-n]').forEach(function(c){ c.classList.toggle('active', state.disElegido && +c.dataset.n === state.disenios); });
