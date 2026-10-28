@@ -238,6 +238,12 @@
   .send-msg:empty { display: none; }
   .send-msg.err { color: #ff7a7a; }
   .send-btn:disabled + .send-msg { color: #FFC94D; }
+  .modal-box.sent-box { width: min(480px, 100%); padding: 1.4rem; }
+  #sentModal { align-items: center; }
+  #sentModal .modal-box { max-height: none; overflow: visible; }
+  #sentModal .modal-close { position: absolute; float: none; margin: 0; top: 1rem; right: 1rem; }
+  #sentModal .sent { margin-top: 1.6rem; }
+  .sent-again { margin-top: 1rem; }
   .sent { padding: 1rem; border-radius: 12px; background: rgba(124,227,161,.08); border: 1px solid rgba(124,227,161,.35); }
   .sent-ok { color: #7CE3A1; font-weight: 600; font-size: .9rem; margin-bottom: .35rem; word-break: break-word; }
   .sent p { font-size: .8rem; color: var(--lgray); margin-bottom: .6rem; }
@@ -640,16 +646,23 @@
         </div>
         <p class="send-msg" id="sendMsg"></p>
       </div>
-      <div class="sent" id="sentBox" hidden>
-        <div class="sent-ok">✓ ¡Listo! Te enviamos la cotización a <b id="sentTo"></b></div>
-        <p>Revisá tu casilla (y spam). Para confirmar la fecha, escribinos por WhatsApp.</p>
-        <button type="button" class="lam-link sent-lam" id="lamBtn2">Ver render de tus prendas</button>
-        <div class="mail-preview" id="mailPreview" hidden></div>
-      </div>
       <p class="fine">La fecha se confirma con la seña.<br>Los precios que te enviamos no incluyen IVA.<br><a class="fine-link" id="colorLink" target="_blank" rel="noopener">Consultá por disponibilidad de colores</a>.</p>
     </aside>
   </div>
 </main>
+
+<div class="modal" id="sentModal" role="dialog" aria-modal="true" aria-labelledby="sentTo">
+  <div class="modal-box sent-box">
+    <button type="button" class="modal-close" id="sentClose" aria-label="Cerrar"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="sent" id="sentBox">
+      <div class="sent-ok">✓ ¡Listo! Te enviamos la cotización a <b id="sentTo"></b></div>
+      <p>Revisá tu casilla (y spam). Para confirmar la fecha, escribinos por WhatsApp.</p>
+      <button type="button" class="lam-link sent-lam" id="lamBtn2">Ver render de tus prendas</button>
+      <div class="mail-preview" id="mailPreview" hidden></div>
+    </div>
+    <button type="button" class="send-btn sent-again" id="sentAgain">Cotizar otro evento</button>
+  </div>
+</div>
 
 <div class="modal" id="lamModal" role="dialog" aria-modal="true" aria-labelledby="lamTitle">
   <div class="modal-box lam-box">
@@ -1537,7 +1550,8 @@ $('sendBtn').addEventListener('click', function(){
 });
 function enviarCotizacion(){
   var em = $('email').value.trim();
-  $('sentTo').textContent = em; $('sendBox').hidden = true; $('sentBox').hidden = false; renderMail();
+  $('sentTo').textContent = em; renderMail();
+  $('sentModal').classList.add('open'); document.body.style.overflow = 'hidden';
   state.enviada = true; update();
   if (hayDisenios()) armarLamina().then(function(b){ state.laminaPNG = b; });   // queda lista para adjuntarla al mail (Resend)
 }
@@ -1695,10 +1709,18 @@ function fitLam(){             // la imagen entra entera en la pantalla, sin scr
   img.style.maxHeight = Math.max(120, libre) + 'px';
 }
 window.addEventListener('resize', fitLam);
-function closeLam(){ $('lamModal').classList.remove('open'); document.body.style.overflow = ''; }
+function reiniciar(){         // la página vuelve a cero (sin datos cargados y arriba de todo)
+  try { history.scrollRestoration = 'manual'; } catch (e) {}
+  location.replace(location.pathname + '?nuevo=' + Date.now());
+}
+if (/[?&]nuevo=/.test(location.search)) { try { history.replaceState(null, '', location.pathname); window.scrollTo(0, 0); } catch (e) {} }
+$('sentClose').addEventListener('click', reiniciar);
+$('sentAgain').addEventListener('click', reiniciar);
+$('sentModal').addEventListener('click', function(e){ if (e.target === this) reiniciar(); });
+function closeLam(){ $('lamModal').classList.remove('open'); document.body.style.overflow = $('sentModal').classList.contains('open') ? 'hidden' : ''; }
 $('lamClose').addEventListener('click', closeLam);
 $('lamModal').addEventListener('click', function(e){ if (e.target === this) closeLam(); });
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && $('lamModal').classList.contains('open')) closeLam(); });
+document.addEventListener('keydown', function(e){ if (e.key !== 'Escape') return; if ($('lamModal').classList.contains('open')) { closeLam(); return; } if ($('sentModal').classList.contains('open')) reiniciar(); });
 $('openChart').addEventListener('click', function(){ $('chartModal').classList.add('open'); document.body.style.overflow = 'hidden'; });
 function closeChart(){ $('chartModal').classList.remove('open'); document.body.style.overflow = ''; }
 $('chartClose').addEventListener('click', closeChart);
