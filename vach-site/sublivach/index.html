@@ -237,7 +237,7 @@
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
   .send-msg.err { color: #ff7a7a; }
-  .send-btn:disabled + .send-msg { color: #FFC94D; }
+  .send-msg.falta { color: #FF5C6C; font-weight: 700; }
   .sent-again { margin-top: .9rem; }
   .sent-again[hidden] { display: none; }
   .sent { padding: 1rem; border-radius: 12px; background: rgba(124,227,161,.08); border: 1px solid rgba(124,227,161,.35); }
@@ -399,6 +399,12 @@
   .field input, .field select { width: 100%; height: 44px; padding: 0 .9rem; border-radius: 10px; border: 1px solid var(--border);
     background: var(--card2); color: var(--white); font: inherit; color-scheme: dark; }
   .field input:focus, .field select:focus { outline: none; border-color: var(--purple-line); }
+  .field select { -webkit-appearance: none; appearance: none; cursor: pointer; padding-right: 2.2rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right .9rem center; }
+  .field input.vacio, .field select.vacio { color: rgba(170,170,170,.38); }   /* fecha y horario sin elegir: más tenues */
+  .field select option { color: var(--white); background: #18181B; }
+  .field input::-webkit-calendar-picker-indicator { opacity: .45; }
   .field-full { grid-column: 1 / -1; }
   #zones { margin-bottom: 1.1rem; }
   .loc { max-height: 0; opacity: 0; overflow: hidden; margin: 0; transition: max-height .3s ease, opacity .25s ease, margin .3s ease; }
@@ -592,7 +598,7 @@
         <p class="step-lock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg><span>Completá el paso anterior para seguir</span></p>
         <p class="step-sub">Es el catálogo de opciones que van a ver tus invitados para elegir qué estampar.</p>
         <div class="chips" id="designs"></div>
-        <p class="upload-note design-note" id="designNote">Opcional: subí tus diseños en PNG <b>a modo de ejemplo</b>, para ver cómo quedan sobre las prendas.<br>El arte final lo coordinamos después.</p>
+        <p class="upload-note design-note" id="designNote"><u>Opcional</u>: subí tus diseños en PNG <b>a modo de ejemplo</b>, para ver cómo quedan sobre las prendas.<br>El arte final lo coordinamos después.</p>
         <div class="design-slots" id="designSlots"></div>
         <div class="design-foot">
           <button type="button" class="view-all" id="viewAll" hidden>Ver en tamaño real</button>
@@ -619,9 +625,9 @@
         <div class="field loc" id="locWrap"><label for="loc">Ubicación del evento</label><input type="text" id="loc" autocomplete="street-address" placeholder="Dirección o localidad · Ej.: Pilar, Buenos Aires" /></div>
         <div class="fields">
           <div class="field"><label for="date">Fecha del evento</label><input type="date" id="date" /></div>
-          <div class="field"><label for="start">Horario de la activación</label><input type="time" id="start" step="900" /><span class="field-hint" id="endHint"></span></div>
+          <div class="field"><label for="start">Horario de inicio</label><select id="start"></select><span class="field-hint" id="endHint"></span></div>
           <div class="field"><label for="name">Tu nombre</label><input type="text" id="name" autocomplete="name" placeholder="Ej.: Sofía Pérez" /></div>
-          <div class="field"><label for="brand">Agencia o marca</label><input type="text" id="brand" autocomplete="organization" placeholder="Ej.: Agencia X / Marca Y" /></div>
+          <div class="field"><label for="brand">Agencia o marca</label><input type="text" id="brand" autocomplete="organization" placeholder="Ej.: Vach*" /></div>
         </div>
       </section>
     </div>
@@ -1356,7 +1362,14 @@ $('zones').addEventListener('click', function(e){
   var b = e.target.closest('.chip'); if (!b) return; state.zona = b.dataset.z; update();
   if (state.zona === 'fuera') setTimeout(function(){ $('loc').focus(); }, 250);
 });
-['date','start','name','brand','loc'].forEach(function(id){ $(id).addEventListener('input', update); });
+/* horario de inicio en formato 24 h (cada 15 minutos) */
+(function(){
+  var h = '<option value="">Elegí el horario</option>';
+  for (var m = 0; m < 24*60; m += 15) { var t = ('0'+Math.floor(m/60)).slice(-2)+':'+('0'+m%60).slice(-2); h += '<option value="'+t+'">'+t+' hs</option>'; }
+  $('start').innerHTML = h;
+})();
+function marcarVacios(){ ['date','start'].forEach(function(id){ $(id).classList.toggle('vacio', !$(id).value); }); }
+['date','start','name','brand','loc'].forEach(function(id){ $(id).addEventListener('input', update); $(id).addEventListener('change', update); });
 
 
 function tallesTxt(sep, kv){
@@ -1502,6 +1515,8 @@ function update(){
   $('sendBtn').hidden = sinDis && state.preguntaRender; $('askInline').hidden = !(sinDis && state.preguntaRender);
   $('sendMsg').classList.remove('err');
   $('sendMsg').textContent = falta.length ? 'Para enviar falta completar: ' + falta.join(', ') + '.' : '';
+  $('sendMsg').classList.toggle('falta', falta.length > 0);
+  marcarVacios();
 
   document.querySelectorAll('#designs .chip[data-n]').forEach(function(c){ c.classList.toggle('active', state.disElegido && +c.dataset.n === state.disenios); });
   $('step3').classList.toggle('sin-elegir', !state.disElegido);
