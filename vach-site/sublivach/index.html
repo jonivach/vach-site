@@ -733,6 +733,9 @@
 /* ===========================================================
    PRECIOS — editar solo este bloque
    =========================================================== */
+/* Planilla de precios (Google Sheets → Publicar en la web → pestaña "Precios" → CSV).
+   Pegar acá el link. Si está vacío o no responde, se usan los precios de abajo. */
+var PRECIOS_CSV = '';
 var RENDER_TRAS_ENVIO = true;    // true = "Ver render de tus prendas" se habilita recién al enviar la cotización (y con al menos un diseño cargado)
 var PRECIOS = {
   prendas: [
@@ -1721,6 +1724,62 @@ $('chartClose').addEventListener('click', closeChart);
 $('chartModal').addEventListener('click', function(e){ if (e.target === this) closeChart(); });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeChart(); });
 update();
+
+/* ---------- precios desde la planilla ---------- */
+function csvFilas(t){
+  var filas = [], f = [], v = '', q = false;
+  for (var i = 0; i < t.length; i++) {
+    var ch = t[i];
+    if (q) { if (ch === '"') { if (t[i+1] === '"') { v += '"'; i++; } else q = false; } else v += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ',') { f.push(v); v = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && t[i+1] === '\n') i++; f.push(v); filas.push(f); f = []; v = ''; }
+    else v += ch;
+  }
+  if (v || f.length) { f.push(v); filas.push(f); }
+  return filas;
+}
+function aplicarPrecios(t){
+  var m = {};
+  csvFilas(t).forEach(function(f){
+    var k = (f[0] || '').trim(), raw = (f[1] || '').replace(/[^0-9-]/g, '');   // "$10.000" → 10000
+    if (k && k[0] !== '#' && raw !== '' && !isNaN(+raw)) m[k] = +raw;
+  });
+  if (Object.keys(m).length < 5) return false;                                // no parece la planilla
+  var set = function(k, fn){ if (m[k] != null) fn(m[k]); };
+  Object.keys(PRECIOS.variantes).forEach(function(id){
+    PRECIOS.variantes[id].opciones.forEach(function(o){ set('prenda.'+id+'.'+o.id, function(v){ o.precio = v; }); });
+    var pr = prendaOf(id); if (pr) pr.precio = PRECIOS.variantes[id].opciones[0].precio;
+  });
+  Object.keys(PRECIOS.estampas).forEach(function(k){ var e = PRECIOS.estampas[k]; set('estampa.'+e.cm+'cm', function(v){ e.precio = v; }); });
+  set('hora', function(v){ PRECIOS.precioHora = v; });
+  set('horas_min', function(v){ PRECIOS.horasMin = v; });
+  set('horas_max', function(v){ PRECIOS.horasMax = v; });
+  set('disenios_incluidos', function(v){ PRECIOS.diseniosIncluidos = v; });
+  set('disenio_extra', function(v){ PRECIOS.precioDisenioExtra = v; });
+  set('minimo_prendas', function(v){ PRECIOS.minimoPrendas = v; });
+  var ds = [];
+  for (var i = 1; i <= 6; i++) if (m['descuento.'+i+'.desde'] != null && m['descuento.'+i+'.pct'] != null) ds.push({ desde: m['descuento.'+i+'.desde'], pct: m['descuento.'+i+'.pct'] });
+  if (ds.length) PRECIOS.descuentos = ds.sort(function(a, b){ return a.desde - b.desde; });
+  ['regular','oversize'].forEach(function(c){ PRECIOS.talles.forEach(function(t){
+    set('talle.'+c+'.'+t+'.ancho', function(v){ PRECIOS.tablaTalles[c][t].ancho = v; });
+    set('talle.'+c+'.'+t+'.largo', function(v){ PRECIOS.tablaTalles[c][t].largo = v; });
+  }); });
+  // refrescar lo que muestra la página
+  $('minP').textContent = PRECIOS.minimoPrendas; $('minH').textContent = PRECIOS.horasMin;
+  r.min = PRECIOS.horasMin; r.max = PRECIOS.horasMax;
+  if (state.horas) state.horas = Math.min(PRECIOS.horasMax, Math.max(PRECIOS.horasMin, state.horas));
+  renderCortes(); update();
+  return true;
+}
+(function(){
+  if (!PRECIOS_CSV) return;
+  try { var c = localStorage.getItem('sv-precios'); if (c) aplicarPrecios(c); } catch (e) {}   // últimos precios guardados, al instante
+  fetch(PRECIOS_CSV + (PRECIOS_CSV.indexOf('?') < 0 ? '?' : '&') + 't=' + Date.now(), { cache: 'no-store' })
+    .then(function(res){ if (!res.ok) throw 0; return res.text(); })
+    .then(function(t){ if (aplicarPrecios(t)) { try { localStorage.setItem('sv-precios', t); } catch (e) {} } })
+    .catch(function(){});                                                       // si falla, quedan los precios de abajo
+})();
 </script>
 </body>
 </html>
