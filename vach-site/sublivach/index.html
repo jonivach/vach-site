@@ -237,7 +237,8 @@
   .send-msg { font-size: .76rem; color: var(--gray); margin-top: .55rem; text-align: center; }
   .send-msg:empty { display: none; }
   .send-msg.err { color: #ff7a7a; }
-  .send-msg.falta { color: #FF5C6C; font-weight: 700; }
+  .send-msg.falta { color: #B5B5B5; font-weight: 400; }
+  .send-msg.falta b { color: #FF5C6C; font-weight: 700; }
   .sent-again { margin-top: .9rem; }
   .sent-again[hidden] { display: none; }
   .sent { padding: 1rem; border-radius: 12px; background: rgba(124,227,161,.08); border: 1px solid rgba(124,227,161,.35); }
@@ -1514,7 +1515,7 @@ function update(){
   if (!sinDis) state.preguntaRender = false;
   $('sendBtn').hidden = sinDis && state.preguntaRender; $('askInline').hidden = !(sinDis && state.preguntaRender);
   $('sendMsg').classList.remove('err');
-  $('sendMsg').textContent = falta.length ? 'Para enviar falta completar: ' + falta.join(', ') + '.' : '';
+  $('sendMsg').innerHTML = falta.length ? 'Para enviar falta completar: <b>' + falta.map(esc).join(', ') + '</b>.' : '';
   $('sendMsg').classList.toggle('falta', falta.length > 0);
   marcarVacios();
 
