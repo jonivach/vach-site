@@ -81,6 +81,9 @@ p{margin:0}
 .supply{display:flex;flex-direction:column;align-items:center;gap:4px}
 .supply .row{justify-content:center;flex-wrap:wrap;gap:8px}
 .supply strong{font-size:18px}
+.fishrow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.fishrow svg{width:40px;height:24px;transition:filter .2s,opacity .2s,transform .2s}
+.fishrow svg.used{filter:grayscale(1);opacity:.3;transform:scale(.88)}
 .reward{font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
 .reward b{color:var(--ink)}
 .board-wrap{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:10px}
@@ -233,9 +236,9 @@ const LIMITS={3:[20,40],4:[45,90],5:[90,180],6:[150,300],7:[240,480]};
 const CROSS_FROM=26, BULB_FROM=11, GUIDE_TO=10, FIXED_TO=5;
 const F=(seen)=>({t:"fish",seen}),C=(label,o)=>Object.assign({t:"cat",label},o||{}),E=(seen)=>({t:"empty",seen});
 const INTROS={
-  one:{lv:1,title:"Poné 1 pez",text:"Tocá una casilla para poner un pez. El gato mira hacia donde apunta su flecha. El número dice cuántos peces ve.",ex:[F(1),C("←1"),E()]},
+  one:{lv:1,title:"Poné 1 pez",text:"Arriba ves el pez que tenés que poner: tocá una casilla para ponerlo. El gato mira hacia donde apunta su flecha. El número dice cuántos peces ve.",ex:[F(1),C("←1"),E()]},
   zero:{lv:2,title:"El cero también es pista",text:"Si un gato dice 0, no ve ningún pez. Si un gato dice 1, ve un pez.",ex:[C("→0"),E(1),E(1)]},
-  two:{lv:3,title:"Ahora son 2 peces",text:"Arriba ves cuántos peces tenés que poner. Cuando un gato ve exactamente su número, se pone verde.",ex:[C("→2",{ok:1}),F(1),F(1)]},
+  two:{lv:3,title:"Ahora son 2 peces",text:"Arriba ves los peces que tenés que poner. Cada pez que ponés en el tablero se apaga arriba. Cuando un gato ve exactamente su número, se pone verde.",ex:[C("→2",{ok:1}),F(1),F(1)]},
   diag:{lv:4,title:"Miradas en diagonal",text:"Los gatos también pueden mirar en diagonal.",ex:[C("↘1"),E(),F()]},
   look:{lv:6,title:"Ahora mirá vos",text:"Desde este nivel lo que mira cada gato ya no viene marcado. Pasá el mouse o apoyá el dedo sobre un gato para verlo.",ex:[C("→1"),E(),F()]},
   liar:{lv:11,title:"Acá hay gato encerrado",text:"Desde este nivel, uno de los gatos miente: su número es falso. Poné los peces haciendo caso a los demás y tocá al mentiroso para acusarlo. Lo que mira cada gato ya no se marca solo: si lo necesitás, prendé la lamparita.",ex:[{t:"liar",label:"↑1"},F(),E()]},
@@ -440,7 +443,7 @@ function renderGameShell(){
       <div class="grow stack" style="gap:1px"><span class="eyebrow">${STAGES[si].name}</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em">Nivel ${G.num}</span></div>
       ${liarPill}<span class="pill" id="timer">0:00</span></div>`;
   app.innerHTML=`<main class="view" style="gap:14px">${head}
-    <div class="supply"><div class="row"><strong>Poné ${peces(L.k)} en el tablero</strong><span class="pill" id="count">0 de ${L.k}</span>${daily?liarPill:""}</div>${daily?"":'<span class="reward" id="reward"></span>'}</div>
+    <div class="supply"><div class="row"><div class="fishrow" id="fishrow" role="img"></div>${daily?liarPill:""}</div>${daily?"":'<span class="reward" id="reward"></span>'}</div>
     <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="Tablero de ${L.n} por ${L.n}"></div></div>
     <p class="status" id="status" role="status" aria-live="polite"></p>
     <div class="controls">
@@ -516,8 +519,10 @@ function renderBoard(){
     el.classList.toggle("lock",G.locked.has(i));
     el.setAttribute("aria-label",`Fila ${Math.floor(i/G.n)+1}, columna ${i%G.n+1}: ${v===1?"pez":v===2?"acá no va pez":"vacía"}`);
   }
-  const placed=G.cells.filter(v=>v===1).length,cnt=$("count");
-  cnt.textContent=`${placed} de ${G.L.k}`;cnt.classList.toggle("full",placed===G.L.k);
+  const placed=G.cells.filter(v=>v===1).length,fr=$("fishrow");
+  if(fr.children.length!==G.L.k)fr.innerHTML=Array.from({length:G.L.k},()=>'<svg viewBox="0 0 40 24" aria-hidden="true"><use href="#fish"/></svg>').join("");
+  [...fr.children].forEach((s,j)=>s.classList.toggle("used",j<placed));
+  fr.setAttribute("aria-label",`Peces para poner: ${G.L.k}. Ya pusiste ${placed}.`);
   const hb=$("hintBtn");hb.textContent=`Pista (${save.bank})`;
   const cb=$("crossBtn");if(cb)cb.setAttribute("aria-pressed",G.crossMode);
   const bb=$("bulbBtn");if(bb)bb.setAttribute("aria-pressed",G.bulb);
@@ -743,7 +748,7 @@ function copyShare(btn){
 /* ---------- Cómo se juega ---------- */
 function renderHow(){
   app.innerHTML=`<main class="view" style="gap:14px"><div class="top"><button class="round" data-act="back" aria-label="Volver">${ico("back",18)}</button><h1>Cómo se juega</h1></div>
-    <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Poné los peces que pide el nivel</h2><div class="row" style="gap:8px"><b style="font-size:15px">Poné 2 peces en el tablero</b><span class="pill">0 de 2</span></div><p class="muted" style="font-size:14px;line-height:1.45">Tocá una casilla para poner un pez. Tocalo de nuevo para sacarlo.</p></section>
+    <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Poné los peces que pide el nivel</h2><div class="fishrow" style="justify-content:flex-start" aria-hidden="true"><svg viewBox="0 0 40 24" class="used"><use href="#fish"/></svg><svg viewBox="0 0 40 24"><use href="#fish"/></svg></div><p class="muted" style="font-size:14px;line-height:1.45">Arriba del tablero ves los peces que tenés que poner. Tocá una casilla para poner uno: arriba se apaga. Tocalo de nuevo para sacarlo.</p></section>
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Los gatos son las pistas</h2>${miniHTML([C("→2"),F(1),F(1)])}<p class="muted" style="font-size:14px;line-height:1.45">Cada gato mira hacia su flecha, hasta el borde, y dice cuántos peces ve. Si dice 0, no ve ningún pez. Si dice 1, ve un pez. Donde hay un gato no va pez.</p></section>
     <section class="card stack" style="gap:10px"><div class="row" style="justify-content:space-between"><h2 style="font-size:16px">Alguno puede mentir</h2><span class="pill liar">Desde el nivel 11</span></div><p class="muted" style="font-size:14px;line-height:1.45">En muchos niveles uno de los gatos tiene un número falso (desde el nivel 101, dos). Poné los peces haciendo caso a los demás y tocá al mentiroso para acusarlo. El gato con corona nunca miente.</p></section>
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Ayudas</h2>
