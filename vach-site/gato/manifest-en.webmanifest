@@ -1,0 +1,18 @@
+{
+  "name": "Trapped Cat",
+  "short_name": "Trapped Cat",
+  "description": "Logic puzzle: the cats tell you how many fish they see, but one of them is lying.",
+  "lang": "en",
+  "id": "/gato/en/",
+  "start_url": "/gato/en/",
+  "scope": "/gato/en/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F8F7EC",
+  "theme_color": "#F8F7EC",
+  "icons": [
+    {"src": "/gato/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/gato/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "/gato/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}

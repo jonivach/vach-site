@@ -1,5 +1,4 @@
-// api/gato/desafio.js — Vercel Function en /api/gato/desafio
-// (El sitio es HTML estático sin Next.js, así que va en /api con un export POST, sin App ni Pages Router.)
+// app/api/gato/desafio/route.js
 // Ranking anónimo del desafío del día de Gato Encerrado.
 // Guarda solo: número de desafío, un código al azar por navegador y el tiempo en segundos. Sin nombres ni datos personales.
 import { Redis } from "@upstash/redis";

@@ -1,0 +1,1146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Trapped Cat · a game by VACH*</title>
+<meta name="description" content="Logic puzzle: the cats tell you how many fish they see, but one of them is lying. 150 levels and a new challenge every day.">
+<meta name="theme-color" content="#F8F7EC">
+<meta property="og:title" content="Trapped Cat">
+<meta property="og:description" content="The cats know where the fish are. But one of them is lying. Play free.">
+<meta property="og:url" content="https://www.vach.com.ar/gato/en">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.vach.com.ar/gato/og-en.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Trapped Cat: a board with cats and fish">
+<meta property="og:site_name" content="VACH*">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vach.com.ar/gato/og-en.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%237B4FFF' d='M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z'/%3E%3Ccircle cx='15' cy='23' r='2.2' fill='%23fff'/%3E%3Ccircle cx='25' cy='23' r='2.2' fill='%23fff'/%3E%3C/svg%3E">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
+<link rel="manifest" href="/gato/manifest-en.webmanifest">
+<link rel="apple-touch-icon" href="/gato/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Trapped Cat">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<style>
+/* Layout: una columna tipo app de celular, centrada; paleta VACH* sobre crema (un solo tema, elegido) */
+:root{
+  --bg:#F8F7EC; --card:#FFFEF8; --tile:#EEECDD; --ink:#0A0A0A; --muted:#66655C; --soft:#3D3C36; --line:rgba(10,10,10,.12);
+  --fish:#F5C800; --cat:#7B4FFF; --cat-bg:#EAE3FF; --ray:#E4DEF5; --good:#0E9A7C; --bad:#D9432C; --bad-bg:#FBE1DB;
+  --f:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:16px;-webkit-tap-highlight-color:transparent;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button{font:inherit;color:inherit}
+a{color:inherit}
+.app{max-width:440px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+.view{display:flex;flex-direction:column;gap:16px;padding-block:20px 28px;flex:1}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px}
+.grow{flex:1;min-width:0}
+.top{display:flex;align-items:center;gap:12px;min-height:44px}
+.top h1{font-size:26px;letter-spacing:-.03em}
+.round{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);flex:none;cursor:pointer;padding:0}
+.round svg{width:18px;height:18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:999px;font-size:16px;font-weight:700;text-decoration:none;cursor:pointer;border:1.5px solid var(--ink);background:var(--card);color:var(--ink);padding:0 20px;width:100%}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn[disabled]{opacity:.45;cursor:default}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;border-radius:999px;padding:5px 10px;background:var(--card);border:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+.pill.liar{background:var(--bad-bg);color:var(--bad);border-color:transparent}
+.pill.full{color:var(--good);border-color:var(--good)}
+.pill.yellow{background:var(--fish);border:1.5px solid var(--ink)}
+:focus-visible{outline:3px solid var(--cat);outline-offset:2px}
+.muted{color:var(--muted)}
+.center{text-align:center}
+.stack{display:flex;flex-direction:column;gap:10px}
+.mt-auto{margin-top:auto}
+.list{background:var(--card);border:1px solid var(--line);border-radius:18px;display:flex;flex-direction:column;overflow:hidden}
+.list>*{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 16px;min-height:58px;border:0;border-bottom:1px solid rgba(10,10,10,.08);background:none;text-align:left;width:100%;cursor:pointer;font-size:16px;font-weight:600;text-decoration:none}
+.list>*:last-child{border-bottom:0}
+.sw{appearance:none;-webkit-appearance:none;width:48px;height:28px;border-radius:999px;background:#D6D3C4;position:relative;margin:0;cursor:pointer;flex:none;transition:background .15s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:var(--card);transition:left .15s}
+.sw:checked{background:var(--good)}.sw:checked::after{left:23px}
+
+/* Inicio */
+.brand{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:700;letter-spacing:-.03em}
+.minib{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;width:200px;align-self:center}
+.minib span{aspect-ratio:1;border-radius:8px;background:var(--tile);display:grid;place-items:center}
+.minib span.c{background:var(--cat-bg)}
+.bar{height:8px;border-radius:999px;background:var(--tile);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--cat);border-radius:999px}
+.daily{background:var(--fish);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.streak{display:flex;flex-direction:column;align-items:center;background:var(--ink);color:var(--bg);border-radius:14px;padding:8px 12px;flex:none}
+.streak b{font-size:22px;line-height:1}.streak small{font-size:11px;font-weight:600}
+.tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:80px;padding:12px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.tile-btn svg{width:22px;height:22px}
+.tile-btn.off{background:var(--tile);border-color:transparent;color:#8A887C;cursor:default}
+.tile-btn small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+/* Juego */
+.supply{display:flex;flex-direction:column;align-items:center;gap:4px}
+.supply .row{justify-content:center;flex-wrap:wrap;gap:8px}
+.supply strong{font-size:18px}
+.fishrow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.fishrow svg{width:40px;height:24px;transition:filter .2s,opacity .2s,transform .2s}
+.fishrow svg.used{filter:grayscale(1);opacity:.3;transform:scale(.88)}
+.reward{font-size:13px;color:var(--muted);text-align:center;font-variant-numeric:tabular-nums}
+.reward b{color:var(--ink)}
+.board-wrap{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:10px}
+.board{display:grid;gap:5px;touch-action:manipulation;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.cell{position:relative;aspect-ratio:1;border:0;border-radius:9px;background:var(--tile);padding:0;cursor:pointer;display:grid;place-items:center;transition:background .12s,transform .08s}
+.cell:active{transform:scale(.95)}
+.cell.seen,.cell.ray{background:var(--ray)}
+.cell .fish{width:72%}
+.cell .x{width:34%}
+.cell.lock{box-shadow:inset 0 0 0 2px var(--good)}
+.cell.cat{background:var(--cat-bg)}
+.cell.cat .face{position:absolute;left:9%;top:8%;width:46%}
+.cell.cat .clue{position:absolute;right:8%;bottom:5%;display:flex;align-items:center;gap:1px;font-weight:700;line-height:1;font-size:var(--clue,18px)}
+.cell.cat .clue svg{width:calc(var(--clue,18px)*.8);height:calc(var(--clue,18px)*.8)}
+.cell.cat .crown{position:absolute;right:7%;top:6%;width:34%}
+.cell.cat.ok .clue{color:var(--good)}
+.cell.cat.over .clue{color:var(--bad)}
+.cell.cat.hov{box-shadow:inset 0 0 0 3px var(--cat)}
+.cell.cat.acc{background:var(--bad-bg);box-shadow:inset 0 0 0 3px var(--bad)}
+.cell.cat.acc .face path{fill:var(--bad)}
+.cell.cat.acc .clue{color:var(--bad)}
+.cell.cat.acc::before{content:"Liar!";position:absolute;top:-9px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;background:var(--bad);color:var(--card);border-radius:999px;padding:2px 6px;white-space:nowrap;z-index:2}
+.cell.hint{animation:pulse 1.1s ease-in-out 3}
+.cell.shake{animation:shake .4s}
+@keyframes pulse{50%{box-shadow:inset 0 0 0 4px var(--good)}}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.status{min-height:22px;text-align:center;font-size:15px;font-weight:600;color:var(--muted)}
+.status.ok{color:var(--good)}.status.warn{color:var(--bad)}.status.info{color:var(--cat)}
+.controls{display:flex;gap:8px}
+.controls .ctl{flex:1 1 0;min-width:0;min-height:50px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-weight:700;cursor:pointer}
+.controls .tool{flex:0 0 52px;display:grid;place-items:center;padding:0}
+.controls .tool svg{width:22px;height:22px}
+.controls .tool[aria-pressed="true"]{background:var(--fish);border-color:var(--ink)}
+.dailybar{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 16px}
+.dailybar b{font-size:30px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+
+/* Victoria y resultados */
+.hero{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-top:8px}
+.hero h1{font-size:38px;letter-spacing:-.04em;line-height:1}
+.stars{display:flex;gap:10px}
+.stars svg{width:46px;height:46px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.album{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.acard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.acard .art{width:84px;height:84px;border-radius:50%;background:var(--cat-bg);display:grid;place-items:center;margin-bottom:4px}
+.acard.off .art{background:var(--tile)}
+.acard b{font-size:15px}.acard span:last-child{font-size:12px;color:var(--muted);line-height:1.35}
+.acard.off b{color:var(--muted)}
+.newcat{display:flex;align-items:center;gap:14px;width:100%;background:var(--card);border:2px solid var(--cat);border-radius:20px;padding:12px 14px;cursor:pointer;font:inherit;color:inherit;animation:pop .4s ease-out both}
+.newcat .art{width:76px;height:76px;border-radius:50%;background:var(--cat-bg);display:grid;place-items:center;flex:none}
+#pushState{background:var(--good);color:#fff;border-color:transparent}#pushState.off{background:var(--card);color:var(--muted);border-color:var(--line)}
+.askcard{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
+.tile-btn .dot{position:absolute;top:8px;right:10px;width:10px;height:10px;border-radius:50%;background:var(--bad)}
+.installcard{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px 10px 10px 12px}
+.installcard img{border-radius:11px;flex:none}
+.steps{margin:0;padding:0 0 0 22px;display:flex;flex-direction:column;gap:10px;font-size:16px;line-height:1.45;color:var(--soft)}
+.rank{background:var(--cat-bg);color:var(--ink);border-radius:16px;padding:12px 16px;font-size:15px;font-weight:700;text-align:center;line-height:1.4}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.stat b{font-size:28px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.stat.dark .eyebrow{color:#AAAAAA}
+.week{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.week div{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--muted)}
+.week i{width:36px;height:36px;border-radius:10px;background:var(--tile);display:grid;place-items:center}
+.week i.on{background:var(--ink)}
+.week i.today{box-shadow:0 0 0 2px var(--fish)}
+.stage-end{background:var(--fish);margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));position:relative;overflow:hidden}
+.confetti i{position:absolute;border-radius:2px}
+
+/* Niveles */
+.stage-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:var(--card);border:1px solid var(--line);cursor:pointer;width:100%;text-align:left}
+.stage-row.locked{background:var(--tile);border-color:transparent}
+.badge{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex:none}
+.stage-open{display:flex;flex-direction:column;gap:14px;padding:16px;border-radius:20px;background:var(--card);border:2px solid var(--ink)}
+.lv-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.lv{aspect-ratio:1;border-radius:12px;background:var(--bg);border:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;cursor:pointer;padding:0}
+.lv b{font-size:16px}.lv small{font-size:10px;letter-spacing:1px;color:#B38F00}
+.lv.cur{background:var(--ink);color:var(--bg);box-shadow:0 0 0 3px var(--fish);border-color:var(--ink)}
+.lv.cur small{color:var(--fish);letter-spacing:0;font-weight:600}
+.lv.locked{background:var(--tile);border-color:transparent;color:var(--muted)}
+
+/* Hojas */
+.scrim{position:fixed;inset:-100px 0;background:rgba(10,10,10,.55);z-index:20}
+.sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(440px,100%);background:var(--bg);border-radius:28px 28px 0 0;z-index:21;
+  padding:14px max(20px,env(safe-area-inset-left,0px)) calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px;max-height:85vh;max-height:calc(100dvh - 12px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
+.grab{width:44px;height:5px;border-radius:999px;background:#D6D3C4;align-self:center;flex:none}
+.sheet .hero h2{font-size:26px;letter-spacing:-.03em;line-height:1.1}
+.sheet .hero p{font-size:15px;line-height:1.5;color:var(--muted);max-width:320px}
+.mini{display:grid;grid-template-columns:repeat(3,64px);gap:6px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;align-self:center}
+.mini span{height:64px;border-radius:10px;background:var(--tile);position:relative;display:grid;place-items:center}
+.mini .s{background:var(--ray)}
+.mini .c{background:var(--cat-bg)}
+.mini .l{background:var(--bad-bg);box-shadow:inset 0 0 0 3px var(--bad)}
+.mini .c svg.f,.mini .l svg.f{position:absolute;left:6px;top:6px;width:28px}
+.mini .c b,.mini .l b{position:absolute;right:6px;bottom:4px;font-size:18px}
+.mini .l b{color:var(--bad)}
+.mini .c .cr{position:absolute;right:5px;top:5px;width:22px}
+.tagged{position:relative;animation:glow 1.2s ease-in-out infinite;z-index:3}
+@keyframes glow{50%{box-shadow:0 0 0 4px var(--fish)}}
+.tagbub{position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--fish);font-size:13px;font-weight:700;line-height:1.2;padding:7px 10px;border-radius:10px;white-space:nowrap;z-index:6;pointer-events:none;animation:pop .25s ease-out both}
+.tagbub::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--ink)}
+.tagbub.b{bottom:auto;top:calc(100% + 9px)}.tagbub.b::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:var(--ink)}
+.tagbub.l{left:0;transform:none}.tagbub.l::after{left:22px}
+.tagbub.r{left:auto;right:0;transform:none}.tagbub.r::after{left:auto;right:16px}
+@keyframes pop{from{opacity:0;translate:0 4px}to{opacity:1;translate:0 0}}
+.tut{display:grid;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;align-self:center}
+.tut button{width:64px;height:64px;border-radius:10px;border:0;background:var(--tile);position:relative;display:grid;place-items:center;padding:0;cursor:pointer}
+.tut button.c{background:var(--cat-bg)}
+.tut button.c svg.f{position:absolute;left:6px;top:6px;width:28px}
+.tut button.c b{position:absolute;right:6px;bottom:4px;font-size:18px}
+.tut button.acc{background:var(--bad-bg);box-shadow:inset 0 0 0 3px var(--bad)}
+.tut button.acc b{color:var(--bad)}
+.tut button.acc svg.f{color:var(--bad)!important}
+.tut button.ok{box-shadow:inset 0 0 0 3px var(--good)}
+.tut button.shake{animation:shake .4s}
+.dots{display:flex;justify-content:center;gap:6px}
+.dots i{width:6px;height:6px;border-radius:999px;background:#D6D3C4}
+.dots i.on{width:20px;background:var(--ink)}
+.sharecard{border-radius:22px;padding:14px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;flex:none;text-align:center;align-self:center;width:min(290px,100%)}
+.sharetext{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.45;color:var(--soft);white-space:pre-line;user-select:text}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:50;transition:opacity .35s}
+.splash.out{opacity:0;pointer-events:none}
+/* festejo al ganar */
+.board-wrap{position:relative}
+.cell.cheer{animation:cheer .55s ease-out both;animation-delay:var(--d,0ms)}
+.cell.cat.cheer{background:#D9F2EA}.cell.cat.cheer .clue{color:var(--good)}.cell.cat.cheer .face{animation:blink .55s var(--d,0ms) both}
+@keyframes cheer{0%{transform:none}35%{transform:translateY(-9px) scale(1.07)}70%{transform:translateY(1px) scale(.98)}100%{transform:none}}
+@keyframes blink{40%{transform:scaleY(.15)}}
+.cell.busted{animation:busted .7s cubic-bezier(.3,1.7,.5,1) both;z-index:4}
+.cell.busted::before{animation:stamp .5s .15s cubic-bezier(.3,1.8,.5,1) both}
+@keyframes busted{0%{transform:none}30%{transform:scale(1.2) rotate(-8deg)}55%{transform:scale(1.12) rotate(6deg)}100%{transform:none}}
+@keyframes stamp{0%{transform:translateX(-50%) scale(2.4);opacity:0}100%{transform:translateX(-50%) scale(1);opacity:1}}
+.cell .fish.wig{animation:wig .45s ease-in-out 2;animation-delay:var(--d,0ms)}
+@keyframes wig{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.burst{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none;z-index:8}
+.burst i{position:absolute;left:-5px;top:-5px;width:10px;height:10px;border-radius:3px;animation:fly 1s cubic-bezier(.2,.7,.4,1) forwards;animation-delay:var(--w,0ms)}
+@keyframes fly{0%{transform:none;opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
+.cell.cat.pop .clue{animation:pop2 .35s ease-out}
+@keyframes pop2{50%{transform:scale(1.35)}}
+@media (prefers-reduced-motion:reduce){.cell,.cell.hint,.cell.shake,.cell.cheer,.cell.busted,.cell .fish,.cell::before,.cell .face,.cell .clue{animation:none!important;transition:none!important}
+.burst{display:none}.splash{animation:none;transition:none}}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="cat" viewBox="0 0 40 40"><path fill="currentColor" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><circle cx="15" cy="23" r="2.2" fill="var(--eye,#F8F7EC)"/><circle cx="25" cy="23" r="2.2" fill="var(--eye,#F8F7EC)"/></symbol>
+  <symbol id="cat-happy" viewBox="0 0 40 40"><path fill="currentColor" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><path d="M12 23.5q3 -2.4 6 0M22 23.5q3 -2.4 6 0" fill="none" stroke="var(--eye,#F8F7EC)" stroke-width="1.8" stroke-linecap="round"/><path d="M17 28q3 2.5 6 0" fill="none" stroke="var(--eye,#F8F7EC)" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="cat-sad" viewBox="0 0 40 40"><path fill="currentColor" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><circle cx="15" cy="23" r="2.2" fill="var(--eye,#F8F7EC)"/><circle cx="25" cy="23" r="2.2" fill="var(--eye,#F8F7EC)"/><path d="M17 30q3 -2.5 6 0" fill="none" stroke="var(--eye,#F8F7EC)" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="fish" viewBox="0 0 40 24"><path fill="#F5C800" stroke="#0A0A0A" stroke-width="1.6" stroke-linejoin="round" d="M4 12C9 3 20 1 28 8l8-6v20l-8-6C20 23 9 21 4 12z"/><circle cx="11" cy="10.5" r="1.9" fill="#0A0A0A"/></symbol>
+  <symbol id="bell" viewBox="0 0 20 20"><path d="M10 2.5a5 5 0 0 0-5 5v3.2L3.5 14h13L15 10.7V7.5a5 5 0 0 0-5-5zM8 15.8a2 2 0 0 0 4 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+  <symbol id="share" viewBox="0 0 20 20"><path d="M10 2.5v10M6.5 6L10 2.5 13.5 6M6 9H4.5v8.5h11V9H14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="x" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></symbol>
+  <symbol id="arrow" viewBox="0 0 20 20"><path d="M3 10h12M10 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="back" viewBox="0 0 20 20"><path d="M17 10H5M10 5l-5 5 5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="close" viewBox="0 0 20 20"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="chev" viewBox="0 0 20 20"><path d="M8 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.2h5c0-.9.4-1.7 1.1-2.2A6 6 0 0 0 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 2.8l2.8 5.8 6.3.9-4.6 4.4 1.1 6.3L12 17.2l-5.6 3 1.1-6.3L2.9 9.5l6.3-.9z" stroke="#0A0A0A" stroke-width="1.4" stroke-linejoin="round"/></symbol>
+  <symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="grid" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="6" height="6" rx="1.5"/><rect x="14" y="4" width="6" height="6" rx="1.5"/><rect x="4" y="14" width="6" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></g></symbol>
+  <symbol id="help" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6v.6M12 17h.01"/></g></symbol>
+  <symbol id="bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14l-1.2 11a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></g></symbol>
+  <symbol id="crown" viewBox="0 0 24 18"><path d="M2 15.5L3.5 5l5 4.5L12 2l3.5 7.5 5-4.5L22 15.5z" fill="#F5C800" stroke="#0A0A0A" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="vach" viewBox="5 10.4 47 12.1"><g fill="currentColor"><path d="M9.47,21.88l-4.07-10.87h2.97l2.67,7.67h.06l2.66-7.67h2.98l-4.09,10.87h-3.18Z"/><path d="M36.28,18.84l.47,2.47c-.92.51-2.22.81-3.42.81-3.56,0-6.03-2.24-6.03-5.58s2.39-5.76,6.03-5.76c1.16,0,2.28.26,3.22.73l-.7,2.53c-.67-.42-1.540-.71-2.52-.71-2.130,0-3.25,1.52-3.25,3.22,0,1.91,1.41,3.03,3.34,3.03.98,0,2.21-.34,2.86-.73Z"/><path d="M44.73,11.01h2.78v10.87h-2.78v-3.99h-4.05v3.99h-2.78v-10.87h2.78v4.21h4.05v-4.21Z"/><path d="M23.06,11.01h-3.17l-4.16,10.87h3.17l.54-1.63.75-2.24,1.26-3.77h.06l1.27,3.77.75,2.24.54,1.63h3.150l-4.16-10.87Z"/><polygon points="50.96 12.65 51.38 13.14 50.68 13.73 50.2 13.15 49.72 13.73 49.02 13.14 49.44 12.65 48.84 12.44 49.14 11.58 49.75 11.8 49.75 11.15 50.65 11.15 50.65 11.8 51.26 11.58 51.56 12.44 50.96 12.65"/></g></symbol>
+</svg>
+
+<div class="splash" id="splash" aria-hidden="true">
+  <div style="position:relative;width:170px;height:150px">
+    <svg width="150" height="150" style="color:var(--cat);position:absolute;left:0;top:0"><use href="#cat"/></svg>
+    <svg width="74" height="44" style="position:absolute;right:-14px;bottom:6px;transform:rotate(-14deg)"><use href="#fish"/></svg>
+  </div>
+  <div style="font-size:40px;font-weight:700;letter-spacing:-.04em">Trapped Cat</div>
+  <svg width="84" height="22" style="position:absolute;bottom:calc(40px + env(safe-area-inset-bottom,0px))"><use href="#vach"/></svg>
+</div>
+
+<div class="app" id="app"></div>
+<div id="sheetRoot"></div>
+
+<script>
+(function(){
+"use strict";
+const LEVELS=[{"n":3,"k":1,"L":0,"intro":"one","cats":[[0,1,"N",1,0]],"sol":[0],"li":[],"t":[30,60]},{"n":3,"k":1,"L":0,"intro":"zero","cats":[[1,2,"N",0,0],[2,0,"W",1,0]],"sol":[0],"li":[],"t":[30,60]},{"n":4,"k":2,"L":0,"intro":"two","cats":[[2,2,"N",1,0],[3,1,"W",0,0],[0,2,"N",1,0]],"sol":[0,2],"li":[],"t":[45,90]},{"n":4,"k":2,"L":0,"intro":"diag","cats":[[0,1,"E",1,0],[3,3,"NW",2,0],[1,2,"E",1,0]],"sol":[5,10],"li":[],"t":[55,110]},{"n":4,"k":2,"L":0,"intro":null,"cats":[[1,0,"E",1,0],[0,1,"E",1,0],[2,1,"W",0,0],[2,3,"N",0,0]],"sol":[3,7],"li":[],"t":[45,90]},{"n":4,"k":2,"L":1,"intro":"liar","cats":[[2,2,"NW",2,0],[3,3,"NW",1,0],[2,0,"SW",2,0]],"sol":[5,8],"li":[0],"t":[55,110]},{"n":4,"k":2,"L":1,"intro":null,"cats":[[2,2,"N",0,0],[2,3,"W",2,0],[2,1,"S",1,0]],"sol":[12,13],"li":[2],"t":[45,90]},{"n":4,"k":3,"L":1,"intro":null,"cats":[[2,1,"W",2,0],[3,2,"NW",2,0],[3,3,"N",1,0],[3,1,"SW",0,0]],"sol":[3,4,5],"li":[1],"t":[50,100]},{"n":4,"k":2,"L":1,"intro":null,"cats":[[1,2,"NE",0,0],[1,1,"S",1,0],[0,1,"SE",1,0],[1,3,"N",0,0],[3,0,"SW",1,0]],"sol":[12,14],"li":[1],"t":[45,90]},{"n":5,"k":3,"L":1,"intro":null,"cats":[[3,2,"N",0,0],[1,0,"SE",3,0],[4,0,"SW",2,0],[1,2,"E",0,0],[0,0,"E",1,0]],"sol":[2,16,20],"li":[1],"t":[65,130]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",1,0],[1,0,"SE",1,0],[3,2,"W",2,0],[3,4,"N",3,0],[1,2,"NE",0,0]],"sol":[8,10,12,19],"li":[3],"t":[65,130]},{"n":5,"k":3,"L":1,"intro":null,"cats":[[1,1,"SE",3,0],[4,4,"N",2,0],[4,2,"N",1,0],[3,3,"W",0,0],[1,2,"S",1,0],[4,1,"W",0,0]],"sol":[4,19,21],"li":[0],"t":[65,130]},{"n":4,"k":3,"L":1,"intro":null,"cats":[[2,3,"N",2,0],[1,1,"E",0,0],[3,3,"NW",1,0],[0,1,"E",1,0],[2,0,"W",1,0]],"sol":[1,6,10],"li":[1],"t":[55,110]},{"n":4,"k":3,"L":1,"intro":null,"cats":[[1,3,"NE",1,0],[0,2,"N",2,0],[3,3,"N",0,0],[3,2,"N",2,0]],"sol":[0,4,10],"li":[3],"t":[60,120]},{"n":4,"k":3,"L":1,"intro":null,"cats":[[3,0,"S",0,0],[3,2,"N",1,0],[0,2,"N",1,0],[1,3,"NE",2,0],[2,0,"W",1,0]],"sol":[0,7,10],"li":[0],"t":[60,120]},{"n":4,"k":2,"L":1,"intro":null,"cats":[[1,0,"E",1,0],[1,2,"NE",0,0],[2,3,"N",1,0],[0,2,"N",2,0],[1,3,"NE",1,0]],"sol":[2,7],"li":[3],"t":[60,120]},{"n":5,"k":3,"L":1,"intro":null,"cats":[[4,2,"S",0,0],[0,0,"SE",2,0],[1,3,"N",3,0],[3,3,"W",1,0],[0,3,"E",1,0]],"sol":[6,12,17],"li":[2],"t":[75,150]},{"n":4,"k":2,"L":1,"intro":null,"cats":[[0,2,"NE",1,0],[0,1,"S",1,0],[3,1,"W",1,0],[2,3,"W",2,0]],"sol":[5,12],"li":[3],"t":[70,140]},{"n":5,"k":3,"L":1,"intro":null,"cats":[[1,1,"SE",2,0],[4,4,"NW",2,0],[2,3,"NE",2,0],[0,4,"NE",2,0],[1,0,"E",1,0]],"sol":[4,12,18],"li":[2],"t":[85,170]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"E",1,0],[3,2,"N",0,0],[1,3,"N",3,0],[0,1,"SE",1,0],[2,0,"S",1,0],[1,2,"N",2,0]],"sol":[1,6,14,17],"li":[2],"t":[95,190]},{"n":5,"k":3,"L":1,"intro":null,"cats":[[4,4,"NW",0,0],[2,4,"NE",2,0],[1,1,"E",0,0],[3,0,"S",2,0],[1,2,"SE",0,0]],"sol":[13,14,18],"li":[0],"t":[95,190]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"SW",2,0],[3,3,"NW",0,0],[4,3,"N",1,0],[1,0,"E",2,0],[0,3,"E",2,0],[3,4,"N",1,0],[0,0,"S",0,0]],"sol":[3,4,16,17],"li":[0],"t":[100,200]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,3,"N",3,0],[2,0,"S",1,0],[3,4,"W",1,0],[3,2,"SW",0,0],[3,3,"W",2,0]],"sol":[1,6,11,22],"li":[4],"t":[120,240]},{"n":5,"k":3,"L":1,"intro":null,"cats":[[3,0,"S",3,0],[4,4,"NW",2,0],[4,0,"W",0,0],[1,3,"NE",0,0],[0,2,"S",0,0],[2,4,"W",1,0]],"sol":[6,18,21],"li":[0],"t":[115,230]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"W",0,0],[2,1,"E",1,0],[3,4,"W",1,0],[4,2,"SW",1,0],[2,0,"SW",2,0],[4,0,"S",0,0]],"sol":[6,8,10,18],"li":[2],"t":[125,250]},{"n":5,"k":4,"L":1,"intro":"cross","cats":[[4,4,"N",3,0],[1,0,"SE",1,0],[3,0,"S",4,0],[1,4,"NE",0,0],[3,1,"W",1,0],[0,2,"NE",0,0]],"sol":[4,5,14,19],"li":[2],"t":[70,140]},{"n":5,"k":5,"L":1,"intro":null,"cats":[[4,3,"W",2,0],[1,1,"SE",0,0],[1,4,"NE",2,0],[1,2,"S",0,0],[2,4,"E",2,0],[2,0,"SE",2,0],[4,4,"N",2,0]],"sol":[8,9,14,15,17],"li":[4],"t":[85,170]},{"n":5,"k":5,"L":1,"intro":null,"cats":[[0,2,"S",1,0],[1,2,"NE",1,0],[4,4,"N",1,0],[1,1,"S",2,0],[4,1,"SW",3,0],[4,3,"NW",0,0],[0,4,"NE",1,0]],"sol":[3,14,15,16,21],"li":[4],"t":[85,170]},{"n":5,"k":5,"L":1,"intro":null,"cats":[[0,1,"SE",3,0],[1,4,"NE",1,0],[2,3,"N",3,0],[0,0,"S",1,0],[4,3,"NW",1,0],[3,0,"SW",2,0]],"sol":[2,7,9,12,15],"li":[0],"t":[90,180]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"NW",1,0],[0,4,"NE",1,0],[2,1,"W",1,0],[3,1,"W",2,0],[4,4,"W",2,0],[1,1,"E",0,0]],"sol":[5,16,21,23],"li":[3],"t":[90,180]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"N",0,0],[4,3,"W",1,0],[0,2,"E",2,0],[3,4,"NW",0,0],[3,3,"N",2,0],[3,1,"SW",1,0],[2,1,"SE",0,0]],"sol":[3,12,13,15],"li":[6],"t":[90,180]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"NW",1,0],[1,3,"NE",1,0],[2,2,"W",0,0],[3,1,"W",0,0],[0,4,"N",2,0],[1,2,"N",0,0],[4,2,"NW",1,0]],"sol":[0,2,4,15],"li":[0],"t":[90,180]},{"n":5,"k":4,"L":0,"intro":null,"cats":[[3,4,"N",2,0],[2,0,"W",0,0],[4,4,"NW",0,0],[3,2,"NW",1,0],[1,1,"S",1,0],[2,3,"W",1,0]],"sol":[3,7,8,16],"li":[],"t":[95,190]},{"n":5,"k":5,"L":1,"intro":null,"cats":[[0,3,"E",1,0],[1,4,"E",1,0],[4,3,"NW",2,0],[2,0,"S",0,0],[0,1,"S",2,0],[0,0,"S",1,0],[4,4,"NW",1,0],[3,1,"SW",1,0]],"sol":[1,13,18,20,23],"li":[4],"t":[100,200]},{"n":5,"k":5,"L":1,"intro":null,"cats":[[1,3,"NE",1,0],[2,3,"N",1,0],[1,4,"E",1,0],[1,1,"S",1,0],[3,0,"S",0,0],[4,0,"SW",2,0],[1,0,"SE",1,0],[4,4,"NW",3,0]],"sol":[11,12,19,20,22],"li":[7],"t":[100,200]},{"n":5,"k":5,"L":0,"intro":null,"cats":[[1,0,"SE",2,0],[2,4,"NE",0,0],[4,0,"SW",2,0],[3,4,"N",1,0],[2,0,"S",3,0],[1,4,"N",1,0]],"sol":[7,12,13,16,17],"li":[],"t":[100,200]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"S",1,0],[2,3,"NW",1,0],[3,1,"S",0,0],[2,4,"W",1,0],[4,2,"NW",1,0],[1,0,"S",2,0],[1,4,"N",0,0],[0,0,"SE",1,0]],"sol":[2,5,20,24],"li":[5],"t":[100,200]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",2,0],[1,1,"SE",1,0],[4,3,"W",0,0],[1,3,"E",1,0],[3,2,"N",0,0],[0,3,"NE",0,0],[4,0,"S",0,0],[1,4,"NE",1,0]],"sol":[10,12,17,20],"li":[2],"t":[100,200]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"W",1,0],[0,0,"E",2,0],[3,2,"NW",0,0],[3,3,"N",1,0],[0,1,"S",0,0],[2,0,"SE",1,0],[2,2,"SW",2,0]],"sol":[3,4,6,14],"li":[6],"t":[100,200]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",1,0],[2,1,"SW",1,0],[4,2,"NW",1,0],[1,4,"E",2,0],[3,0,"SW",2,0],[3,4,"N",1,0]],"sol":[8,15,22,24],"li":[4],"t":[110,220]},{"n":5,"k":5,"L":1,"intro":null,"cats":[[3,1,"SW",3,0],[4,1,"W",2,0],[2,4,"E",2,0],[2,0,"SW",0,0],[2,3,"E",1,0],[4,0,"S",1,0]],"sol":[5,7,18,23,24],"li":[0],"t":[115,230]},{"n":5,"k":4,"L":0,"intro":null,"cats":[[2,3,"W",2,0],[1,2,"N",1,0],[4,1,"W",1,0],[0,4,"E",1,0],[4,2,"S",1,0]],"sol":[6,15,16,24],"li":[],"t":[110,220]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"NW",2,0],[4,1,"SW",1,0],[3,1,"SW",1,0],[1,3,"E",1,0],[2,1,"SE",1,0],[0,1,"E",0,0],[1,4,"N",2,0],[2,4,"N",1,0]],"sol":[1,11,17,20],"li":[4],"t":[125,250]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"E",0,0],[2,2,"SE",1,0],[0,1,"S",2,0],[1,4,"E",0,0],[3,3,"NW",0,0],[4,3,"W",3,0]],"sol":[15,16,17,20],"li":[1],"t":[130,260]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"E",1,0],[3,0,"S",2,0],[1,4,"E",0,0],[0,1,"E",0,0],[4,2,"W",3,0],[4,4,"NW",0,0]],"sol":[10,11,13,23],"li":[2],"t":[135,270]},{"n":6,"k":5,"L":1,"intro":"more","cats":[[2,1,"SE",1,0],[0,4,"NE",1,0],[0,3,"N",2,0],[4,1,"W",4,0],[1,4,"E",1,0],[3,4,"E",0,0],[2,0,"W",0,0],[3,3,"N",1,0],[1,5,"N",1,0]],"sol":[6,12,15,19,26],"li":[3],"t":[115,230]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[2,1,"S",1,0],[3,5,"E",1,0],[5,4,"W",2,0],[3,0,"S",1,0],[2,4,"E",1,0],[0,5,"NE",0,0],[2,5,"W",1,0],[1,1,"E",1,0],[2,3,"NE",3,0],[4,3,"S",0,0]],"sol":[11,14,24,27,31,35],"li":[8],"t":[95,190]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[4,3,"S",2,0],[5,4,"W",2,0],[1,0,"E",1,0],[5,0,"SW",1,0],[2,3,"NE",1,0],[1,5,"NE",0,0],[2,5,"NW",1,0],[3,0,"S",2,0],[4,5,"NW",0,0],[4,0,"SW",2,0]],"sol":[2,9,15,18,24,28],"li":[0],"t":[100,200]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[5,4,"N",2,0],[3,0,"SE",0,0],[4,0,"SW",0,0],[0,4,"E",2,0],[1,0,"E",1,0],[4,2,"SW",0,0],[3,4,"N",1,0],[5,2,"N",1,0],[3,3,"S",1,0],[4,1,"W",4,0]],"sol":[5,15,23,25,28,33],"li":[9],"t":[100,200]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[1,4,"NE",1,0],[1,1,"E",2,0],[1,5,"NE",0,0],[3,0,"SE",1,0],[1,0,"S",2,0],[4,5,"N",0,0],[2,1,"SE",2,0]],"sol":[13,15,17,19,29],"li":[1],"t":[100,200]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[2,0,"W",0,0],[1,4,"N",2,0],[1,3,"NE",1,0],[3,5,"N",2,0],[4,0,"W",1,0],[3,4,"W",3,0],[0,2,"SE",0,0],[0,4,"N",2,0]],"sol":[3,6,7,9,13,18],"li":[5],"t":[105,210]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[1,5,"E",3,0],[4,4,"N",1,0],[3,2,"E",1,0],[5,5,"NW",1,0],[4,1,"W",1,0],[2,2,"NW",1,0],[5,0,"S",4,0],[3,3,"E",0,0],[0,3,"N",0,0],[5,4,"NW",1,0]],"sol":[1,7,16,32,33,34],"li":[6],"t":[105,210]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[3,0,"SW",1,0],[1,4,"NE",2,0],[4,0,"S",2,0],[0,4,"E",0,0],[0,1,"SE",0,0],[2,4,"NE",0,0],[1,2,"N",1,0],[2,3,"N",3,0],[3,2,"NW",0,0]],"sol":[5,7,10,18,22],"li":[7],"t":[105,210]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[0,3,"E",2,0],[0,5,"NE",0,0],[1,2,"S",1,0],[0,0,"S",0,0],[5,4,"N",2,0],[1,5,"NE",3,0],[2,4,"NW",2,0]],"sol":[11,16,17,19,21],"li":[6],"t":[105,210]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[1,1,"S",1,0],[3,2,"SE",1,0],[0,1,"SE",0,0],[3,0,"SE",0,0],[1,3,"E",1,0],[1,5,"E",1,0],[4,5,"N",4,0],[2,5,"NE",0,0],[3,5,"N",2,0]],"sol":[9,21,25,29,35],"li":[6],"t":[105,210]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[1,3,"SE",0,0],[3,4,"W",1,0],[0,4,"E",2,0],[2,2,"E",1,0],[1,5,"N",2,0],[4,1,"W",2,0],[5,0,"W",1,0],[4,5,"W",4,0],[1,2,"NE",0,0],[5,4,"NW",2,0]],"sol":[1,6,9,15,25,28],"li":[7],"t":[115,230]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[1,0,"SE",1,0],[0,2,"N",2,0],[2,4,"N",4,0],[3,3,"W",1,0],[4,4,"N",0,0],[1,3,"NE",2,0]],"sol":[2,8,9,14,20],"li":[1],"t":[115,230]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,3,"SE",2,0],[0,2,"SE",1,0],[1,1,"SE",0,0],[2,4,"NE",1,0],[3,0,"S",2,0],[0,0,"S",0,0],[4,2,"SW",3,0],[4,1,"W",2,0]],"sol":[8,9,11,25,32,33],"li":[6],"t":[120,240]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[3,4,"NE",1,0],[0,4,"NE",0,0],[1,5,"N",1,0],[3,5,"N",0,0],[1,2,"S",1,0],[5,1,"SW",1,0],[4,4,"W",0,0],[4,2,"N",1,0],[3,0,"SE",1,0],[0,0,"SE",1,0]],"sol":[10,22,25,26,35],"li":[6],"t":[125,250]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[0,3,"NE",0,0],[5,1,"W",1,0],[4,1,"SW",0,0],[1,5,"N",2,0],[3,2,"NE",1,0],[3,3,"N",1,0],[2,4,"E",0,0],[4,3,"W",0,0],[5,4,"W",2,0]],"sol":[1,5,9,24,25],"li":[2],"t":[130,260]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[3,3,"NW",0,0],[1,4,"N",1,0],[3,2,"NW",2,0],[1,3,"N",0,0],[5,5,"W",1,0],[3,1,"W",2,0],[0,3,"E",2,0],[4,2,"S",2,0],[2,3,"SW",0,0]],"sol":[1,6,8,22,23,34],"li":[3],"t":[145,290]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[1,4,"NE",1,0],[4,4,"NW",2,0],[3,4,"N",0,0],[4,3,"NW",1,0],[2,5,"NE",1,0],[5,3,"N",2,0],[4,5,"NW",2,0],[4,1,"SW",1,0],[2,0,"S",0,0],[4,0,"W",1,0]],"sol":[1,5,6,13,17,30],"li":[1],"t":[145,290]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[2,2,"S",1,0],[3,4,"W",2,0],[4,4,"N",1,0],[1,0,"SE",1,0],[5,5,"NW",4,0],[3,1,"SW",2,0],[5,2,"W",1,0],[0,0,"E",1,0]],"sol":[4,15,19,24,26],"li":[4],"t":[150,300]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[5,5,"NW",2,0],[1,2,"N",0,0],[0,0,"S",1,0],[5,3,"SW",1,0],[2,3,"SW",1,0],[4,4,"N",1,0],[3,1,"SE",1,0],[4,3,"SW",1,0],[4,5,"N",3,0],[2,4,"E",0,0]],"sol":[14,16,21,30,32,33],"li":[8],"t":[155,310]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[4,2,"S",2,0],[1,5,"NE",1,0],[2,3,"SE",1,0],[0,4,"E",3,0],[3,5,"W",1,0],[1,0,"SE",1,0],[0,5,"NE",3,0],[5,5,"N",0,0]],"sol":[22,26,27,28,32],"li":[6],"t":[165,330]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,3,"E",1,0],[0,4,"NE",3,0],[1,3,"S",1,0],[2,0,"SE",2,0],[4,4,"W",2,0],[3,3,"NE",1,0],[5,2,"SW",0,0],[1,4,"NE",0,0]],"sol":[4,9,11,14,23,31],"li":[4],"t":[165,330]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[1,3,"NE",0,0],[0,4,"E",2,0],[1,5,"NE",0,0],[4,5,"NW",2,0],[3,0,"SE",0,0],[1,0,"E",1,0],[2,3,"S",2,0],[5,4,"N",1,0],[0,1,"E",0,0],[5,0,"SW",1,0]],"sol":[2,13,23,25,27],"li":[6],"t":[165,330]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,5,"NE",3,0],[4,5,"N",4,0],[3,5,"NE",0,0],[5,5,"N",1,0],[0,3,"SE",2,0],[2,5,"N",1,0]],"sol":[4,5,10,16,20,22],"li":[4],"t":[180,360]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,5,"E",1,0],[0,2,"S",2,0],[2,1,"S",1,0],[3,5,"W",2,0],[5,3,"N",3,0]],"sol":[5,11,17,18,24,32],"li":[3],"t":[195,390]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,5,"NE",1,0],[3,1,"S",2,0],[5,4,"W",0,0],[4,0,"W",2,0],[3,3,"W",0,0],[5,1,"S",2,0],[2,3,"N",1,0],[2,2,"NW",2,0],[2,0,"E",1,0]],"sol":[0,3,7,8,15,33],"li":[5],"t":[195,390]},{"n":6,"k":5,"L":1,"intro":"crown","cats":[[5,4,"N",0,0],[1,0,"S",1,0],[3,4,"W",3,0],[3,0,"S",0,0],[5,1,"S",1,0],[0,3,"NE",2,1],[0,5,"NE",2,0]],"sol":[8,10,13,20,35],"li":[2],"t":[120,240]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[5,4,"W",2,0],[5,3,"NW",1,0],[4,4,"N",2,0],[0,3,"S",2,0],[0,4,"N",0,0],[2,3,"E",2,0],[1,4,"NE",1,0],[1,2,"E",1,0]],"sol":[5,16,21,22,26,27],"li":[3],"t":[105,210]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[3,4,"E",1,0],[1,5,"N",2,0],[0,4,"N",0,0],[3,3,"N",0,0],[1,0,"SE",1,0],[5,5,"NW",3,0],[1,3,"S",1,0],[4,1,"S",1,0],[0,3,"N",1,1]],"sol":[0,7,8,25,28],"li":[2],"t":[105,210]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[2,1,"S",1,0],[2,5,"NE",0,0],[3,0,"S",0,0],[0,5,"NE",1,0],[3,3,"E",1,0],[1,4,"E",0,0],[4,5,"NW",0,0],[5,0,"SW",1,0],[0,0,"SE",2,0],[3,2,"NE",0,1],[0,1,"E",2,0],[0,2,"NE",2,0]],"sol":[2,7,11,20,23,35],"li":[6],"t":[120,240]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[4,2,"W",4,0],[0,1,"E",2,0],[4,1,"S",2,0],[2,4,"NE",1,0],[0,3,"SE",1,0],[3,5,"N",1,0],[5,0,"S",0,0],[2,5,"NE",0,0]],"sol":[7,8,21,25,28,34],"li":[0],"t":[120,240]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[2,1,"S",1,0],[1,1,"SE",3,0],[2,0,"SE",0,0],[5,2,"NW",0,1],[3,3,"W",0,0],[0,1,"E",1,0],[1,3,"NE",2,0],[3,0,"W",1,0],[4,3,"N",2,0],[0,5,"N",0,0]],"sol":[1,4,11,14,28,35],"li":[8],"t":[120,240]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[0,1,"SE",2,1],[1,2,"E",0,0],[5,3,"NW",2,0],[0,5,"NE",0,0],[3,5,"NE",1,0],[0,4,"E",1,0],[2,2,"S",1,0],[2,4,"N",2,0]],"sol":[2,9,20,28,34],"li":[3],"t":[125,250]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[0,5,"NE",1,0],[3,4,"N",2,0],[4,2,"N",1,0],[5,5,"N",1,0],[0,2,"E",1,0],[0,1,"S",1,1],[5,4,"W",0,0],[0,3,"SE",0,0],[3,2,"S",0,0]],"sol":[3,9,10,17,24],"li":[6],"t":[125,250]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[1,0,"SE",1,0],[5,2,"N",1,0],[2,2,"SW",1,0],[2,4,"NE",1,0],[1,4,"E",1,0],[1,5,"N",0,0],[2,0,"SE",0,0],[1,1,"E",1,0],[4,2,"NW",1,1],[4,0,"S",2,0]],"sol":[5,9,21,22,24,28],"li":[6],"t":[130,260]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[3,4,"NE",0,0],[3,1,"SE",2,0],[5,2,"NW",1,0],[0,3,"S",1,0],[4,0,"W",1,0],[4,5,"NW",2,0],[0,5,"N",2,0],[0,1,"E",0,0],[2,4,"NE",0,0]],"sol":[3,12,13,20,24],"li":[1],"t":[130,260]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[2,2,"N",2,0],[4,3,"NW",1,0],[2,4,"E",2,0],[3,0,"SW",1,0],[3,4,"E",2,0],[2,3,"W",0,0],[4,0,"SW",1,1],[0,0,"E",1,0],[3,1,"S",0,0],[1,2,"N",1,0]],"sol":[2,8,24,28,29],"li":[9],"t":[130,260]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[4,5,"N",1,0],[5,3,"S",2,0],[5,1,"W",2,0],[0,5,"N",0,0],[3,5,"NE",1,0],[2,4,"N",1,0],[1,3,"NE",3,1]],"sol":[4,7,9,14,29,35],"li":[4],"t":[140,280]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[5,1,"S",2,0],[3,5,"W",2,0],[4,5,"NW",1,0],[4,3,"W",4,0],[5,2,"W",0,0],[4,4,"W",1,0],[3,3,"E",0,0],[3,1,"SW",1,0],[1,5,"N",1,0]],"sol":[19,27,29,30,32,35],"li":[3],"t":[140,280]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[5,3,"W",1,0],[4,0,"S",0,0],[2,0,"SW",1,0],[0,2,"NE",1,0],[2,1,"E",0,0],[0,0,"E",2,0],[1,0,"SE",2,1],[4,2,"W",2,0],[3,1,"S",2,0],[0,3,"NE",2,0]],"sol":[3,7,13,15,21,29],"li":[5],"t":[140,280]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[3,1,"E",2,0],[4,0,"SW",0,0],[3,0,"W",1,0],[5,2,"S",2,0],[4,3,"SW",0,0],[5,5,"W",2,1],[1,5,"N",1,0],[1,2,"SE",0,0],[4,4,"N",2,0]],"sol":[1,10,11,16,30,33],"li":[3],"t":[145,290]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[4,4,"N",1,0],[3,0,"S",0,0],[2,3,"NW",2,0],[0,0,"E",3,1],[4,2,"SW",0,0],[1,3,"S",1,0],[3,4,"NE",1,0],[3,2,"SE",2,0]],"sol":[1,2,5,22,25,29],"li":[2],"t":[145,290]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[2,3,"NW",1,0],[3,4,"E",1,0],[1,5,"N",2,0],[5,1,"S",1,0],[3,5,"NW",1,0],[4,5,"W",1,0],[1,3,"NE",0,0],[3,0,"W",1,0],[2,5,"N",0,0],[3,3,"SW",2,0]],"sol":[1,12,13,29,30],"li":[9],"t":[145,290]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[4,5,"N",1,0],[0,5,"N",0,0],[4,1,"SW",2,0],[5,3,"N",0,0],[0,3,"S",1,1],[1,4,"E",2,0],[5,0,"S",2,0]],"sol":[15,20,24,28,29,35],"li":[1],"t":[150,300]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[1,4,"E",2,1],[3,3,"W",0,0],[5,4,"W",2,0],[3,0,"E",1,0],[4,0,"S",1,0],[1,3,"SE",0,0],[1,1,"SE",2,0],[2,1,"S",1,0],[3,2,"SW",1,0],[0,3,"S",2,0]],"sol":[5,14,27,28,30],"li":[9],"t":[150,300]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[3,1,"S",1,0],[2,4,"NE",0,0],[5,1,"S",1,0],[4,0,"S",4,0],[1,5,"E",2,0],[4,5,"N",2,0],[0,1,"SE",2,0],[3,4,"NE",0,0]],"sol":[10,13,20,28,33,35],"li":[3],"t":[165,330]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[1,3,"SE",1,0],[5,5,"NW",1,0],[2,0,"E",2,0],[1,2,"N",1,0],[1,0,"S",1,0],[0,5,"N",1,0],[0,3,"S",1,0],[3,2,"S",1,0],[5,4,"N",0,0],[2,1,"W",0,0]],"sol":[3,4,7,24,33],"li":[9],"t":[165,330]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[5,0,"SW",3,0],[3,1,"SE",1,0],[5,1,"W",0,0],[1,2,"SE",1,0],[0,2,"NE",1,0],[1,3,"N",0,0],[0,1,"E",2,1],[2,4,"W",1,0],[5,2,"S",0,0]],"sol":[2,8,10,16,20,25],"li":[2],"t":[170,340]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[2,3,"W",0,0],[2,5,"NW",1,0],[1,2,"SE",2,0],[1,5,"NE",1,0],[3,1,"SE",2,0],[2,4,"NW",1,0],[4,1,"W",2,1],[5,5,"NW",0,0]],"sol":[6,8,12,16,23,25],"li":[2],"t":[170,340]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[1,2,"E",0,0],[0,1,"S",2,0],[0,3,"S",2,0],[3,1,"E",0,0],[5,4,"W",2,0],[2,1,"S",3,0],[4,1,"W",1,1],[4,4,"NW",1,0],[2,0,"S",3,0]],"sol":[7,12,20,24,26,32],"li":[2],"t":[170,340]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[2,2,"S",2,0],[4,3,"N",2,0],[2,5,"NE",2,0],[3,1,"W",0,0],[4,5,"NW",3,0]],"sol":[13,17,20,26,27],"li":[1],"t":[170,340]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,5,"E",4,0],[4,4,"N",1,0],[1,0,"S",0,0],[4,0,"W",4,0],[0,4,"NE",1,0],[1,2,"E",2,0]],"sol":[14,16,32,33,34,35],"li":[3],"t":[180,360]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[2,0,"SW",1,0],[0,0,"S",1,0],[0,5,"E",1,0],[5,3,"SW",0,0],[1,3,"E",2,0],[2,4,"NE",1,0],[2,5,"NE",1,0],[5,5,"NW",1,0],[1,1,"E",1,0],[4,1,"S",2,0],[2,2,"S",1,1]],"sol":[11,12,20,22,34],"li":[7],"t":[190,380]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[3,2,"SW",1,0],[1,1,"S",2,1],[3,0,"SW",1,0],[2,5,"N",1,0],[3,4,"N",2,0],[4,5,"N",1,0],[4,0,"SW",1,0],[1,4,"N",1,0],[2,1,"E",2,0]],"sol":[9,10,13,20,31],"li":[4],"t":[195,390]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[4,1,"SW",2,0],[4,0,"W",2,0],[0,5,"N",1,0],[1,1,"SE",1,0],[4,5,"W",0,0],[2,2,"S",0,0],[4,2,"W",2,0],[5,3,"SW",1,0],[5,2,"SW",0,0],[5,0,"S",2,1]],"sol":[11,12,15,25,28,29],"li":[1],"t":[205,410]},{"n":6,"k":5,"L":1,"intro":null,"cats":[[4,1,"W",1,0],[2,0,"SE",0,0],[4,3,"SW",2,1],[0,4,"E",2,0],[3,5,"N",3,0],[5,2,"NW",1,0],[1,5,"N",1,0],[0,3,"N",1,0]],"sol":[3,6,25,27,32],"li":[4],"t":[210,420]},{"n":7,"k":5,"L":2,"intro":"two_liars","cats":[[2,5,"NW",2,0],[6,1,"W",3,0],[5,0,"SW",1,0],[3,1,"SE",0,0],[6,0,"SW",2,0],[5,1,"S",5,0],[1,5,"NE",0,0]],"sol":[7,8,9,21,29],"li":[4,5],"t":[160,320]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[6,2,"S",3,0],[2,5,"N",4,0],[1,6,"NE",2,0],[4,6,"E",2,0],[5,6,"NW",0,0],[0,0,"SE",0,0],[5,2,"W",0,0]],"sol":[13,25,27,34,41],"li":[1,3],"t":[135,270]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[3,2,"W",0,0],[2,3,"SE",0,0],[5,2,"NW",0,0],[2,1,"S",3,0],[0,6,"N",4,0],[1,0,"S",1,0],[2,2,"SW",0,0],[0,1,"SE",4,0],[1,4,"NE",1,0],[3,1,"W",0,0],[1,5,"E",1,0]],"sol":[5,30,37,43,44],"li":[4,7],"t":[140,280]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[3,6,"NW",3,0],[4,3,"W",2,0],[3,5,"NW",0,0],[6,2,"NW",2,0],[0,3,"E",0,0],[0,5,"N",2,0],[0,0,"E",1,0],[6,4,"N",1,0]],"sol":[4,7,12,13,28],"li":[0,1],"t":[145,290]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[5,0,"SW",0,0],[2,4,"SW",0,0],[0,0,"S",0,0],[3,4,"SW",0,0],[5,5,"W",1,0],[2,6,"E",4,0],[5,3,"NW",1,0],[5,4,"SW",1,0],[0,3,"NE",0,0],[0,2,"S",2,0],[2,3,"NW",1,0],[4,1,"W",1,0]],"sol":[10,38,45,46,47,48],"li":[9,10],"t":[150,300]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[2,1,"W",0,0],[1,4,"E",1,0],[3,1,"SE",1,0],[0,5,"E",5,0],[4,3,"E",0,0],[4,1,"SE",1,0],[2,5,"NW",1,0],[5,5,"NW",1,0],[0,4,"NE",1,0],[0,2,"N",1,0],[5,1,"W",1,1]],"sol":[7,16,19,21,34],"li":[0,3],"t":[165,330]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[6,6,"NW",2,0],[2,5,"NW",2,0],[0,3,"SE",1,0],[0,1,"E",0,0],[3,3,"N",2,0],[0,4,"E",0,0],[1,1,"E",1,0],[5,1,"W",0,0],[2,1,"S",1,0],[4,2,"N",1,0],[3,5,"E",1,0]],"sol":[3,4,16,17,40,45],"li":[1,6],"t":[165,330]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[3,0,"S",4,0],[4,0,"E",1,0],[3,3,"W",3,0],[6,6,"NW",3,0],[5,5,"W",0,0],[3,4,"NE",1,0],[3,2,"NW",1,0],[2,0,"S",0,0],[1,4,"NE",1,0],[5,2,"SW",1,0]],"sol":[0,1,5,8,25,32],"li":[0,2],"t":[180,360]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[4,4,"N",3,0],[0,2,"E",0,0],[3,1,"W",0,0],[1,4,"N",4,0],[5,1,"SW",0,0],[1,1,"S",2,0],[5,3,"W",2,0],[2,6,"N",3,0],[2,2,"N",1,0],[6,4,"W",0,0],[0,0,"S",1,0]],"sol":[2,22,23,35,37,43],"li":[0,3],"t":[180,360]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[0,3,"SE",3,0],[5,4,"SW",1,0],[4,6,"N",2,0],[5,2,"W",1,0],[6,6,"W",1,0],[6,4,"W",2,0],[3,3,"S",1,0],[2,5,"NE",0,0],[1,0,"E",0,0],[0,6,"N",1,0],[1,1,"SE",4,0],[1,3,"NE",2,0]],"sol":[10,11,16,28,32,45],"li":[0,10],"t":[185,370]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[4,6,"N",0,0],[4,3,"SE",0,0],[6,1,"S",5,0],[0,0,"S",1,0],[5,3,"S",1,0],[6,3,"SW",1,1],[6,2,"W",2,0],[6,5,"N",2,0],[2,6,"E",0,0],[3,0,"SE",1,0]],"sol":[6,14,19,33,34],"li":[1,2],"t":[185,370]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[0,4,"NE",2,0],[4,5,"N",2,0],[5,1,"W",1,0],[2,5,"N",1,0],[1,4,"SE",1,0],[2,3,"NW",2,0],[2,2,"NW",1,0],[5,4,"NW",0,0],[6,0,"SW",1,0],[5,5,"N",3,0],[5,3,"NW",1,0]],"sol":[0,4,10,30,32,45],"li":[5,9],"t":[190,380]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[6,3,"NW",0,0],[2,0,"W",0,0],[5,2,"SW",0,0],[1,0,"E",1,0],[1,1,"S",0,0],[5,3,"S",3,0],[0,4,"E",0,0],[1,5,"E",2,1],[3,3,"NW",1,0],[2,2,"N",0,0],[4,6,"NW",2,0],[0,1,"E",1,0],[6,0,"SW",1,0],[5,0,"S",2,0],[4,1,"S",1,0]],"sol":[4,12,14,38,39,47],"li":[5,8],"t":[200,400]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[3,3,"S",3,0],[2,3,"E",3,0],[6,0,"W",0,0],[5,5,"NW",1,0],[2,6,"NE",1,0],[4,4,"NE",0,0],[5,6,"N",0,0],[3,2,"SE",1,0],[1,2,"E",2,0],[4,3,"S",0,0],[5,4,"NW",1,0]],"sol":[9,16,18,38,41],"li":[0,1],"t":[210,420]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[0,3,"E",1,0],[3,3,"SW",2,0],[4,6,"N",1,0],[2,1,"S",1,0],[4,3,"W",3,0],[1,0,"SE",0,0],[6,4,"W",0,0],[4,0,"SW",2,0],[1,6,"N",3,0],[2,0,"E",1,0],[1,5,"NE",2,0]],"sol":[6,8,15,16,18,22],"li":[1,4],"t":[215,430]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[0,1,"S",0,0],[1,3,"SE",2,0],[0,0,"E",0,0],[5,5,"W",3,0],[2,6,"NW",2,0],[0,2,"NE",1,0],[6,1,"SW",0,0],[2,2,"W",2,0],[4,3,"S",1,0]],"sol":[8,30,36,38,39],"li":[4,7],"t":[220,440]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[5,6,"N",1,0],[3,1,"W",1,0],[4,1,"SW",4,0],[5,5,"W",1,0],[6,0,"SW",2,0],[0,2,"E",2,0],[2,6,"N",2,0],[5,0,"SW",2,0],[6,4,"NW",0,1],[2,0,"S",5,0],[4,5,"NW",0,0],[1,6,"N",1,0]],"sol":[8,12,16,17,30,35],"li":[2,9],"t":[230,460]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[2,2,"S",0,0],[1,1,"S",0,1],[1,4,"S",1,0],[3,5,"E",0,0],[6,3,"NW",2,0],[5,2,"S",3,0],[4,6,"W",3,0]],"sol":[3,11,26,33,47],"li":[2,6],"t":[235,470]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[0,0,"E",3,0],[4,6,"E",1,0],[1,2,"E",1,0],[0,2,"S",1,0],[0,5,"E",0,0],[5,1,"SW",2,0],[3,5,"N",1,0],[3,3,"NW",0,0],[3,0,"W",0,0],[6,0,"S",0,0],[3,6,"NW",2,0],[0,1,"SE",0,0]],"sol":[10,18,21,29,30],"li":[0,1],"t":[235,470]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[4,6,"NE",0,0],[5,3,"W",1,0],[0,1,"E",0,0],[2,4,"E",1,0],[1,5,"E",3,0],[3,4,"S",0,0],[5,4,"W",2,0],[3,3,"SE",0,0],[0,4,"NE",1,0],[2,0,"SW",1,0],[3,1,"SE",1,0]],"sol":[14,18,22,29,32],"li":[4,7],"t":[245,490]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[0,5,"NE",1,0],[2,1,"E",2,0],[5,2,"S",0,0],[6,4,"W",2,0],[3,3,"NW",3,0],[2,4,"SW",0,0],[0,3,"N",2,0],[4,4,"N",1,0],[1,4,"E",1,0],[6,1,"W",2,0],[5,3,"N",2,0],[6,3,"W",1,0]],"sol":[5,10,12,25,28,31],"li":[4,6],"t":[255,510]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[0,3,"NE",1,0],[5,6,"NW",2,0],[1,0,"SE",4,0],[1,4,"E",2,0],[6,0,"SW",2,0],[6,1,"W",0,0],[6,2,"W",0,0],[3,1,"S",2,0],[4,0,"S",0,0],[1,6,"NE",3,0]],"sol":[3,23,24,30,31],"li":[2,9],"t":[265,530]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[6,6,"W",1,0],[2,1,"SE",1,0],[3,0,"W",3,0],[1,2,"S",2,0],[4,1,"W",3,0],[3,1,"W",1,0],[2,2,"SW",2,0],[4,5,"NW",0,0],[0,3,"E",3,0],[5,0,"S",1,0]],"sol":[8,22,25,26,28,43],"li":[2,4],"t":[280,560]},{"n":7,"k":5,"L":2,"intro":null,"cats":[[4,2,"NE",0,0],[6,0,"SW",1,0],[1,4,"SE",1,0],[6,3,"SW",2,0],[1,6,"N",0,0],[4,0,"SE",1,0],[5,3,"W",5,0],[6,4,"W",1,0],[2,5,"W",1,0],[2,4,"NW",0,0],[0,6,"N",3,0]],"sol":[20,24,33,35,45],"li":[6,10],"t":[280,560]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[0,3,"S",0,0],[5,3,"NW",1,0],[1,1,"E",1,0],[6,6,"W",4,0],[5,0,"SW",1,0],[2,3,"E",2,1],[5,4,"S",2,0],[6,1,"S",1,0],[3,0,"S",2,0],[1,0,"SE",2,0],[2,1,"SW",1,0],[6,3,"N",0,0]],"sol":[10,15,24,25,29,41],"li":[3,6],"t":[300,600]},{"n":7,"k":6,"L":2,"intro":"legend","cats":[[4,0,"W",1,1],[0,1,"E",4,0],[1,3,"SE",0,0],[4,4,"S",1,0],[0,4,"N",1,0],[1,1,"S",0,0],[3,4,"W",1,0],[6,2,"NW",0,0],[1,2,"N",2,0]],"sol":[0,9,10,11,13,39],"li":[6,8],"t":[160,320]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[3,4,"S",1,0],[3,1,"SE",0,0],[2,1,"W",2,0],[5,2,"NW",0,0],[2,5,"NE",3,0],[4,3,"W",0,0],[5,0,"S",3,0],[6,2,"SW",1,0],[1,2,"E",1,0],[4,1,"E",0,0],[0,3,"E",1,0],[1,1,"SE",1,0]],"sol":[17,27,33,38,40,47],"li":[2,4],"t":[160,320]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[2,4,"SE",1,0],[2,3,"NW",0,0],[3,2,"SW",2,0],[6,5,"N",5,0],[3,0,"SW",2,0],[5,6,"W",1,0],[1,4,"E",0,0],[4,1,"SE",1,0],[0,0,"S",1,0],[6,2,"S",1,0],[4,2,"SW",2,0]],"sol":[9,21,24,27,36,46],"li":[2,3],"t":[170,340]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[1,6,"NE",2,0],[5,2,"SW",2,0],[6,2,"W",1,0],[2,1,"S",4,0],[0,3,"NE",0,0],[2,3,"W",2,0],[3,4,"SE",0,0],[1,5,"N",3,1],[3,5,"NW",1,0],[5,0,"W",2,0],[1,3,"NE",1,0]],"sol":[1,4,8,14,25,29,37],"li":[3,5],"t":[175,350]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[0,6,"NE",5,1],[2,4,"NW",2,0],[6,1,"SW",0,0],[5,3,"W",3,0],[2,3,"SE",1,0],[5,4,"SW",0,0],[1,1,"E",1,0],[0,2,"NE",1,0]],"sol":[2,6,12,18,24,36,47],"li":[1,3],"t":[175,350]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[3,0,"E",3,0],[6,0,"SW",0,0],[2,5,"N",3,0],[0,1,"S",2,0],[6,6,"NW",1,0],[4,4,"SW",2,0],[5,6,"N",0,0],[2,4,"NW",0,0],[6,3,"W",1,0],[2,2,"NW",0,0]],"sol":[2,9,23,28,35,38,44],"li":[0,4],"t":[185,370]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[5,4,"NW",3,0],[3,5,"W",0,0],[2,6,"N",4,0],[4,6,"W",1,0],[0,1,"S",1,0],[0,5,"NE",1,0],[6,4,"S",2,0],[6,5,"N",4,0],[2,0,"E",0,0]],"sol":[1,9,16,23,25,30,42],"li":[6,7],"t":[190,380]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[0,5,"NE",1,0],[6,5,"NW",1,0],[3,2,"E",2,0],[2,6,"NE",0,0],[0,3,"E",0,0],[6,4,"W",0,0],[1,2,"S",2,0],[6,0,"W",6,0],[5,6,"NW",3,0],[1,1,"E",0,0]],"sol":[1,5,18,19,36,43],"li":[7,8],"t":[190,380]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[1,2,"E",0,0],[3,1,"SW",0,1],[5,5,"N",3,0],[0,1,"S",2,0],[0,3,"NE",2,0],[5,4,"W",1,0],[5,3,"W",1,0],[0,6,"E",0,0],[2,2,"SW",2,0],[3,6,"N",2,0],[1,5,"N",1,0]],"sol":[3,9,14,24,29,35],"li":[2,8],"t":[200,400]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[1,4,"E",1,0],[0,5,"NE",2,0],[4,6,"N",0,0],[2,3,"NW",0,0],[3,5,"N",2,0],[4,3,"SW",2,0],[4,1,"SW",4,0],[0,3,"S",0,0],[5,5,"NW",0,1],[5,1,"W",2,0],[6,0,"SW",2,0]],"sol":[5,9,10,17,30,36],"li":[5,6],"t":[210,420]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[6,6,"N",3,0],[3,4,"SE",1,0],[2,5,"NW",2,0],[5,1,"SW",1,0],[1,5,"E",1,0],[0,2,"E",1,0],[3,6,"NE",2,0],[2,3,"NW",1,0],[2,6,"NE",0,1],[3,2,"SE",1,0],[6,0,"S",2,0],[0,5,"NE",0,0],[4,5,"N",1,0],[1,6,"NE",0,0]],"sol":[7,18,27,33,34,40,47],"li":[0,2],"t":[215,430]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[0,3,"SE",1,0],[2,4,"NW",0,0],[5,2,"S",3,0],[5,6,"N",0,0],[6,1,"SW",2,0],[6,6,"N",3,0],[2,5,"NE",1,0],[1,4,"N",1,0],[4,3,"W",3,0],[6,2,"W",0,0],[1,0,"E",0,0]],"sol":[8,27,31,34,41,43,45],"li":[2,8],"t":[215,430]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[1,0,"S",1,0],[3,2,"N",1,0],[4,6,"N",1,0],[2,6,"W",2,0],[5,6,"N",2,0],[5,1,"S",1,0],[5,4,"NW",2,0],[5,2,"NW",0,0],[2,0,"SW",0,0],[6,4,"SW",2,0],[4,5,"E",2,0],[0,0,"SE",2,0]],"sol":[5,10,32,40,41,42,43],"li":[6,9],"t":[215,430]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[0,6,"E",3,0],[4,2,"N",2,0],[6,3,"NW",2,0],[5,2,"W",1,0],[6,5,"NW",1,0],[4,6,"E",1,0],[6,0,"W",5,0],[1,6,"N",6,0],[5,1,"S",1,0]],"sol":[3,4,11,17,44,45,47],"li":[6,7],"t":[220,440]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[3,5,"E",1,0],[2,0,"W",1,0],[0,0,"E",1,0],[4,1,"SE",1,0],[1,4,"NE",2,0],[6,0,"SW",5,0],[4,5,"N",2,1],[6,4,"W",0,0],[5,2,"W",2,0],[0,1,"S",1,0],[5,5,"N",0,0]],"sol":[1,14,18,25,27,41],"li":[4,5],"t":[220,440]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[6,4,"W",4,0],[5,0,"S",2,0],[4,1,"SE",0,0],[6,6,"W",1,0],[3,4,"SW",1,0],[5,3,"W",0,0],[0,2,"S",2,0],[1,6,"N",0,0],[2,4,"W",0,0],[4,6,"N",4,0],[5,2,"N",1,0],[0,0,"S",0,0]],"sol":[4,12,18,32,37,39,47],"li":[0,6],"t":[225,450]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[5,2,"S",2,1],[1,5,"NE",2,0],[6,5,"NW",0,0],[5,6,"W",0,0],[3,4,"SW",1,0],[6,0,"S",0,0],[3,3,"W",2,0],[2,5,"W",0,0],[6,1,"W",0,0],[1,3,"S",0,0],[2,1,"SW",2,0],[0,0,"E",2,0],[0,6,"NE",2,0]],"sol":[15,18,21,23,26,30,40],"li":[4,11],"t":[230,460]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[3,3,"S",1,0],[3,5,"NE",1,0],[6,2,"W",1,0],[6,3,"SW",0,0],[1,1,"S",2,0],[5,0,"SW",1,0],[6,1,"W",2,0],[5,5,"N",5,0],[6,6,"NW",3,0],[2,4,"NE",1,0],[0,4,"E",1,0],[1,3,"E",0,1]],"sol":[0,11,12,16,32,36,43],"li":[0,7],"t":[230,460]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[5,5,"W",0,0],[1,3,"E",2,0],[3,0,"SE",3,0],[5,6,"N",1,0],[1,1,"E",0,0],[2,0,"SE",0,0],[6,4,"W",1,0],[4,5,"NW",1,0],[6,3,"NW",2,0],[3,2,"S",2,0],[6,5,"N",2,0],[0,3,"NE",1,0]],"sol":[6,15,20,24,25,33,45],"li":[2,8],"t":[245,490]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[4,3,"N",2,0],[3,4,"SE",2,0],[3,1,"S",2,0],[4,4,"E",1,0],[5,3,"N",2,0],[0,4,"NE",0,0],[4,5,"NW",1,0],[5,4,"W",1,0],[0,6,"NE",1,0],[2,1,"SE",1,0],[2,3,"E",0,1],[1,6,"E",1,0],[6,2,"W",1,0]],"sol":[5,7,12,17,29,34,45],"li":[0,1],"t":[260,520]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[5,1,"W",4,0],[6,3,"SW",1,0],[6,2,"W",1,0],[2,4,"SE",1,0],[2,3,"NE",0,0],[0,3,"SE",1,0],[2,6,"N",2,0],[3,4,"SW",0,0],[3,0,"SE",1,0],[6,0,"SW",5,0],[0,4,"E",2,0],[5,3,"SW",1,0]],"sol":[2,9,19,29,33,38],"li":[0,9],"t":[265,530]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[5,5,"NW",3,0],[6,4,"SW",0,0],[1,5,"E",1,0],[6,1,"S",1,0],[2,6,"N",2,0],[3,1,"W",0,0],[4,0,"SW",3,0],[0,4,"E",3,1],[5,4,"S",0,0],[4,5,"NW",0,0],[0,6,"N",1,0],[5,1,"W",1,0]],"sol":[0,16,29,30,32,41],"li":[6,11],"t":[275,550]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[6,0,"SW",0,0],[4,3,"S",1,0],[2,6,"NW",0,0],[0,1,"SE",2,0],[3,2,"E",0,0],[6,2,"NW",0,0],[3,3,"SE",0,0],[0,6,"NE",1,1],[3,6,"N",1,0],[5,5,"W",3,0],[2,0,"S",0,0],[2,3,"E",2,0],[6,4,"W",1,0]],"sol":[26,27,31,35,36,39],"li":[0,2],"t":[295,590]},{"n":7,"k":6,"L":2,"intro":null,"cats":[[2,4,"NW",1,0],[5,1,"S",2,0],[5,5,"N",3,0],[2,6,"NE",1,0],[6,1,"S",1,0],[0,1,"S",4,0],[0,0,"SE",1,0],[2,5,"E",1,0],[1,3,"N",0,0],[4,5,"NE",2,0],[0,3,"E",3,0]],"sol":[5,14,24,26,27,33],"li":[5,7],"t":[305,610]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[5,5,"W",2,0],[5,6,"N",3,1],[0,4,"NE",1,0],[2,0,"SE",0,0],[2,5,"E",0,0],[2,4,"W",0,0],[6,3,"N",0,0],[0,6,"E",0,0],[5,2,"SW",1,0],[4,6,"NW",2,0],[2,1,"E",2,0],[4,5,"N",1,0],[4,2,"SW",2,0]],"sol":[5,11,12,14,22,31,33],"li":[0,12],"t":[335,670]}];
+const DAILY=[{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"W",1,0],[1,0,"S",3,0],[0,0,"SE",0,0],[0,3,"NE",1,0],[2,4,"N",2,0],[4,0,"S",1,0],[0,4,"N",1,0],[0,2,"E",0,0]],"sol":[5,7,9,17],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"W",1,0],[0,1,"E",3,0],[3,4,"N",1,0],[2,3,"N",1,0],[1,0,"S",1,0],[0,2,"NE",2,0]],"sol":[0,6,7,8],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"S",1,0],[4,0,"SW",2,0],[3,4,"N",0,0],[2,2,"N",1,0],[0,0,"S",4,0],[0,1,"SE",1,0],[3,0,"W",1,0]],"sol":[2,16,17,20],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"SE",2,0],[0,1,"E",0,0],[4,2,"N",1,0],[2,4,"W",0,0],[2,1,"SE",0,0],[3,4,"N",2,0],[0,4,"E",1,0]],"sol":[3,4,18,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"W",0,0],[2,0,"S",3,0],[0,1,"SE",2,0],[2,4,"N",3,0],[1,3,"N",1,0]],"sol":[7,11,12,17],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"S",1,0],[2,4,"NW",0,0],[0,2,"E",0,0],[4,0,"S",1,0],[2,0,"E",2,0],[0,4,"E",3,0]],"sol":[17,21,23,24],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"S",1,0],[2,1,"SE",1,0],[3,1,"SW",0,0],[0,0,"SE",1,0],[1,0,"S",2,0],[1,2,"E",0,0],[1,4,"E",2,0],[3,0,"S",1,0]],"sol":[6,19,22,23],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"W",1,0],[4,4,"W",2,0],[2,1,"S",2,0],[1,2,"NE",1,0],[0,1,"S",2,0],[4,0,"W",0,0]],"sol":[10,17,20,22],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"W",0,0],[2,0,"SE",2,0],[3,2,"S",2,0],[2,3,"W",0,0],[2,4,"E",1,0],[0,2,"E",1,0],[3,0,"SW",1,0]],"sol":[7,8,14,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"W",1,0],[1,4,"N",3,0],[1,1,"S",0,0],[0,2,"E",2,0],[3,4,"N",1,0],[2,1,"E",1,0],[2,0,"W",0,0]],"sol":[3,9,12,14],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",2,0],[4,1,"SW",3,0],[1,0,"S",1,0],[3,4,"W",1,0],[3,1,"SW",1,0],[0,0,"S",1,0],[2,1,"W",0,0]],"sol":[3,11,13,20],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"S",3,0],[3,4,"W",1,0],[1,3,"E",0,0],[2,0,"S",0,0],[0,4,"NE",0,0],[1,1,"SE",1,0],[0,2,"N",2,0]],"sol":[0,5,21,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"SW",2,0],[4,4,"N",1,0],[2,3,"N",0,0],[4,2,"W",0,0],[1,4,"NE",1,0],[3,4,"NW",1,0],[3,2,"S",1,0],[0,4,"NE",1,0]],"sol":[5,9,16,18],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",1,0],[1,3,"N",1,0],[0,3,"N",1,0],[3,0,"SW",0,0],[2,3,"NE",2,0],[1,0,"S",1,0],[4,4,"W",2,0],[2,4,"W",1,0]],"sol":[0,6,20,23],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"E",1,0],[1,3,"N",2,0],[3,4,"N",1,0],[0,2,"SE",1,0],[4,2,"W",1,0],[1,4,"E",0,0],[4,1,"SW",1,0]],"sol":[1,6,13,22],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"S",3,0],[3,2,"N",0,0],[0,3,"N",1,0],[2,0,"SW",1,0],[3,4,"N",3,0]],"sol":[10,12,17,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,3,"E",1,0],[4,2,"S",0,0],[1,1,"SE",1,0],[1,0,"SE",2,0],[3,0,"SW",3,0],[2,4,"E",1,0]],"sol":[7,13,18,23],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"NE",1,0],[1,4,"E",3,0],[3,0,"W",0,0],[1,2,"N",0,0],[4,2,"S",0,0],[0,4,"E",3,0]],"sol":[7,22,23,24],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"N",3,0],[2,1,"E",2,0],[2,3,"N",0,0],[1,3,"NE",1,0],[3,3,"W",1,0],[4,0,"SW",2,0]],"sol":[8,9,15,20],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"SW",1,0],[0,1,"S",2,0],[2,0,"SE",0,0],[0,3,"E",0,0],[3,0,"S",1,0],[1,4,"E",1,0],[4,1,"S",3,0]],"sol":[10,13,20,22],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"N",0,0],[4,0,"W",0,0],[1,4,"N",4,0],[1,0,"S",0,0],[2,0,"SE",1,0],[3,3,"NW",1,0],[0,1,"S",2,0],[0,2,"SE",0,0]],"sol":[12,14,15,20],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"E",1,0],[2,0,"S",2,0],[3,2,"SW",1,0],[4,4,"N",0,0],[0,0,"S",0,0],[1,2,"NE",2,0],[3,4,"W",1,0]],"sol":[3,7,12,21],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"W",1,0],[1,3,"NE",0,0],[0,0,"SE",1,0],[2,1,"SE",1,0],[3,2,"N",1,0],[1,0,"S",1,0],[1,2,"E",1,0],[0,4,"E",0,0]],"sol":[3,6,14,19],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"E",1,0],[1,4,"N",2,0],[0,0,"SE",1,0],[0,2,"SE",0,0],[2,0,"S",0,0],[4,2,"NW",2,0],[0,3,"N",1,0],[3,4,"NW",1,0]],"sol":[1,5,6,19],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"SW",2,0],[2,3,"W",0,0],[4,0,"S",1,0],[4,3,"W",1,0],[4,4,"NW",1,0],[2,0,"W",2,0]],"sol":[13,14,18,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,0,"E",0,0],[4,1,"S",3,0],[3,0,"W",1,0],[3,4,"W",1,0],[1,1,"S",1,0]],"sol":[14,19,21,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"W",1,0],[1,3,"NE",2,0],[4,4,"W",2,0],[3,0,"S",1,0],[2,0,"S",2,0],[2,2,"E",0,0],[4,1,"W",0,0],[0,3,"N",0,0]],"sol":[1,17,22,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",2,0],[4,3,"W",1,0],[2,2,"NW",1,0],[3,4,"N",2,0],[2,3,"NE",1,0],[4,0,"SW",0,0],[1,2,"SE",1,0],[1,0,"S",0,0]],"sol":[0,3,13,15],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,2,"SE",1,0],[1,4,"N",0,0],[0,1,"E",0,0],[4,3,"W",0,0],[3,3,"N",1,0],[3,4,"W",2,0],[3,2,"NW",0,0],[2,0,"SE",1,0]],"sol":[3,14,20,22],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"W",0,0],[3,3,"N",0,0],[4,0,"S",0,0],[3,1,"SW",2,0],[0,3,"N",3,0],[1,3,"N",0,0],[1,4,"NE",1,0]],"sol":[0,5,10,17],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",0,0],[2,3,"W",1,0],[1,1,"S",2,0],[2,0,"S",0,0],[3,2,"NW",1,0],[0,0,"SE",1,0],[1,3,"E",0,0],[2,1,"E",1,0]],"sol":[1,9,15,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"E",0,0],[2,3,"NE",1,0],[0,3,"NE",2,0],[3,4,"W",0,0],[4,2,"NW",1,0],[4,4,"W",1,0]],"sol":[2,3,11,13],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"W",2,0],[1,4,"NE",0,0],[1,0,"S",2,0],[1,1,"E",1,0],[3,0,"SW",0,0],[3,3,"NW",2,0]],"sol":[0,2,8,12],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",1,0],[0,3,"N",1,0],[2,0,"S",0,0],[3,4,"NW",1,0],[1,2,"E",1,0],[2,4,"NW",2,0],[3,0,"W",1,0],[1,4,"NE",0,0]],"sol":[1,10,14,16],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"SW",2,0],[3,4,"NW",0,0],[2,4,"E",1,0],[1,3,"NE",1,0],[4,2,"NW",2,0],[3,3,"W",3,0]],"sol":[2,8,20,24],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"NW",3,0],[3,3,"N",1,0],[3,0,"SW",2,0],[1,4,"E",1,0],[1,1,"E",0,0],[3,4,"W",1,0]],"sol":[11,13,15,22],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"NW",2,0],[2,3,"E",1,0],[4,4,"N",0,0],[4,0,"W",0,0],[3,2,"W",1,0],[0,4,"N",2,0]],"sol":[5,6,12,15],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"SE",2,0],[4,3,"W",3,0],[1,3,"NE",0,0],[4,0,"S",1,0],[4,4,"NW",1,0],[1,2,"E",1,0]],"sol":[14,15,17,18],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"N",1,0],[2,3,"NE",0,0],[4,4,"N",2,0],[4,0,"SW",0,0],[3,4,"N",2,0],[3,0,"SW",1,0],[2,0,"S",1,0],[3,1,"W",0,0]],"sol":[11,14,19,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"S",2,0],[3,2,"N",1,0],[1,1,"SE",1,0],[1,4,"NE",2,0],[2,2,"NW",2,0]],"sol":[8,9,17,18],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",1,0],[1,1,"S",1,0],[3,2,"S",1,0],[4,3,"W",0,0],[1,4,"NE",0,0],[3,1,"SW",0,0],[2,2,"S",1,0],[3,0,"S",4,0]],"sol":[10,11,22,23],"li":[7]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"N",1,0],[3,2,"SW",2,0],[3,0,"SW",1,0],[0,1,"SE",2,0],[0,0,"SE",0,0],[3,1,"W",2,0]],"sol":[10,11,17,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,2,"E",2,0],[3,2,"SW",1,0],[0,4,"NE",2,0],[0,0,"E",0,0],[1,3,"N",2,0],[4,3,"W",0,0]],"sol":[8,12,14,21],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"N",0,0],[1,3,"E",1,0],[1,0,"S",0,0],[4,1,"W",2,0],[3,3,"W",0,0],[2,2,"NE",2,0],[0,2,"NE",2,0]],"sol":[4,5,8,19],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",2,0],[4,1,"SW",2,0],[1,2,"SE",2,0],[3,2,"SW",1,0]],"sol":[3,8,17,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"N",1,0],[4,4,"W",3,0],[2,3,"NW",1,0],[4,2,"N",1,0],[0,0,"E",1,0],[2,4,"NW",2,0]],"sol":[4,10,11,16],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"E",1,0],[0,4,"N",1,0],[0,1,"SE",2,0],[4,3,"W",1,0],[3,4,"NW",0,0],[3,3,"NW",1,0],[4,0,"W",2,0],[2,2,"SE",1,0]],"sol":[0,3,16,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"S",1,0],[1,1,"SE",0,0],[3,4,"N",1,0],[4,0,"S",2,0],[1,2,"N",0,0],[3,1,"S",0,0],[4,3,"N",2,0],[0,0,"E",1,0]],"sol":[2,9,13,14],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"W",3,0],[4,2,"SW",0,0],[1,1,"S",0,0],[0,1,"S",0,0],[4,1,"SW",1,0],[1,2,"SE",0,0],[0,0,"E",0,0],[2,1,"S",0,0]],"sol":[8,13,19,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"S",1,0],[3,1,"SW",2,0],[1,4,"E",2,0],[4,3,"NW",0,0],[3,4,"W",1,0],[0,0,"E",1,0],[2,2,"E",0,0],[4,0,"SW",2,0]],"sol":[2,16,18,20],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"W",1,0],[2,0,"E",0,0],[1,0,"S",3,0],[1,3,"E",2,0],[0,2,"E",0,0],[1,1,"SE",2,0],[2,3,"NE",0,0]],"sol":[0,18,19,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"S",0,0],[1,3,"E",2,0],[3,4,"N",1,0],[1,2,"E",1,0],[1,1,"S",1,0],[2,4,"E",2,0]],"sol":[14,18,19,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"SE",0,0],[0,3,"N",1,0],[2,1,"W",1,0],[3,1,"S",2,0],[0,0,"S",2,0],[2,3,"N",2,0]],"sol":[5,13,20,23],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"NW",0,0],[4,2,"N",1,0],[2,2,"S",2,0],[1,1,"E",0,0],[2,3,"NW",1,0],[1,4,"N",1,0],[0,3,"N",2,0],[3,2,"NW",0,0]],"sol":[4,5,10,16],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",0,0],[3,4,"N",0,0],[1,1,"S",3,0],[1,0,"SE",1,0],[2,1,"SE",0,0],[2,0,"S",0,0],[4,0,"SW",1,0],[4,1,"S",0,0]],"sol":[0,11,16,21],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,2,"SE",0,0],[3,3,"NW",0,0],[0,1,"E",0,0],[0,2,"SE",0,0],[0,3,"NE",3,0],[4,4,"N",1,0],[1,3,"NE",1,0],[1,0,"E",1,0]],"sol":[4,13,20,21],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"NE",1,0],[2,1,"E",2,0],[2,0,"SE",0,0],[1,0,"SE",1,0],[4,3,"W",1,0],[4,2,"NW",1,0]],"sol":[8,9,13,18],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"E",2,0],[2,2,"N",2,0],[1,0,"E",1,0],[2,1,"SE",1,0],[4,0,"S",2,0],[3,0,"S",0,0]],"sol":[2,19,22,24],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",2,0],[3,0,"SW",1,0],[2,4,"E",2,0],[1,3,"N",0,0],[4,0,"SW",0,0],[2,0,"S",1,0],[2,1,"W",0,0]],"sol":[15,17,23,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"SW",1,0],[2,1,"SW",2,0],[2,3,"NW",1,0],[4,3,"W",3,0],[3,4,"N",2,0]],"sol":[11,15,16,18],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"S",2,0],[3,0,"W",2,0],[0,1,"E",0,0],[3,1,"W",2,0],[4,3,"NW",0,0]],"sol":[0,2,15,20],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"NW",2,0],[0,1,"E",0,0],[2,2,"NW",1,0],[3,1,"SW",1,0],[4,0,"W",2,0],[1,3,"E",0,0],[3,4,"NW",1,0],[2,0,"E",1,0]],"sol":[0,3,11,20],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,2,"E",2,0],[3,3,"NW",1,0],[2,2,"NE",0,0],[2,1,"W",1,0],[1,3,"N",0,0],[4,3,"W",4,0]],"sol":[0,5,13,14],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"E",0,0],[2,0,"W",2,0],[4,2,"NW",0,0],[4,1,"S",1,0],[1,2,"E",0,0],[2,3,"NE",1,0],[2,1,"SE",1,0]],"sol":[0,1,13,24],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"SE",0,0],[1,2,"E",0,0],[4,1,"SW",3,0],[1,4,"NE",1,0],[4,0,"S",1,0],[3,1,"S",1,0],[2,1,"W",1,0]],"sol":[5,17,19,23],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"W",1,0],[0,3,"N",3,0],[0,4,"NE",1,0],[2,3,"N",0,0],[3,3,"N",0,0],[1,1,"S",2,0],[0,2,"SE",0,0]],"sol":[4,5,11,21],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"SW",1,0],[4,4,"N",3,0],[4,3,"W",1,0],[4,1,"SW",2,0],[2,4,"NE",1,0],[3,4,"N",0,0]],"sol":[11,14,17,21],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"NE",1,0],[1,4,"N",1,0],[0,4,"E",1,0],[0,1,"E",1,0],[3,4,"N",1,0],[0,0,"SE",0,0],[3,3,"NW",3,0],[2,1,"SW",1,0]],"sol":[3,9,11,22],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"W",0,0],[1,3,"N",3,0],[4,1,"S",1,0],[4,3,"W",0,0],[3,0,"W",2,0],[0,2,"SE",1,0],[2,0,"E",0,0]],"sol":[0,1,22,24],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"NW",1,0],[1,1,"S",0,0],[1,3,"E",0,0],[0,1,"E",0,0],[2,3,"NE",1,0],[0,2,"NE",2,0],[3,4,"W",2,0],[1,2,"E",1,0]],"sol":[0,13,20,22],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"S",2,0],[4,2,"W",1,0],[1,4,"NE",1,0],[3,3,"W",1,0],[4,0,"SW",0,0],[1,3,"E",1,0],[3,4,"NW",1,0],[0,1,"E",1,0]],"sol":[9,11,15,19],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"N",2,0],[3,1,"SW",2,0],[0,4,"NE",2,0],[0,3,"N",1,0],[3,2,"SW",1,0],[2,0,"SW",2,0]],"sol":[6,10,12,16],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"N",2,0],[0,1,"E",1,0],[1,0,"E",1,0],[3,4,"N",3,0],[4,4,"N",0,0],[0,2,"E",2,0],[1,4,"N",1,0]],"sol":[3,8,11,13],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",1,0],[2,1,"S",0,0],[1,1,"E",1,0],[4,3,"W",4,0],[0,3,"N",2,0],[4,0,"SW",0,0],[3,0,"W",0,0]],"sol":[5,9,10,13],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"W",1,0],[0,0,"E",3,0],[1,3,"NE",0,0],[2,2,"SE",1,0],[3,4,"W",0,0],[3,1,"S",0,0]],"sol":[1,2,3,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"E",1,0],[1,0,"E",1,0],[0,4,"N",1,0],[4,2,"N",1,0],[2,0,"W",0,0],[4,0,"S",1,0],[4,3,"W",0,0],[0,2,"N",2,0]],"sol":[3,5,9,23],"li":[7]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"W",2,0],[0,1,"S",0,0],[2,0,"SE",0,0],[2,4,"E",0,0],[3,4,"W",1,0],[0,0,"E",4,0],[4,3,"N",1,0]],"sol":[1,3,9,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"W",1,0],[2,0,"S",1,0],[2,4,"N",1,0],[3,3,"W",1,0],[0,4,"N",2,0],[0,2,"SE",1,0],[4,2,"N",2,0]],"sol":[0,5,12,16],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"N",0,0],[1,3,"E",3,0],[1,4,"NE",1,0],[3,0,"S",1,0],[4,1,"W",1,0],[4,4,"NW",0,0],[2,0,"S",1,0],[2,4,"W",1,0]],"sol":[5,17,20,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"SE",2,0],[2,0,"S",4,0],[4,3,"N",0,0],[4,0,"S",1,0],[0,1,"S",1,0],[3,0,"SW",1,0]],"sol":[15,16,22,24],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"N",1,0],[3,2,"NW",1,0],[0,1,"SE",2,0],[3,1,"S",0,0],[2,1,"S",3,0]],"sol":[1,3,11,17],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"NW",2,0],[2,0,"S",2,0],[4,1,"SW",1,0],[0,3,"E",1,0],[3,2,"W",1,0],[0,4,"E",0,0],[0,0,"E",0,0],[2,1,"W",0,0]],"sol":[8,12,14,17],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"N",2,0],[4,1,"W",2,0],[2,2,"N",1,0],[3,0,"SW",1,0],[0,2,"S",2,0],[4,0,"SW",1,0],[1,0,"S",0,0]],"sol":[2,5,8,15],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"N",2,0],[4,2,"NW",2,0],[0,1,"S",1,0],[4,1,"W",1,0],[3,2,"NW",1,0],[3,4,"W",1,0]],"sol":[1,2,8,20],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"W",1,0],[3,1,"SW",2,0],[0,4,"NE",2,0],[1,0,"S",1,0],[4,3,"N",2,0],[2,3,"NE",1,0],[4,4,"NW",0,0]],"sol":[4,9,10,16],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"SW",1,0],[2,4,"N",1,0],[0,0,"E",2,0],[4,3,"NW",2,0],[3,0,"S",0,0],[0,1,"E",4,0]],"sol":[1,4,7,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"N",1,0],[0,1,"E",2,0],[3,0,"W",0,0],[4,4,"W",0,0],[0,4,"N",1,0],[0,3,"E",0,0],[4,2,"W",1,0],[3,1,"W",2,0]],"sol":[4,6,7,10],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"S",0,0],[4,3,"W",2,0],[1,3,"E",0,0],[3,2,"S",0,0],[3,0,"SW",2,0],[1,4,"NE",2,0]],"sol":[7,9,15,17],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"SW",0,0],[1,2,"E",2,0],[4,0,"SW",1,0],[1,1,"SE",1,0],[3,3,"N",2,0],[0,2,"N",1,0],[1,0,"S",1,0],[3,0,"W",0,0]],"sol":[5,12,13,21],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"W",2,0],[1,3,"N",2,0],[4,2,"NW",2,0],[0,1,"E",1,0]],"sol":[1,2,8,11],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"S",1,0],[0,0,"SE",0,0],[2,3,"E",0,0],[1,2,"NE",2,0],[4,4,"N",4,0],[0,2,"N",1,0]],"sol":[3,5,7,14],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"NW",2,0],[2,1,"S",1,0],[2,3,"NW",0,0],[4,0,"SW",0,0],[3,4,"NW",1,0],[4,2,"N",1,0]],"sol":[1,9,13,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,2,"S",1,0],[2,0,"SW",2,0],[0,1,"SE",2,0],[0,4,"NE",0,0],[4,0,"W",1,0],[1,0,"S",1,0],[3,3,"NW",0,0]],"sol":[3,17,21,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"E",1,0],[2,1,"SE",2,0],[1,1,"SE",1,0],[4,3,"N",1,0],[2,2,"E",2,0],[2,4,"NW",0,0],[3,0,"S",2,0]],"sol":[8,13,14,24],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"N",1,0],[1,4,"N",1,0],[3,0,"SW",2,0],[0,0,"SE",3,0],[2,3,"E",1,0],[0,2,"NE",0,0],[4,3,"N",0,0]],"sol":[5,7,11,18],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"NE",1,0],[0,2,"S",2,0],[1,2,"NE",2,0],[4,1,"SW",0,0]],"sol":[3,7,15,20],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"S",1,0],[2,0,"S",2,0],[2,3,"NE",0,0],[2,2,"S",2,0],[0,1,"S",1,0],[0,2,"NE",0,0],[0,3,"E",1,0]],"sol":[7,16,20,22],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"S",1,0],[1,2,"N",1,0],[1,4,"NE",0,0],[0,1,"S",1,0],[1,1,"SE",0,0],[2,2,"S",1,0],[4,0,"SW",1,0],[0,4,"N",0,0]],"sol":[1,16,22,23],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,0,"S",0,0],[1,1,"E",0,0],[3,0,"S",2,0],[1,4,"NE",0,0],[0,1,"E",2,0],[3,3,"W",1,0]],"sol":[7,8,16,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"W",1,0],[1,3,"E",2,0],[3,2,"W",1,0],[3,4,"N",0,0],[2,3,"N",0,0],[1,1,"S",0,0],[4,4,"W",2,0]],"sol":[10,15,20,22],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"NE",0,0],[3,3,"N",2,0],[2,0,"S",1,0],[0,0,"E",3,0],[2,3,"NE",1,0],[3,0,"SW",0,0],[2,4,"NW",1,0]],"sol":[8,12,13,16],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"NW",0,0],[4,3,"NW",1,0],[3,0,"W",1,0],[2,3,"NE",2,0],[1,2,"S",1,0],[1,3,"E",1,0]],"sol":[2,9,13,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"W",1,0],[4,0,"S",0,0],[3,4,"N",1,0],[0,3,"N",1,0],[4,1,"S",2,0],[3,0,"SW",2,0],[3,3,"NW",0,0]],"sol":[5,7,8,11],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"NE",1,0],[3,1,"SW",0,0],[3,3,"W",3,0],[0,2,"NE",0,0],[2,1,"S",2,0],[4,1,"W",1,0]],"sol":[4,5,17,22],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"N",0,0],[1,0,"E",1,0],[3,0,"S",0,0],[0,2,"E",3,0],[4,4,"N",0,0],[0,4,"NE",0,0],[1,4,"NE",0,0],[2,2,"S",0,0]],"sol":[2,6,7,11],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"E",1,0],[0,1,"S",2,0],[2,1,"SW",0,0],[4,3,"N",2,0],[1,2,"E",0,0],[4,2,"W",1,0]],"sol":[4,9,10,20],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"S",1,0],[1,1,"E",1,0],[4,3,"N",0,0],[3,1,"S",1,0],[1,3,"N",3,0],[4,2,"NW",1,0],[0,1,"SE",1,0]],"sol":[2,7,23,24],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"S",2,0],[1,4,"N",2,0],[1,1,"SE",0,0],[3,4,"NW",0,0],[0,3,"NE",2,0]],"sol":[1,3,7,16],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"N",3,0],[4,4,"NW",2,0],[0,3,"N",1,0],[0,0,"S",0,0],[4,1,"SW",0,0],[1,1,"S",0,0]],"sol":[3,8,12,18],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"W",1,0],[4,2,"S",1,0],[1,3,"N",1,0],[3,1,"W",1,0],[0,0,"SE",2,0],[1,1,"E",0,0],[3,0,"SW",0,0],[3,4,"NW",3,0]],"sol":[1,5,18,24],"li":[7]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"W",0,0],[1,1,"E",2,0],[1,0,"E",1,0],[0,2,"E",1,0],[1,2,"S",1,0],[2,1,"S",1,0],[3,0,"W",2,0]],"sol":[0,2,12,16],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"SW",2,0],[1,0,"SE",0,0],[4,1,"SW",1,0],[0,4,"E",3,0],[3,4,"N",0,0],[4,0,"S",2,0]],"sol":[14,21,22,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"S",3,0],[1,2,"E",1,0],[4,2,"NW",1,0],[2,3,"N",1,0],[2,1,"S",0,0],[3,3,"NW",2,0]],"sol":[0,2,6,13],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"W",0,0],[3,3,"NW",2,0],[1,0,"S",1,0],[4,3,"NW",1,0],[2,3,"NW",0,0],[2,1,"E",2,0],[1,4,"N",1,0]],"sol":[0,12,13,16],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"S",1,0],[1,1,"E",0,0],[4,0,"S",0,0],[3,4,"W",3,0],[0,0,"E",0,0],[2,4,"W",0,0],[3,3,"W",0,0]],"sol":[10,11,12,13],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,3,"NE",2,0],[2,4,"N",1,0],[1,4,"NE",0,0],[2,2,"NW",1,0],[4,1,"W",2,0],[2,1,"SE",2,0]],"sol":[2,4,6,8],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"W",0,0],[1,3,"E",0,0],[0,4,"E",0,0],[1,0,"SE",1,0],[2,3,"NE",2,0],[4,4,"NW",2,0],[2,4,"N",1,0],[1,1,"S",1,0]],"sol":[9,11,12,13],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"NE",0,0],[0,4,"NE",1,0],[2,0,"SE",1,0],[4,0,"S",1,0],[1,2,"SE",2,0],[4,3,"W",2,0],[1,4,"E",0,0]],"sol":[8,9,15,17],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"NW",0,0],[1,0,"S",2,0],[0,4,"NE",1,0],[4,1,"SW",2,0],[1,3,"E",0,0],[4,0,"S",2,0]],"sol":[8,11,13,21],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"SE",0,0],[0,4,"E",1,0],[2,1,"W",1,0],[4,0,"S",1,0],[2,2,"E",2,0],[4,1,"W",2,0],[1,3,"E",0,0],[1,4,"N",2,0]],"sol":[6,8,11,24],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"W",3,0],[3,0,"SW",0,0],[3,3,"N",2,0],[1,1,"S",1,0],[1,4,"NE",1,0],[2,1,"W",1,0]],"sol":[5,8,13,16],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"S",1,0],[3,4,"NW",1,0],[1,2,"E",0,0],[4,0,"W",2,0],[4,1,"W",4,0],[0,0,"E",2,0],[1,3,"E",0,0],[1,0,"SE",0,0]],"sol":[2,3,5,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,2,"W",2,0],[3,2,"S",1,0],[0,0,"E",2,0],[2,3,"NE",1,0],[4,0,"S",1,0],[3,4,"W",0,0],[0,1,"S",0,0],[1,0,"SE",0,0]],"sol":[2,3,9,18],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"W",1,0],[2,2,"W",1,0],[4,3,"N",1,0],[4,4,"NW",1,0],[1,4,"N",0,0],[3,2,"W",2,0],[2,1,"SW",1,0],[4,0,"W",1,0]],"sol":[0,9,10,15],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"S",0,0],[4,3,"N",0,0],[0,4,"E",0,0],[3,1,"SW",1,0],[3,0,"W",0,0],[3,3,"W",0,0],[0,2,"N",0,0],[0,3,"E",1,0]],"sol":[6,11,13,16],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"NW",1,0],[0,2,"N",0,0],[4,0,"SW",3,0],[1,4,"E",2,0],[4,3,"W",0,0],[3,4,"N",0,0],[1,0,"SE",1,0]],"sol":[7,11,22,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"N",4,0],[4,0,"SW",2,0],[1,0,"S",1,0],[2,2,"E",0,0],[2,3,"W",2,0],[4,2,"W",1,0]],"sol":[8,10,15,16],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"S",1,0],[2,1,"SE",1,0],[4,2,"SW",2,0],[4,4,"W",2,0],[1,1,"S",0,0],[0,3,"NE",3,0]],"sol":[18,19,20,22],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"E",1,0],[1,4,"N",3,0],[3,1,"W",1,0],[0,2,"NE",1,0],[2,3,"W",1,0],[3,4,"N",1,0],[4,1,"SW",0,0],[0,3,"E",1,0]],"sol":[2,3,7,16],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"W",4,0],[2,4,"E",1,0],[0,2,"S",1,0],[3,0,"SW",0,0],[3,1,"S",2,0],[2,0,"S",1,0],[2,2,"W",0,0],[0,0,"SE",1,0]],"sol":[17,18,20,23],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"W",2,0],[2,0,"S",2,0],[4,1,"S",1,0],[0,1,"E",2,0],[4,3,"N",1,0],[1,0,"S",0,0],[3,1,"SW",1,0]],"sol":[12,14,15,17],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"E",1,0],[0,4,"N",1,0],[4,1,"SW",2,0],[1,3,"E",0,0],[1,2,"NE",2,0],[2,0,"W",0,0],[0,3,"NE",1,0]],"sol":[7,10,13,21],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,0,"SE",0,0],[2,2,"W",2,0],[1,4,"E",3,0],[3,1,"S",2,0]],"sol":[10,11,13,23],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"NE",1,0],[0,1,"S",3,0],[3,2,"N",1,0],[3,0,"S",3,0],[4,1,"S",0,0]],"sol":[8,17,18,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"S",1,0],[1,2,"S",0,0],[0,1,"SE",1,0],[4,1,"W",2,0],[1,4,"E",3,0],[3,4,"W",1,0]],"sol":[6,8,17,20],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"S",0,0],[3,2,"NW",1,0],[2,4,"NE",0,0],[0,0,"E",1,0],[1,2,"E",3,0],[2,0,"SW",1,0],[0,4,"NE",1,0],[4,4,"NW",1,0]],"sol":[3,7,10,12],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"NW",2,0],[1,3,"N",2,0],[2,4,"NE",1,0],[0,1,"E",1,0],[2,2,"N",1,0],[0,3,"E",1,0],[1,2,"S",0,0]],"sol":[1,2,6,18],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"SW",1,0],[3,3,"NW",1,0],[1,2,"N",1,0],[2,3,"NW",0,0],[2,0,"SW",2,0],[4,2,"W",0,0],[0,0,"E",2,0]],"sol":[3,4,6,21],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"S",1,0],[3,0,"S",2,0],[3,1,"W",0,0],[1,3,"NE",2,0],[0,0,"SE",1,0],[2,0,"SW",1,0]],"sol":[4,10,12,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,3,"N",1,0],[2,1,"S",1,0],[4,0,"SW",0,0],[3,1,"S",2,0],[1,0,"E",0,0],[3,4,"W",1,0],[0,3,"NE",1,0]],"sol":[11,13,18,22],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"SE",1,0],[2,2,"NW",0,0],[2,0,"W",1,0],[1,2,"S",0,0],[4,0,"SW",1,0],[0,4,"N",0,0],[0,1,"E",4,0],[4,4,"NW",1,0]],"sol":[1,8,18,22],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"N",3,0],[1,3,"E",0,0],[2,3,"NE",1,0],[2,4,"NW",2,0],[3,1,"S",1,0]],"sol":[1,6,11,13],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,0,"SE",4,0],[4,4,"N",1,0],[4,3,"W",0,0],[4,1,"W",3,0],[0,1,"E",3,0],[2,0,"SE",1,0]],"sol":[4,6,7,8],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"N",2,0],[4,0,"S",4,0],[3,1,"SW",0,0],[0,0,"E",1,0],[1,0,"SE",0,0],[0,3,"N",2,0]],"sol":[2,5,10,17],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,0,"S",2,0],[4,2,"S",0,0],[0,2,"E",2,0],[4,3,"W",1,0],[0,3,"NE",2,0],[0,1,"SE",1,0],[1,0,"E",0,0],[3,3,"NW",0,0]],"sol":[7,11,13,16],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"NW",2,0],[0,0,"S",1,0],[3,3,"W",0,0],[1,1,"E",2,0],[0,4,"E",0,0],[1,3,"NE",3,0],[4,1,"W",2,0]],"sol":[1,7,8,10],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,1,"SW",1,0],[2,0,"S",2,0],[0,0,"E",1,0],[0,1,"SE",0,0],[2,2,"NE",0,0],[0,3,"NE",1,0],[0,4,"NE",4,0]],"sol":[1,7,16,22],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"S",0,0],[3,2,"SW",0,0],[3,0,"S",0,0],[4,0,"W",0,0],[1,3,"NE",2,0],[2,2,"NW",1,0],[0,0,"S",0,0]],"sol":[6,7,11,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"W",1,0],[1,4,"N",2,0],[4,0,"S",1,0],[4,3,"N",0,0],[4,4,"NW",1,0],[0,3,"E",1,0],[2,2,"E",1,0],[3,1,"S",2,0]],"sol":[1,11,13,18],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"E",2,0],[2,0,"S",0,0],[4,1,"W",0,0],[1,3,"N",2,0],[1,1,"SE",0,0],[4,2,"SW",1,0],[2,2,"NE",1,0]],"sol":[1,4,11,13],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"NW",0,0],[0,1,"E",1,0],[2,1,"SW",1,0],[3,3,"W",2,0],[3,0,"S",2,0],[2,3,"N",2,0]],"sol":[8,15,16,23],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"S",4,0],[2,0,"S",0,0],[0,4,"NE",0,0],[4,4,"NW",0,0],[1,4,"NE",0,0],[1,2,"E",1,0],[0,1,"S",0,0]],"sol":[3,14,19,23],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,3,"E",0,0],[4,3,"NW",0,0],[1,4,"N",2,0],[0,1,"SE",0,0],[2,1,"S",2,0],[0,3,"N",2,0]],"sol":[0,10,12,22],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"N",2,0],[1,2,"E",2,0],[2,1,"E",1,0],[0,1,"S",2,0],[0,4,"NE",1,0]],"sol":[3,8,10,15],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"SW",0,0],[2,0,"E",2,0],[1,2,"SE",1,0],[4,3,"W",3,0],[1,0,"E",0,0]],"sol":[15,16,18,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,0,"W",1,0],[4,0,"SW",1,0],[0,3,"N",0,0],[1,3,"NE",0,0],[4,3,"NW",0,0],[1,1,"SE",2,0],[4,1,"W",3,0]],"sol":[2,18,20,24],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"S",1,0],[1,4,"E",3,0],[2,4,"N",0,0],[1,2,"E",0,0],[1,1,"E",1,0],[4,4,"W",1,0],[0,4,"NE",2,0]],"sol":[8,16,19,23],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"E",1,0],[3,1,"W",0,0],[0,1,"SE",1,0],[4,3,"W",3,0],[2,1,"SW",2,0],[1,3,"E",2,0]],"sol":[9,15,17,18],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"NW",0,0],[1,2,"N",1,0],[2,3,"E",0,0],[0,1,"SE",1,0],[1,1,"E",2,0],[3,2,"SW",2,0]],"sol":[1,7,9,23],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,4,"NE",1,0],[0,0,"S",2,0],[4,1,"S",0,0],[1,0,"S",4,0],[0,3,"N",2,0],[2,1,"S",0,0],[2,2,"N",1,0]],"sol":[2,5,10,13],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"NW",0,0],[1,4,"N",0,0],[4,4,"N",2,0],[3,0,"W",2,0],[2,1,"SE",0,0],[3,1,"W",1,0],[4,1,"S",1,0]],"sol":[0,2,4,14],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"SW",1,0],[4,2,"N",1,0],[2,1,"S",2,0],[4,1,"W",0,0],[2,3,"W",0,0],[1,3,"E",2,0]],"sol":[12,18,19,22],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,1,"S",1,0],[3,3,"N",1,0],[0,1,"E",1,0],[3,0,"W",0,0],[1,1,"S",3,0],[0,3,"NE",1,0],[1,3,"NE",0,0],[2,3,"W",0,0]],"sol":[9,11,13,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"E",2,0],[0,2,"SE",1,0],[2,2,"N",0,0],[1,1,"S",1,0],[4,3,"W",4,0],[2,1,"SE",1,0]],"sol":[3,4,13,16],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"NE",2,0],[3,4,"N",2,0],[2,0,"S",1,0],[2,2,"NE",0,0],[4,2,"W",1,0],[0,0,"SE",1,0],[0,1,"SE",1,0],[0,2,"SE",2,0]],"sol":[3,11,18,22],"li":[7]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"W",0,0],[3,1,"W",1,0],[4,4,"NW",0,0],[0,4,"N",2,0],[0,2,"SE",0,0],[3,3,"NW",1,0],[2,3,"NW",2,0],[2,1,"E",1,0]],"sol":[5,9,11,15],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"E",1,0],[1,3,"E",0,0],[2,4,"NE",0,0],[0,3,"NE",1,0],[4,3,"W",1,0],[3,4,"N",1,0],[0,4,"N",2,0],[3,1,"S",1,0]],"sol":[0,7,10,13],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"N",4,0],[4,4,"NW",2,0],[2,2,"SE",1,0],[0,3,"N",2,0],[3,2,"W",2,0]],"sol":[0,10,11,18],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,3,"N",3,0],[1,0,"S",1,0],[3,0,"S",1,0],[3,2,"W",2,0],[0,0,"SE",1,0],[3,1,"SW",0,0]],"sol":[10,11,23,24],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"SE",0,0],[4,2,"S",1,0],[3,3,"W",3,0],[4,1,"S",2,0]],"sol":[15,16,17,24],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"SE",1,0],[3,4,"W",2,0],[3,3,"NW",0,0],[4,2,"S",2,0],[4,3,"W",1,0],[1,4,"N",0,0],[4,1,"SW",0,0]],"sol":[15,20,22,24],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"N",1,0],[0,0,"S",1,0],[3,1,"SW",3,0],[1,3,"NE",1,0],[3,4,"N",1,0],[4,2,"N",1,0],[4,0,"W",1,0]],"sol":[3,5,9,12],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"NE",1,0],[0,3,"NE",2,0],[3,0,"S",0,0],[4,4,"N",1,0],[1,3,"E",0,0],[4,2,"W",2,0],[4,0,"SW",0,0]],"sol":[7,9,10,11],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,2,"N",0,0],[0,2,"E",1,0],[1,2,"N",1,0],[1,0,"E",0,0],[2,2,"E",2,0],[4,3,"W",2,0],[1,4,"N",2,0],[3,0,"SW",1,0]],"sol":[6,14,15,16],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"N",0,0],[1,3,"E",2,0],[0,4,"N",2,0],[3,4,"N",3,0],[2,1,"W",0,0],[3,0,"W",0,0],[1,1,"E",0,0]],"sol":[10,15,17,18],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,1,"SE",2,0],[4,1,"SW",1,0],[3,2,"S",0,0],[0,4,"E",1,0],[0,0,"E",3,0],[2,1,"S",1,0],[3,0,"S",1,0]],"sol":[8,11,17,24],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"NW",3,0],[2,1,"W",2,0],[0,0,"E",0,0],[1,3,"N",3,0]],"sol":[5,6,11,17],"li":[3]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,4,"E",2,0],[4,2,"SW",1,0],[3,0,"S",1,0],[1,0,"SE",2,0],[0,3,"E",1,0]],"sol":[7,19,23,24],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,3,"N",0,0],[2,3,"W",2,0],[4,1,"SW",0,0],[2,4,"E",0,0],[0,0,"SE",0,0],[4,0,"SW",0,0],[4,2,"NW",1,0],[0,3,"N",0,0]],"sol":[2,3,7,19],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,3,"NE",0,0],[2,4,"E",2,0],[1,0,"E",1,0],[4,3,"N",1,0],[0,0,"S",1,0],[0,4,"NE",4,0],[2,1,"W",0,0]],"sol":[4,10,23,24],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"E",2,0],[3,0,"SW",1,0],[4,2,"N",0,0],[2,3,"NE",1,0],[0,1,"SE",1,0],[1,2,"SE",1,0],[1,0,"SE",2,0],[1,4,"E",0,0]],"sol":[7,12,13,23],"li":[7]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"N",2,0],[4,3,"N",1,0],[0,2,"E",2,0],[3,2,"NW",0,0],[3,3,"W",2,0],[2,0,"S",0,0]],"sol":[11,14,15,16],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"SW",0,0],[2,4,"E",1,0],[1,1,"E",3,0],[0,0,"S",1,0],[4,0,"SW",1,0],[3,1,"S",1,0],[4,2,"S",2,0]],"sol":[18,19,20,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,1,"S",0,0],[4,1,"S",1,0],[1,4,"NE",1,0],[3,4,"W",2,0],[4,4,"NW",0,0],[2,2,"E",0,0],[1,0,"S",1,0]],"sol":[17,19,20,22],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"W",0,0],[3,0,"S",2,0],[1,1,"E",0,0],[0,0,"S",1,0],[1,4,"NE",1,0],[0,2,"N",1,0],[2,2,"NE",2,0]],"sol":[5,17,18,23],"li":[6]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"NW",0,0],[1,0,"E",1,0],[4,2,"N",2,0],[1,4,"E",1,0],[2,4,"NW",0,0],[4,3,"NW",1,0],[3,0,"SW",0,0],[3,1,"S",0,0]],"sol":[4,9,13,23],"li":[7]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,0,"SW",1,0],[3,0,"SW",1,0],[4,4,"NW",1,0],[3,4,"W",2,0],[4,2,"S",2,0],[1,2,"SE",0,0],[0,4,"N",0,0]],"sol":[7,12,21,22],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,2,"W",0,0],[2,2,"SW",0,0],[2,0,"SE",0,0],[2,3,"W",1,0],[1,2,"S",2,0],[3,2,"SW",1,0],[0,4,"NE",1,0],[0,0,"S",2,0]],"sol":[4,5,15,21],"li":[4]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"W",3,0],[4,2,"N",1,0],[1,0,"E",0,0],[0,4,"E",1,0],[2,1,"S",3,0]],"sol":[9,12,17,22],"li":[0]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"N",2,0],[1,3,"NE",1,0],[3,0,"SW",2,0],[1,0,"SE",1,0],[0,0,"S",1,0],[0,2,"N",1,0],[2,1,"SW",1,0]],"sol":[5,8,11,13],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,0,"E",1,0],[2,3,"W",1,0],[1,2,"E",3,0],[2,1,"W",1,0],[3,2,"N",0,0],[0,1,"SE",1,0],[4,0,"SW",0,0]],"sol":[2,6,15,23],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,4,"NW",1,0],[2,3,"NW",0,0],[4,0,"SW",2,0],[3,2,"S",1,0],[3,1,"S",1,0],[3,0,"S",3,0],[0,4,"N",0,0],[0,2,"E",2,0]],"sol":[12,14,16,23],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,1,"SW",0,0],[0,1,"S",3,0],[3,4,"W",3,0],[2,1,"S",1,0],[4,4,"NW",0,0]],"sol":[10,15,20,22],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[1,3,"NE",1,0],[2,3,"NW",1,0],[2,2,"N",1,0],[0,3,"E",0,0],[3,0,"W",0,0],[0,1,"E",0,0],[4,1,"S",2,0]],"sol":[4,11,14,24],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[3,4,"W",2,0],[0,0,"SE",4,0],[2,1,"S",1,0],[1,1,"SE",2,0],[1,4,"E",2,0]],"sol":[18,20,22,24],"li":[1]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"E",1,0],[2,4,"E",0,0],[0,2,"SE",2,0],[3,3,"N",1,0],[2,3,"N",0,0],[4,2,"S",1,0],[4,1,"SW",2,0]],"sol":[4,13,19,21],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[2,0,"E",1,0],[0,3,"N",2,0],[1,1,"E",0,0],[0,2,"NE",0,0],[4,3,"NW",1,0],[3,0,"SW",2,0],[1,3,"N",1,0]],"sol":[0,1,4,5],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,4,"NE",0,0],[0,1,"SE",0,0],[1,1,"S",1,0],[0,2,"NE",1,0],[0,0,"SE",2,0],[3,2,"S",2,0]],"sol":[2,18,21,24],"li":[5]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[0,2,"SE",1,0],[0,1,"E",2,0],[4,0,"SW",4,0],[2,2,"SW",1,0],[4,1,"SW",1,0],[2,1,"SE",1,0]],"sol":[6,8,13,16],"li":[2]},{"n":5,"k":4,"L":1,"intro":null,"cats":[[4,3,"NW",1,0],[1,4,"E",1,0],[0,1,"SE",0,0],[2,1,"SW",0,0],[3,1,"W",2,0],[3,2,"N",1,0],[0,3,"E",1,0],[4,4,"NW",1,0]],"sol":[1,3,18,22],"li":[4]}];
+const GAME_URL="https://www.vach.com.ar/gato/en";
+const LANG="en",OTHER_URL=LANG==="es"?"/gato/en/":"/gato/";
+const TOTAL=LEVELS.length;
+const DIRS={N:[0,-1],NE:[1,-1],E:[1,0],SE:[1,1],S:[0,1],SW:[-1,1],W:[-1,0],NW:[-1,-1]};
+const ANG={E:0,SE:45,S:90,SW:135,W:180,NW:225,N:270,NE:315};
+const DNAME={N:"up",NE:"up and right",E:"right",SE:"down and right",S:"down",SW:"down and left",W:"left",NW:"up and left"};
+const STAGES=[
+  {name:"Rookie",from:1,to:5,size:"3×3 and 4×4 boards",news:"learn the rules"},
+  {name:"Suspects",from:6,to:25,size:"4×4 and 5×5 boards",news:"the lying cat"},
+  {name:"Detective",from:26,to:45,size:"5×5 boards",news:"mark with an X"},
+  {name:"Inspector",from:46,to:70,size:"6×6 boards",news:"more fish per board"},
+  {name:"Chief",from:71,to:100,size:"6×6 boards",news:"the cat who never lies"},
+  {name:"Secret Agent",from:101,to:125,size:"7×7 boards",news:"two lying cats"},
+  {name:"Legend",from:126,to:150,size:"7×7 boards",news:"the toughest cases"}
+];
+const LIMITS={3:[20,40],4:[45,90],5:[90,180],6:[150,300],7:[240,480]};
+const CROSS_FROM=26, BULB_FROM=6, GUIDE_TO=10, FIXED_TO=5, HOVER_TO=5, HINT_CAP=5, HINT_FROM=6;
+const F=(seen)=>({t:"fish",seen}),C=(label,o)=>Object.assign({t:"cat",label},o||{}),E=(seen)=>({t:"empty",seen});
+const INTROS={
+  one:{lv:1,short:"Each cat says how many fish it sees along its arrow.",tag:"cat:any",tagLabel:"Counts the fish it sees",title:"Place 1 fish",text:"Above the board you see the fish you need to place: tap a square to place it. The cat looks where its arrow points. The number says how many fish it sees.",ex:[F(1),C("←1"),E()]},
+  zero:{lv:2,short:"If a cat says 0, it sees no fish.",tag:"cat:zero",tagLabel:"Says 0: sees no fish",title:"Zero is a clue too",text:"If a cat says 0, it sees no fish. If a cat says 1, it sees one fish.",ex:[C("→0"),E(1),E(1)]},
+  two:{lv:3,short:"Each fish you place fades out up top.",tag:"sel:#fishrow",tagLabel:"They fade as you place them",title:"Now there are 2 fish",text:"Above the board you see the fish you need to place. Each fish you put on the board fades out up top. When a cat sees exactly its number, it turns green.",ex:[C("→2",{ok:1}),F(1),F(1)]},
+  diag:{lv:4,short:"They look diagonally too.",tag:"cat:diag",tagLabel:"Looks diagonally",title:"Diagonal looks",text:"Cats can also look diagonally.",ex:[C("↘1"),E(),F()]},
+  liar:{lv:6,short:"One of the cats is lying. Find it and tap it.",tag:"sel:.pill.liar",tagLabel:"One is lying",title:"Something’s fishy here",text:"From this level on, one of the cats is lying: its number is false. Place the fish by trusting the others, then tap the liar to call it out. What each cat looks at is no longer marked: turn on the light bulb if you need it.",ex:[{t:"liar",label:"↑1"},F(),E()]},
+  cross:{lv:26,short:"Mark with an X where no fish goes.",tag:"sel:#crossBtn",tagLabel:"Mark with an X",title:"Mark the empty squares",text:"Now you can put an X where you’re sure there’s no fish. Tap the X button, or press and hold the square (right-click on a computer).",ex:[{t:"cross"},{t:"cross"},F()]},
+  more:{lv:46,short:"Bigger boards, more fish.",tag:"sel:#fishrow",tagLabel:"More fish",title:"More fish",text:"Boards grow to 6×6 and there are more fish to find. The cats’ numbers go up.",ex:[C("→2"),F(),F()]},
+  crown:{lv:71,short:"The cat with a crown never lies.",tag:"cat:crown",tagLabel:"Never lies",title:"The cat who never lies",text:"The cat with a crown always tells the truth. Use it to rule out suspects.",ex:[C("→1",{crown:1}),E(),F()]},
+  two_liars:{lv:101,short:"Now two cats are lying.",tag:"sel:.pill.liar",tagLabel:"Two are lying",title:"Two liars",text:"From here on, two cats are lying. Find both and call them out.",ex:[{t:"liar",label:"→2"},F(),{t:"liar",label:"←0"}]},
+  legend:{lv:126,short:"The toughest cases. Good luck.",tag:"sel:.pill.liar",tagLabel:"Good luck, Legend",title:"The toughest cases",text:"7×7 boards, two liars and more fish. Good luck, Legend.",ex:[C("↗3",{crown:1}),F(),{t:"liar",label:"↓0"}]}
+};
+const TUTS={
+  liar:{title:"Which one is lying?",ask:"One of these two cats is lying. Tap it.",cells:[{t:"cat",label:"→1",liar:0},{t:"fish"},{t:"cat",label:"←0",liar:1}],need:1,
+    win:"That one! It sees a fish but says 0.",wrong:"That one tells the truth: it sees 1 fish."},
+  cross:{title:"Try the X",ask:"This cat says 0. Tap the two squares it looks at to mark them with an X.",cells:[{t:"cat",label:"→0"},{t:"empty",x:1},{t:"empty",x:1}],cross:2,
+    win:"Nice! In the game, turn on the X button or press and hold."},
+  two_liars:{title:"Two are lying",ask:"Two of these cats are lying. Tap both.",cells:[{t:"cat",label:"→1",liar:0},{t:"fish"},{t:"cat",label:"←0",liar:1},{t:"cat",label:"←2",liar:1}],need:2,
+    win:"Exactly! Both see a fish and say something else.",wrong:"That one tells the truth: it sees 1 fish."}
+};
+const INTRO_ORDER=["one","zero","two","diag","liar","cross","more","crown","two_liars","legend"];
+const INTRO_AT={};INTRO_ORDER.forEach(k=>INTRO_AT[INTROS[k].lv]=k);
+
+/* ---------- guardado ---------- */
+const TEST=/prueba/.test(location.hash),TEST_FROM=Math.max(1,+((location.hash.match(/prueba-?(\d+)/)||[])[1]||1));
+const KEY=TEST?"gato-encerrado-prueba":"gato-encerrado-web-v1";
+const blank=()=>({unlocked:1,stars:{},won:{},bank:3,seen:{},stageDone:{},welcomed:0,
+  daily:{last:"",streak:0,best:0,results:{}},settings:{sound:1,vib:1,bulb:0}});
+let save=blank();
+try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s){save=Object.assign(blank(),s);save.daily=Object.assign(blank().daily,s.daily||{});save.settings=Object.assign(blank().settings,s.settings||{})}}catch(e){}
+save.bank=Math.min(HINT_CAP,Math.max(0,save.bank|0));
+if(!save.uid){save.uid=Array.from({length:16},()=>"abcdefghijkmnpqrstuvwxyz23456789"[Math.floor(Math.random()*32)]).join("")}
+if(TEST){save.unlocked=TOTAL;save.welcomed=1;save.log=save.log||[];if(save.bank<HINT_CAP)save.bank=HINT_CAP}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
+function addHints(k){const b=save.bank;save.bank=Math.min(HINT_CAP,save.bank+k);return save.bank-b}
+let lastStageGain=0,lastDailyGain=0;
+/* ---------- estadísticas (Vercel Web Analytics) ---------- */
+// Cada paso se registra como una "página" virtual (/gato/nivel/12/gana), que se ve gratis en el panel Pages de Vercel,
+// y además como evento con datos (nivel, tiempo), que Vercel muestra en el plan Pro.
+const tb=s=>s<30?"menos de 30s":s<60?"30s a 1m":s<120?"1 a 2m":s<300?"2 a 5m":s<600?"5 a 10m":"más de 10m";
+function track(ev,n,data){
+  if(TEST)return;
+  try{if(!window.va)return;const path="/gato/"+(LANG==="en"?"en/":"")+(n?"nivel/"+n+"/":"")+ev;
+    window.va("pageview",{route:path,path:path});
+    window.va("event",{name:ev,data:Object.assign(n?{nivel:n}:{},data||{})});}catch(e){}
+}
+/* ---------- álbum de gatos ---------- */
+const FLAME='<path d="M20 2.5c3 3 3.4 6 2.2 8.4c2-.6 3-2.2 3-4.2c3.2 4.2 1.2 9.8-5.2 9.8s-8.4-5.6-5.2-9.8c0 2 1 3.6 3 4.2c-1.2-2.4-.8-5.4 2.2-8.4z" fill="#FF7A1A"/><path d="M20 9c1.4 1.6 1.6 3.2.8 4.6c1-.2 1.6-1 1.6-2c1.4 2 .4 4.6-2.4 4.6s-3.8-2.6-2.4-4.6c0 1 .6 1.8 1.6 2c-.8-1.4-.6-3 .8-4.6z" fill="#FFD23F"/>';
+const ALBUM=[
+  {id:"michi",name:"Kitty",how:"Finish the Rookie stage",stage:0,color:"#7B4FFF",acc:'<path d="M28 11.5l5-3.2v6.4zM28 11.5l-5-3.2v6.4z" fill="#D9432C"/><circle cx="28" cy="11.5" r="1.7" fill="#A8301D"/>'},
+  {id:"lupa",name:"Lens",how:"Finish the Suspects stage",stage:1,color:"#5B8DEF",acc:'<circle cx="30.5" cy="30.5" r="5.2" fill="rgba(255,255,255,.55)" stroke="#0A0A0A" stroke-width="1.8"/><path d="M34.2 34.2l3.8 3.8" stroke="#0A0A0A" stroke-width="2.6" stroke-linecap="round"/>'},
+  {id:"sherlock",name:"Sherlock",how:"Finish the Detective stage",stage:2,color:"#C98A4B",acc:'<path d="M9.5 15.5Q20 5 30.5 15.5z" fill="#7A4E26"/><path d="M6.5 15.6h27" stroke="#5A3818" stroke-width="2.6" stroke-linecap="round"/><path d="M14 11.5q6-3.5 12 0" stroke="#A06A38" stroke-width="1" fill="none"/>'},
+  {id:"bigotes",name:"Sir Whiskers",how:"Finish the Inspector stage",stage:3,color:"#8A8A8A",acc:'<path d="M20 28.2q-4.2-3.4-8.4.8q4.2.2 8.4-.8zM20 28.2q4.2-3.4 8.4.8q-4.2.2-8.4-.8z" fill="#0A0A0A"/><circle cx="25" cy="23" r="4" fill="none" stroke="#C9A200" stroke-width="1.5"/><path d="M29 24.5q2 4 .6 8.5" stroke="#C9A200" stroke-width=".9" fill="none"/>'},
+  {id:"comisario",name:"Chief Pancho",how:"Finish the Chief stage",stage:4,color:"#3E5BD8",acc:'<path d="M9.5 14.5Q20 5.5 30.5 14.5v2h-21z" fill="#1F2A60"/><path d="M7 16.6h26" stroke="#0A0A0A" stroke-width="2.4" stroke-linecap="round"/><path d="M20 8.6l1.1 2.2 2.4.3-1.8 1.6.5 2.4-2.2-1.2-2.2 1.2.5-2.4-1.8-1.6 2.4-.3z" fill="#F5C800"/>'},
+  {id:"agente",name:"Agent 00Meow",how:"Finish the Secret Agent stage",stage:5,color:"#2B2B2B",eye:"#2B2B2B",acc:'<rect x="10" y="20" width="9.4" height="6.2" rx="2.2" fill="#0A0A0A" stroke="#5A5A5A" stroke-width=".8"/><rect x="20.6" y="20" width="9.4" height="6.2" rx="2.2" fill="#0A0A0A" stroke="#5A5A5A" stroke-width=".8"/><path d="M19 22.2h2" stroke="#5A5A5A" stroke-width="1.6"/><path d="M12 21.5l3 0" stroke="#fff" stroke-width=".8" opacity=".7"/>'},
+  {id:"leyenda",name:"The Legend",how:"Finish the Legend stage",stage:6,color:"#E0A800",acc:'<path d="M20 11.6l1.6 3.2 3.5.5-2.5 2.4.6 3.5-3.2-1.7-3.2 1.7.6-3.5-2.5-2.4 3.5-.5z" fill="#FFF3B8"/>'},
+  {id:"chispa",name:"Spark",how:"3-day streak in the challenge",streak:3,color:"#FF8A3D",acc:FLAME},
+  {id:"brasa",name:"Ember",how:"7-day streak in the challenge",streak:7,color:"#E2502F",acc:FLAME+'<path d="M8.5 33q11.5 5.5 23 0v3.2q-11.5 5.5-23 0z" fill="#F5C800"/><path d="M26.5 35.5l2.4 4.4h-4.6z" fill="#F5C800"/>'},
+  {id:"fenix",name:"Phoenix",how:"30-day streak in the challenge",streak:30,color:"#B8336A",acc:FLAME.replace(/#FF7A1A/g,"#F5C800").replace(/#FFD23F/g,"#FFF3B8")+'<path d="M5 20q-4-4-3-10q3 4 6 5zM35 20q4-4 3-10q-3 4-6 5z" fill="#F5C800"/>'}
+];
+const hasCat=c=>c.stage!==undefined?!!save.stageDone[c.stage]:(save.daily.best||0)>=c.streak;
+const albumCount=()=>ALBUM.filter(hasCat).length;
+function catArt(c,size,locked){
+  if(locked)return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true"><path fill="#D6D3C4" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><text x="20" y="29" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFEF8" font-family="inherit">?</text></svg>`;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" aria-hidden="true" style="overflow:visible"><path fill="${c.color}" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><circle cx="15" cy="23" r="2.2" fill="${c.eye||"#FFFEF8"}"/><circle cx="25" cy="23" r="2.2" fill="${c.eye||"#FFFEF8"}"/>${c.acc}</svg>`;
+}
+// gatos recién ganados que todavía no se mostraron
+function newCats(){save.albumSeen=save.albumSeen||{};return ALBUM.filter(c=>hasCat(c)&&!save.albumSeen[c.id])}
+function markSeen(list){save.albumSeen=save.albumSeen||{};list.forEach(c=>save.albumSeen[c.id]=1);persist()}
+function newCatHTML(list){
+  if(!list.length)return "";
+  return list.map(c=>`<button class="newcat" data-act="go" data-arg="album"><span class="art">${catArt(c,64)}</span><span class="stack" style="gap:2px;text-align:left"><span class="eyebrow" style="color:var(--cat)">New cat for your album</span><b style="font-size:18px">${c.name}</b><span class="muted" style="font-size:13px">${albumCount()} of ${ALBUM.length} cats</span></span></button>`).join("");
+}
+function renderAlbum(){
+  const n=albumCount();
+  app.innerHTML=`<main class="view" style="gap:16px"><div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><h1 class="grow">Album</h1><span class="muted" style="font-size:14px;font-weight:600">${n} of ${ALBUM.length}</span></div>
+    <p class="muted" style="font-size:14px;line-height:1.45">Every stage you finish and every daily challenge streak gives you a new cat. Collect them all.</p>
+    <div class="album">${ALBUM.map(c=>{const on=hasCat(c);return `<div class="acard ${on?"":"off"}"><span class="art">${catArt(c,64,!on)}</span><b>${on?c.name:"???"}</b><span>${on?(c.stage!==undefined?STAGES[c.stage].name+" stage":c.streak+"-day streak"):c.how}</span></div>`}).join("")}</div>
+  </main>`;
+  markSeen(ALBUM.filter(hasCat));
+}
+
+/* ---------- instalar como app ---------- */
+const STANDALONE=(()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}})();
+const IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
+const MOBILE=IOS||/Android|Mobi/.test(navigator.userAgent);
+let installEvt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;if(view==="home")renderHome()});
+window.addEventListener("appinstalled",()=>{installEvt=null;save.installHint=1;persist();track("instalada")});
+if(GAME_URL){
+  if(/^\/gato(\/en)?$/.test(location.pathname))try{history.replaceState(null,"",location.pathname+"/"+location.search+location.hash)}catch(e){}
+  if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/gato/sw.js",{scope:"/gato/"}).catch(()=>{}));
+}
+function installApp(){
+  track("instalar-toca");
+  if(installEvt){installEvt.prompt();installEvt.userChoice.then(()=>{installEvt=null;if(view==="home")renderHome()}).catch(()=>{});return}
+  const steps=IOS?[`Tap Safari’s <b>Share</b> button ${ico("share",18,18,'style="vertical-align:-3px"')}, at the bottom or top of the screen.`,`Scroll down and choose <b>Add to Home Screen</b>.`,`Tap <b>Add</b>. The cat shows up on your home screen.`]
+    :MOBILE?[`Open the browser menu (the three dots ⋮).`,`Choose <b>Install app</b> or <b>Add to Home screen</b>.`,`Confirm. The cat shows up on your home screen.`]
+    :[`In Chrome or Edge, click the install icon in the address bar (a screen with an arrow).`,`Choose <b>Install</b>. The game opens in its own window.`,`It’s best on your phone: open www.vach.com.ar/gato/en and follow the steps there.`];
+  openSheet(heroSheet(`<img src="/gato/icon-192.png" width="72" height="72" alt="" style="border-radius:18px" onerror="this.remove()">`,"Install Trapped Cat","It sits on your home screen like an app, opens full screen and works offline.")+
+    `<ol class="steps">${steps.map(t=>`<li>${t}</li>`).join("")}</ol><button class="btn primary" data-act="closeSheet">Done</button>`);
+}
+const showInstallCard=()=>!STANDALONE&&!TEST&&!save.installHint&&MOBILE&&!!save.won[3];
+
+/* ---------- recordatorio diario (notificaciones) ---------- */
+const PUSH_API="/api/gato/push";
+const pushSupported=()=>!!(GAME_URL&&!TEST&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window);
+const pushNeedsInstall=()=>IOS&&!STANDALONE;
+function b64u(s){const p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from([...b].map(c=>c.charCodeAt(0)))}
+async function enablePush(){
+  track("recordatorio-toca");
+  if(pushNeedsInstall()){installApp();return false}
+  if(!pushSupported())return false;
+  try{
+    const perm=await Notification.requestPermission();if(perm!=="granted"){save.pushAsked=1;persist();return false}
+    const reg=await navigator.serviceWorker.ready;
+    const {key}=await (await fetch(PUSH_API)).json();if(!key)return false;
+    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(key)});
+    const r=await fetch(PUSH_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:save.uid,lang:LANG,sub:sub.toJSON()})});
+    if(!r.ok)return false;
+    save.push=1;save.pushAsked=1;persist();track("recordatorio-activa");return true;
+  }catch(e){return false}
+}
+async function disablePush(){
+  save.push=0;persist();
+  try{const reg=await navigator.serviceWorker.ready;const sub=await reg.pushManager.getSubscription();if(sub)await sub.unsubscribe()}catch(e){}
+  try{await fetch(PUSH_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({id:save.uid,off:true})})}catch(e){}
+}
+const showPushAsk=()=>(pushSupported()||pushNeedsInstall())&&!save.push&&!save.pushAsked&&(()=>{try{return Notification.permission!=="denied"}catch(e){return true}})();
+
+/* ---------- ranking anónimo del desafío ---------- */
+const RANK_API="/api/gato/desafio";
+function dailyRank(done){
+  const r=save.daily.results[today()];if(!r||TEST||!window.fetch){done(null);return}
+  let fin=false;const end=v=>{if(!fin){fin=true;done(v)}};setTimeout(()=>end(null),6000);
+  try{fetch(RANK_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({d:dayIndex()+1,id:save.uid,t:r.t})})
+    .then(x=>x.ok?x.json():null).then(j=>{if(j&&typeof j.total==="number"){r.p=j.pct;r.c=j.total;persist();end(j)}else end(null)}).catch(()=>end(null))}catch(e){end(null)}
+}
+function rankText(r){
+  if(!r||!r.c)return "";
+  if(r.c<5)return r.c===1?"You’re the first to solve it today.":`You’re one of the first ${r.c} to solve it today.`;
+  return r.p>=100?`You were the fastest of today’s ${r.c} players.`:r.p<=0?`${r.c} people solved it today. Go for more tomorrow.`:`Faster than ${r.p}% of today’s ${r.c} players.`;
+}
+function testLog(e){if(!TEST)return;save.log.push(e);if(save.log.length>400)save.log.shift();persist()}
+function testText(){
+  const rows=save.log.map(e=>e.x?`${e.n}: quit at ${fmt(e.s)}`:`${e.n}: ${fmt(e.s)} ${"★".repeat(e.st)}${e.h?` · ${plural(e.h,"hint","hints")}`:""}`);
+  return "Trapped Cat · test\n"+(rows.length?rows.join("\n"):"(no levels played yet)");
+}
+
+/* ---------- utilidades ---------- */
+const $=id=>document.getElementById(id);
+const app=$("app");
+const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
+const plural=(k,a,b)=>k===1?`1 ${a}`:`${k} ${b}`;
+const peces=k=>plural(k,"fish","fish");
+const stageOf=n=>STAGES.findIndex(s=>n>=s.from&&n<=s.to);
+const starsTotal=()=>Object.values(save.stars).reduce((a,b)=>a+b,0);
+const stageStars=si=>{let t=0;for(let n=STAGES[si].from;n<=STAGES[si].to;n++)t+=save.stars[n]||0;return t};
+const stageWon=si=>{let t=0;for(let n=STAGES[si].from;n<=STAGES[si].to;n++)if(save.won[n])t++;return t};
+const current=()=>{if(TEST){for(let n=TEST_FROM;n<=TOTAL;n++)if(!save.won[n])return n;return TOTAL}return Math.min(save.unlocked,TOTAL)};
+const allDone=()=>!!save.won[TOTAL];
+const ico=(id,w,h,extra)=>`<svg width="${w}" height="${h||w}" aria-hidden="true" ${extra||""}><use href="#${id}"/></svg>`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function dateKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+const today=()=>dateKey(new Date());
+const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return dateKey(d)};
+function dayIndex(){const d=new Date();return Math.round((Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())-Date.UTC(2026,9,29))/864e5)}
+function dailyPuzzle(){const i=dayIndex();return DAILY[((i%DAILY.length)+DAILY.length)%DAILY.length]}
+function longDate(){try{const s=new Date().toLocaleDateString("en-US",{weekday:"long",day:"numeric",month:"long"});return s.charAt(0).toUpperCase()+s.slice(1)}catch(e){return today()}}
+const shortDate=()=>{const d=new Date();return `${d.getMonth()+1}/${d.getDate()}`};
+function streakNow(){const l=save.daily.last;return (l===today()||l===yesterday())?save.daily.streak:0}
+function untilMidnight(){const d=new Date(),m=new Date(d);m.setHours(24,0,0,0);const s=Math.max(0,Math.floor((m-d)/1000));return `${Math.floor(s/3600)}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`}
+function weekHTML(){
+  const d=new Date(),dow=(d.getDay()+6)%7,mon=new Date(d);mon.setDate(d.getDate()-dow);
+  const names=["M","T","W","T","F","S","S"];let h='<div class="week" role="img" aria-label="Days played this week">';
+  for(let i=0;i<7;i++){const x=new Date(mon);x.setDate(mon.getDate()+i);const k=dateKey(x),on=!!save.daily.results[k];
+    h+=`<div>${names[i]}<i class="${on?"on":""} ${i===dow?"today":""}">${on?ico("check",14,14,'style="color:var(--fish)"'):""}</i></div>`}
+  return h+"</div>";
+}
+
+/* ---------- sonido y vibración ---------- */
+let actx=null;
+function beep(freqs,dur){
+  if(!save.settings.sound)return;
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+    freqs.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type="triangle";o.frequency.value=f;
+      const t=actx.currentTime+i*dur;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.12,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+      o.connect(g).connect(actx.destination);o.start(t);o.stop(t+dur+.02)})}catch(e){}
+}
+function buzz(ms){if(!save.settings.vib)return;try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+
+/* ---------- hojas (paneles que suben) ---------- */
+let sheetClose=null;
+function openSheet(html,opts){
+  closeSheet(true);
+  opts=opts||{};
+  $("sheetRoot").innerHTML=`<div class="scrim" data-act="${opts.dismiss===false?"noop":"closeSheet"}"></div><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab" aria-hidden="true"></div>${html}</section>`;
+  sheetClose=opts.onClose||null;
+  document.documentElement.classList.add("lock");
+  if(G)G.paused=true;
+  const f=$("sheetRoot").querySelector(".sheet .btn, .sheet button, .sheet a");if(f)setTimeout(()=>f.focus({preventScroll:true}),30);
+}
+function closeSheet(silent){
+  const had=$("sheetRoot").innerHTML!=="";
+  $("sheetRoot").innerHTML="";
+  document.documentElement.classList.remove("lock");
+  if(G)G.paused=false;
+  const cb=sheetClose;sheetClose=null;
+  if(had&&!silent&&cb)cb();
+}
+const heroSheet=(icon,title,text)=>`<div class="hero">${icon}<h2 id="sheetTitle">${title}</h2>${text?`<p>${text}</p>`:""}</div>`;
+
+/* ---------- navegación ---------- */
+let view="home",G=null,tick=null;
+function go(v,arg){
+  closeSheet(true);
+  if(G&&view==="game"&&(v!=="game"||arg!==G.num))quitLog();
+  if(v!=="game"&&G){G=null}
+  view=v;
+  ({home:renderHome,levels:renderLevels,game:()=>startLevel(arg),daily:startDaily,victory:()=>renderVictory(arg),
+    stage:()=>renderStageEnd(arg),dailyResult:()=>renderDailyResult(arg),how:renderHow,settings:renderSettings,
+    help:renderHelp,welcome:renderWelcome,album:renderAlbum})[v]();
+  window.scrollTo(0,0);
+}
+
+/* ---------- Inicio ---------- */
+function renderHome(){
+  const n=current(),si=stageOf(n),st=STAGES[si],done=allDone();
+  const inStage=st.to-st.from+1,doneIn=stageWon(si),pct=Math.round(doneIn/inStage*100);
+  const next=STAGES[si+1];
+  const left=st.to-(n-1)-(save.won[n]?1:0);
+  const dk=save.daily.results[today()];
+  const s=streakNow();
+  app.innerHTML=`<main class="view">
+    <div class="top"><div class="brand grow">${ico("cat",34,34,'style="color:var(--cat)"')}Trapped Cat</div>
+      <button class="round" data-act="go" data-arg="settings" aria-label="Settings">${ico("gear",20)}</button></div>
+    ${TEST?`<section class="card stack" style="gap:10px;border:2px dashed var(--cat)"><span class="eyebrow" style="color:var(--cat)">Test mode</span><span style="font-size:14px;line-height:1.45">All levels are open. Play in order from level ${TEST_FROM} and send your times when you’re done. What you play here doesn’t mix with your normal game.</span><span class="muted" style="font-size:13px">${plural(save.log.length,"entry","entries")} saved</span><div class="row" style="gap:8px"><a class="btn primary" style="flex:1;padding:0 12px" href="https://wa.me/?text=${encodeURIComponent(testText())}" target="_blank" rel="noopener">WhatsApp</a><button class="btn" style="flex:1;padding:0 12px" data-act="copyLog">Copy</button></div><button data-act="clearLog" style="background:none;border:0;font-weight:700;font-size:13px;color:var(--muted);min-height:36px;cursor:pointer">Start the test over</button></section>`:""}
+    <section class="card stack" style="border-radius:24px;padding:22px 20px 20px;gap:18px">
+      <div class="row" style="justify-content:space-between;align-items:baseline"><span class="eyebrow">Stage ${si+1} · ${st.name}</span><span class="muted" style="font-size:13px;font-weight:600">${done?"150 of 150":`Level ${n} of ${TOTAL}`}</span></div>
+      <div class="minib" aria-hidden="true"><span></span><span class="c">${ico("cat",26,26,'style="color:var(--cat);--eye:var(--cat-bg)"')}</span><span></span><span>${ico("fish",30,18)}</span><span>${ico("fish",30,18)}</span><span></span><span></span><span class="c">${ico("cat",26,26,'style="color:var(--cat);--eye:var(--cat-bg)"')}</span></div>
+      <button class="btn primary" style="width:auto;align-self:center;padding:0 28px;min-height:48px" data-act="${done?"go":"play"}" data-arg="${done?"levels":n}"><span style="font-size:17px">${done?"See levels":"Play"}</span>${done?"":`<span style="color:var(--fish);font-weight:500">Level ${n}</span>`}</button>
+      <div class="stack" style="gap:6px"><div class="bar"><i style="width:${pct}%"></i></div>
+        <span class="muted" style="font-size:13px">${done?"You finished all 150 levels. You’re a Legend!":next?`${peces2(left)} to go until ${next.name}`:`${peces2(left)} to go until the end`}</span></div>
+    </section>
+    <section class="daily">
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div class="stack" style="gap:4px"><span class="eyebrow" style="color:var(--ink)">Daily challenge</span><span style="font-size:22px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div>
+        <div class="streak"><b>${s}</b><small>${s===1?"day streak":"day streak"}</small></div>
+      </div>
+      <span style="font-size:14px;line-height:1.45">${dk?`You solved it in ${fmt(dk.t)}. Come back tomorrow to keep your streak.`:"A new board every day, the same for everyone. Compare your time with friends."}</span>
+      <button class="btn" data-act="go" data-arg="daily">${dk?"See my result":"Play the challenge"} ${ico("arrow",18)}</button>
+    </section>
+    ${showInstallCard()?`<section class="installcard"><img src="/gato/icon-192.png" width="44" height="44" alt="" onerror="this.remove()"><span class="grow stack" style="gap:1px"><b style="font-size:15px">Get it as an app</b><span class="muted" style="font-size:13px">On your home screen, works offline</span></span><button class="btn primary" style="width:auto;min-height:40px;padding:0 16px" data-act="installApp">Install</button><button class="round" style="width:36px;height:36px" data-act="hideInstall" aria-label="Don’t show again">${ico("close",14)}</button></section>`:""}
+    <nav class="tiles3 mt-auto" aria-label="More options">
+      <button class="tile-btn" data-act="go" data-arg="levels">${ico("grid",22,22,'style="color:var(--cat)"')}Levels</button>
+      <button class="tile-btn" data-act="go" data-arg="how">${ico("help",22,22,'style="color:var(--cat)"')}How to play</button>
+      <button class="tile-btn" data-act="go" data-arg="album" style="position:relative">${newCats().length?'<i class="dot" aria-label="There’s a new cat"></i>':""}<span style="display:block;height:22px">${catArt(ALBUM[0],24)}</span>Album · ${albumCount()}/${ALBUM.length}</button>
+    </nav>
+  </main>`;
+}
+const peces2=k=>plural(k,"level","levels");
+
+/* ---------- Niveles ---------- */
+let openStage=null;
+function renderLevels(){
+  const n=current(),cs=stageOf(n);
+  if(openStage===null)openStage=cs;
+  let h=`<main class="view"><div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><h1 class="grow">Levels</h1><span class="muted" style="font-size:14px;font-weight:600">${starsTotal()} of ${TOTAL*3} ★</span></div>`;
+  STAGES.forEach((st,si)=>{
+    const count=st.to-st.from+1,locked=st.from>save.unlocked,done=stageWon(si)===count;
+    const sub=`Levels ${st.from} to ${st.to} · ${st.size}`;
+    if(locked){
+      h+=`<button class="stage-row locked" data-act="lockedStage" data-arg="${si}"><span class="badge" style="background:var(--bg)">${ico("lock",18,18,'style="color:var(--muted)"')}</span><span class="grow stack" style="gap:2px"><b style="font-size:17px;color:var(--soft)">${st.name}</b><span class="muted" style="font-size:13px">${sub}</span><span style="font-size:13px;color:var(--soft)">New: ${st.news}</span></span></button>`;
+    }else if(si===openStage){
+      h+=`<section class="stage-open"><button class="row" data-act="toggleStage" data-arg="${si}" style="background:none;border:0;padding:0;cursor:pointer;text-align:left"><span class="badge" style="background:${done?"var(--good)":"var(--cat)"}">${done?ico("check",20,20,'style="color:var(--card)"'):ico("cat",26,26,'style="color:var(--card);--eye:var(--cat)"')}</span><span class="grow stack" style="gap:2px"><b style="font-size:17px">${st.name}</b><span class="muted" style="font-size:13px">${sub}</span></span><b style="font-size:14px">${stageStars(si)} / ${count*3} ★</b></button><div class="lv-grid">`;
+      for(let k=st.from;k<=st.to;k++){
+        const s=save.stars[k]||0;
+        if(k>save.unlocked)h+=`<button class="lv locked" data-act="lockedLevel" data-arg="${k}" aria-label="Level ${k}, locked"><b style="font-size:14px;font-weight:600">${k}</b>${ico("lock",12,12)}</button>`;
+        else if(!save.won[k])h+=`<button class="lv cur" data-act="play" data-arg="${k}" aria-label="Level ${k}, play"><b>${k}</b><small>Play</small></button>`;
+        else h+=`<button class="lv" data-act="play" data-arg="${k}" aria-label="Level ${k}, ${s} of 3 stars"><b>${k}</b><small aria-hidden="true">${"★".repeat(s)}${"☆".repeat(3-s)}</small></button>`;
+      }
+      h+=`</div></section>`;
+    }else{
+      h+=`<button class="stage-row" data-act="toggleStage" data-arg="${si}"><span class="badge" style="background:${done?"var(--good)":"var(--cat)"}">${done?ico("check",20,20,'style="color:var(--card)"'):ico("cat",26,26,'style="color:var(--card);--eye:var(--cat)"')}</span><span class="grow stack" style="gap:2px"><b style="font-size:17px">${st.name}</b><span class="muted" style="font-size:13px">${sub}</span></span><b style="font-size:14px">${stageStars(si)} / ${count*3} ★</b></button>`;
+    }
+  });
+  app.innerHTML=h+`</main>`;
+}
+function lockedSheet(title,text){
+  const n=current();
+  openSheet(heroSheet(`<span class="badge" style="width:64px;height:64px;border-radius:50%;background:var(--tile)">${ico("lock",28,28,'style="color:var(--soft)"')}</span>`,title,text)+
+    `<div class="stack"><button class="btn primary" data-act="play" data-arg="${n}">Play level ${n}</button><button class="btn" data-act="closeSheet">Back to levels</button></div>`);
+}
+
+/* ---------- Juego ---------- */
+function makeGame(L,mode,num){
+  const N=L.n*L.n;
+  const cats=L.cats.map(([x,y,d,v,cr])=>{const r=[];let a=x+DIRS[d][0],b=y+DIRS[d][1];while(a>=0&&b>=0&&a<L.n&&b<L.n){r.push(b*L.n+a);a+=DIRS[d][0];b+=DIRS[d][1]}return{x,y,d,v,crown:!!cr,i:y*L.n+x,r}});
+  const catAt=new Array(N).fill(-1);cats.forEach((c,ci)=>catAt[c.i]=ci);
+  return{L,mode,num,n:L.n,N,cats,catAt,cells:new Array(N).fill(0),locked:new Set(),accused:[],sec:0,done:false,paused:false,
+    hover:-1,crossMode:false,bulb:!!save.settings.bulb,focus:0,hintsUsed:0};
+}
+const guideFixed=()=>G.mode==="level"&&G.num<=FIXED_TO;
+const guideNums=()=>G.mode==="level"&&G.num<=GUIDE_TO;
+const hoverAllowed=()=>(G.mode==="level"&&G.num<=HOVER_TO)||G.bulb;
+const hasBulb=()=>G.mode==="daily"||G.num>=BULB_FROM;
+const hasCross=()=>G.mode==="daily"||G.num>=CROSS_FROM;
+
+function startLevel(num){
+  num=Math.max(1,Math.min(+num||current(),TOTAL));
+  if(num>save.unlocked){go("levels");return}
+  G=makeGame(LEVELS[num-1],"level",num);
+  view="game";
+  if(!save.won[num])track("empieza",num);
+  renderGameShell();
+  const key=INTRO_AT[num];
+  if(key&&!save.seen[key])showIntro(key,true);
+  else if(num>=CROSS_FROM&&!save.seen.cross)showIntro("cross",true);
+}
+function startDaily(){
+  const dk=save.daily.results[today()];
+  if(dk){view="dailyResult";renderDailyResult({already:true});return}
+  G=makeGame(dailyPuzzle(),"daily",0);
+  view="game";
+  track("desafio-empieza");
+  renderGameShell();
+}
+function renderGameShell(){
+  const L=G.L,daily=G.mode==="daily",si=daily?0:stageOf(G.num);
+  const liarPill=L.L?`<span class="pill liar">${L.L===2?"2 liars":"1 liar"}</span>`:"";
+  const head=daily?`
+    <div class="top"><button class="round" data-act="exitGame" aria-label="Back to home">${ico("back",18)}</button>
+      <div class="grow stack" style="gap:1px"><span class="eyebrow">Daily challenge</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div>
+      <span class="pill yellow">Streak ${streakNow()}</span></div>
+    <div class="dailybar"><div class="stack" style="gap:1px"><span class="eyebrow" style="color:#AAAAAA">Your time</span><b id="timer">0:00</b></div>
+      <div class="stack" style="gap:1px;align-items:flex-end;text-align:right"><span style="font-size:12px;color:#AAAAAA">Challenge #${dayIndex()+1}</span><span style="font-size:15px;font-weight:700;color:var(--fish)">Everyone plays this board today</span></div></div>`
+  :`<div class="top"><button class="round" data-act="exitGame" aria-label="Leave level">${ico("back",18)}</button>
+      <div class="grow stack" style="gap:1px"><span class="eyebrow">${STAGES[si].name}</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em">Level ${G.num}</span></div>
+      ${liarPill}<span class="pill" id="timer">0:00</span></div>`;
+  app.innerHTML=`<main class="view" style="gap:14px">${head}
+    <div class="supply"><div class="row"><div class="fishrow" id="fishrow" role="img"></div>${daily?liarPill:""}</div>${daily?"":'<span class="reward" id="reward"></span>'}</div>
+    <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="${L.n} by ${L.n} board"></div></div>
+    <p class="status" id="status" role="status" aria-live="polite"></p>
+    <div class="controls">
+      <button class="ctl" data-act="resetBoard">Reset</button>
+      <button class="ctl" data-act="hint" id="hintBtn">Hint</button>
+      ${hasCross()?`<button class="ctl tool" data-act="toggleCross" id="crossBtn" aria-pressed="false" aria-label="Put an X where there’s no fish">${ico("x",18,18)}</button>`:""}
+      ${hasBulb()?`<button class="ctl tool" data-act="toggleBulb" id="bulbBtn" aria-pressed="false" aria-label="Show what a cat looks at when you hover">${ico("bulb",22)}</button>`:""}
+    </div>
+  </main>`;
+  buildBoard();renderBoard();drawTime();
+  clearInterval(tick);
+  tick=setInterval(()=>{if(G&&view==="game"&&!G.done&&!G.paused&&!document.hidden){G.sec++;drawTime()}},1000);
+}
+function drawTime(){
+  const t=$("timer");if(t)t.textContent=fmt(G.sec);
+  const r=$("reward");if(!r)return;
+  const [a,b]=G.L.t||LIMITS[G.n];
+  const canGain=!save.won[G.num]&&G.num>=HINT_FROM&&save.bank<HINT_CAP;
+  if(G.sec<=a)r.innerHTML=canGain?`Finish before <b>${fmt(a)}</b>: 3 stars and <b>1 hint</b>`:`Finish before <b>${fmt(a)}</b> for 3 stars`;
+  else if(G.sec<=b)r.innerHTML=`Finish before <b>${fmt(b)}</b> for 2 stars`;
+  else r.textContent="Finish it to earn 1 star";
+}
+const CLUE={3:24,4:21,5:18,6:15,7:13};
+function buildBoard(){
+  const b=$("board");b.style.gridTemplateColumns=`repeat(${G.n},1fr)`;b.style.setProperty("--clue",CLUE[G.n]+"px");
+  b.innerHTML="";
+  for(let i=0;i<G.N;i++){
+    const ci=G.catAt[i];
+    const el=document.createElement("button");el.className="cell";el.id="c"+i;el.tabIndex=i===0?0:-1;
+    if(ci>=0){
+      const c=G.cats[ci];el.classList.add("cat");
+      el.innerHTML=`<svg class="face" viewBox="0 0 40 40" aria-hidden="true" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat"/></svg>${c.crown?'<svg class="crown" viewBox="0 0 24 18" aria-hidden="true"><use href="#crown"/></svg>':""}<span class="clue"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(${ANG[c.d]}deg)"><use href="#arrow"/></svg>${c.v}</span>`;
+      el.addEventListener("mouseenter",()=>hoverCat(ci,true));
+      el.addEventListener("mouseleave",()=>hoverCat(ci,false));
+      el.addEventListener("focus",()=>hoverCat(ci,true));
+      el.addEventListener("blur",()=>hoverCat(ci,false));
+      el.addEventListener("touchstart",()=>{hoverCat(ci,true);clearTimeout(el._t);el._t=setTimeout(()=>hoverCat(ci,false),1400)},{passive:true});
+      el.addEventListener("click",()=>tapCat(ci));
+    }else{
+      let lp=null,longDone=false;
+      el.addEventListener("pointerdown",ev=>{if(!hasCross()||ev.button>0)return;longDone=false;clearTimeout(lp);lp=setTimeout(()=>{longDone=true;tapCell(i,2)},450)});
+      ["pointerup","pointerleave","pointercancel"].forEach(t=>el.addEventListener(t,()=>clearTimeout(lp)));
+      el.addEventListener("contextmenu",ev=>{if(!hasCross())return;ev.preventDefault();if(!longDone)tapCell(i,2);longDone=true;setTimeout(()=>{longDone=false},0)});
+      el.addEventListener("click",()=>{if(longDone){longDone=false;return}tapCell(i)});
+    }
+    b.appendChild(el);
+  }
+}
+function hoverCat(ci,on){
+  if(!G)return;
+  if(on&&!hoverAllowed())return;
+  G.hover=on?ci:(G.hover===ci?-1:G.hover);renderBoard();
+}
+function seenBy(ci){return G.cats[ci].r.filter(j=>G.cells[j]===1).length}
+function renderBoard(){
+  if(!G||!$("board"))return;
+  const fixed=new Set();if(guideFixed())G.cats.forEach(c=>c.r.forEach(j=>fixed.add(j)));
+  const hov=G.hover>=0&&hoverAllowed()?new Set(G.cats[G.hover].r):new Set();
+  for(let i=0;i<G.N;i++){
+    const el=$("c"+i),ci=G.catAt[i];
+    el.tabIndex=i===G.focus?0:-1;
+    if(ci>=0){
+      const c=G.cats[ci],sb=seenBy(ci),acc=G.accused.includes(ci);
+      el.classList.toggle("acc",acc);
+      el.classList.toggle("hov",G.hover===ci&&hoverAllowed()&&!acc);
+      const okNow=guideNums()&&sb===c.v;if(okNow&&!el.classList.contains("ok")){el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop")}
+      el.classList.toggle("ok",okNow);
+      el.classList.toggle("over",guideNums()&&sb>c.v);
+      el.setAttribute("aria-label",`Cat${c.crown?" with a crown":""}: says it sees ${peces(c.v)} looking ${DNAME[c.d]}${acc?". Accused of lying":""}`);
+      continue;
+    }
+    const v=G.cells[i];
+    const want=v===1?"f":v===2?"x":"";
+    if(el.dataset.v!==want){el.dataset.v=want;el.innerHTML=v===1?'<svg class="fish" viewBox="0 0 40 24" aria-hidden="true"><use href="#fish"/></svg>':v===2?'<svg class="x" viewBox="0 0 20 20" aria-hidden="true" style="color:#8A887C"><use href="#x"/></svg>':""}
+    el.classList.toggle("seen",fixed.has(i)||hov.has(i));
+    el.classList.toggle("lock",G.locked.has(i));
+    el.setAttribute("aria-label",`Row ${Math.floor(i/G.n)+1}, column ${i%G.n+1}: ${v===1?"fish":v===2?"no fish here":"empty"}`);
+  }
+  const placed=G.cells.filter(v=>v===1).length,fr=$("fishrow");
+  if(fr.children.length!==G.L.k)fr.innerHTML=Array.from({length:G.L.k},()=>'<svg viewBox="0 0 40 24" aria-hidden="true"><use href="#fish"/></svg>').join("");
+  [...fr.children].forEach((s,j)=>s.classList.toggle("used",j<placed));
+  fr.setAttribute("aria-label",`Fish to place: ${G.L.k}. Placed so far: ${placed}.`);
+  const hb=$("hintBtn");hb.textContent=`Hint (${save.bank})`;
+  const cb=$("crossBtn");if(cb)cb.setAttribute("aria-pressed",G.crossMode);
+  const bb=$("bulbBtn");if(bb)bb.setAttribute("aria-pressed",G.bulb);
+}
+function setStatus(t,cls){const s=$("status");if(!s)return;s.textContent=t||"";s.className="status"+(cls?" "+cls:"")}
+function flash(i,cls){const el=$("c"+i);if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),cls==="hint"?3400:450)}
+
+function tapCell(i,force){
+  if(!G||G.done)return;clearTag();
+  G.focus=i;
+  const mode=force!==undefined?force:(G.crossMode?2:1);
+  if(G.locked.has(i)){setStatus("A hint placed that fish. It’s right.");return}
+  const v=G.cells[i];
+  if(mode===2){G.cells[i]=v===2?0:(v===1?1:2);if(v===1){setStatus("Remove the fish first to put an X.");return}buzz(8);renderBoard();return}
+  if(v===1){G.cells[i]=0;beep([330],.06)}
+  else{
+    const placed=G.cells.filter(x=>x===1).length;
+    if(placed>=G.L.k){setStatus(`You already placed ${peces(G.L.k)}. To move one, tap it to remove it.`,"warn");buzz(30);return}
+    G.cells[i]=1;beep([523],.07);buzz(10);
+  }
+  renderBoard();check();
+}
+function tapCat(ci){
+  if(!G||G.done)return;clearTag();
+  const c=G.cats[ci];G.focus=c.i;
+  if(!G.L.L){setStatus("In this level every cat tells the truth.");return}
+  if(c.crown){setStatus("This cat wears a crown: it never lies.","info");flash(c.i,"shake");return}
+  const k=G.accused.indexOf(ci);
+  if(k>=0)G.accused.splice(k,1);
+  else{
+    if(G.accused.length>=G.L.L){setStatus(`You already accused ${G.L.L===1?"a cat":"two cats"}. Tap an accused cat to drop the charge.`,"warn");return}
+    G.accused.push(ci);beep([392,330],.08);
+  }
+  renderBoard();check(true);
+}
+function wrongCats(){const w=[];G.cats.forEach((c,ci)=>{if(seenBy(ci)!==c.v)w.push(ci)});return w}
+function check(fromCat){
+  const L=G.L,placed=G.cells.filter(v=>v===1).length;
+  if(placed<L.k){setStatus(fromCat&&G.accused.length?`You accused ${G.accused.length===1?"a cat":"two cats"}.`:"");return}
+  const w=wrongCats();
+  if(!L.L){if(!w.length)return win();setStatus(w.length===1?"One cat doesn’t agree. Check again.":"Some cats don’t agree. Check again.","warn");return}
+  if(w.some(ci=>G.cats[ci].crown)){setStatus("With these fish, the crowned cat would be lying. And it never lies.","warn");return}
+  if(w.length===0){setStatus("With these fish nobody lies, but someone has to. Check again.","warn");return}
+  if(w.length<L.L){setStatus("With these fish only one cat lies, but there are two liars. Check again.","warn");return}
+  if(w.length>L.L){setStatus(`With these fish, more than ${L.L===1?"one cat would be":"two cats would be"} lying. Check again.`,"warn");return}
+  if(G.accused.length<L.L){setStatus(L.L===1?"The fish add up. Now tap the lying cat.":G.accused.length?"The fish add up. Accuse one more cat.":"The fish add up. Now tap the two lying cats.","ok");return}
+  const bad=G.accused.filter(ci=>!w.includes(ci));
+  if(bad.length){bad.forEach(ci=>flash(G.cats[ci].i,"shake"));setStatus(L.L===1?"That cat tells the truth. The liar is another one.":"An accused cat tells the truth. Check again.","warn");buzz(40);return}
+  win();
+}
+function hint(){
+  if(!G||G.done)return;
+  if(save.bank<=0){noHintsSheet();return}
+  const sol=new Set(G.L.sol);let target=-1,msg="",cls="ok";
+  for(let i=0;i<G.N;i++)if(G.cells[i]===1&&!sol.has(i)&&!G.locked.has(i)){target=i;msg="This fish doesn’t go here.";cls="warn";break}
+  if(target<0)for(const i of G.L.sol)if(G.cells[i]!==1){
+    if(G.cells.filter(v=>v===1).length>=G.L.k)break;
+    G.cells[i]=1;G.locked.add(i);target=i;msg="I placed a fish in its spot.";break}
+  if(target<0){const li=G.L.li.find(x=>!G.accused.includes(x));if(li!==undefined){target=G.cats[li].i;msg="Take a good look at this cat.";cls="info"}}
+  if(target<0){const wrongAcc=G.accused.find(ci=>!G.L.li.includes(ci));if(wrongAcc!==undefined){target=G.cats[wrongAcc].i;msg="This accused cat tells the truth.";cls="warn"}}
+  if(target<0)return;
+  save.bank--;G.hintsUsed++;persist();G.focus=target;
+  track(G.mode==="daily"?"desafio-pista":"pista",G.mode==="daily"?0:G.num);
+  renderBoard();flash(target,"hint");check();if(!G.done)setStatus(msg,cls);
+}
+function noHintsSheet(){
+  openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"You’re out of hints","You earn hints with 3 stars on a new level, by solving the daily challenge and by finishing each stage.")+
+    `<div class="stack"><button class="btn primary" data-act="closeSheet">Keep playing</button></div>`);
+}
+const WIN_MS=1500;
+function celebrate(){
+  const liars=new Set(G.L.L?G.accused:[]);let k=0;
+  G.cats.forEach((c,ci)=>{const el=$("c"+c.i);if(!el)return;if(liars.has(ci)){el.classList.add("busted")}else{el.style.setProperty("--d",(250+k++*70)+"ms");el.classList.add("cheer")}});
+  G.cells.forEach((v,i)=>{if(v===1){const f=$("c"+i)&&$("c"+i).querySelector(".fish");if(f){f.style.setProperty("--d",(k++*50)+"ms");f.classList.add("wig")}}});
+  const w=document.querySelector(".board-wrap");if(w){const b=document.createElement("div");b.className="burst";const col=["#F5C800","#7B4FFF","#0E9A7C","#D9432C","#0A0A0A"];
+    for(let i=0;i<26;i++){const a=Math.random()*Math.PI*2,d=90+Math.random()*120,e=document.createElement("i");
+      e.style.cssText=`background:${col[i%5]};--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-40}px;--r:${Math.random()*540-270}deg;--w:${200+Math.random()*200}ms;${i%3?"":"border-radius:50%"}`;b.appendChild(e)}
+    w.appendChild(b);setTimeout(()=>b.remove(),1600)}
+  if(liars.size){beep([196,165],.12);setTimeout(()=>beep([523,659,784,1047,1319],.09),260)}else beep([523,659,784,1047],.11);
+}
+function win(){
+  G.done=true;clearInterval(tick);
+  celebrate();buzz([30,40,60]);
+  setStatus(G.L.L?(G.L.L===2?"You caught both liars!":"You caught the liar!"):"Case closed!","ok");
+  let res;
+  if(G.mode==="daily"){
+    const t=today(),first=!save.daily.results[t];lastDailyGain=0;
+    if(first){
+      save.daily.streak=save.daily.last===yesterday()?save.daily.streak+1:(save.daily.last===t?save.daily.streak:1);
+      save.daily.last=t;save.daily.best=Math.max(save.daily.best,save.daily.streak);
+      save.daily.results[t]={t:G.sec,h:G.hintsUsed};
+      lastDailyGain=addHints(1);
+      track("desafio-gana",0,{tiempo:tb(G.sec)});
+    }
+    persist();
+    setTimeout(()=>{if(view==="game")go("dailyResult",{fresh:true})},WIN_MS);
+    return;
+  }
+  const n=G.num,[a,b]=G.L.t||LIMITS[G.n],first=!save.won[n];
+  const st=G.sec<=a?3:G.sec<=b?2:1;
+  const full=save.bank>=HINT_CAP;
+  const gain=(first&&st===3&&n>=HINT_FROM)?addHints(1):0;
+  if(first)track("gana",n,{tiempo:tb(G.sec)});
+  testLog({n,s:G.sec,h:G.hintsUsed,st});
+  save.stars[n]=Math.max(save.stars[n]||0,st);save.won[n]=1;
+  save.unlocked=Math.max(save.unlocked,Math.min(TOTAL,n+1));
+  const si=stageOf(n),stageJustDone=n===STAGES[si].to&&!save.stageDone[si];
+  lastStageGain=0;
+  if(stageJustDone){save.stageDone[si]=1;lastStageGain=addHints(2);track("etapa-"+(si+1))}
+  persist();
+  res={n,L:G.L.L,sec:G.sec,stars:st,gain,first,limitA:a,stageJustDone,si,full:full&&first&&st===3&&n>=HINT_FROM};
+  setTimeout(()=>{if(view==="game")go("victory",res)},WIN_MS);
+}
+function quitLog(){if(G&&!G.done&&G.mode==="level"&&!G.logged){G.logged=1;if(!save.won[G.num])track("sale",G.num,{tiempo:tb(G.sec)});if(G.sec>=5)testLog({n:G.num,s:G.sec,x:1})}}
+window.addEventListener("pagehide",()=>{if(view==="game")quitLog()});
+function exitGame(){
+  if(!G||G.done){go("home");return}
+  const busy=G.cells.some(v=>v===1)||G.accused.length;
+  if(!busy){go(G.mode==="daily"?"home":"home");return}
+  openSheet(heroSheet(`<svg width="68" height="68" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,G.mode==="daily"?"Leave the challenge?":"Leave the level?","You’ll lose what you did on this board. The clock is paused while you decide.")+
+    `<div class="stack"><button class="btn primary" data-act="closeSheet">Keep playing</button><button class="btn" data-act="go" data-arg="home">Leave</button></div>`);
+}
+
+/* ---------- Carteles ---------- */
+function miniHTML(ex){
+  return `<div class="mini" aria-hidden="true">${ex.map(c=>{
+    if(c.t==="fish")return `<span class="${c.seen?"s":""}">${ico("fish",40,24)}</span>`;
+    if(c.t==="cross")return `<span>${ico("x",22,22,'style="color:#66655C"')}</span>`;
+    if(c.t==="empty")return `<span class="${c.seen?"s":""}"></span>`;
+    if(c.t==="liar")return `<span class="l"><svg class="f" viewBox="0 0 40 40" style="color:var(--bad);--eye:var(--bad-bg)"><use href="#cat"/></svg><b>${c.label}</b></span>`;
+    return `<span class="c"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat"/></svg>${c.crown?'<svg class="cr" viewBox="0 0 24 18"><use href="#crown"/></svg>':""}<b style="${c.ok?"color:var(--good)":""}">${c.label}</b></span>`;
+  }).join("")}</div>`;
+}
+function introCard(key,i,list){
+  const it=INTROS[key];
+  return `<div class="row" style="justify-content:space-between"><span class="eyebrow" style="color:var(--cat)">Level ${it.lv}</span>${list?`<span class="muted" style="font-size:13px;font-weight:600">${i+1} of ${list.length}</span>`:""}</div>
+    ${miniHTML(it.ex)}
+    <div class="stack" style="gap:8px"><h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${it.title}</h2><p style="font-size:17px;line-height:1.45;color:var(--soft)">${list?it.text:it.short}</p></div>`;
+}
+function showIntro(key,inGame){
+  if(TUTS[key]){tut={key,acc:[],cross:[],done:false,msg:"",bad:-1};openSheet('<div id="tutBox" class="stack" style="gap:16px"></div>',{dismiss:false});renderTut();return}
+  openSheet(introCard(key)+`<button class="btn primary" data-act="introOk" data-arg="${key}">Play</button>`,{dismiss:false});
+}
+let tut=null;
+function renderTut(){
+  const T=TUTS[tut.key],it=INTROS[tut.key],box=$("tutBox");if(!box)return;
+  const cells=T.cells.map((c,i)=>{
+    if(c.t==="cat"){const a=tut.acc.includes(i);return `<button class="c ${a?"acc":""} ${tut.done&&a?"ok":""} ${tut.bad===i?"shake":""}" data-act="tutTap" data-arg="${i}" aria-label="Cat that says ${c.label}"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:${a?"var(--bad-bg)":"var(--cat-bg)"}"><use href="#cat"/></svg><b>${c.label}</b></button>`}
+    if(c.t==="fish")return `<button data-act="tutTap" data-arg="${i}" aria-label="Fish">${ico("fish",40,24)}</button>`;
+    const x=tut.cross.includes(i);return `<button data-act="tutTap" data-arg="${i}" aria-label="${x?"Marked with an X":"Empty square"}" class="${tut.done?"ok":""}">${x?ico("x",22,22,'style="color:#66655C"'):""}</button>`;
+  }).join("");
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><span class="eyebrow" style="color:var(--cat)">Level ${it.lv} · New</span></div>
+    <div class="stack" style="gap:6px"><h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${T.title}</h2><p style="font-size:17px;line-height:1.45;color:var(--soft)">${T.ask}</p></div>
+    <div class="tut" style="grid-template-columns:repeat(${T.cells.length},64px)">${cells}</div>
+    <p class="status ${tut.done?"ok":tut.msg?"warn":""}" role="status" aria-live="polite">${tut.done?T.win:tut.msg}</p>
+    <button class="btn primary" data-act="introOk" data-arg="${tut.key}" ${tut.done?"":"disabled"}>${tut.done?"Play":"Solve it to continue"}</button>`;
+}
+function tutTap(i){
+  if(!tut||tut.done)return;const T=TUTS[tut.key],c=T.cells[i];tut.bad=-1;tut.msg="";
+  if(T.cross){if(c.x){const k=tut.cross.indexOf(i);k>=0?tut.cross.splice(k,1):tut.cross.push(i);beep([440],.05);if(tut.cross.length===T.cross)tut.done=true}else tut.msg="Tap the empty squares the cat looks at."}
+  else if(c.t==="cat"){
+    if(c.liar){if(!tut.acc.includes(i)){tut.acc.push(i);beep([392,330],.08)}if(tut.acc.length===T.need){tut.done=true;beep([523,659,784],.09)}}
+    else{tut.bad=i;tut.msg=T.wrong;buzz(30)}
+  }else tut.msg="Tap a cat.";
+  renderTut();
+}
+/* etiqueta sobre la novedad, en el tablero */
+let tagTimer=null;
+function clearTag(){clearTimeout(tagTimer);document.querySelectorAll(".tagbub").forEach(e=>e.remove());document.querySelectorAll(".tagged").forEach(e=>e.classList.remove("tagged"))}
+function showTag(key){
+  const it=INTROS[key];if(!it||!G||!it.tag)return;
+  clearTag();
+  let el=null,side="";
+  const [kind,what]=[it.tag.slice(0,it.tag.indexOf(":")),it.tag.slice(it.tag.indexOf(":")+1)];
+  if(kind==="sel")el=document.querySelector("#app "+what);
+  else{
+    const ci=G.cats.findIndex(c=>what==="any"||(what==="zero"&&c.v===0)||(what==="diag"&&c.d.length===2)||(what==="crown"&&c.crown));
+    if(ci<0)return;const c=G.cats[ci];el=$("c"+c.i);side=c.x===0?"l":c.x===G.n-1?"r":"";
+  }
+  if(!el)return;
+  if(el.id==="crossBtn"||el.id==="bulbBtn")side="r";
+  if(el.closest(".top"))side+=" b";
+  el.classList.add("tagged");
+  const b=document.createElement("span");b.className="tagbub "+side;b.textContent=it.tagLabel;el.appendChild(b);
+  tagTimer=setTimeout(clearTag,7000);
+}
+function unlockedIntros(){return INTRO_ORDER.filter(k=>INTROS[k].lv<=save.unlocked)}
+function helpCard(i){
+  const list=unlockedIntros();i=(i+list.length)%list.length;
+  openSheet(introCard(list[i],i,list)+`<div class="dots" aria-hidden="true">${list.map((_,j)=>`<i class="${j===i?"on":""}"></i>`).join("")}</div>
+    <div class="controls"><button class="ctl tool round" style="border-radius:999px" data-act="helpCard" data-arg="${i-1}" aria-label="Previous card">${ico("back",18)}</button><button class="btn primary" data-act="closeSheet">Got it</button><button class="ctl tool round" style="border-radius:999px" data-act="helpCard" data-arg="${i+1}" aria-label="Next card">${ico("chev",18)}</button></div>`);
+}
+function renderHelp(){
+  const list=unlockedIntros();
+  app.innerHTML=`<main class="view"><div class="top"><button class="round" data-act="go" data-arg="settings" aria-label="Back to settings">${ico("back",18)}</button><h1 class="grow">Help cards</h1></div>
+    <p class="muted" style="font-size:14px;line-height:1.45">These are the cards that show up when the game introduces something new. Tap one to read it again. The next ones appear when you reach their level.</p>
+    <div class="list">${list.map((k,i)=>`<button data-act="helpCard" data-arg="${i}"><span class="badge" style="width:34px;height:34px;border-radius:10px;background:var(--cat-bg);color:var(--cat);font-size:13px;font-weight:700">${INTROS[k].lv}</span><span class="grow stack" style="gap:1px"><b style="font-size:15px">${INTROS[k].title}</b><span class="muted" style="font-size:13px;font-weight:500">Level ${INTROS[k].lv}</span></span>${ico("chev",16,16,'style="color:var(--muted)"')}</button>`).join("")}</div>
+    <button class="btn primary mt-auto" data-act="reseen">Show them again while I play</button>
+    <span class="center muted" style="font-size:13px">Each card shows up again at the level that introduces it.</span></main>`;
+}
+
+/* ---------- Victoria ---------- */
+function starsHTML(n,size){let h=`<div class="stars" role="img" aria-label="${n} of 3 stars">`;for(let i=0;i<3;i++)h+=`<svg width="${size}" height="${size}" aria-hidden="true" style="fill:${i<n?"var(--fish)":"var(--tile)"}"><use href="#star"/></svg>`;return h+"</div>"}
+function victoryTitle(L){return L===2?"Liars caught!":L===1?"Liar caught!":"Case closed!"}
+function renderVictory(r){
+  if(!r){go("home");return}
+  const st=STAGES[r.si],last=r.n>=TOTAL;
+  const note=r.gain?`You finished in under ${fmt(r.limitA)}: 3 stars and 1 hint. You have ${plural(save.bank,"hint","hints")}.`
+    :r.full?`3 stars. You already have the maximum of ${HINT_CAP} hints, so this one isn’t added.`
+    :!r.first?"You had already beaten this level, so no hints this time."
+    :r.n<HINT_FROM?(r.stars===3?"3 stars! From the Suspects stage on, each 3-star finish gives you a hint.":`For 3 stars, finish before ${fmt(r.limitA)}.`)
+    :`With 3 stars (before ${fmt(r.limitA)}) you earn a hint.`;
+  const nextLabel=r.stageJustDone?(last?"See my achievement":"Continue"):"Next level";
+  const nextAct=r.stageJustDone?`data-act="stageEnd" data-arg="${r.si}"`:`data-act="play" data-arg="${r.n+1}"`;
+  app.innerHTML=`<main class="view" style="gap:22px">
+    <div class="top"><span class="eyebrow grow">Level ${r.n} · ${st.name}</span><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("close",18)}</button></div>
+    <div class="hero"><div style="position:relative;width:132px;height:120px"><svg width="120" height="120" style="color:var(--cat);position:absolute;left:0;top:0" aria-hidden="true"><use href="#cat-happy"/></svg><svg width="64" height="38" style="position:absolute;right:-6px;bottom:2px;transform:rotate(-14deg)" aria-hidden="true"><use href="#fish"/></svg></div>
+      <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,46)}</div>
+    <div class="stats"><div class="stat"><span class="eyebrow">Time</span><b>${fmt(r.sec)}</b></div><div class="stat"><span class="eyebrow">Hints earned</span><b style="color:${r.gain?"var(--good)":"var(--muted)"}">${r.gain?"+"+r.gain:"0"}</b></div></div>
+    <p class="center muted" style="font-size:15px;line-height:1.5">${note}</p>
+    <div class="stack mt-auto">${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
+      <button class="btn" data-act="shareLevel">Share result</button></div>
+  </main>`;
+  lastResult=r;
+}
+let lastResult=null;
+
+/* ---------- Fin de etapa ---------- */
+function renderStageEnd(si){
+  si=+si;const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
+  const conf=[[34,92,"#7B4FFF",-30,14,6],[318,120,"#0A0A0A",24,16,6],[70,300,"#FFFEF8",0,10,10],[330,270,"#7B4FFF",60,14,6],[160,72,"#0A0A0A",0,10,10],[24,210,"#FFFEF8",12,16,6],[290,360,"#FFFEF8",0,10,10]];
+  app.innerHTML=`<main class="view stage-end" style="gap:22px">
+    <div class="confetti" aria-hidden="true">${conf.map(([x,y,c,r,w,h])=>`<i style="left:${x/390*100}%;top:${y}px;width:${w}px;height:${h}px;background:${c};transform:rotate(${r}deg);${w===h?"border-radius:50%":""}"></i>`).join("")}</div>
+    <div class="hero" style="position:relative;margin-top:20px"><div style="width:150px;height:150px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 8px var(--card)"><svg width="96" height="96" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
+      <span class="eyebrow" style="color:var(--ink)">You finished ${st.name}</span><h1>${next?`Promoted to ${next.name}!`:"You’re a Legend!"}</h1></div>
+    <div class="stats" style="position:relative"><div class="stat" style="border:0"><span class="eyebrow">Levels</span><b>${stageWon(si)} of ${count}</b></div><div class="stat" style="border:0"><span class="eyebrow">Stars</span><b>${stageStars(si)} of ${count*3}</b></div></div>
+    ${(()=>{const nc=newCats().filter(c=>c.stage===si);markSeen(nc);return nc.length?`<div style="position:relative">${newCatHTML(nc)}</div>`:""})()}
+    ${lastStageGain?`<p class="center" style="position:relative;font-size:16px;font-weight:700">+${lastStageGain} ${lastStageGain===1?"hint":"hints"} for finishing the stage</p>`:""}
+    ${next?`<div class="row" style="position:relative;background:var(--ink);color:var(--bg);border-radius:20px;padding:16px 18px;gap:14px"><span class="badge" style="width:44px;height:44px;background:var(--bg);color:var(--ink)">${ico("lock",20)}</span><span class="stack" style="gap:2px"><span class="eyebrow" style="color:var(--fish)">New</span><span style="font-size:15px;line-height:1.4">In ${next.name}: ${next.news}, ${next.size}.</span></span></div>`:`<p class="center" style="position:relative;font-size:16px;line-height:1.5">You finished all 150 levels of Trapped Cat. Keep playing the daily challenge.</p>`}
+    <div class="stack mt-auto" style="position:relative">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">On to ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Back to home</button>`}
+      <button class="btn" data-act="shareStage" data-arg="${si}">Share my achievement</button></div>
+  </main>`;
+}
+
+/* ---------- Desafío: resultado ---------- */
+function renderDailyResult(o){
+  o=o||{};const r=save.daily.results[today()];if(!r){go("home");return}
+  const times=Object.values(save.daily.results).map(x=>x.t),best=Math.min(...times),s=streakNow();
+  app.innerHTML=`<main class="view" style="gap:18px">
+    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Daily challenge</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div></div>
+    <div class="hero">${o.fresh?`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>Challenge solved!</h1>`:`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1 style="font-size:32px">You already solved today’s challenge</h1>`}</div>
+    <div class="stats"><div class="stat dark"><span class="eyebrow">Your time</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Your best</span><b>${fmt(best)}</b></div></div>
+    <div class="rank" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparing your time with everyone else’s…"}</div>
+    ${(()=>{const nc=newCats().filter(c=>c.streak);markSeen(nc);return newCatHTML(nc)})()}
+    ${showPushAsk()?`<section class="askcard" id="pushAsk"><div class="row" style="gap:12px;align-items:flex-start"><span class="badge" style="width:44px;height:44px;border-radius:12px;background:var(--fish);flex:none">${ico("bell",22)}</span><span class="grow stack" style="gap:2px"><b style="font-size:16px">Remind you tomorrow?</b><span class="muted" style="font-size:14px;line-height:1.4">One reminder if you haven’t played yet, so your streak survives</span></span></div><div class="row" style="gap:8px"><button class="btn primary" style="flex:1;min-height:44px" data-act="pushOn">Remind me</button><button class="btn" style="flex:1;min-height:44px" data-act="pushNo">No, thanks</button></div></section>`:""}
+    <p class="center muted" style="font-size:15px">${r.h?`You used ${plural(r.h,"hint","hints")}.`:"No hints."}${o.fresh&&lastDailyGain?' <b style="color:var(--good)">+1 hint</b> for solving the challenge.':""} Share it and see who does it faster.</p>
+    <section class="card stack" style="gap:12px"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="font-size:16px">${plural(s,"day","days")} streak</h2><span class="muted" style="font-size:13px">Best: ${save.daily.best}</span></div>${weekHTML()}</section>
+    <div class="row" style="justify-content:center;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 16px;gap:10px"><span style="font-size:13px;color:#AAAAAA">New challenge in</span><b id="countdown" style="font-size:20px;color:var(--fish);font-variant-numeric:tabular-nums">${untilMidnight()}</b></div>
+    <div class="stack mt-auto"><button class="btn primary" data-act="shareDaily">Share result</button><button class="btn" data-act="go" data-arg="levels">Go to levels</button></div>
+  </main>`;
+  if(!TEST)refreshRank();
+}
+function refreshRank(){dailyRank(j=>{const el=$("rankLine");if(!el)return;const r=save.daily.results[today()];if(j)el.textContent=rankText(r);else if(!r.c)el.hidden=true})}
+setInterval(()=>{const c=$("countdown");if(c)c.textContent=untilMidnight()},1000);
+
+/* ---------- Compartir ---------- */
+function shareSheet(cardHTML,text){
+  const full=text+(GAME_URL?"\n"+GAME_URL:"");
+  openSheet(`<h2 id="sheetTitle" class="visually-hidden">Share</h2>${cardHTML}<div class="sharetext" id="shareText">${esc(full)}</div>
+    <div class="row" style="gap:8px"><a class="btn primary" style="flex:1;padding:0 12px" href="https://wa.me/?text=${encodeURIComponent(full)}" target="_blank" rel="noopener">WhatsApp</a><button class="btn" style="flex:1;padding:0 12px" data-act="copyShare">Copy text</button></div>
+    <button data-act="closeSheet" style="background:none;border:0;font-weight:700;font-size:15px;color:var(--muted);min-height:44px;cursor:pointer">Close</button>`);
+  window.__share=full;
+}
+const brandRow=(dark)=>`<div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,`style="color:var(--cat);--eye:${dark?"var(--ink)":"var(--bg)"}"`)}<b style="font-size:14px">Trapped Cat</b></div>`;
+// tablero en emojis, sin revelar la solución: gatos y casillas vacías (corona si hay)
+function emojiGrid(L){const cs=new Map(L.cats.map(c=>[c[1]*L.n+c[0],c]));const rows=[];
+  for(let y=0;y<L.n;y++){let r="";for(let x=0;x<L.n;x++){const c=cs.get(y*L.n+x);r+=c?(c[4]?"👑":"🐱"):"⬜"}rows.push(r)}return rows.join("\n")}
+function shareLevel(){
+  const r=lastResult;if(!r)return;track("comparte-nivel");
+  const card=`<div class="sharecard" style="background:var(--card);border:1px solid var(--line)">${brandRow()}<b style="font-size:40px;letter-spacing:-.05em;line-height:.95">Level ${r.n}</b><span style="font-size:16px;font-weight:700;background:var(--ink);color:var(--fish);border-radius:999px;padding:6px 14px">${victoryTitle(r.L)}</span>${starsHTML(r.stars,24)}<b style="font-size:24px;font-variant-numeric:tabular-nums">${fmt(r.sec)}</b><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
+  shareSheet(card,`Trapped Cat · Level ${r.n}\n${"⭐".repeat(r.stars)}${"▫️".repeat(3-r.stars)} · ⏱ ${fmt(r.sec)}${r.L?` · ${r.L===2?"😾😾 caught":"😾 caught"}`:""}\nCan you do it faster?`);
+}
+function shareStage(si){
+  si=+si;track("comparte-etapa");const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
+  const card=`<div class="sharecard" style="background:var(--fish)">${brandRow()}<div style="width:68px;height:68px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 5px var(--card)"><svg width="44" height="44" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div><span class="eyebrow" style="color:var(--ink)">${next?"New rank":"Game complete"}</span><b style="font-size:30px;letter-spacing:-.04em;line-height:1">${next?next.name:"Leyenda"}</b><span style="font-size:14px">${st.name} complete · ${stageStars(si)} of ${count*3} ★</span><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
+  shareSheet(card,next?`I was promoted to ${next.name} in Trapped Cat! I finished the ${st.name} stage with ${stageStars(si)} of ${count*3} stars.\nCan you unmask the lying cats?`:`I finished all 150 levels of Trapped Cat! I’m a Legend.\nCan you unmask the lying cats?`);
+}
+function shareDaily(){
+  const r=save.daily.results[today()];if(!r)return;track("comparte-desafio");
+  const P=dailyPuzzle(),cs=new Set(P.cats.map(c=>c[1]*P.n+c[0]));
+  const mini=[...Array(P.n*P.n).keys()].map(i=>`<span style="aspect-ratio:1;border-radius:4px;background:${cs.has(i)?"var(--cat)":"#2A2A2A"}"></span>`).join("");
+  const card=`<div class="sharecard" style="background:var(--ink);color:var(--bg)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Trapped Cat</b><span style="margin-left:auto;font-size:12px;color:#AAAAAA">${shortDate()}</span></div><span class="eyebrow" style="color:var(--fish)">Challenge #${dayIndex()+1}</span><div aria-hidden="true" style="width:84px;display:grid;grid-template-columns:repeat(${P.n},1fr);gap:3px">${mini}</div><b style="font-size:38px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"hint","hints"):"No hints"} · ${plural(streakNow(),"day","days")} streak</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">Can you beat me?</span></div>`;
+  const rk=r.c>=5&&r.p>0?`\n🏆 Faster than ${r.p}% today`:"";
+  shareSheet(card,`Trapped Cat · Challenge #${dayIndex()+1}\n⏱ ${fmt(r.t)} · ${r.h?"💡".repeat(Math.min(r.h,5)):"no hints"} · 🔥 ${streakNow()}${rk}\nCan you beat me?`);
+}
+function copyShare(btn){
+  const done=()=>{btn.textContent="Copied!";setTimeout(()=>{if(btn.isConnected)btn.textContent="Copy text"},1800)};
+  const fallback=()=>{const el=$("shareText");if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Selected"};
+  try{navigator.clipboard.writeText(window.__share).then(done,fallback)}catch(e){fallback()}
+}
+
+/* ---------- Cómo se juega ---------- */
+function renderHow(){
+  app.innerHTML=`<main class="view" style="gap:14px"><div class="top"><button class="round" data-act="back" aria-label="Back">${ico("back",18)}</button><h1>How to play</h1></div>
+    <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Place the fish the level asks for</h2><div class="fishrow" style="justify-content:flex-start" aria-hidden="true"><svg viewBox="0 0 40 24" class="used"><use href="#fish"/></svg><svg viewBox="0 0 40 24"><use href="#fish"/></svg></div><p class="muted" style="font-size:14px;line-height:1.45">Above the board you see the fish you need to place. Tap a square to place one: it fades out up top. Tap it again to remove it.</p></section>
+    <section class="card stack" style="gap:10px"><h2 style="font-size:16px">The cats are the clues</h2>${miniHTML([C("→2"),F(1),F(1)])}<p class="muted" style="font-size:14px;line-height:1.45">Each cat looks along its arrow, all the way to the edge, and says how many fish it sees. If it says 0, it sees no fish. If it says 1, it sees one fish. No fish goes where a cat sits.</p></section>
+    <section class="card stack" style="gap:10px"><div class="row" style="justify-content:space-between"><h2 style="font-size:16px">Some may lie</h2><span class="pill liar">From level 6</span></div><p class="muted" style="font-size:14px;line-height:1.45">In many levels one of the cats has a false number (two from level 101). Place the fish by trusting the others and tap the liar to call it out. The cat with a crown never lies.</p></section>
+    <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Helpers</h2>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Hint</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Shows you one step. You earn hints with 3 stars, with the daily challenge and by finishing each stage. You can keep up to 5.</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("bulb",18)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Light bulb: hover over a cat to highlight what it looks at.</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("x",14)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">X (from level 26): mark where you’re sure there’s no fish.</span></div></section>
+  </main>`;
+}
+let backTo="home";
+
+/* ---------- Ajustes ---------- */
+function renderSettings(){
+  const S=save.settings;
+  app.innerHTML=`<main class="view" style="gap:18px"><div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><h1>Settings</h1></div>
+    <section class="stack" style="gap:8px"><h2 class="eyebrow" style="margin:0 4px">Game</h2><div class="list">
+      <label for="setSound">Sound<input id="setSound" class="sw" type="checkbox" role="switch" data-set="sound" ${S.sound?"checked":""}></label>
+      ${(pushSupported()||pushNeedsInstall())?`<button data-act="pushToggle"><span class="stack" style="gap:2px;text-align:left"><span>Daily reminder</span><span class="muted" style="font-size:13px;font-weight:500">${pushNeedsInstall()?"Install the game to turn it on":"Reminds you in the evening if you haven’t played the challenge"}</span></span><span class="pill ${save.push?"":"off"}" id="pushState">${save.push?"On":"Off"}</span></button>`:""}
+      <label for="setVib">Vibration<input id="setVib" class="sw" type="checkbox" role="switch" data-set="vib" ${S.vib?"checked":""}></label>
+      <label for="setBulb"><span class="stack" style="gap:2px"><span>Light bulb always on</span><span class="muted" style="font-size:13px;font-weight:500">Highlights what each cat looks at when you hover</span></span><input id="setBulb" class="sw" type="checkbox" role="switch" data-set="bulb" ${S.bulb?"checked":""}></label>
+    </div></section>
+    <section class="stack" style="gap:8px"><h2 class="eyebrow" style="margin:0 4px">General</h2><div class="list">
+      <button data-act="how">How to play${ico("chev",16,16,'style="color:var(--muted)"')}</button>
+      <button data-act="setLang">${LANG==="es"?"Idioma: Español":"Language: English"}<span class="muted" style="font-size:14px;font-weight:600">${LANG==="es"?"Switch to English":"Cambiar a español"}</span></button>
+      ${STANDALONE?"":`<button data-act="installApp">Install on your phone${ico("chev",16,16,'style="color:var(--muted)"')}</button>`}
+      <button data-act="go" data-arg="help">See the help cards again${ico("chev",16,16,'style="color:var(--muted)"')}</button>
+    </div></section>
+    <section class="stack" style="gap:8px"><h2 class="eyebrow" style="margin:0 4px">Progress</h2>
+      <div class="list"><button data-act="askReset" style="color:var(--bad)">Erase my progress</button></div>
+      <p class="muted" style="font-size:13px;line-height:1.45;margin:0 4px">Your progress is saved in this browser. If you clear your browser data or play on another device, you start over.</p></section>
+    <div class="row mt-auto" style="justify-content:center;gap:8px;font-size:13px;color:var(--muted)">A game by <svg width="58" height="15" aria-label="VACH*" style="color:var(--ink)"><use href="#vach"/></svg></div>
+  </main>`;
+}
+function askReset(){
+  openSheet(heroSheet(`<span class="badge" style="width:64px;height:64px;border-radius:50%;background:var(--bad-bg);color:var(--bad)">${ico("trash",30)}</span>`,"Erase all your progress?",`You go back to level 1 and lose your ${starsTotal()} stars, your hints and your ${plural(streakNow(),"day","days")} streak. This can’t be undone.`)+
+    `<div class="stack"><button class="btn primary" data-act="closeSheet">Cancel</button><button class="btn danger" data-act="doReset">Yes, erase everything</button></div>`);
+}
+
+/* ---------- Bienvenida ---------- */
+function renderWelcome(){
+  app.innerHTML=`<main class="view" style="gap:28px;padding-top:56px">
+    <div class="mini" style="grid-template-columns:repeat(3,76px)" role="img" aria-label="A 3 by 3 board with a cat looking left that says 1, and a fish next to it">
+      <span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span>
+      <span class="s" style="height:76px">${ico("fish",52,31)}</span><span class="c" style="height:76px"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg);width:36px"><use href="#cat"/></svg><b style="font-size:22px">←1</b></span><span style="height:76px"></span></div>
+    <div class="hero" style="gap:12px"><h1 style="font-size:34px;line-height:1.05">The cats know where the fish are</h1><p class="muted" style="font-size:16px;line-height:1.5;max-width:300px">Each cat tells you how many fish it sees. Listen to them and find them all. But careful: some of them may lie.</p></div>
+    <div class="stack mt-auto"><button class="btn primary" data-act="welcomeGo">Start ${ico("arrow",18,18,'style="color:var(--fish)"')}</button><span class="center muted" style="font-size:13px">The first level takes a single tap.</span></div>
+  </main>`;
+}
+
+/* ---------- acciones ---------- */
+const ACT={
+  noop(){},
+  go(a){go(a)},
+  back(){go(backTo||"home")},
+  how(){backTo="settings";go("how")},
+  play(a){go("game",+a)},
+  closeSheet(){closeSheet()},
+  exitGame(){exitGame()},
+  resetBoard(){if(!G||G.done)return;G.cells=G.cells.map((v,i)=>G.locked.has(i)?1:0);G.accused=[];G.crossMode=false;setStatus("Board cleared. The clock keeps running.");renderBoard()},
+  hint(){hint()},
+  toggleCross(){if(!G)return;G.crossMode=!G.crossMode;setStatus(G.crossMode?"X mode: tap the squares where there’s no fish.":"");renderBoard()},
+  toggleBulb(){if(!G)return;G.bulb=!G.bulb;G.hover=-1;renderBoard()},
+  introOk(k,btn){if(btn&&btn.disabled)return;save.seen[k]=1;persist();tut=null;closeSheet();if(G){G.paused=false;setTimeout(()=>showTag(k),150)}},
+  tutTap(a){tutTap(+a)},
+  toggleStage(a){openStage=openStage===+a?-1:+a;renderLevels()},
+  lockedLevel(a){const n=current(),k=+a;lockedSheet(`Level ${k} is still locked`,`Levels open one at a time. You’re ${k-n===1?"1 level":(k-n)+" levels"} away: continue with level ${n}.`)},
+  lockedStage(a){const st=STAGES[+a],n=current();lockedSheet(`${st.name} is still locked`,`It opens at level ${st.from}. You’re ${st.from-n===1?"1 level":(st.from-n)+" levels"} away: continue with level ${n}.`)},
+  stageEnd(a){go("stage",a)},
+  shareLevel(){shareLevel()},shareStage(a){shareStage(a)},shareDaily(){shareDaily()},
+  copyShare(a,btn){copyShare(btn)},
+  helpCard(a){helpCard(+a)},
+  reseen(){save.seen={};persist();const b=document.querySelector('[data-act="reseen"]');if(b)b.textContent="Done: they’ll show up again"},
+  askReset(){askReset()},
+  doReset(){const s=save.settings;save=blank();save.settings=s;save.welcomed=0;persist();openStage=null;go("welcome")},
+  installApp(){installApp()},
+  pushOn(a,btn){btn.textContent="…";enablePush().then(ok=>{const c=$("pushAsk");if(c)c.innerHTML=ok?`<span class="grow" style="font-weight:700;text-align:center;padding:8px">Done: we’ll remind you tomorrow if you haven’t played.</span>`:`<span class="grow muted" style="text-align:center;padding:8px">Couldn’t turn it on. Try from Settings.</span>`})},
+  pushNo(){save.pushAsked=1;persist();const c=$("pushAsk");if(c)c.remove()},
+  pushToggle(){if(pushNeedsInstall()){installApp();return}const st=$("pushState");if(save.push){disablePush().then(()=>{if(view==="settings")renderSettings()})}else{if(st)st.textContent="…";enablePush().then(()=>{if(view==="settings")renderSettings()})}},
+  setLang(){save.lang=LANG==="es"?"en":"es";persist();if(GAME_URL)location.href=OTHER_URL;else{const b=document.querySelector('[data-act="setLang"]');if(b)b.lastChild.textContent=LANG==="es"?"Disponible en la web":"Available on the web"}},
+  hideInstall(){save.installHint=1;persist();renderHome()},
+  welcomeGo(){save.welcomed=1;persist();track("bienvenida");go("game",1)},
+  copyLog(a,btn){const t=testText();try{navigator.clipboard.writeText(t).then(()=>{btn.textContent="Copied!"},()=>{btn.textContent="Couldn’t copy"})}catch(e){btn.textContent="Couldn’t copy"}},
+  clearLog(){save.log=[];save.won={};save.stars={};persist();go("home")}
+};
+document.addEventListener("click",e=>{const t=e.target.closest("[data-act]");if(!t)return;const f=ACT[t.dataset.act];if(f){e.preventDefault();f(t.dataset.arg,t,e)}});
+document.addEventListener("change",e=>{const t=e.target;if(t.dataset&&t.dataset.set){save.settings[t.dataset.set]=t.checked?1:0;persist();if(t.dataset.set==="sound"&&t.checked)beep([523],.06);if(t.dataset.set==="vib"&&t.checked)buzz(20)}});
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&$("sheetRoot").innerHTML){const s=$("sheetRoot").querySelector('.scrim[data-act="closeSheet"]');if(s)closeSheet();return}
+  if(view!=="game"||!G||$("sheetRoot").innerHTML)return;
+  if(!e.target.closest||!e.target.closest(".board"))return;
+  const n=G.n;let f=G.focus;
+  if(e.key==="ArrowRight")f=f%n<n-1?f+1:f;else if(e.key==="ArrowLeft")f=f%n>0?f-1:f;
+  else if(e.key==="ArrowDown")f=f+n<G.N?f+n:f;else if(e.key==="ArrowUp")f=f-n>=0?f-n:f;
+  else if(e.key===" "||e.key==="Enter"){e.preventDefault();G.catAt[f]>=0?tapCat(G.catAt[f]):tapCell(f,1);$("c"+f).focus();return}
+  else if((e.key==="x"||e.key==="X")&&hasCross()&&G.catAt[f]<0){tapCell(f,2);$("c"+f).focus();return}
+  else return;
+  e.preventDefault();G.focus=f;renderBoard();$("c"+f).focus();
+});
+
+/* ---------- arranque ---------- */
+function boot(){
+  if(GAME_URL&&!TEST){
+    if(!save.lang){save.lang=/^es\b/i.test(navigator.language||"es")?"es":"en";persist()}
+    if(save.lang!==LANG){location.replace(OTHER_URL+location.hash);return}
+  }
+  if(STANDALONE)track("abre-app");
+  if(!save.welcomed)go("welcome");else go("home");
+  const sp=$("splash");setTimeout(()=>{sp.classList.add("out");setTimeout(()=>sp.remove(),400)},900);
+}
+boot();
+})();
+</script>
