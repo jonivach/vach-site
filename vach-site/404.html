@@ -117,24 +117,6 @@
     }
     .btn:hover { opacity: 0.85; }
   </style>
-<style id="cursor-style">
-  /* ── CUSTOM CURSOR ── */
-  *, *::before, *::after { cursor: none !important; }
-  #vach-cursor {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 16px; height: 16px;
-    background: transparent;
-    background: rgba(0,0,0,0.35);
-    box-shadow: 0 0 0 1.5px #fff;
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: 99999;
-    transition: transform 0.08s ease, opacity 0.2s;
-  }
-</style>
 </head>
 <body>
   <div class="bg"></div>
@@ -146,19 +128,5 @@
     <p>La página que buscás no existe o fue movida. Volvé al inicio y seguí explorando.</p>
     <a href="/" class="btn">← Volver al inicio</a>
   </div>
-<div id="vach-cursor"></div>
-<script>
-(function(){
-  if (window.matchMedia('(hover: none)').matches) return;
-  var el = document.getElementById('vach-cursor');
-  document.addEventListener('mousemove', function(e){
-    el.style.display = 'block';
-    el.style.left = e.clientX + 'px';
-    el.style.top  = e.clientY + 'px';
-  });
-  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
-})();
-</script>
 </body>
 </html>

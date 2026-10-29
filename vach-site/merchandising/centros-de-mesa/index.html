@@ -44,24 +44,6 @@
   <meta name="twitter:title" content="Centros de Mesa · Merchandising · VACH*" />
   <meta name="twitter:description" content="Centros de mesa personalizados para eventos corporativos y sociales. Diseños únicos con tu marca." />
   <meta name="twitter:image" content="https://vach.com.ar/og-image-v2.png" />
-<style id="cursor-style">
-  /* ── CUSTOM CURSOR ── */
-  *, *::before, *::after { cursor: none !important; }
-  #vach-cursor {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 16px; height: 16px;
-    background: transparent;
-    background: rgba(0,0,0,0.35);
-    box-shadow: 0 0 0 1.5px #fff;
-    border-radius: 50%;
-    pointer-events: none;
-    transform: translate(-50%, -50%);
-    z-index: 99999;
-    transition: transform 0.08s ease, opacity 0.2s;
-  }
-</style>
 </head>
 <body>
 
@@ -336,20 +318,6 @@
   });
 </script>
 
-<div id="vach-cursor"></div>
-<script>
-(function(){
-  if (window.matchMedia('(hover: none)').matches) return;
-  var el = document.getElementById('vach-cursor');
-  document.addEventListener('mousemove', function(e){
-    el.style.display = 'block';
-    el.style.left = e.clientX + 'px';
-    el.style.top  = e.clientY + 'px';
-  });
-  document.addEventListener('mouseleave', function(){ el.style.opacity = '0'; });
-  document.addEventListener('mouseenter', function(){ el.style.opacity = '1'; });
-})();
-</script>
 
 <button id="back-to-top" aria-label="Volver arriba" onclick="window.scrollTo({top:0,behavior:'smooth'})">
   <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M6 10V2M2 6l4-4 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
