@@ -10,6 +10,14 @@
 <meta property="og:description" content="Los gatos saben dónde están los peces. Pero alguno miente. ¿Lo descubrís?">
 <meta property="og:url" content="https://www.vach.com.ar/gato">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://www.vach.com.ar/gato/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gato Encerrado: un tablero con gatos, peces y un gato mentiroso marcado">
+<meta property="og:site_name" content="VACH*">
+<meta property="og:locale" content="es_AR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.vach.com.ar/gato/og.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%237B4FFF' d='M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z'/%3E%3Ccircle cx='15' cy='23' r='2.2' fill='%23fff'/%3E%3Ccircle cx='25' cy='23' r='2.2' fill='%23fff'/%3E%3C/svg%3E">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}</style>
@@ -72,7 +80,7 @@ p{margin:0}
 .streak{display:flex;flex-direction:column;align-items:center;background:var(--ink);color:var(--bg);border-radius:14px;padding:8px 12px;flex:none}
 .streak b{font-size:22px;line-height:1}.streak small{font-size:11px;font-weight:600}
 .tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tile-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.tile-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:80px;padding:12px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
 .tile-btn svg{width:22px;height:22px}
 .tile-btn.off{background:var(--tile);border-color:transparent;color:#8A887C;cursor:default}
 .tile-btn small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -151,9 +159,10 @@ p{margin:0}
 .lv.locked{background:var(--tile);border-color:transparent;color:var(--muted)}
 
 /* Hojas */
-.scrim{position:fixed;inset:0;background:rgba(10,10,10,.55);z-index:20}
+.scrim{position:fixed;inset:-100px 0;background:rgba(10,10,10,.55);z-index:20}
 .sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(440px,100%);background:var(--bg);border-radius:28px 28px 0 0;z-index:21;
-  padding:14px max(20px,env(safe-area-inset-left,0px)) calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px;max-height:92vh;overflow:auto}
+  padding:14px max(20px,env(safe-area-inset-left,0px)) calc(28px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:16px;max-height:85vh;max-height:calc(100dvh - 12px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
 .grab{width:44px;height:5px;border-radius:999px;background:#D6D3C4;align-self:center;flex:none}
 .sheet .hero h2{font-size:26px;letter-spacing:-.03em;line-height:1.1}
 .sheet .hero p{font-size:15px;line-height:1.5;color:var(--muted);max-width:320px}
@@ -166,14 +175,33 @@ p{margin:0}
 .mini .c b,.mini .l b{position:absolute;right:6px;bottom:4px;font-size:18px}
 .mini .l b{color:var(--bad)}
 .mini .c .cr{position:absolute;right:5px;top:5px;width:22px}
+.tagged{position:relative;animation:glow 1.2s ease-in-out infinite;z-index:3}
+@keyframes glow{50%{box-shadow:0 0 0 4px var(--fish)}}
+.tagbub{position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);background:var(--ink);color:var(--fish);font-size:13px;font-weight:700;line-height:1.2;padding:7px 10px;border-radius:10px;white-space:nowrap;z-index:6;pointer-events:none;animation:pop .25s ease-out both}
+.tagbub::after{content:"";position:absolute;top:100%;left:50%;margin-left:-6px;border:6px solid transparent;border-top-color:var(--ink)}
+.tagbub.l{left:0;transform:none}.tagbub.l::after{left:22px}
+.tagbub.r{left:auto;right:0;transform:none}.tagbub.r::after{left:auto;right:16px}
+@keyframes pop{from{opacity:0;translate:0 4px}to{opacity:1;translate:0 0}}
+.tut{display:grid;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px;align-self:center}
+.tut button{width:64px;height:64px;border-radius:10px;border:0;background:var(--tile);position:relative;display:grid;place-items:center;padding:0;cursor:pointer}
+.tut button.c{background:var(--cat-bg)}
+.tut button.c svg.f{position:absolute;left:6px;top:6px;width:28px}
+.tut button.c b{position:absolute;right:6px;bottom:4px;font-size:18px}
+.tut button.acc{background:var(--bad-bg);box-shadow:inset 0 0 0 3px var(--bad)}
+.tut button.acc b{color:var(--bad)}
+.tut button.acc svg.f{color:var(--bad)!important}
+.tut button.ok{box-shadow:inset 0 0 0 3px var(--good)}
+.tut button.shake{animation:shake .4s}
 .dots{display:flex;justify-content:center;gap:6px}
 .dots i{width:6px;height:6px;border-radius:999px;background:#D6D3C4}
 .dots i.on{width:20px;background:var(--ink)}
-.sharecard{border-radius:24px;padding:20px 22px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;align-self:center;width:min(290px,100%)}
-.sharetext{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.45;color:var(--soft);white-space:pre-line;user-select:text}
+.sharecard{border-radius:22px;padding:14px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;flex:none;text-align:center;align-self:center;width:min(290px,100%)}
+.sharetext{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.45;color:var(--soft);white-space:pre-line;user-select:text}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .splash{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:50;transition:opacity .35s}
 .splash.out{opacity:0;pointer-events:none}
-@media (prefers-reduced-motion:reduce){.cell,.cell.hint,.cell.shake,.splash{animation:none;transition:none}}
+@media (prefers-reduced-motion:reduce){.cell,.cell.hint,.cell.shake,.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.splash{animation:none;transition:none}}
 </style>
 
 </head>
@@ -236,17 +264,25 @@ const LIMITS={3:[20,40],4:[45,90],5:[90,180],6:[150,300],7:[240,480]};
 const CROSS_FROM=26, BULB_FROM=11, GUIDE_TO=10, FIXED_TO=5, HINT_CAP=5, HINT_FROM=11;
 const F=(seen)=>({t:"fish",seen}),C=(label,o)=>Object.assign({t:"cat",label},o||{}),E=(seen)=>({t:"empty",seen});
 const INTROS={
-  one:{lv:1,title:"Poné 1 pez",text:"Arriba ves el pez que tenés que poner: tocá una casilla para ponerlo. El gato mira hacia donde apunta su flecha. El número dice cuántos peces ve.",ex:[F(1),C("←1"),E()]},
-  zero:{lv:2,title:"El cero también es pista",text:"Si un gato dice 0, no ve ningún pez. Si un gato dice 1, ve un pez.",ex:[C("→0"),E(1),E(1)]},
-  two:{lv:3,title:"Ahora son 2 peces",text:"Arriba ves los peces que tenés que poner. Cada pez que ponés en el tablero se apaga arriba. Cuando un gato ve exactamente su número, se pone verde.",ex:[C("→2",{ok:1}),F(1),F(1)]},
-  diag:{lv:4,title:"Miradas en diagonal",text:"Los gatos también pueden mirar en diagonal.",ex:[C("↘1"),E(),F()]},
-  look:{lv:6,title:"Ahora mirá vos",text:"Desde este nivel lo que mira cada gato ya no viene marcado. Pasá el mouse o apoyá el dedo sobre un gato para verlo.",ex:[C("→1"),E(),F()]},
-  liar:{lv:11,title:"Acá hay gato encerrado",text:"Desde este nivel, uno de los gatos miente: su número es falso. Poné los peces haciendo caso a los demás y tocá al mentiroso para acusarlo. Lo que mira cada gato ya no se marca solo: si lo necesitás, prendé la lamparita.",ex:[{t:"liar",label:"↑1"},F(),E()]},
-  cross:{lv:26,title:"Marcá dónde no va nada",text:"Ahora podés poner una cruz donde estás seguro de que no va un pez. Tocá el botón de la cruz, o mantené el dedo apretado sobre la casilla (clic derecho en la compu).",ex:[{t:"cross"},{t:"cross"},F()]},
-  more:{lv:46,title:"Más peces",text:"Los tableros crecen a 6×6 y hay más peces para encontrar. Los números de los gatos suben.",ex:[C("→2"),F(),F()]},
-  crown:{lv:71,title:"El gato que nunca miente",text:"El gato con corona siempre dice la verdad. Usalo para descartar sospechosos.",ex:[C("→1",{crown:1}),E(),F()]},
-  two_liars:{lv:101,title:"Dos mentirosos",text:"Desde acá mienten dos gatos. Encontrá a los dos y acusalos.",ex:[{t:"liar",label:"→2"},F(),{t:"liar",label:"←0"}]},
-  legend:{lv:126,title:"Los casos más difíciles",text:"Tableros de 7×7, dos mentirosos y más peces. Suerte, Leyenda.",ex:[C("↗3",{crown:1}),F(),{t:"liar",label:"↓0"}]}
+  one:{lv:1,short:"Cada gato dice cuántos peces ve hacia su flecha.",tag:"cat:any",tagLabel:"Cuenta los peces que ve",title:"Poné 1 pez",text:"Arriba ves el pez que tenés que poner: tocá una casilla para ponerlo. El gato mira hacia donde apunta su flecha. El número dice cuántos peces ve.",ex:[F(1),C("←1"),E()]},
+  zero:{lv:2,short:"Si un gato dice 0, no ve ningún pez.",tag:"cat:zero",tagLabel:"Dice 0: no ve ningún pez",title:"El cero también es pista",text:"Si un gato dice 0, no ve ningún pez. Si un gato dice 1, ve un pez.",ex:[C("→0"),E(1),E(1)]},
+  two:{lv:3,short:"Cada pez que ponés se apaga arriba.",tag:"sel:#fishrow",tagLabel:"Se apagan al ponerlos",title:"Ahora son 2 peces",text:"Arriba ves los peces que tenés que poner. Cada pez que ponés en el tablero se apaga arriba. Cuando un gato ve exactamente su número, se pone verde.",ex:[C("→2",{ok:1}),F(1),F(1)]},
+  diag:{lv:4,short:"También miran en diagonal.",tag:"cat:diag",tagLabel:"Mira en diagonal",title:"Miradas en diagonal",text:"Los gatos también pueden mirar en diagonal.",ex:[C("↘1"),E(),F()]},
+  look:{lv:6,short:"Pasá el dedo sobre un gato para ver qué mira.",tag:"cat:any",tagLabel:"Pasá el dedo para ver",title:"Ahora mirá vos",text:"Desde este nivel lo que mira cada gato ya no viene marcado. Pasá el mouse o apoyá el dedo sobre un gato para verlo.",ex:[C("→1"),E(),F()]},
+  liar:{lv:11,short:"Uno de los gatos miente. Encontralo y tocalo.",tag:"sel:.pill.liar",tagLabel:"Uno miente",title:"Acá hay gato encerrado",text:"Desde este nivel, uno de los gatos miente: su número es falso. Poné los peces haciendo caso a los demás y tocá al mentiroso para acusarlo. Lo que mira cada gato ya no se marca solo: si lo necesitás, prendé la lamparita.",ex:[{t:"liar",label:"↑1"},F(),E()]},
+  cross:{lv:26,short:"Marcá con cruz donde no va un pez.",tag:"sel:#crossBtn",tagLabel:"Marcá con cruz",title:"Marcá dónde no va nada",text:"Ahora podés poner una cruz donde estás seguro de que no va un pez. Tocá el botón de la cruz, o mantené el dedo apretado sobre la casilla (clic derecho en la compu).",ex:[{t:"cross"},{t:"cross"},F()]},
+  more:{lv:46,short:"Tableros más grandes, más peces.",tag:"sel:#fishrow",tagLabel:"Más peces",title:"Más peces",text:"Los tableros crecen a 6×6 y hay más peces para encontrar. Los números de los gatos suben.",ex:[C("→2"),F(),F()]},
+  crown:{lv:71,short:"El gato con corona nunca miente.",tag:"cat:crown",tagLabel:"Nunca miente",title:"El gato que nunca miente",text:"El gato con corona siempre dice la verdad. Usalo para descartar sospechosos.",ex:[C("→1",{crown:1}),E(),F()]},
+  two_liars:{lv:101,short:"Ahora mienten dos gatos.",tag:"sel:.pill.liar",tagLabel:"Mienten dos",title:"Dos mentirosos",text:"Desde acá mienten dos gatos. Encontrá a los dos y acusalos.",ex:[{t:"liar",label:"→2"},F(),{t:"liar",label:"←0"}]},
+  legend:{lv:126,short:"Los casos más difíciles. Suerte.",tag:"sel:.pill.liar",tagLabel:"Suerte, Leyenda",title:"Los casos más difíciles",text:"Tableros de 7×7, dos mentirosos y más peces. Suerte, Leyenda.",ex:[C("↗3",{crown:1}),F(),{t:"liar",label:"↓0"}]}
+};
+const TUTS={
+  liar:{title:"¿Cuál miente?",ask:"Uno de estos dos gatos miente. Tocalo.",cells:[{t:"cat",label:"→1",liar:0},{t:"fish"},{t:"cat",label:"←0",liar:1}],need:1,
+    win:"¡Ese! Ve un pez pero dice 0.",wrong:"Ese dice la verdad: ve 1 pez."},
+  cross:{title:"Probá la cruz",ask:"Este gato dice 0. Tocá las dos casillas que mira para marcarlas con cruz.",cells:[{t:"cat",label:"→0"},{t:"empty",x:1},{t:"empty",x:1}],cross:2,
+    win:"¡Bien! En el juego, activá el botón de la cruz o mantené el dedo apretado."},
+  two_liars:{title:"Mienten dos",ask:"Dos de estos gatos mienten. Tocá a los dos.",cells:[{t:"cat",label:"→1",liar:0},{t:"fish"},{t:"cat",label:"←0",liar:1},{t:"cat",label:"←2",liar:1}],need:2,
+    win:"¡Exacto! Los dos ven un pez y dicen otra cosa.",wrong:"Ese dice la verdad: ve 1 pez."}
 };
 const INTRO_ORDER=["one","zero","two","diag","look","liar","cross","more","crown","two_liars","legend"];
 const INTRO_AT={};INTRO_ORDER.forEach(k=>INTRO_AT[INTROS[k].lv]=k);
@@ -311,12 +347,14 @@ function openSheet(html,opts){
   opts=opts||{};
   $("sheetRoot").innerHTML=`<div class="scrim" data-act="${opts.dismiss===false?"noop":"closeSheet"}"></div><section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"><div class="grab" aria-hidden="true"></div>${html}</section>`;
   sheetClose=opts.onClose||null;
+  document.documentElement.classList.add("lock");
   if(G)G.paused=true;
   const f=$("sheetRoot").querySelector(".sheet .btn, .sheet button, .sheet a");if(f)setTimeout(()=>f.focus({preventScroll:true}),30);
 }
 function closeSheet(silent){
   const had=$("sheetRoot").innerHTML!=="";
   $("sheetRoot").innerHTML="";
+  document.documentElement.classList.remove("lock");
   if(G)G.paused=false;
   const cb=sheetClose;sheetClose=null;
   if(had&&!silent&&cb)cb();
@@ -364,7 +402,7 @@ function renderHome(){
     <nav class="tiles3 mt-auto" aria-label="Más opciones">
       <button class="tile-btn" data-act="go" data-arg="levels">${ico("grid",22,22,'style="color:var(--cat)"')}Niveles</button>
       <button class="tile-btn" data-act="go" data-arg="how">${ico("help",22,22,'style="color:var(--cat)"')}Cómo se juega</button>
-      <div class="tile-btn off" aria-disabled="true" aria-label="Tienda, próximamente">${ico("bag",22)}Tienda<small>Pronto</small></div>
+      <div class="tile-btn off" aria-disabled="true" aria-label="Tienda, todavía no disponible">${ico("bag",22)}Tienda</div>
     </nav>
   </main>`;
 }
@@ -536,7 +574,7 @@ function setStatus(t,cls){const s=$("status");if(!s)return;s.textContent=t||"";s
 function flash(i,cls){const el=$("c"+i);if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),cls==="hint"?3400:450)}
 
 function tapCell(i,force){
-  if(!G||G.done)return;
+  if(!G||G.done)return;clearTag();
   G.focus=i;
   const mode=force!==undefined?force:(G.crossMode?2:1);
   if(G.locked.has(i)){setStatus("Ese pez lo puso una pista. Ya está bien.");return}
@@ -551,7 +589,7 @@ function tapCell(i,force){
   renderBoard();check();
 }
 function tapCat(ci){
-  if(!G||G.done)return;
+  if(!G||G.done)return;clearTag();
   const c=G.cats[ci];G.focus=c.i;
   if(!G.L.L){setStatus("En este nivel todos los gatos dicen la verdad.");return}
   if(c.crown){setStatus("Este gato tiene corona: nunca miente.","info");flash(c.i,"shake");return}
@@ -648,10 +686,53 @@ function introCard(key,i,list){
   const it=INTROS[key];
   return `<div class="row" style="justify-content:space-between"><span class="eyebrow" style="color:var(--cat)">Nivel ${it.lv}</span>${list?`<span class="muted" style="font-size:13px;font-weight:600">${i+1} de ${list.length}</span>`:""}</div>
     ${miniHTML(it.ex)}
-    <div class="stack" style="gap:8px"><h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${it.title}</h2><p style="font-size:15px;line-height:1.5;color:var(--soft)">${it.text}</p></div>`;
+    <div class="stack" style="gap:8px"><h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${it.title}</h2><p style="font-size:17px;line-height:1.45;color:var(--soft)">${list?it.text:it.short}</p></div>`;
 }
 function showIntro(key,inGame){
-  openSheet(introCard(key)+`<button class="btn primary" data-act="introOk" data-arg="${key}">Entendido</button>`,{dismiss:false});
+  if(TUTS[key]){tut={key,acc:[],cross:[],done:false,msg:"",bad:-1};openSheet('<div id="tutBox" class="stack" style="gap:16px"></div>',{dismiss:false});renderTut();return}
+  openSheet(introCard(key)+`<button class="btn primary" data-act="introOk" data-arg="${key}">Jugar</button>`,{dismiss:false});
+}
+let tut=null;
+function renderTut(){
+  const T=TUTS[tut.key],it=INTROS[tut.key],box=$("tutBox");if(!box)return;
+  const cells=T.cells.map((c,i)=>{
+    if(c.t==="cat"){const a=tut.acc.includes(i);return `<button class="c ${a?"acc":""} ${tut.done&&a?"ok":""} ${tut.bad===i?"shake":""}" data-act="tutTap" data-arg="${i}" aria-label="Gato que dice ${c.label}"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:${a?"var(--bad-bg)":"var(--cat-bg)"}"><use href="#cat"/></svg><b>${c.label}</b></button>`}
+    if(c.t==="fish")return `<button data-act="tutTap" data-arg="${i}" aria-label="Pez">${ico("fish",40,24)}</button>`;
+    const x=tut.cross.includes(i);return `<button data-act="tutTap" data-arg="${i}" aria-label="${x?"Marcada con cruz":"Casilla vacía"}" class="${tut.done?"ok":""}">${x?ico("x",22,22,'style="color:#66655C"'):""}</button>`;
+  }).join("");
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><span class="eyebrow" style="color:var(--cat)">Nivel ${it.lv} · Novedad</span></div>
+    <div class="stack" style="gap:6px"><h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${T.title}</h2><p style="font-size:17px;line-height:1.45;color:var(--soft)">${T.ask}</p></div>
+    <div class="tut" style="grid-template-columns:repeat(${T.cells.length},64px)">${cells}</div>
+    <p class="status ${tut.done?"ok":tut.msg?"warn":""}" role="status" aria-live="polite">${tut.done?T.win:tut.msg}</p>
+    <button class="btn primary" data-act="introOk" data-arg="${tut.key}" ${tut.done?"":"disabled"}>${tut.done?"Jugar":"Resolvelo para seguir"}</button>`;
+}
+function tutTap(i){
+  if(!tut||tut.done)return;const T=TUTS[tut.key],c=T.cells[i];tut.bad=-1;tut.msg="";
+  if(T.cross){if(c.x){const k=tut.cross.indexOf(i);k>=0?tut.cross.splice(k,1):tut.cross.push(i);beep([440],.05);if(tut.cross.length===T.cross)tut.done=true}else tut.msg="Tocá las casillas vacías que mira el gato."}
+  else if(c.t==="cat"){
+    if(c.liar){if(!tut.acc.includes(i)){tut.acc.push(i);beep([392,330],.08)}if(tut.acc.length===T.need){tut.done=true;beep([523,659,784],.09)}}
+    else{tut.bad=i;tut.msg=T.wrong;buzz(30)}
+  }else tut.msg="Tocá a un gato.";
+  renderTut();
+}
+/* etiqueta sobre la novedad, en el tablero */
+let tagTimer=null;
+function clearTag(){clearTimeout(tagTimer);document.querySelectorAll(".tagbub").forEach(e=>e.remove());document.querySelectorAll(".tagged").forEach(e=>e.classList.remove("tagged"))}
+function showTag(key){
+  const it=INTROS[key];if(!it||!G||!it.tag)return;
+  clearTag();
+  let el=null,side="";
+  const [kind,what]=[it.tag.slice(0,it.tag.indexOf(":")),it.tag.slice(it.tag.indexOf(":")+1)];
+  if(kind==="sel")el=document.querySelector("#app "+what);
+  else{
+    const ci=G.cats.findIndex(c=>what==="any"||(what==="zero"&&c.v===0)||(what==="diag"&&c.d.length===2)||(what==="crown"&&c.crown));
+    if(ci<0)return;const c=G.cats[ci];el=$("c"+c.i);side=c.x===0?"l":c.x===G.n-1?"r":"";
+  }
+  if(!el)return;
+  if(el.id==="crossBtn"||el.id==="bulbBtn")side="r";
+  el.classList.add("tagged");
+  const b=document.createElement("span");b.className="tagbub "+side;b.textContent=it.tagLabel;el.appendChild(b);
+  tagTimer=setTimeout(clearTag,7000);
 }
 function unlockedIntros(){return INTRO_ORDER.filter(k=>INTROS[k].lv<=save.unlocked)}
 function helpCard(i){
@@ -729,32 +810,33 @@ setInterval(()=>{const c=$("countdown");if(c)c.textContent=untilMidnight()},1000
 /* ---------- Compartir ---------- */
 function shareSheet(cardHTML,text){
   const full=text+(GAME_URL?"\n"+GAME_URL:"");
-  openSheet(`${cardHTML}<h2 id="sheetTitle" style="font-size:18px">Compartir</h2><div class="sharetext" id="shareText">${esc(full)}</div>
-    <div class="stack"><a class="btn primary" href="https://wa.me/?text=${encodeURIComponent(full)}" target="_blank" rel="noopener">Enviar por WhatsApp</a><button class="btn" data-act="copyShare">Copiar texto</button><button class="btn" data-act="closeSheet" style="border-color:transparent">Cerrar</button></div>`);
+  openSheet(`<h2 id="sheetTitle" class="visually-hidden">Compartir</h2>${cardHTML}<div class="sharetext" id="shareText">${esc(full)}</div>
+    <div class="row" style="gap:8px"><a class="btn primary" style="flex:1;padding:0 12px" href="https://wa.me/?text=${encodeURIComponent(full)}" target="_blank" rel="noopener">WhatsApp</a><button class="btn" style="flex:1;padding:0 12px" data-act="copyShare">Copiar texto</button></div>
+    <button data-act="closeSheet" style="background:none;border:0;font-weight:700;font-size:15px;color:var(--muted);min-height:44px;cursor:pointer">Cerrar</button>`);
   window.__share=full;
 }
 const brandRow=(dark)=>`<div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,`style="color:var(--cat);--eye:${dark?"var(--ink)":"var(--bg)"}"`)}<b style="font-size:14px">Gato Encerrado</b></div>`;
 function shareLevel(){
   const r=lastResult;if(!r)return;
-  const card=`<div class="sharecard" style="background:var(--card);border:1px solid var(--line)">${brandRow()}<b style="font-size:52px;letter-spacing:-.05em;line-height:.95">Nivel ${r.n}</b><span style="font-size:16px;font-weight:700;background:var(--ink);color:var(--fish);border-radius:999px;padding:6px 14px">${victoryTitle(r.L)}</span>${starsHTML(r.stars,30)}<b style="font-size:28px;font-variant-numeric:tabular-nums">${fmt(r.sec)}</b><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
+  const card=`<div class="sharecard" style="background:var(--card);border:1px solid var(--line)">${brandRow()}<b style="font-size:40px;letter-spacing:-.05em;line-height:.95">Nivel ${r.n}</b><span style="font-size:16px;font-weight:700;background:var(--ink);color:var(--fish);border-radius:999px;padding:6px 14px">${victoryTitle(r.L)}</span>${starsHTML(r.stars,24)}<b style="font-size:24px;font-variant-numeric:tabular-nums">${fmt(r.sec)}</b><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
   const what=r.L===2?" y descubrí a los dos mentirosos":r.L===1?" y descubrí al mentiroso":"";
   shareSheet(card,`Resolví el nivel ${r.n} de Gato Encerrado en ${fmt(r.sec)}${what}. ${"★".repeat(r.stars)}${"☆".repeat(3-r.stars)}\n¿Lo resolvés más rápido?`);
 }
 function shareStage(si){
   si=+si;const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
-  const card=`<div class="sharecard" style="background:var(--fish)">${brandRow()}<div style="width:96px;height:96px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 6px var(--card)"><svg width="62" height="62" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div><span class="eyebrow" style="color:var(--ink)">${next?"Nuevo rango":"Juego completo"}</span><b style="font-size:36px;letter-spacing:-.04em;line-height:1">${next?next.name:"Leyenda"}</b><span style="font-size:14px">${st.name} completa · ${stageStars(si)} de ${count*3} ★</span><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
+  const card=`<div class="sharecard" style="background:var(--fish)">${brandRow()}<div style="width:68px;height:68px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 5px var(--card)"><svg width="44" height="44" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div><span class="eyebrow" style="color:var(--ink)">${next?"Nuevo rango":"Juego completo"}</span><b style="font-size:30px;letter-spacing:-.04em;line-height:1">${next?next.name:"Leyenda"}</b><span style="font-size:14px">${st.name} completa · ${stageStars(si)} de ${count*3} ★</span><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
   shareSheet(card,next?`¡Ascendí a ${next.name} en Gato Encerrado! Terminé la etapa ${st.name} con ${stageStars(si)} de ${count*3} estrellas.\n¿Te animás a desenmascarar a los gatos mentirosos?`:`¡Terminé los 150 niveles de Gato Encerrado! Soy Leyenda.\n¿Te animás a desenmascarar a los gatos mentirosos?`);
 }
 function shareDaily(){
   const r=save.daily.results[today()];if(!r)return;
   const P=dailyPuzzle(),cs=new Set(P.cats.map(c=>c[1]*P.n+c[0]));
   const mini=[...Array(P.n*P.n).keys()].map(i=>`<span style="aspect-ratio:1;border-radius:4px;background:${cs.has(i)?"var(--cat)":"#2A2A2A"}"></span>`).join("");
-  const card=`<div class="sharecard" style="background:var(--ink);color:var(--bg)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Gato Encerrado</b><span style="margin-left:auto;font-size:12px;color:#AAAAAA">${shortDate()}</span></div><span class="eyebrow" style="color:var(--fish)">Desafío n.º ${dayIndex()+1}</span><div aria-hidden="true" style="width:120px;display:grid;grid-template-columns:repeat(${P.n},1fr);gap:3px">${mini}</div><b style="font-size:48px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"pista","pistas"):"Sin pistas"} · Racha de ${plural(streakNow(),"día","días")}</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">¿Me ganás?</span></div>`;
+  const card=`<div class="sharecard" style="background:var(--ink);color:var(--bg)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Gato Encerrado</b><span style="margin-left:auto;font-size:12px;color:#AAAAAA">${shortDate()}</span></div><span class="eyebrow" style="color:var(--fish)">Desafío n.º ${dayIndex()+1}</span><div aria-hidden="true" style="width:84px;display:grid;grid-template-columns:repeat(${P.n},1fr);gap:3px">${mini}</div><b style="font-size:38px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"pista","pistas"):"Sin pistas"} · Racha de ${plural(streakNow(),"día","días")}</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">¿Me ganás?</span></div>`;
   shareSheet(card,`Gato Encerrado · Desafío n.º ${dayIndex()+1} (${shortDate()})\nLo resolví en ${fmt(r.t)}, ${r.h?`con ${plural(r.h,"pista","pistas")}`:"sin pistas"}. Racha de ${plural(streakNow(),"día","días")}.\n¿Me ganás?`);
 }
 function copyShare(btn){
-  const done=()=>{btn.textContent="Copiado";setTimeout(()=>{if(btn.isConnected)btn.textContent="Copiar texto"},1800)};
-  const fallback=()=>{const el=$("shareText");if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Texto seleccionado: copialo"};
+  const done=()=>{btn.textContent="¡Copiado!";setTimeout(()=>{if(btn.isConnected)btn.textContent="Copiar texto"},1800)};
+  const fallback=()=>{const el=$("shareText");if(!el)return;const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent="Seleccionado"};
   try{navigator.clipboard.writeText(window.__share).then(done,fallback)}catch(e){fallback()}
 }
 
@@ -820,7 +902,8 @@ const ACT={
   hint(){hint()},
   toggleCross(){if(!G)return;G.crossMode=!G.crossMode;setStatus(G.crossMode?"Modo cruz: tocá las casillas donde no va un pez.":"");renderBoard()},
   toggleBulb(){if(!G)return;G.bulb=!G.bulb;G.hover=-1;renderBoard()},
-  introOk(k){save.seen[k]=1;persist();closeSheet();if(G)G.paused=false},
+  introOk(k,btn){if(btn&&btn.disabled)return;save.seen[k]=1;persist();tut=null;closeSheet();if(G){G.paused=false;setTimeout(()=>showTag(k),150)}},
+  tutTap(a){tutTap(+a)},
   toggleStage(a){openStage=openStage===+a?-1:+a;renderLevels()},
   lockedLevel(a){const n=current(),k=+a;lockedSheet(`El nivel ${k} todavía está cerrado`,`Los niveles se abren de a uno. Te ${k-n===1?"falta 1":"faltan "+(k-n)} para llegar: seguí por el nivel ${n}.`)},
   lockedStage(a){const st=STAGES[+a],n=current();lockedSheet(`${st.name} todavía está cerrada`,`Se abre en el nivel ${st.from}. Te ${st.from-n===1?"falta 1 nivel":"faltan "+(st.from-n)+" niveles"}: seguí por el nivel ${n}.`)},
