@@ -995,7 +995,8 @@ function removeDesignEverywhere(i){
   for (var id in state.place) state.place[id] = state.place[id].filter(function(pl){ return pl.d !== i; });
 }
 function renderPrendaTabs(){
-  $('scalePrendas').innerHTML = PRECIOS.prendas.map(function(p){
+  var elegidas = prendasEditor();
+  $('scalePrendas').innerHTML = PRECIOS.prendas.filter(function(p){ return elegidas.indexOf(p.id) >= 0; }).map(function(p){
     return '<button type="button" class="chip'+(p.id===scaleId?' active':'')+'" data-p="'+p.id+'">'+p.nombre+'</button>'; }).join('');
   var v = PRECIOS.variantes[scaleId]; $('corteTool').hidden = !v;
   if (v) { $('corteToolL').textContent = v.titulo; $('corteChipsModal').innerHTML = chipsVar(scaleId, 'chip'); }
@@ -1202,7 +1203,8 @@ $('calibReset').addEventListener('click', function(){ setCalib(1); });
 $('calibModal').addEventListener('click', function(e){ if (e.target === this) closeCalib(); });
 function prendasEditor(){
   var L = PRECIOS.prendas.filter(function(p){ return state.qty[p.id] > 0; }).map(function(p){ return p.id; });
-  if (L.indexOf(scaleId) < 0) L.unshift(scaleId);
+  if (!L.length) L = [scaleId];                                   // sin prendas elegidas: solo la pedida
+  if (L.indexOf(scaleId) < 0) { scaleId = L[0]; scaleSel = 0; }    // solo se editan las prendas elegidas
   return L;
 }
 function svgPrenda(id, activa){
@@ -1223,7 +1225,7 @@ function svgPrenda(id, activa){
   return '<svg viewBox="'+m.vb+'" class="'+(m.img ? 'photo' : '')+(m.color ? ' color' : '')+'">'+base+arts.join('')+(activa ? '<g class="rot" id="rotHandle"></g>' : '')+'</svg>';
 }
 function renderScale(){
-  var ids = prendasEditor();
+  var ids = prendasEditor();   // (también corrige scaleId si la prenda no está elegida)
   ids.forEach(function(id){
     var p = prendaOf(id);
     state.place[placeKey(id)] = placesOf(id).filter(function(pl){ return pl.d === -1 || (pl.d < state.disenios && state.designs[pl.d]); });
