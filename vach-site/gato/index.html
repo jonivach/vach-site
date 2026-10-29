@@ -233,7 +233,7 @@ const STAGES=[
   {name:"Leyenda",from:126,to:150,size:"tableros de 7×7",news:"los casos más difíciles"}
 ];
 const LIMITS={3:[20,40],4:[45,90],5:[90,180],6:[150,300],7:[240,480]};
-const CROSS_FROM=26, BULB_FROM=11, GUIDE_TO=10, FIXED_TO=5;
+const CROSS_FROM=26, BULB_FROM=11, GUIDE_TO=10, FIXED_TO=5, HINT_CAP=5, HINT_FROM=11;
 const F=(seen)=>({t:"fish",seen}),C=(label,o)=>Object.assign({t:"cat",label},o||{}),E=(seen)=>({t:"empty",seen});
 const INTROS={
   one:{lv:1,title:"Poné 1 pez",text:"Arriba ves el pez que tenés que poner: tocá una casilla para ponerlo. El gato mira hacia donde apunta su flecha. El número dice cuántos peces ve.",ex:[F(1),C("←1"),E()]},
@@ -257,7 +257,10 @@ const blank=()=>({unlocked:1,stars:{},won:{},bank:3,seen:{},stageDone:{},welcome
   daily:{last:"",streak:0,best:0,results:{}},settings:{sound:1,vib:1,bulb:0}});
 let save=blank();
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s){save=Object.assign(blank(),s);save.daily=Object.assign(blank().daily,s.daily||{});save.settings=Object.assign(blank().settings,s.settings||{})}}catch(e){}
+save.bank=Math.min(HINT_CAP,Math.max(0,save.bank|0));
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
+function addHints(k){const b=save.bank;save.bank=Math.min(HINT_CAP,save.bank+k);return save.bank-b}
+let lastStageGain=0,lastDailyGain=0;
 
 /* ---------- utilidades ---------- */
 const $=id=>document.getElementById(id);
@@ -460,9 +463,11 @@ function renderGameShell(){
 function drawTime(){
   const t=$("timer");if(t)t.textContent=fmt(G.sec);
   const r=$("reward");if(!r)return;
-  if(save.won[G.num]){r.textContent="Ya ganaste este nivel: repetirlo no da pistas.";return}
   const [a,b]=LIMITS[G.n];
-  r.innerHTML=G.sec<=a?`Terminá antes de <b>${fmt(a)}</b> y ganás <b>2 pistas</b>`:G.sec<=b?`Terminá antes de <b>${fmt(b)}</b> y ganás <b>1 pista</b>`:"Ya no ganás pistas en este nivel";
+  const canGain=!save.won[G.num]&&G.num>=HINT_FROM&&save.bank<HINT_CAP;
+  if(G.sec<=a)r.innerHTML=canGain?`Terminá antes de <b>${fmt(a)}</b>: 3 estrellas y <b>1 pista</b>`:`Terminá antes de <b>${fmt(a)}</b> para 3 estrellas`;
+  else if(G.sec<=b)r.innerHTML=`Terminá antes de <b>${fmt(b)}</b> para 2 estrellas`;
+  else r.textContent="Terminalo y te llevás 1 estrella";
 }
 const CLUE={3:24,4:21,5:18,6:15,7:13};
 function buildBoard(){
@@ -588,7 +593,7 @@ function hint(){
   renderBoard();flash(target,"hint");check();if(!G.done)setStatus(msg,cls);
 }
 function noHintsSheet(){
-  openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"Te quedaste sin pistas","Ganás pistas terminando niveles por primera vez: cuanto más rápido, más pistas.")+
+  openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"Te quedaste sin pistas","Ganás pistas con 3 estrellas en un nivel nuevo, resolviendo el desafío del día y terminando cada etapa.")+
     `<div class="stack"><button class="btn primary" data-act="closeSheet">Seguir jugando</button></div>`);
 }
 function win(){
@@ -597,25 +602,28 @@ function win(){
   setStatus(G.L.L?(G.L.L===2?"¡Descubriste a los dos mentirosos!":"¡Descubriste al mentiroso!"):"¡Caso cerrado!","ok");
   let res;
   if(G.mode==="daily"){
-    const t=today(),first=!save.daily.results[t];
+    const t=today(),first=!save.daily.results[t];lastDailyGain=0;
     if(first){
       save.daily.streak=save.daily.last===yesterday()?save.daily.streak+1:(save.daily.last===t?save.daily.streak:1);
       save.daily.last=t;save.daily.best=Math.max(save.daily.best,save.daily.streak);
       save.daily.results[t]={t:G.sec,h:G.hintsUsed};
+      lastDailyGain=addHints(1);
     }
     persist();
     setTimeout(()=>{if(view==="game")go("dailyResult",{fresh:true})},900);
     return;
   }
   const n=G.num,[a,b]=LIMITS[G.n],first=!save.won[n];
-  const gain=first?(G.sec<=a?2:G.sec<=b?1:0):0;
   const st=G.sec<=a?3:G.sec<=b?2:1;
-  save.stars[n]=Math.max(save.stars[n]||0,st);save.won[n]=1;save.bank+=gain;
+  const full=save.bank>=HINT_CAP;
+  const gain=(first&&st===3&&n>=HINT_FROM)?addHints(1):0;
+  save.stars[n]=Math.max(save.stars[n]||0,st);save.won[n]=1;
   save.unlocked=Math.max(save.unlocked,Math.min(TOTAL,n+1));
   const si=stageOf(n),stageJustDone=n===STAGES[si].to&&!save.stageDone[si];
-  if(stageJustDone)save.stageDone[si]=1;
+  lastStageGain=0;
+  if(stageJustDone){save.stageDone[si]=1;lastStageGain=addHints(2)}
   persist();
-  res={n,L:G.L.L,sec:G.sec,stars:st,gain,first,limitA:a,stageJustDone,si};
+  res={n,L:G.L.L,sec:G.sec,stars:st,gain,first,limitA:a,stageJustDone,si,full:full&&first&&st===3&&n>=HINT_FROM};
   setTimeout(()=>{if(view==="game")go("victory",res)},900);
 }
 function exitGame(){
@@ -666,7 +674,11 @@ function victoryTitle(L){return L===2?"¡Mentirosos descubiertos!":L===1?"¡Ment
 function renderVictory(r){
   if(!r){go("home");return}
   const st=STAGES[r.si],last=r.n>=TOTAL;
-  const note=!r.first?"Ya habías ganado este nivel, así que no suma pistas.":r.gain===2?`Terminaste en menos de ${fmt(r.limitA)}, el tiempo para ganar el máximo de pistas.`:r.gain===1?"Ganaste una pista. Más rápido, ganás dos.":"Esta vez no sumaste pistas. Probá terminar más rápido.";
+  const note=r.gain?`Terminaste en menos de ${fmt(r.limitA)}: 3 estrellas y 1 pista. Tenés ${plural(save.bank,"pista","pistas")}.`
+    :r.full?`3 estrellas. Ya tenés el máximo de ${HINT_CAP} pistas, así que esta no se suma.`
+    :!r.first?"Ya habías ganado este nivel, así que no suma pistas."
+    :r.n<HINT_FROM?(r.stars===3?"¡3 estrellas! Desde la etapa Sospechas, cada 3 estrellas te da una pista.":`Para 3 estrellas, terminalo antes de ${fmt(r.limitA)}.`)
+    :`Con 3 estrellas (antes de ${fmt(r.limitA)}) ganás una pista.`;
   const nextLabel=r.stageJustDone?(last?"Ver mi logro":"Seguir"):"Siguiente nivel";
   const nextAct=r.stageJustDone?`data-act="stageEnd" data-arg="${r.si}"`:`data-act="play" data-arg="${r.n+1}"`;
   app.innerHTML=`<main class="view" style="gap:22px">
@@ -691,6 +703,7 @@ function renderStageEnd(si){
     <div class="hero" style="position:relative;margin-top:20px"><div style="width:150px;height:150px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 8px var(--card)"><svg width="96" height="96" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
       <span class="eyebrow" style="color:var(--ink)">Terminaste ${st.name}</span><h1>${next?`¡Ascendiste a ${next.name}!`:"¡Sos una Leyenda!"}</h1></div>
     <div class="stats" style="position:relative"><div class="stat" style="border:0"><span class="eyebrow">Niveles</span><b>${stageWon(si)} de ${count}</b></div><div class="stat" style="border:0"><span class="eyebrow">Estrellas</span><b>${stageStars(si)} de ${count*3}</b></div></div>
+    ${lastStageGain?`<p class="center" style="position:relative;font-size:16px;font-weight:700">+${lastStageGain} ${lastStageGain===1?"pista":"pistas"} por terminar la etapa</p>`:""}
     ${next?`<div class="row" style="position:relative;background:var(--ink);color:var(--bg);border-radius:20px;padding:16px 18px;gap:14px"><span class="badge" style="width:44px;height:44px;background:var(--bg);color:var(--ink)">${ico("lock",20)}</span><span class="stack" style="gap:2px"><span class="eyebrow" style="color:var(--fish)">Novedad</span><span style="font-size:15px;line-height:1.4">En ${next.name}: ${next.news}, ${next.size}.</span></span></div>`:`<p class="center" style="position:relative;font-size:16px;line-height:1.5">Terminaste los 150 niveles de Gato Encerrado. Seguí jugando el desafío de cada día.</p>`}
     <div class="stack mt-auto" style="position:relative">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">Seguir a ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Volver al inicio</button>`}
       <button class="btn" data-act="shareStage" data-arg="${si}">Compartir mi logro</button></div>
@@ -705,7 +718,7 @@ function renderDailyResult(o){
     <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Desafío del día</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div></div>
     <div class="hero">${o.fresh?`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>¡Desafío resuelto!</h1>`:`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1 style="font-size:32px">Ya resolviste el desafío de hoy</h1>`}</div>
     <div class="stats"><div class="stat dark"><span class="eyebrow">Tu tiempo</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Tu mejor tiempo</span><b>${fmt(best)}</b></div></div>
-    <p class="center muted" style="font-size:15px">${r.h?`Usaste ${plural(r.h,"pista","pistas")}.`:"Sin pistas."} Compartilo y fijate quién lo hace más rápido.</p>
+    <p class="center muted" style="font-size:15px">${r.h?`Usaste ${plural(r.h,"pista","pistas")}.`:"Sin pistas."}${o.fresh&&lastDailyGain?' <b style="color:var(--good)">+1 pista</b> por resolver el desafío.':""} Compartilo y fijate quién lo hace más rápido.</p>
     <section class="card stack" style="gap:12px"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="font-size:16px">Racha de ${plural(s,"día","días")}</h2><span class="muted" style="font-size:13px">Récord: ${save.daily.best}</span></div>${weekHTML()}</section>
     <div class="row" style="justify-content:center;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 16px;gap:10px"><span style="font-size:13px;color:#AAAAAA">Nuevo desafío en</span><b id="countdown" style="font-size:20px;color:var(--fish);font-variant-numeric:tabular-nums">${untilMidnight()}</b></div>
     <div class="stack mt-auto"><button class="btn primary" data-act="shareDaily">Compartir resultado</button><button class="btn" data-act="go" data-arg="levels">Seguir con los niveles</button></div>
@@ -752,7 +765,7 @@ function renderHow(){
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Los gatos son las pistas</h2>${miniHTML([C("→2"),F(1),F(1)])}<p class="muted" style="font-size:14px;line-height:1.45">Cada gato mira hacia su flecha, hasta el borde, y dice cuántos peces ve. Si dice 0, no ve ningún pez. Si dice 1, ve un pez. Donde hay un gato no va pez.</p></section>
     <section class="card stack" style="gap:10px"><div class="row" style="justify-content:space-between"><h2 style="font-size:16px">Alguno puede mentir</h2><span class="pill liar">Desde el nivel 11</span></div><p class="muted" style="font-size:14px;line-height:1.45">En muchos niveles uno de los gatos tiene un número falso (desde el nivel 101, dos). Poné los peces haciendo caso a los demás y tocá al mentiroso para acusarlo. El gato con corona nunca miente.</p></section>
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Ayudas</h2>
-      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Pista</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Te muestra un paso. Ganás pistas terminando niveles rápido.</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Pista</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Te muestra un paso. Ganás pistas con 3 estrellas, con el desafío del día y al terminar cada etapa. Podés guardar hasta 5.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("bulb",18)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Lamparita: al pasar sobre un gato, marca lo que mira.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("x",14)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Cruz (desde el nivel 26): marcá dónde seguro no va un pez.</span></div></section>
   </main>`;
