@@ -1,5 +1,7 @@
 {
   "rewrites": [
+    { "source": "/gato", "destination": "/gato/index.html" },
+    { "source": "/gato/", "destination": "/gato/index.html" },
     { "source": "/:path*", "destination": "/404.html" }
   ],
   "headers": [
