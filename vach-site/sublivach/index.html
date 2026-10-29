@@ -153,8 +153,10 @@
   .sel-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
   .modal .sel-tools .size-chips .chip { height: 46px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .sel-actions { height: 46px; }
-  .bg-btn { height: 46px; padding: 0 1.1rem; border-radius: 10px; border: 0; background: #F5C800; color: #111; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(245,200,0,.22); }
-  .bg-btn:hover { background: #FFD62E; }
+  .bg-btn { height: 46px; padding: 0 1.2rem; border-radius: 12px; border: 1px solid #F5C800; background: rgba(245,200,0,.14); color: var(--white); font: inherit; font-size: .88rem; font-weight: 600; cursor: pointer; transition: background .2s, opacity .2s; }
+  .bg-btn:hover { background: rgba(245,200,0,.24); }
+  .bg-btn.restaurar { opacity: .5; }
+  .bg-btn.restaurar:hover { opacity: .8; }
   .bg-btn:disabled { opacity: .5; cursor: wait; }
   .bg-btn[hidden] { display: none; }
   .sel-tools .size-chips { width: 330px; max-width: 100%; }
@@ -299,8 +301,12 @@
   .rot-field input:focus { outline: none; }
   .rot-field:focus-within { border-color: var(--purple-line); }
   .rot-field span { color: var(--gray); }
-  .rot-tool[hidden] { display: none; }
-  .rot-tool .rot-field { width: max-content; }
+  .mock { position: relative; }
+  .rot-pill { cursor: text; }
+  .rot-edit { position: absolute; z-index: 5; transform: translate(-50%, -50%); width: 64px; height: 30px; border-radius: 15px; border: 1px solid var(--purple);
+    background: #111; color: #fff; font: inherit; font-size: .85rem; font-weight: 700; text-align: center; -moz-appearance: textfield; box-shadow: 0 0 0 3px rgba(123,79,255,.3); }
+  .rot-edit::-webkit-outer-spin-button, .rot-edit::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .rot-edit:focus { outline: none; }
   .scale-card { background: var(--card2); border: 1px solid var(--border); border-radius: 14px; padding: 1rem; height: clamp(260px, calc(100vh - 430px), 520px); display: flex; flex-direction: column; min-width: 0; }
   .scale-card .t { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray); margin-bottom: .7rem; }
   .mock { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
@@ -706,7 +712,6 @@
     </div>
     <div class="scale-tools sel-tools" id="selTools">
       <div class="tool"><span class="tool-l" id="selLabel">Medida máxima del diseño seleccionado</span><div class="size-chips" id="scaleChips"></div></div>
-      <div class="tool rot-tool" id="rotTool"><span class="tool-l">Giro</span><div class="rot-field"><input type="number" id="rotInput" min="-180" max="180" step="1" inputmode="numeric" aria-label="Giro en grados"><span>°</span></div></div>
       <div class="sel-actions">
         <button type="button" class="bg-btn" id="bgBtn">Eliminar fondo</button>
         <button type="button" class="link-btn" id="removeSel">Quitar de la prenda</button>
@@ -714,7 +719,7 @@
     </div>
     <p class="upload-note" id="logoNote"></p>
     <div class="scale-grid" id="scaleMock"></div>
-    <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo y usá el botón redondo (o el campo «Giro») para rotarlo. Tocá una prenda para editarla.</p>
+    <p class="fine-note" id="dragNote">Arrastrá cada diseño para ubicarlo y usá el botón redondo para rotarlo (o tocá los grados para escribirlos). Tocá una prenda para editarla.</p>
     <div class="scale-hidden" hidden>
       <div class="scale-card real-card"><p class="real-mobile">La vista en tamaño real está disponible en tablet y computadora.</p><div class="t" id="realTitle">Tamaño real</div><div class="real" id="scaleReal"></div><div class="real-dims" id="realDims"></div>
         <p class="fine-note">Escala real aproximada.<span id="scrollHint"></span></p>
@@ -1127,20 +1132,21 @@ $('removeSel').addEventListener('click', function(){
 /* arrastrar */
 var drag = null;
 var ROT_ICON = '<path d="M20 11a8 8 0 1 1-2.6-5.9" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round"/><path d="M20 3.5v5h-5" fill="none" stroke="#111" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>';
-function placeRot(){          // botón redondo debajo del diseño seleccionado
+function placeRot(keepEdit){
+  if (!keepEdit) cerrarGiro(false);          // botón redondo debajo del diseño seleccionado
   var g = $('rotHandle'); if (!g) return;
   var L = placesOf(scaleId), pl = L[scaleSel];
   if (!pl || pl.d < 0) { g.innerHTML = ''; return; }
-  var svg = g.ownerSVGElement, vb = svg.viewBox.baseVal, px = svg.getBoundingClientRect().width / vb.width;   // px por cm
+  var svg = g.ownerSVGElement, vb = svg.viewBox.baseVal, sr = svg.getBoundingClientRect(), px = Math.min(sr.width / vb.width, sr.height / vb.height);   // px por cm (el dibujo se ajusta al lado más chico)
   if (!px) return;
   var R = 15 / px, gap = 10 / px, bx = boxOf(pl), y = pl.y + bx.hh + gap + R;
   if (y + R > vb.height) y = pl.y - bx.hh - gap - R;                                  // si no entra abajo, va arriba
   g.setAttribute('transform', 'translate('+pl.x+' '+y+')');
   g.innerHTML = '<title>Girar</title><circle r="'+R+'" fill="#fff" stroke="rgba(0,0,0,.18)" stroke-width="1" vector-effect="non-scaling-stroke" style="filter:drop-shadow(0 2px 4px rgba(0,0,0,.35))"/>' +
     '<svg x="'+(-R*.62)+'" y="'+(-R*.62)+'" width="'+(R*1.24)+'" height="'+(R*1.24)+'" viewBox="0 0 24 24">'+ROT_ICON+'</svg>' +
-    (pl.r ? (function(){ var t = Math.round(pl.r)+'°', bw = (t.length * 6.6 + 12) / px, bh = 18 / px, ty = R + 6/px;
-      return '<rect x="'+(-bw/2)+'" y="'+ty+'" width="'+bw+'" height="'+bh+'" rx="'+(bh/2)+'" fill="rgba(17,17,17,.88)"/>' +
-             '<text y="'+(ty + bh/2 + 4/px)+'" text-anchor="middle" font-size="'+(11/px)+'" font-weight="700" fill="#fff">'+t+'</text>'; })() : '');
+    (function(){ var t = Math.round(pl.r || 0)+'°', bw = (t.length * 6.6 + 16) / px, bh = 20 / px, ty = R + 6/px;
+      return '<g class="rot-pill"><title>Escribir el giro</title><rect x="'+(-bw/2)+'" y="'+ty+'" width="'+bw+'" height="'+bh+'" rx="'+(bh/2)+'" fill="rgba(17,17,17,.9)" stroke="rgba(255,255,255,.35)" stroke-width="1" vector-effect="non-scaling-stroke"/>' +
+             '<text y="'+(ty + bh/2 + 4/px)+'" text-anchor="middle" font-size="'+(11/px)+'" font-weight="700" fill="#fff">'+t+'</text></g>'; })();
 }
 function svgPt(svg, e){ var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); }
 $('scaleMock').addEventListener('pointerdown', function(e){
@@ -1150,6 +1156,8 @@ $('scaleMock').addEventListener('pointerdown', function(e){
     scaleId = card.dataset.p; var a0 = e.target.closest('.art'); scaleSel = a0 ? +a0.dataset.i : 0; renderScale();
     if (!a0) return;
   }
+  if (e.target.closest('.rot-edit')) return;
+  if (e.target.closest('.rot-pill')) { e.preventDefault(); setTimeout(abrirGiro, 0); return; }
   var rh = e.target.closest('.rot');
   if (rh) {                     // girar: el ángulo sigue al puntero alrededor del centro del diseño
     var plr = placesOf(scaleId)[scaleSel], svg = rh.ownerSVGElement, q = svgPt(svg, e);
@@ -1171,7 +1179,7 @@ $('scaleMock').addEventListener('pointermove', function(e){
     a = ((a % 360) + 540) % 360 - 180;                                   // entre -180 y 180
     var snap = Math.round(a / 45) * 45; if (Math.abs(a - snap) < 5) a = snap;   // se "pega" a 0°, 45°, 90°…
     pr.r = a === -180 ? 180 : a; clampOne(scaleId, pr);
-    drag.art.setAttribute('transform', artTf(pr)); placeRot(); $('rotInput').value = Math.round(pr.r); return;
+    drag.art.setAttribute('transform', artTf(pr)); placeRot(); return;
   }
   var p = svgPt(drag.svg, e), pl = drag.pl;
   pl.x = drag.ox + (p.x - drag.x); pl.y = drag.oy + (p.y - drag.y); clampOne(scaleId, pl);
@@ -1240,9 +1248,7 @@ function renderScale(){
   $('selLabel').textContent = L.length > 1 ? 'Medida máxima del diseño seleccionado' : 'Medida máxima del diseño';
   $('removeSel').hidden = sel.d < 0;
   $('bgBtn').hidden = sel.d < 0;
-  $('rotTool').hidden = sel.d < 0;
-  if (document.activeElement !== $('rotInput')) $('rotInput').value = Math.round(sel.r || 0);
-  if (sel.d >= 0) $('bgBtn').textContent = state.orig[sel.d] ? 'Restaurar fondo' : 'Eliminar fondo';
+  if (sel.d >= 0) { $('bgBtn').textContent = state.orig[sel.d] ? 'Restaurar fondo' : 'Eliminar fondo'; $('bgBtn').classList.toggle('restaurar', !!state.orig[sel.d]); }
   $('scaleChips').innerHTML = p.tamanios.map(function(t){
     return '<button type="button" class="chip'+(sel.t===t?' active':'')+'" data-t="'+t+'"><small>hasta</small>'+PRECIOS.estampas[t].nombre+'</button>'; }).join('');
   var g = $('scaleMock'); g.style.setProperty('--n', Math.min(ids.length, 3));
@@ -1252,6 +1258,7 @@ function renderScale(){
     return '<div class="scale-card'+(on ? ' on' : '')+'" data-p="'+id+'"><div class="t"><b>'+pr.nombre+(v ? ' · '+v.nombre : '')+'</b>'+tabs+'</div><div class="mock">'+svgPrenda(id, on)+'</div></div>';
   }).join('');
   placeRot();
+  requestAnimationFrame(function(){ if (!$('rotInput')) placeRot(); });   // una vez acomodado el tamaño de las tarjetas
 }
 function svgActivo(){ return $('scaleMock').querySelector('.scale-card.on svg'); }
 function drawReal(pl){         // (vista de tamaño real: ya no se muestra)
@@ -1284,14 +1291,32 @@ $('scaleClose').addEventListener('click', closeScale);
 $('scaleDone').addEventListener('click', closeScale);
 $('scaleModal').addEventListener('click', function(e){ if (e.target === this) closeScale(); });
 document.addEventListener('keydown', function(e){ if (e.key !== 'Escape') return; if ($('calibModal').classList.contains('open')) { closeCalib(); return; } closeScale(); });
-$('rotInput').addEventListener('input', function(){
-  var pl = placesOf(scaleId)[scaleSel]; if (!pl || pl.d < 0) return;
-  var v = parseInt(this.value, 10); if (isNaN(v)) return;
-  v = ((v % 360) + 540) % 360 - 180; if (v === -180) v = 180;
-  pl.r = v; clampOne(scaleId, pl);
-  var art = svgActivo() && svgActivo().querySelector('.art[data-i="'+scaleSel+'"]'); if (art) art.setAttribute('transform', artTf(pl)); placeRot();
-});
-$('rotInput').addEventListener('blur', function(){ var pl = placesOf(scaleId)[scaleSel]; if (pl) this.value = Math.round(pl.r || 0); });
+/* giro escribiendo el número: tocar la etiqueta de grados abre un campo encima */
+function abrirGiro(){
+  var pill = $('scaleMock').querySelector('.rot-pill'), mock = pill && pill.closest('.mock'); if (!pill) return;
+  cerrarGiro(false);
+  var pl = placesOf(scaleId)[scaleSel];
+  var inp = document.createElement('input');
+  inp.type = 'number'; inp.id = 'rotInput'; inp.className = 'rot-edit'; inp.min = -180; inp.max = 180; inp.step = 1; inp.inputMode = 'numeric';
+  inp.value = Math.round(pl.r || 0); inp.setAttribute('aria-label', 'Giro en grados');
+  mock.appendChild(inp); ubicarGiro(); inp.focus(); inp.select();
+  inp.addEventListener('input', function(){
+    var p2 = placesOf(scaleId)[scaleSel]; if (!p2 || p2.d < 0) return;
+    var v = parseInt(this.value, 10); if (isNaN(v)) return;
+    v = ((v % 360) + 540) % 360 - 180; if (v === -180) v = 180;
+    p2.r = v; clampOne(scaleId, p2);
+    var art = svgActivo() && svgActivo().querySelector('.art[data-i="'+scaleSel+'"]'); if (art) art.setAttribute('transform', artTf(p2));
+    placeRot(true); ubicarGiro();
+  });
+  inp.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === 'Escape') { e.preventDefault(); cerrarGiro(true); } });
+  inp.addEventListener('blur', function(){ cerrarGiro(true); });
+}
+function ubicarGiro(){             // el campo queda justo encima de la etiqueta de grados
+  var inp = $('rotInput'), pill = $('scaleMock').querySelector('.rot-pill rect'); if (!inp || !pill) return;
+  var r = pill.getBoundingClientRect(), mr = inp.parentNode.getBoundingClientRect();
+  inp.style.left = (r.left - mr.left + r.width/2) + 'px'; inp.style.top = (r.top - mr.top + r.height/2) + 'px';
+}
+function cerrarGiro(redibujar){ var x = $('rotInput'); if (!x || x._cerrando) return; x._cerrando = true; if (x.parentNode) x.parentNode.removeChild(x); if (redibujar) placeRot(); }
 $('scaleChips').addEventListener('click', function(e){
   var b = e.target.closest('.chip'); if (!b) return;
   var pl = placesOf(scaleId)[scaleSel]; pl.t = b.dataset.t; clampOne(scaleId, pl); renderScale();
