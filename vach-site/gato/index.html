@@ -136,6 +136,7 @@ p{margin:0}
 .stars{display:flex;gap:10px}
 .stars svg{width:46px;height:46px}
 .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.rank{background:var(--cat-bg);color:var(--ink);border-radius:16px;padding:12px 16px;font-size:15px;font-weight:700;text-align:center;line-height:1.4}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
 .stat b{font-size:28px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .stat.dark{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -295,6 +296,7 @@ const blank=()=>({unlocked:1,stars:{},won:{},bank:3,seen:{},stageDone:{},welcome
 let save=blank();
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s){save=Object.assign(blank(),s);save.daily=Object.assign(blank().daily,s.daily||{});save.settings=Object.assign(blank().settings,s.settings||{})}}catch(e){}
 save.bank=Math.min(HINT_CAP,Math.max(0,save.bank|0));
+if(!save.uid){save.uid=Array.from({length:16},()=>"abcdefghijkmnpqrstuvwxyz23456789"[Math.floor(Math.random()*32)]).join("")}
 if(TEST){save.unlocked=TOTAL;save.welcomed=1;save.log=save.log||[];if(save.bank<HINT_CAP)save.bank=HINT_CAP}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 function addHints(k){const b=save.bank;save.bank=Math.min(HINT_CAP,save.bank+k);return save.bank-b}
@@ -308,6 +310,19 @@ function track(ev,n,data){
   try{if(!window.va)return;const path="/gato/"+(n?"nivel/"+n+"/":"")+ev;
     window.va("pageview",{route:path,path:path});
     window.va("event",{name:ev,data:Object.assign(n?{nivel:n}:{},data||{})});}catch(e){}
+}
+/* ---------- ranking anónimo del desafío ---------- */
+const RANK_API="/api/gato/desafio";
+function dailyRank(done){
+  const r=save.daily.results[today()];if(!r||TEST||!window.fetch){done(null);return}
+  let fin=false;const end=v=>{if(!fin){fin=true;done(v)}};setTimeout(()=>end(null),6000);
+  try{fetch(RANK_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({d:dayIndex()+1,id:save.uid,t:r.t})})
+    .then(x=>x.ok?x.json():null).then(j=>{if(j&&typeof j.total==="number"){r.p=j.pct;r.c=j.total;persist();end(j)}else end(null)}).catch(()=>end(null))}catch(e){end(null)}
+}
+function rankText(r){
+  if(!r||!r.c)return "";
+  if(r.c<5)return r.c===1?"Sos el primero en resolverlo hoy.":`Sos de los primeros ${r.c} en resolverlo hoy.`;
+  return r.p>=100?`Fuiste el más rápido de los ${r.c} jugadores de hoy.`:r.p<=0?`Hoy lo resolvieron ${r.c} personas. Mañana vas por más.`:`Más rápido que el ${r.p}% de los ${r.c} jugadores de hoy.`;
 }
 function testLog(e){if(!TEST)return;save.log.push(e);if(save.log.length>400)save.log.shift();persist()}
 function testText(){
@@ -826,12 +841,15 @@ function renderDailyResult(o){
     <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Desafío del día</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div></div>
     <div class="hero">${o.fresh?`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>¡Desafío resuelto!</h1>`:`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1 style="font-size:32px">Ya resolviste el desafío de hoy</h1>`}</div>
     <div class="stats"><div class="stat dark"><span class="eyebrow">Tu tiempo</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Tu mejor tiempo</span><b>${fmt(best)}</b></div></div>
+    <div class="rank" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparando tu tiempo con el de los demás…"}</div>
     <p class="center muted" style="font-size:15px">${r.h?`Usaste ${plural(r.h,"pista","pistas")}.`:"Sin pistas."}${o.fresh&&lastDailyGain?' <b style="color:var(--good)">+1 pista</b> por resolver el desafío.':""} Compartilo y fijate quién lo hace más rápido.</p>
     <section class="card stack" style="gap:12px"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="font-size:16px">Racha de ${plural(s,"día","días")}</h2><span class="muted" style="font-size:13px">Récord: ${save.daily.best}</span></div>${weekHTML()}</section>
     <div class="row" style="justify-content:center;background:var(--ink);color:var(--bg);border-radius:18px;padding:12px 16px;gap:10px"><span style="font-size:13px;color:#AAAAAA">Nuevo desafío en</span><b id="countdown" style="font-size:20px;color:var(--fish);font-variant-numeric:tabular-nums">${untilMidnight()}</b></div>
     <div class="stack mt-auto"><button class="btn primary" data-act="shareDaily">Compartir resultado</button><button class="btn" data-act="go" data-arg="levels">Seguir con los niveles</button></div>
   </main>`;
+  if(!TEST)refreshRank();
 }
+function refreshRank(){dailyRank(j=>{const el=$("rankLine");if(!el)return;const r=save.daily.results[today()];if(j)el.textContent=rankText(r);else if(!r.c)el.hidden=true})}
 setInterval(()=>{const c=$("countdown");if(c)c.textContent=untilMidnight()},1000);
 
 /* ---------- Compartir ---------- */
@@ -859,7 +877,8 @@ function shareDaily(){
   const P=dailyPuzzle(),cs=new Set(P.cats.map(c=>c[1]*P.n+c[0]));
   const mini=[...Array(P.n*P.n).keys()].map(i=>`<span style="aspect-ratio:1;border-radius:4px;background:${cs.has(i)?"var(--cat)":"#2A2A2A"}"></span>`).join("");
   const card=`<div class="sharecard" style="background:var(--ink);color:var(--bg)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Gato Encerrado</b><span style="margin-left:auto;font-size:12px;color:#AAAAAA">${shortDate()}</span></div><span class="eyebrow" style="color:var(--fish)">Desafío n.º ${dayIndex()+1}</span><div aria-hidden="true" style="width:84px;display:grid;grid-template-columns:repeat(${P.n},1fr);gap:3px">${mini}</div><b style="font-size:38px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"pista","pistas"):"Sin pistas"} · Racha de ${plural(streakNow(),"día","días")}</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">¿Me ganás?</span></div>`;
-  shareSheet(card,`Gato Encerrado · Desafío n.º ${dayIndex()+1} (${shortDate()})\nLo resolví en ${fmt(r.t)}, ${r.h?`con ${plural(r.h,"pista","pistas")}`:"sin pistas"}. Racha de ${plural(streakNow(),"día","días")}.\n¿Me ganás?`);
+  const rk=r.c>=5&&r.p>0?` Más rápido que el ${r.p}% de los jugadores de hoy.`:"";
+  shareSheet(card,`Gato Encerrado · Desafío n.º ${dayIndex()+1} (${shortDate()})\nLo resolví en ${fmt(r.t)}, ${r.h?`con ${plural(r.h,"pista","pistas")}`:"sin pistas"}.${rk} Racha de ${plural(streakNow(),"día","días")}.\n¿Me ganás?`);
 }
 function copyShare(btn){
   const done=()=>{btn.textContent="¡Copiado!";setTimeout(()=>{if(btn.isConnected)btn.textContent="Copiar texto"},1800)};

@@ -1,0 +1,8 @@
+{
+  "name": "vach-site",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@upstash/redis": "^1.40.0"
+  }
+}
