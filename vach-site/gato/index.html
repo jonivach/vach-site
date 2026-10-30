@@ -294,7 +294,10 @@ html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
 .gameview .board-wrap{width:100%;align-self:center;max-width:max(220px,calc(100vh - var(--over)));max-width:max(220px,calc(100dvh - var(--over)))}
 @media (max-height:720px){.gameview{gap:10px;padding-top:12px;padding-bottom:14px;--over:240px}.gameview.special{--over:322px}.gameview>.top{margin-bottom:0}.dailybar{padding:8px 14px}.dailybar b{font-size:24px}}
 .supplyrow{display:flex;align-items:center;gap:10px;min-height:28px;padding:0 2px}
-.supplyrow .fishrow{justify-content:flex-start;flex-wrap:nowrap}.supplyrow .fishrow.many{gap:3px}.supplyrow .fishrow.many svg{width:25px;height:15px}
+.supplyrow{flex-wrap:wrap;row-gap:6px}.supplyrow>.pill,.supplyrow>.lives{flex:none}
+.supplyrow .fishrow{justify-content:flex-start;flex-wrap:nowrap;min-width:0}.supplyrow .fishrow.mid4 svg{width:34px;height:20px}.supplyrow .fishrow.many{gap:3px}.supplyrow .fishrow.many svg{width:25px;height:15px}.supplyrow .fishrow.many7 svg{width:21px;height:13px}.supplyrow .fishrow.many7{gap:2px}
+@media (max-width:400px){.supplyrow{gap:8px}.supplyrow>.pill{font-size:12px;padding:4px 8px}.supplyrow .lives svg{width:14px;height:13px}.supplyrow .fishrow.mid4 svg{width:30px;height:18px}.supplyrow .fishrow.many svg{width:22px;height:13px}.supplyrow .fishrow.many7 svg{width:19px;height:12px}}
+@media (max-width:340px){.supplyrow .fishrow svg{width:24px;height:15px}.supplyrow .fishrow.many svg{width:18px;height:11px}.supplyrow .fishrow.many7 svg{width:16px;height:10px}}
 .supplyrow .lives{margin-left:auto}
 .cell.cheer{animation:cheer .55s ease-out both;animation-delay:var(--d,0ms)}
 .cell.cat.cheer{background:#D9F2EA}.cell.cat.cheer .clue{color:var(--good)}.cell.cat.cheer .face{animation:blink .55s var(--d,0ms) both}
@@ -803,7 +806,7 @@ function renderGameShell(){
       <div class="grow stack" style="gap:1px"><span class="eyebrow">${STAGES[si].name}</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;white-space:nowrap">Nivel ${G.num}</span></div>
       <span class="pill" id="timer" style="position:relative" ${relaxOn()?"hidden":""}>0:00</span></div>`;
   app.innerHTML=`<main class="view gameview${daily?" special":""}">${head}
-    <div class="supplyrow"><div class="fishrow${L.k>=6?" many":""}" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
+    <div class="supplyrow"><div class="fishrow${L.k>=7?" many many7":L.k>=5?" many":L.k===4?" mid4":""}" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
     <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="Tablero de ${L.n} por ${L.n}"></div></div>
     ${daily?dbar:'<span class="reward" id="reward"></span>'}
     <p class="status" id="status" role="status" aria-live="polite"></p>
