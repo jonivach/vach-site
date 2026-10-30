@@ -880,7 +880,7 @@ function renderBoard(){
     const v=G.cells[i];
     const want=v===1?"f":v===2?"x":"";
     if(el.dataset.v!==want){el.dataset.v=want;el.innerHTML=v===1?'<svg class="fish" viewBox="0 0 40 24" aria-hidden="true"><use href="#fish"/></svg>':v===2?'<svg class="x" viewBox="0 0 20 20" aria-hidden="true" style="color:#8A887C"><use href="#x"/></svg>':""}
-    el.classList.toggle("seen",fixed.has(i)||hov.has(i));
+    el.classList.toggle("seen",fixed.has(i)||hov.has(i)||!!(G.hintRay&&G.hintRay.has(i)));
     el.classList.toggle("lock",G.locked.has(i));
     el.setAttribute("aria-label",`Row ${Math.floor(i/G.n)+1}, column ${i%G.n+1}: ${v===1?"fish":v===2?"no fish here":"empty"}`);
   }
@@ -974,20 +974,43 @@ function check(fromCat){
   win();
 }
 function hint(){
+  // la pista guía un paso de razonamiento: señala un gato y lo que se deduce, sin poner peces
   if(!G||G.done)return;
   if(save.bank<=0){noHintsSheet();return}
-  const sol=new Set(G.L.sol);let target=-1,msg="",cls="ok";
-  for(let i=0;i<G.N;i++)if(G.cells[i]===1&&!sol.has(i)&&!G.locked.has(i)){target=i;msg="This fish doesn’t go here.";cls="warn";break}
-  if(target<0)for(const i of G.L.sol)if(G.cells[i]!==1){
-    if(G.cells.filter(v=>v===1).length>=G.L.k)break;
-    G.cells[i]=1;G.locked.add(i);target=i;msg="I placed a fish in its spot.";break}
-  if(target<0){const li=G.L.li.find(x=>!G.accused.includes(x));if(li!==undefined){target=G.cats[li].i;msg="Take a good look at this cat.";cls="info"}}
-  if(target<0){const wrongAcc=G.accused.find(ci=>!G.L.li.includes(ci));if(wrongAcc!==undefined){target=G.cats[wrongAcc].i;msg="This accused cat tells the truth.";cls="warn"}}
-  if(target<0)return;
-  save.bank--;G.hintsUsed++;persist();G.focus=target;
+  const sol=new Set(G.L.sol),liars=new Set(G.L.li);let h=null;
+  const wrong=[];for(let i=0;i<G.N;i++)if(G.cells[i]===1&&!sol.has(i)&&!G.locked.has(i))wrong.push(i);
+  if(wrong.length){
+    G.hintWrong=(G.hintWrong||0)+1;
+    h=G.hintWrong>1?{target:wrong[0],ray:[],msg:"This fish doesn’t go here.",cls:"warn"}:{target:-1,ray:[],msg:wrong.length===1?"One fish is in the wrong place. Check what the cats say.":"Some fish are in the wrong place. Check what the cats say.",cls:"warn"};
+  }
+  if(!h){
+    const cands=[];G.hEmpty=G.hEmpty||new Set();G.hFish=G.hFish||new Set();
+    const isFish=j=>G.cells[j]===1||G.hFish.has(j),isEmpty=j=>G.catAt[j]>=0||G.cells[j]===2||G.hEmpty.has(j);
+    G.cats.forEach((c,ci)=>{if(liars.has(ci))return;
+      const fish=c.r.filter(isFish).length,free=c.r.filter(j=>!isFish(j)&&!isEmpty(j)),need=c.v-fish;
+      if(!free.length)return;
+      if(need===0)cands.push({rank:c.v===0?0:1,mark:"e",target:c.i,ray:free,msg:c.v===0?"This cat says 0: there are no fish anywhere along its line.":"This cat already sees all its fish: the rest of its line is empty.",cls:"info"});
+      else if(need===free.length)cands.push({rank:2,mark:"f",target:c.i,ray:free,msg:need===1?"This cat is missing one fish and has only one free square left.":"This cat needs a fish in every free square it looks at.",cls:"info"});
+    });
+    cands.sort((a,b)=>a.rank-b.rank);h=cands[0]||null;
+    if(h)h.ray.forEach(j=>(h.mark==="e"?G.hEmpty:G.hFish).add(j));
+  }
+  if(!h){
+    const missing=G.L.sol.filter(i=>G.cells[i]!==1);
+    if(missing.length){const ci=G.cats.findIndex((c,k)=>!liars.has(k)&&c.v>0&&c.r.includes(missing[0]));
+      if(ci>=0)h={target:G.cats[ci].i,ray:G.cats[ci].r.filter(j=>G.catAt[j]<0),msg:"Take a close look at what this cat says.",cls:"info"}}
+    else{const li=G.L.li.find(x=>!G.accused.includes(x));
+      if(li!==undefined)h={target:G.cats[li].i,ray:G.cats[li].r.filter(j=>G.catAt[j]<0),msg:"Be suspicious of this cat: compare what it says with what it sees.",cls:"info"};
+      else{const wa=G.accused.find(ci=>!liars.has(ci));if(wa!==undefined)h={target:G.cats[wa].i,ray:[],msg:"This accused cat tells the truth.",cls:"warn"}}}
+  }
+  if(!h)return;
+  save.bank--;G.hintsUsed++;persist();
   track(G.mode==="daily"?"desafio-pista":G.mode==="weekly"?"semana-pista":"pista",G.mode==="level"?G.num:0);
-  renderBoard();flash(target,"hint");check();if(!G.done)setStatus(msg,cls);
+  G.hintRay=new Set(h.ray);clearTimeout(G.hintT);G.hintT=setTimeout(()=>{if(G){G.hintRay=new Set();renderBoard()}},4500);
+  if(h.target>=0){G.focus=h.target}
+  renderBoard();if(h.target>=0)flash(h.target,"hint");h.ray.forEach(j=>flash(j,"hint"));setStatus(h.msg,h.cls);
 }
+
 function noHintsSheet(){
   openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"You’re out of hints","You earn hints with 3 stars on a new level, by solving the daily challenge and by finishing each stage.")+
     `<div class="stack"><button class="btn primary" data-act="closeSheet">Keep playing</button></div>`);
@@ -1304,7 +1327,7 @@ function renderHow(){
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">The cats are the clues</h2>${miniHTML([C("→2"),F(1),F(1)])}<p class="muted" style="font-size:14px;line-height:1.45">Each cat looks along its arrow, all the way to the edge, and says how many fish it sees. If it says 0, it sees no fish. If it says 1, it sees one fish. No fish goes where a cat sits.</p></section>
     <section class="card stack" style="gap:10px"><div class="row" style="justify-content:space-between"><h2 style="font-size:16px">Some may lie</h2><span class="pill liar">From level 6</span></div><p class="muted" style="font-size:14px;line-height:1.45">In many levels one of the cats has a false number (two from level 101). Place the fish by trusting the others and tap the liar to call it out. The cat with a crown never lies.</p></section>
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Helpers</h2>
-      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Hint</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Shows you one step. You earn hints with 3 stars, with the daily challenge and by finishing each stage. You can keep up to 5.</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Hint</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Points out a cat and what you can work out from it, without solving the level for you. You earn hints with 3 stars, with the daily challenge and by finishing each stage. You can keep up to 5.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("bulb",18)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Light bulb: hover over a cat to highlight what it looks at.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center;color:var(--bad)">♥ 3</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">When you place all the fish and something’s off, you lose a life and get +10 seconds. After 3 mistakes you start over (from level 6).</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("x",14)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">X (from level 26): mark where you’re sure there’s no fish.</span></div></section>

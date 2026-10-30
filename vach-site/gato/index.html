@@ -880,7 +880,7 @@ function renderBoard(){
     const v=G.cells[i];
     const want=v===1?"f":v===2?"x":"";
     if(el.dataset.v!==want){el.dataset.v=want;el.innerHTML=v===1?'<svg class="fish" viewBox="0 0 40 24" aria-hidden="true"><use href="#fish"/></svg>':v===2?'<svg class="x" viewBox="0 0 20 20" aria-hidden="true" style="color:#8A887C"><use href="#x"/></svg>':""}
-    el.classList.toggle("seen",fixed.has(i)||hov.has(i));
+    el.classList.toggle("seen",fixed.has(i)||hov.has(i)||!!(G.hintRay&&G.hintRay.has(i)));
     el.classList.toggle("lock",G.locked.has(i));
     el.setAttribute("aria-label",`Fila ${Math.floor(i/G.n)+1}, columna ${i%G.n+1}: ${v===1?"pez":v===2?"acá no va pez":"vacía"}`);
   }
@@ -974,20 +974,43 @@ function check(fromCat){
   win();
 }
 function hint(){
+  // la pista guía un paso de razonamiento: señala un gato y lo que se deduce, sin poner peces
   if(!G||G.done)return;
   if(save.bank<=0){noHintsSheet();return}
-  const sol=new Set(G.L.sol);let target=-1,msg="",cls="ok";
-  for(let i=0;i<G.N;i++)if(G.cells[i]===1&&!sol.has(i)&&!G.locked.has(i)){target=i;msg="Este pez no va acá.";cls="warn";break}
-  if(target<0)for(const i of G.L.sol)if(G.cells[i]!==1){
-    if(G.cells.filter(v=>v===1).length>=G.L.k)break;
-    G.cells[i]=1;G.locked.add(i);target=i;msg="Te dejé un pez en su lugar.";break}
-  if(target<0){const li=G.L.li.find(x=>!G.accused.includes(x));if(li!==undefined){target=G.cats[li].i;msg="Mirá bien a este gato.";cls="info"}}
-  if(target<0){const wrongAcc=G.accused.find(ci=>!G.L.li.includes(ci));if(wrongAcc!==undefined){target=G.cats[wrongAcc].i;msg="Este gato acusado dice la verdad.";cls="warn"}}
-  if(target<0)return;
-  save.bank--;G.hintsUsed++;persist();G.focus=target;
+  const sol=new Set(G.L.sol),liars=new Set(G.L.li);let h=null;
+  const wrong=[];for(let i=0;i<G.N;i++)if(G.cells[i]===1&&!sol.has(i)&&!G.locked.has(i))wrong.push(i);
+  if(wrong.length){
+    G.hintWrong=(G.hintWrong||0)+1;
+    h=G.hintWrong>1?{target:wrong[0],ray:[],msg:"Este pez no va acá.",cls:"warn"}:{target:-1,ray:[],msg:wrong.length===1?"Hay un pez mal puesto. Revisá lo que dicen los gatos.":"Hay peces mal puestos. Revisá lo que dicen los gatos.",cls:"warn"};
+  }
+  if(!h){
+    const cands=[];G.hEmpty=G.hEmpty||new Set();G.hFish=G.hFish||new Set();
+    const isFish=j=>G.cells[j]===1||G.hFish.has(j),isEmpty=j=>G.catAt[j]>=0||G.cells[j]===2||G.hEmpty.has(j);
+    G.cats.forEach((c,ci)=>{if(liars.has(ci))return;
+      const fish=c.r.filter(isFish).length,free=c.r.filter(j=>!isFish(j)&&!isEmpty(j)),need=c.v-fish;
+      if(!free.length)return;
+      if(need===0)cands.push({rank:c.v===0?0:1,mark:"e",target:c.i,ray:free,msg:c.v===0?"Este gato dice 0: en toda su línea no hay peces.":"Este gato ya ve todos sus peces: el resto de su línea está vacío.",cls:"info"});
+      else if(need===free.length)cands.push({rank:2,mark:"f",target:c.i,ray:free,msg:need===1?"A este gato le falta un pez y le queda una sola casilla libre.":"Este gato necesita un pez en cada casilla libre que mira.",cls:"info"});
+    });
+    cands.sort((a,b)=>a.rank-b.rank);h=cands[0]||null;
+    if(h)h.ray.forEach(j=>(h.mark==="e"?G.hEmpty:G.hFish).add(j));
+  }
+  if(!h){
+    const missing=G.L.sol.filter(i=>G.cells[i]!==1);
+    if(missing.length){const ci=G.cats.findIndex((c,k)=>!liars.has(k)&&c.v>0&&c.r.includes(missing[0]));
+      if(ci>=0)h={target:G.cats[ci].i,ray:G.cats[ci].r.filter(j=>G.catAt[j]<0),msg:"Mirá bien lo que dice este gato.",cls:"info"}}
+    else{const li=G.L.li.find(x=>!G.accused.includes(x));
+      if(li!==undefined)h={target:G.cats[li].i,ray:G.cats[li].r.filter(j=>G.catAt[j]<0),msg:"Sospechá de este gato: compará lo que dice con lo que ve.",cls:"info"};
+      else{const wa=G.accused.find(ci=>!liars.has(ci));if(wa!==undefined)h={target:G.cats[wa].i,ray:[],msg:"Este gato acusado dice la verdad.",cls:"warn"}}}
+  }
+  if(!h)return;
+  save.bank--;G.hintsUsed++;persist();
   track(G.mode==="daily"?"desafio-pista":G.mode==="weekly"?"semana-pista":"pista",G.mode==="level"?G.num:0);
-  renderBoard();flash(target,"hint");check();if(!G.done)setStatus(msg,cls);
+  G.hintRay=new Set(h.ray);clearTimeout(G.hintT);G.hintT=setTimeout(()=>{if(G){G.hintRay=new Set();renderBoard()}},4500);
+  if(h.target>=0){G.focus=h.target}
+  renderBoard();if(h.target>=0)flash(h.target,"hint");h.ray.forEach(j=>flash(j,"hint"));setStatus(h.msg,h.cls);
 }
+
 function noHintsSheet(){
   openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"Te quedaste sin pistas","Ganás pistas con 3 estrellas en un nivel nuevo, resolviendo el desafío del día y terminando cada etapa.")+
     `<div class="stack"><button class="btn primary" data-act="closeSheet">Seguir jugando</button></div>`);
@@ -1304,7 +1327,7 @@ function renderHow(){
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Los gatos son las pistas</h2>${miniHTML([C("→2"),F(1),F(1)])}<p class="muted" style="font-size:14px;line-height:1.45">Cada gato mira hacia su flecha, hasta el borde, y dice cuántos peces ve. Si dice 0, no ve ningún pez. Si dice 1, ve un pez. Donde hay un gato no va pez.</p></section>
     <section class="card stack" style="gap:10px"><div class="row" style="justify-content:space-between"><h2 style="font-size:16px">Alguno puede mentir</h2><span class="pill liar">Desde el nivel 6</span></div><p class="muted" style="font-size:14px;line-height:1.45">En muchos niveles uno de los gatos tiene un número falso (desde el nivel 101, dos). Poné los peces haciendo caso a los demás y tocá al mentiroso para acusarlo. El gato con corona nunca miente.</p></section>
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Ayudas</h2>
-      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Pista</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Te muestra un paso. Ganás pistas con 3 estrellas, con el desafío del día y al terminar cada etapa. Podés guardar hasta 5.</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Pista</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Te señala un gato y lo que se deduce de él, sin resolverte el nivel. Ganás pistas con 3 estrellas, con el desafío del día y al terminar cada etapa. Podés guardar hasta 5.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("bulb",18)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Lamparita: al pasar sobre un gato, marca lo que mira.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center;color:var(--bad)">♥ 3</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Cuando ponés todos los peces y algo no cierra, perdés una vida y suma 10 segundos. Con 3 errores volvés a empezar (desde el nivel 6).</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("x",14)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Cruz (desde el nivel 26): marcá dónde seguro no va un pez.</span></div></section>
