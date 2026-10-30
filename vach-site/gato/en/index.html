@@ -97,11 +97,11 @@ p{margin:0}
 .minib span.c{background:var(--cat-bg)}
 .bar{height:8px;border-radius:999px;background:var(--tile);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--cat);border-radius:999px}
-.daily{background:var(--fish);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.daily{background:var(--fish);border-radius:24px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
 .streak{display:flex;flex-direction:column;align-items:center;background:var(--night);color:var(--on-night);border-radius:14px;padding:8px 12px;flex:none}
 .streak b{font-size:22px;line-height:1}.streak small{font-size:11px;font-weight:600}
 .tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tile-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:80px;padding:12px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.tile-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:70px;padding:10px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
 .tile-btn svg{width:22px;height:22px}
 .tile-btn.off{background:var(--tile);border-color:transparent;color:#8A887C;cursor:default}
 .tile-btn small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -165,7 +165,46 @@ p{margin:0}
 .newcat .art{width:76px;height:76px;border-radius:50%;background:var(--cat-bg);display:grid;place-items:center;flex:none}
 #pushState{background:var(--good);color:#fff;border-color:transparent}#pushState.off{background:var(--card);color:var(--muted);border-color:var(--line)}
 .askcard{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
-.weekly{background:var(--night);color:var(--on-night);border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.weekly{background:var(--night);color:var(--on-night);border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:0;width:100%;font:inherit;cursor:pointer}
+div.weekly{cursor:default}
+.homecard{border-radius:24px;padding:18px 18px 16px;gap:14px}
+main.home{gap:14px}
+.shieldmini{font-size:11px;margin-left:3px;vertical-align:3px}
+main.min{gap:0}
+main.min .mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding-block:12px}
+main.min h1{font-size:34px;letter-spacing:-.03em;line-height:1.05;max-width:16ch}
+main.min .line{font-size:16px;color:var(--muted);line-height:1.4;margin:0}
+main.min .line b{color:var(--ink)}
+main.min .line.small{font-size:14px}
+main.min .bigtime{font-size:68px;font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
+.chip i{width:34px;height:34px;border-radius:50%;background:var(--cat-bg);display:grid;place-items:center;font-style:normal}
+.linkbtn.big{font-size:15px;align-self:center;padding:14px 4px 2px}
+.linkrow{display:flex;justify-content:center;gap:22px}
+.pushline{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 14px}
+.pushline .linkbtn{padding:4px 8px;color:var(--cat)}
+.result h1{font-size:30px;line-height:1.05}
+.result .stat{padding:10px 14px}
+.result .newcat{padding:10px 12px}.result .newcat .art{width:60px;height:60px}
+@media (max-height:760px){.result{padding-block:12px 14px;gap:10px!important}.result .hero{gap:8px}.result h1{font-size:26px}
+  .result .week i{width:30px;height:30px}.result .week div{gap:2px}.result .rank{padding:8px 12px;font-size:14px}.result .stat b{font-size:24px}.result .subnote{display:none}
+  .stage-end .hero>div:first-child{width:84px!important;height:84px!important}.stage-end .hero>div:first-child svg{width:54px;height:54px}.result .btn{min-height:46px}}
+@media (max-height:620px){.result .week{display:none}.resbtns{flex-direction:row!important}.resbtns>*{flex:1}.resbtns .pastbtn{display:none}.resbtns .btn{font-size:14px!important;padding:0 8px}.result .rowhero svg{display:none}.result h1{font-size:22px}.result .newcat .art{width:46px;height:46px}.result .newcat .art svg{width:44px;height:44px}
+  .stage-end .newsbox{display:none}.stage-end .hero>div:first-child{display:none!important}.result .hero svg[width="90"]{width:64px;height:64px}.result .hero>div[style*="width:100px"]{width:72px!important;height:64px!important}}
+.hdate{font-size:19px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+main.home .streak{padding:6px 10px}main.home .streak b{font-size:20px}main.home .streak small{font-size:10px}
+html.dark .btn.primary{background:#7B4FFF;color:#fff;border-color:#7B4FFF}
+html.dark .btn.primary span[style*="var(--fish)"]{color:#FFF3B8!important}
+@media (max-height:720px){
+  main.home{gap:10px;padding-block:12px 14px}
+  main.home .top{min-height:40px}
+  .homecard{padding:14px 16px;gap:10px}
+  .homecard .btn{min-height:46px!important}
+  .daily{padding:14px 16px;gap:10px}
+  .daily .btn{min-height:44px!important}
+  .weekly{padding:12px 14px}
+}
+@media (max-height:620px){.tiles3 .tile-btn{min-height:50px;flex-direction:row;gap:6px;font-size:13px;padding:8px 6px}}
 .shield{font-size:13px;font-weight:600;line-height:1.4}
 .week i.fz{background:var(--cat-bg);font-size:13px;font-style:normal}
 .lives{display:inline-flex;gap:2px;align-items:center}
@@ -174,6 +213,7 @@ p{margin:0}
 .cell.bad{background:var(--bad-bg)!important;box-shadow:inset 0 0 0 3px var(--bad)}
 .linkbtn{background:none;border:0;padding:6px 0;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .list button.justdone{animation:pop .5s ease-out both;box-shadow:inset 0 0 0 2px var(--good)}
+.board.shakeb{animation:shake .4s}
 .tile-btn .dot{position:absolute;top:8px;right:10px;width:10px;height:10px;border-radius:50%;background:var(--bad)}
 .installcard{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px 10px 10px 12px}
 .installcard img{border-radius:11px;flex:none}
@@ -250,8 +290,11 @@ html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
 .board-wrap{position:relative}
 .gameview{gap:16px;padding-top:max(28px,calc(env(safe-area-inset-top,0px) + 20px))}
 .gameview>.top{margin-bottom:6px}
+.gameview{--over:310px}.gameview.special{--over:360px}
+.gameview .board-wrap{width:100%;align-self:center;max-width:max(220px,calc(100vh - var(--over)));max-width:max(220px,calc(100dvh - var(--over)))}
+@media (max-height:720px){.gameview{gap:10px;padding-top:12px;padding-bottom:14px;--over:240px}.gameview.special{--over:322px}.gameview>.top{margin-bottom:0}.dailybar{padding:8px 14px}.dailybar b{font-size:24px}}
 .supplyrow{display:flex;align-items:center;gap:10px;min-height:28px;padding:0 2px}
-.supplyrow .fishrow{justify-content:flex-start}
+.supplyrow .fishrow{justify-content:flex-start;flex-wrap:nowrap}.supplyrow .fishrow.many{gap:3px}.supplyrow .fishrow.many svg{width:25px;height:15px}
 .supplyrow .lives{margin-left:auto}
 .cell.cheer{animation:cheer .55s ease-out both;animation-delay:var(--d,0ms)}
 .cell.cat.cheer{background:#D9F2EA}.cell.cat.cheer .clue{color:var(--good)}.cell.cat.cheer .face{animation:blink .55s var(--d,0ms) both}
@@ -408,6 +451,7 @@ function newCatHTML(list){
   if(!list.length)return "";
   return list.map(c=>`<button class="newcat" data-act="go" data-arg="album"><span class="art">${catArt(c,64)}</span><span class="stack" style="gap:2px;text-align:left"><span class="eyebrow" style="color:var(--cat)">New cat for your album</span><b style="font-size:18px">${c.name}</b><span class="muted" style="font-size:13px">${albumCount()} of ${ALBUM.length} cats</span></span></button>`).join("");
 }
+function chipCat(c){return `<button class="chip" data-act="go" data-arg="album"><i>${catArt(c,26)}</i>New cat: ${c.name}</button>`}
 function renderAlbum(){
   const n=albumCount();
   app.innerHTML=`<main class="view" style="gap:16px"><div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><h1 class="grow">Album</h1><span class="muted" style="font-size:14px;font-weight:600">${n} of ${ALBUM.length}</span></div>
@@ -591,25 +635,22 @@ function renderHome(){
   const left=st.to-(n-1)-(save.won[n]?1:0);
   const dk=save.daily.results[today()];
   const s=streakNow();
-  app.innerHTML=`<main class="view">
+  app.innerHTML=`<main class="view home">
     <div class="top"><div class="brand grow">${ico("cat",34,34,'style="color:var(--cat)"')}Something Fishy</div>
       <button class="round" data-act="go" data-arg="settings" aria-label="Settings">${ico("gear",20)}</button></div>
     ${TEST?`<section class="card stack" style="gap:10px;border:2px dashed var(--cat)"><span class="eyebrow" style="color:var(--cat)">Test mode</span><span style="font-size:14px;line-height:1.45">All levels are open. Play in order from level ${TEST_FROM} and send your times when you’re done. What you play here doesn’t mix with your normal game.</span><span class="muted" style="font-size:13px">${plural(save.log.length,"entry","entries")} saved</span><div class="row" style="gap:8px"><a class="btn primary" style="flex:1;padding:0 12px" href="https://wa.me/?text=${encodeURIComponent(testText())}" target="_blank" rel="noopener">WhatsApp</a><button class="btn" style="flex:1;padding:0 12px" data-act="copyLog">Copy</button></div><button data-act="clearLog" style="background:none;border:0;font-weight:700;font-size:13px;color:var(--muted);min-height:36px;cursor:pointer">Start the test over</button></section>`:""}
-    <section class="card stack" style="border-radius:24px;padding:22px 20px 20px;gap:18px">
+    <section class="card stack homecard">
       <div class="row" style="justify-content:space-between;align-items:baseline"><span class="eyebrow">Stage ${si+1} · ${st.name}</span><span class="muted" style="font-size:13px;font-weight:600">${done?"150 of 150":`Level ${n} of ${TOTAL}`}</span></div>
-      <div class="minib" aria-hidden="true"><span></span><span class="c">${ico("cat",26,26,'style="color:var(--cat);--eye:var(--cat-bg)"')}</span><span></span><span>${ico("fish",30,18)}</span><span>${ico("fish",30,18)}</span><span></span><span></span><span class="c">${ico("cat",26,26,'style="color:var(--cat);--eye:var(--cat-bg)"')}</span></div>
-      <button class="btn primary" style="width:auto;align-self:center;padding:0 28px;min-height:48px" data-act="${done?"go":"play"}" data-arg="${done?"levels":n}"><span style="font-size:17px">${done?"See levels":"Play"}</span>${done?"":`<span style="color:var(--fish);font-weight:500">Level ${n}</span>`}</button>
-      <div class="stack" style="gap:6px"><div class="bar"><i style="width:${pct}%"></i></div>
-        <span class="muted" style="font-size:13px">${done?"You finished all 150 levels. You’re a Legend!":next?`${peces2(left)} to go until ${next.name}`:`${peces2(left)} to go until the end`}</span></div>
+      <div class="bar" role="img" aria-label="${done?"You finished all 150 levels. You’re a Legend!":next?`${peces2(left)} to go until ${next.name}`:`${peces2(left)} to go until the end`}"><i style="width:${pct}%"></i></div>
+      <button class="btn primary" style="min-height:50px" data-act="${done?"go":"play"}" data-arg="${done?"levels":n}"><span style="font-size:17px">${done?"See levels":"Play"}</span>${done?"":`<span style="color:var(--fish);font-weight:500">Level ${n}</span>`}</button>
     </section>
     <section class="daily">
-      <div class="row" style="justify-content:space-between;align-items:flex-start">
-        <div class="stack" style="gap:4px"><span class="eyebrow" style="color:var(--ink)">Daily challenge</span><span style="font-size:22px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div>
-        <div class="streak"><b>${s}</b><small>${s===1?"day streak":"day streak"}</small></div>
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div class="stack" style="gap:2px"><span class="eyebrow" style="color:var(--ink)">Daily challenge</span><span class="hdate">${longDate()}</span></div>
+        <div class="streak" title="${shieldText()}"><b>${s}${s>0&&freezeReady()?'<span class="shieldmini" aria-hidden="true">🛡️</span>':""}</b><small>${s===1?"day streak":"day streak"}</small></div>
       </div>
-      <span style="font-size:14px;line-height:1.45">${dk?`You solved it in ${fmt(dk.t)}. Come back tomorrow to keep your streak.`:"A new board every day, the same for everyone. Compare your time with friends."}</span>
-      <button class="btn" data-act="go" data-arg="daily">${dk?"See my result":"Play the challenge"} ${ico("arrow",18)}</button>
-      <div class="row" style="justify-content:space-between;gap:10px;flex-wrap:wrap">${s>0||save.daily.freeze?`<span class="shield">${shieldText()}</span>`:"<span></span>"}${dayIndex()>0?`<button class="linkbtn" data-act="go" data-arg="past">Past days ${ico("chev",14)}</button>`:""}</div>
+      <button class="btn" style="min-height:48px" data-act="go" data-arg="daily">${dk?`See my result · ${fmt(dk.t)}`:"Play the challenge"} ${ico("arrow",18)}</button>
+      ${dayIndex()>0?`<button class="linkbtn" style="align-self:center;margin-top:-6px" data-act="go" data-arg="past">Past days</button>`:""}
     </section>
     ${weeklyHTML()}
     ${showInstallCard()?`<section class="installcard"><img src="/gato/icon-192.png" width="44" height="44" alt="" onerror="this.remove()"><span class="grow stack" style="gap:1px"><b style="font-size:15px">Get it as an app</b><span class="muted" style="font-size:13px">On your home screen, works offline</span></span><button class="btn primary" style="width:auto;min-height:40px;padding:0 16px" data-act="installApp">Install</button><button class="round" style="width:36px;height:36px" data-act="hideInstall" aria-label="Don’t show again">${ico("close",14)}</button></section>`:""}
@@ -626,24 +667,29 @@ const peces2=k=>plural(k,"level","levels");
 function weeklyHTML(){
   if(TEST)return "";
   const r=save.weekly.results[weekKey()],lock=save.unlocked<WEEKLY_FROM;
-  return `<section class="weekly"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:10px"><div class="stack" style="gap:4px"><span class="eyebrow" style="color:var(--fish)">Case of the week</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em">Case #${weekIndex()+1}</span></div><span class="pill" style="background:#222;color:var(--fish);border-color:#333">${r?"Solved":lock?"Locked":"+2 hints"}</span></div>
-    <span style="font-size:14px;line-height:1.45;color:#CFCFC6">${lock?`Opens when you reach level ${WEEKLY_FROM}. A big, tough board with the whole week to solve it.`:r?`You solved it in ${fmt(r.t)}. The next case arrives ${daysToSunday()===1?"tomorrow":`in ${daysToSunday()} days`}, on Sunday.`:`A 6×6 board, tougher than the levels. You have until Saturday. New case every Sunday.`}</span>
-    ${lock?"":`<button class="btn" style="background:var(--fish);border-color:var(--fish);color:var(--ink)" data-act="go" data-arg="weekly">${r?"See my result":"Investigate the case"} ${ico("arrow",18)}</button>`}</section>`;
+  const sub=lock?`Opens at level ${WEEKLY_FROM}`:r?`Solved in ${fmt(r.t)} · new one on Sunday`:`Tougher · until Saturday`;
+  return `<${lock?"div":"button"} class="weekly" ${lock?"":'data-act="go" data-arg="weekly"'}><span class="stack grow" style="gap:2px;text-align:left"><span class="eyebrow" style="color:var(--fish)">Case of the week · #${weekIndex()+1}</span><span style="font-size:15px;font-weight:600;color:#CFCFC6">${sub}</span></span>${lock?ico("lock",20,20,'style="color:#8A887C"'):`<span class="pill" style="background:var(--fish);color:#0A0A0A;border-color:var(--fish)">${r?"See":"+2 hints"} ${ico("arrow",14)}</span>`}</${lock?"div":"button"}>`;
 }
 function renderWeeklyResult(o){
   o=o||{};const r=save.weekly.results[weekKey()];if(!r){go("home");return}
-  app.innerHTML=`<main class="view" style="gap:18px">
-    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Case of the week</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">Case #${weekIndex()+1}</span></div></div>
-    <div class="hero"><svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>${o.fresh?"Case solved!":"You already solved this week’s case"}</h1></div>
-    <div class="stats"><div class="stat dark"><span class="eyebrow">Tu tiempo</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Cases solved</span><b>${weeklyCount()}</b></div></div>
-    <div class="rank" id="weekRank" ${TEST?"hidden":""}>${r.c?weekRankText(r):"Comparing your time with everyone else’s…"}</div>
-    ${o.fresh&&lastWeeklyGain?`<div class="rank" style="background:var(--fish)">+${lastWeeklyGain} ${lastWeeklyGain===1?"hint":"hints"} for solving the case</div>`:""}
-    ${(()=>{const nc=newCats().filter(c=>c.weekly);markSeen(nc);return newCatHTML(nc)})()}
-    <p class="center muted" style="font-size:15px">${r.h?`You used ${plural(r.h,"hint","hints")}.`:"No hints."} The next case arrives ${daysToSunday()===1?"tomorrow":`in ${daysToSunday()} days`}, on Sunday.</p>
-    <div class="stack mt-auto"><button class="btn primary" data-act="shareWeekly">Share result</button><button class="btn" data-act="go" data-arg="home">Back to home</button></div>
+  const nc=newCats().filter(c=>c.weekly);markSeen(nc);
+  app.innerHTML=`<main class="view result min">
+    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><span class="eyebrow grow center">Case of the week · #${weekIndex()+1}</span><span style="width:44px;flex:none"></span></div>
+    <div class="mid">
+      <svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
+      <h2 class="visually-hidden">${o.fresh?"Case solved!":"You already solved this week’s case"}</h2>
+      <b class="bigtime">${fmt(r.t)}</b>
+      <p class="line" id="weekRank" ${TEST?"hidden":""}>${r.c?weekRankText(r):"Comparing your time with everyone else’s…"}</p>
+      <p class="line"><b>${plural(weeklyCount(),"case solved","cases solved")}</b>${o.fresh&&lastWeeklyGain?` · <b style="color:var(--good)">+${lastWeeklyGain} hints</b>`:""}</p>
+      ${nc.map(c=>chipCat(c)).join("")}
+    </div>
+    <p class="line small center" style="margin-bottom:10px">The next case arrives ${daysToSunday()===1?"tomorrow":`in ${daysToSunday()} days`}</p>
+    <button class="btn primary" data-act="shareWeekly">Share result</button>
+    <div class="linkrow"><button class="linkbtn big" data-act="go" data-arg="home">Volver al inicio</button></div>
   </main>`;
   if(!TEST)weeklyRank(j=>{const el=$("weekRank");if(!el)return;const rr=save.weekly.results[weekKey()];if(j)el.textContent=weekRankText(rr);else if(!rr.c)el.hidden=true});
 }
+
 function shareWeekly(){
   const r=save.weekly.results[weekKey()];if(!r)return;track("comparte-semana");
   const card=`<div class="sharecard" style="background:var(--night);color:var(--on-night)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Something Fishy</b></div><span class="eyebrow" style="color:var(--fish)">Case of the week #${weekIndex()+1}</span><b style="font-size:38px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"hint","hints"):"No hints"}</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">Can you solve it?</span></div>`;
@@ -756,8 +802,8 @@ function renderGameShell(){
   :`<div class="top"><button class="round" data-act="exitGame" aria-label="Leave level">${ico("back",18)}</button>
       <div class="grow stack" style="gap:1px"><span class="eyebrow">${STAGES[si].name}</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;white-space:nowrap">Level ${G.num}</span></div>
       <span class="pill" id="timer" style="position:relative" ${relaxOn()?"hidden":""}>0:00</span></div>`;
-  app.innerHTML=`<main class="view gameview">${head}
-    <div class="supplyrow"><div class="fishrow" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
+  app.innerHTML=`<main class="view gameview${daily?" special":""}">${head}
+    <div class="supplyrow"><div class="fishrow${L.k>=6?" many":""}" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
     <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="${L.n} by ${L.n} board"></div></div>
     ${daily?dbar:'<span class="reward" id="reward"></span>'}
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -855,23 +901,33 @@ const relaxOn=()=>!!(G&&G.mode==="level"&&save.settings.relax);
 const penaltyOn=()=>G.mode!=="level"||G.num>=PENALTY_FROM;
 function livesHTML(){if(!penaltyOn())return "";const left=LIVES-G.errors;return Array.from({length:LIVES},(_,j)=>`<svg width="16" height="15" viewBox="0 0 20 18" aria-hidden="true"><path d="M10 17s-8-4.9-8-10.2C2 3.9 4.2 2 6.6 2c1.5 0 2.7.8 3.4 2 .7-1.2 1.9-2 3.4-2C15.8 2 18 3.9 18 6.8 18 12.1 10 17 10 17z" fill="${j<left?"var(--bad)":"none"}" stroke="${j<left?"var(--bad)":"#C9C6B8"}" stroke-width="1.8"/></svg>`).join("")}
 function drawLives(){const el=$("lives");if(el){el.innerHTML=livesHTML();el.setAttribute("aria-label",`${plural(LIVES-G.errors,"life","lives")} left`)}}
-function wrongFish(i){
-  flash(i,"shake");flash(i,"bad");buzz([40,40,40]);beep([220,180],.09);
-  if(!penaltyOn()){setStatus("Hmm, that fish doesn’t go there. Take another look at what the cats say.","warn");return}
+function failAttempt(msg){
+  if(!penaltyOn()){setStatus(msg,"warn");return}
+  const sig=G.cells.join("")+"|"+G.accused.slice().sort().join(",");
+  if(sig===G.failSig){setStatus(msg,"warn");return}
+  G.failSig=sig;buzz([40,40,40]);beep([220,180],.09);
+  const b=$("board");if(b){b.classList.remove("shakeb");void b.offsetWidth;b.classList.add("shakeb")}
+  penalize(msg);
+}
+function penalize(msg){
   G.errors++;if(!relaxOn())G.sec+=PENALTY;drawTime();drawLives();
   const t=$("timer");if(t&&!relaxOn()){const f=document.createElement("span");f.className="penalty";f.textContent="+"+PENALTY+"s";t.appendChild(f);setTimeout(()=>f.remove(),1200)}
   track(G.mode==="level"?"error":G.mode==="daily"?"desafio-error":"semana-error",G.mode==="level"?G.num:0);
   const left=LIVES-G.errors;
-  if(left>0){setStatus(relaxOn()?`That fish doesn’t go there. ${left===1?"1 life left.":`${left} lives left.`}`:`That fish doesn’t go there: +${PENALTY} seconds. ${left===1?"1 life left.":`${left} lives left.`}`,"warn");return}
+  if(left>0){setStatus(`${msg} ${relaxOn()?"":`+${PENALTY} seconds. `}${left===1?"1 life left.":`${left} lives left.`}`,"warn");return}
   G.paused=true;track(G.mode==="level"?"sin-vidas":G.mode==="daily"?"desafio-sin-vidas":"semana-sin-vidas",G.mode==="level"?G.num:0);
   const lvl=G.mode==="level";
   openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"Out of lives",lvl?"You made 3 mistakes. Start the level over: the clock goes back to zero.":"You made 3 mistakes. The board clears and you get your lives back, but the clock keeps running.")+
     `<div class="stack"><button class="btn primary" data-act="restartLives">Start over</button>${lvl?`<button class="btn" data-act="go" data-arg="home">Leave</button>`:""}</div>`,{dismiss:false});
 }
+function wrongFish(i){
+  flash(i,"shake");flash(i,"bad");buzz([40,40,40]);beep([220,180],.09);
+  setStatus("Hmm, that fish doesn’t go there. Take another look at what the cats say.","warn");
+}
 function restartLives(){
   closeSheet(true);if(!G)return;
   if(G.mode==="level"){const n=G.num;G.done=true;startLevel(n);return}
-  G.cells=G.cells.map((v,j)=>G.locked.has(j)?1:0);G.accused=[];G.errors=0;G.paused=false;drawLives();renderBoard();setStatus("Board cleared. You have 3 lives again.");
+  G.cells=G.cells.map((v,j)=>G.locked.has(j)?1:0);G.accused=[];G.errors=0;G.failSig="";G.paused=false;drawLives();renderBoard();setStatus("Board cleared. You have 3 lives again.");
 }
 function tapCell(i,force){
   if(!G||G.done)return;clearTag();
@@ -884,7 +940,7 @@ function tapCell(i,force){
   else{
     const placed=G.cells.filter(x=>x===1).length;
     if(placed>=G.L.k){setStatus(`You already placed ${peces(G.L.k)}. To move one, tap it to remove it.`,"warn");buzz(30);return}
-    if(!G.L.sol.includes(i)){wrongFish(i);return}
+    if(!penaltyOn()&&!G.L.sol.includes(i)){wrongFish(i);return}
     G.cells[i]=1;beep([523],.07);buzz(10);
   }
   renderBoard();check();
@@ -907,14 +963,14 @@ function check(fromCat){
   const L=G.L,placed=G.cells.filter(v=>v===1).length;
   if(placed<L.k){setStatus(fromCat&&G.accused.length?`You accused ${G.accused.length===1?"a cat":"two cats"}.`:"");return}
   const w=wrongCats();
-  if(!L.L){if(!w.length)return win();setStatus(w.length===1?"One cat doesn’t agree. Check again.":"Some cats don’t agree. Check again.","warn");return}
-  if(w.some(ci=>G.cats[ci].crown)){setStatus("With these fish, the crowned cat would be lying. And it never lies.","warn");return}
-  if(w.length===0){setStatus("With these fish nobody lies, but someone has to. Check again.","warn");return}
-  if(w.length<L.L){setStatus("With these fish only one cat lies, but there are two liars. Check again.","warn");return}
-  if(w.length>L.L){setStatus(`With these fish, more than ${L.L===1?"one cat would be":"two cats would be"} lying. Check again.`,"warn");return}
+  if(!L.L){if(!w.length)return win();failAttempt(w.length===1?"One cat doesn’t agree.":"Some cats don’t agree.");return}
+  if(w.some(ci=>G.cats[ci].crown)){failAttempt("Something’s off: the crowned cat would be lying.");return}
+  if(w.length===0){failAttempt("Something’s off: this way nobody lies.");return}
+  if(w.length<L.L){failAttempt("Something’s off: this way only one cat lies.");return}
+  if(w.length>L.L){failAttempt(`Something’s off: this way more than ${L.L===1?"one cat lies":"two cats lie"}.`);return}
   if(G.accused.length<L.L){setStatus(L.L===1?"The fish are right! Now tap the lying cat.":G.accused.length?"The fish are right! One more liar to find.":"The fish are right! Now tap the two lying cats.","ok");return}
   const bad=G.accused.filter(ci=>!w.includes(ci));
-  if(bad.length){bad.forEach(ci=>flash(G.cats[ci].i,"shake"));setStatus(L.L===1?"That cat tells the truth. The liar is another one.":"An accused cat tells the truth. Check again.","warn");buzz(40);return}
+  if(bad.length){bad.forEach(ci=>flash(G.cats[ci].i,"shake"));failAttempt(L.L===1?"That cat tells the truth. The liar is another one.":"An accused cat tells the truth.");return}
   win();
 }
 function hint(){
@@ -1089,64 +1145,70 @@ function starsHTML(n,size){let h=`<div class="stars" role="img" aria-label="${n}
 function victoryTitle(L){return L===2?"Liars caught!":L===1?"Liar caught!":"Case closed!"}
 function renderVictory(r){
   if(!r){go("home");return}
-  const st=STAGES[r.si],last=r.n>=TOTAL;
-  const note=r.relax?(r.gain?`No mistakes: 3 stars and 1 hint. You have ${plural(save.bank,"hint","hints")}.`:r.stars===3?"No mistakes: 3 stars.":`With ${plural(r.errors,"mistake","mistakes")}: ${r.stars===2?"2 stars":"1 star"}. No mistakes gets you 3.`)
-    :r.gain?`You finished in under ${fmt(r.limitA)}: 3 stars and 1 hint. You have ${plural(save.bank,"hint","hints")}.`
-    :r.full?`3 stars. You already have the maximum of ${HINT_CAP} hints, so this one isn’t added.`
-    :!r.first?"You had already beaten this level, so no hints this time."
-    :r.n<HINT_FROM?(r.stars===3?"3 stars! From the Suspects stage on, each 3-star finish gives you a hint.":`For 3 stars, finish before ${fmt(r.limitA)}.`)
-    :`With 3 stars (before ${fmt(r.limitA)}) you earn a hint.`;
+  const last=r.n>=TOTAL;
+  const tip=r.stars<3?(r.relax?"No mistakes gets you 3 stars":`3 stars: before ${fmt(r.limitA)}`):"";
   const nextLabel=r.stageJustDone?(last?"See my achievement":"Continue"):"Next level";
   const nextAct=r.stageJustDone?`data-act="stageEnd" data-arg="${r.si}"`:`data-act="play" data-arg="${r.n+1}"`;
-  app.innerHTML=`<main class="view" style="gap:22px">
-    <div class="top"><span class="eyebrow grow">Level ${r.n} · ${st.name}</span><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("close",18)}</button></div>
-    <div class="hero"><div style="position:relative;width:132px;height:120px"><svg width="120" height="120" style="color:var(--cat);position:absolute;left:0;top:0" aria-hidden="true"><use href="#cat-happy"/></svg><svg width="64" height="38" style="position:absolute;right:-6px;bottom:2px;transform:rotate(-14deg)" aria-hidden="true"><use href="#fish"/></svg></div>
-      <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,46)}</div>
-    <div class="stats"><div class="stat">${r.relax?`<span class="eyebrow">Mistakes</span><b>${r.errors}</b>`:`<span class="eyebrow">Time</span><b>${fmt(r.sec)}</b>`}</div><div class="stat"><span class="eyebrow">Hints earned</span><b style="color:${r.gain?"var(--good)":"var(--muted)"}">${r.gain?"+"+r.gain:"0"}</b></div></div>
-    <p class="center muted" style="font-size:15px;line-height:1.5">${note}</p>
-    <div class="stack mt-auto">${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
-      <button class="btn" data-act="shareLevel">Share result</button></div>
+  app.innerHTML=`<main class="view result min">
+    <div class="top"><span class="eyebrow grow">Nivel ${r.n}</span><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("close",18)}</button></div>
+    <div class="mid">
+      <svg width="104" height="104" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
+      <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,40)}
+      <p class="line">${r.relax?(r.errors?plural(r.errors,"mistake","mistakes"):"No mistakes"):`<b>${fmt(r.sec)}</b>`}${r.gain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
+      ${tip?`<p class="line small">${tip}</p>`:""}
+    </div>
+    ${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
+    <button class="linkbtn big" data-act="shareLevel">Share</button>
   </main>`;
   lastResult=r;
 }
+
 let lastResult=null;
 
 /* ---------- Fin de etapa ---------- */
 function renderStageEnd(si){
   si=+si;const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
   const conf=[[34,92,"#7B4FFF",-30,14,6],[318,120,"#0A0A0A",24,16,6],[70,300,"#FFFEF8",0,10,10],[330,270,"#7B4FFF",60,14,6],[160,72,"#0A0A0A",0,10,10],[24,210,"#FFFEF8",12,16,6],[290,360,"#FFFEF8",0,10,10]];
-  app.innerHTML=`<main class="view stage-end" style="gap:22px">
+  const nc=newCats().filter(c=>c.stage===si);markSeen(nc);
+  app.innerHTML=`<main class="view stage-end result min">
     <div class="confetti" aria-hidden="true">${conf.map(([x,y,c,r,w,h])=>`<i style="left:${x/390*100}%;top:${y}px;width:${w}px;height:${h}px;background:${c};transform:rotate(${r}deg);${w===h?"border-radius:50%":""}"></i>`).join("")}</div>
-    <div class="hero" style="position:relative;margin-top:20px"><div style="width:150px;height:150px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 8px var(--card)"><svg width="96" height="96" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
-      <span class="eyebrow" style="color:var(--ink)">You finished ${st.name}</span><h1>${next?`Promoted to ${next.name}!`:"You’re a Legend!"}</h1></div>
-    <div class="stats" style="position:relative"><div class="stat" style="border:0"><span class="eyebrow">Levels</span><b>${stageWon(si)} of ${count}</b></div><div class="stat" style="border:0"><span class="eyebrow">Stars</span><b>${stageStars(si)} of ${count*3}</b></div></div>
-    ${(()=>{const nc=newCats().filter(c=>c.stage===si);markSeen(nc);return nc.length?`<div style="position:relative">${newCatHTML(nc)}</div>`:""})()}
-    ${lastStageGain?`<p class="center" style="position:relative;font-size:16px;font-weight:700">+${lastStageGain} ${lastStageGain===1?"hint":"hints"} for finishing the stage</p>`:""}
-    ${next?`<div class="row" style="position:relative;background:var(--night);color:var(--on-night);border-radius:20px;padding:16px 18px;gap:14px"><span class="badge" style="width:44px;height:44px;background:var(--bg);color:var(--ink)">${ico("lock",20)}</span><span class="stack" style="gap:2px"><span class="eyebrow" style="color:var(--fish)">New</span><span style="font-size:15px;line-height:1.4">In ${next.name}: ${next.news}, ${next.size}.</span></span></div>`:`<p class="center" style="position:relative;font-size:16px;line-height:1.5">You finished all 150 levels of Something Fishy. Keep playing the daily challenge.</p>`}
-    <div class="stack mt-auto" style="position:relative">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">On to ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Back to home</button>`}
-      <button class="btn" data-act="shareStage" data-arg="${si}">Share my achievement</button></div>
+    <div class="top" style="position:relative"><span class="eyebrow grow" style="color:var(--ink)">You finished ${st.name}</span></div>
+    <div class="mid" style="position:relative">
+      <div style="width:120px;height:120px;border-radius:50%;background:var(--night);display:grid;place-items:center"><svg width="76" height="76" style="color:var(--cat);--eye:var(--night)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
+      <h1>${next?`Promoted to ${next.name}!`:"You’re a Legend!"}</h1>
+      <p class="line" style="color:var(--soft)"><b>${stageStars(si)} de ${count*3} ★</b>${lastStageGain?` · +${lastStageGain} ${lastStageGain===1?"hint":"hints"}`:""}</p>
+      ${next?"":`<p class="line small" style="color:var(--soft)">You finished all 150 levels. Keep playing the daily challenge.</p>`}
+      ${nc.map(c=>chipCat(c)).join("")}
+    </div>
+    <div class="stack" style="position:relative;gap:0">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">On to ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Back to home</button>`}
+      <button class="linkbtn big" data-act="shareStage" data-arg="${si}">Share my achievement</button></div>
   </main>`;
 }
+
 
 /* ---------- Desafío: resultado ---------- */
 function renderDailyResult(o){
   o=o||{};const r=save.daily.results[today()];if(!r){go("home");return}
-  const times=Object.values(save.daily.results).map(x=>x.t),best=Math.min(...times),s=streakNow();
-  app.innerHTML=`<main class="view" style="gap:18px">
-    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Daily challenge</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div></div>
-    <div class="hero">${o.fresh?`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>Challenge solved!</h1>`:`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1 style="font-size:32px">You already solved today’s challenge</h1>`}</div>
-    <div class="stats"><div class="stat dark"><span class="eyebrow">Your time</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Your best</span><b>${fmt(best)}</b></div></div>
-    ${o.fresh&&lastFreeze?`<div class="rank" style="background:var(--fish)">🛡️ You missed yesterday, but your shield saved your streak.</div>`:""}
-    <div class="rank" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparing your time with everyone else’s…"}</div>
-    ${(()=>{const nc=newCats().filter(c=>c.streak);markSeen(nc);return newCatHTML(nc)})()}
-    ${showPushAsk()?`<section class="askcard" id="pushAsk"><div class="row" style="gap:12px;align-items:flex-start"><span class="badge" style="width:44px;height:44px;border-radius:12px;background:var(--fish);flex:none">${ico("bell",22)}</span><span class="grow stack" style="gap:2px"><b style="font-size:16px">Remind you tomorrow?</b><span class="muted" style="font-size:14px;line-height:1.4">One reminder if you haven’t played yet, so your streak survives</span></span></div><div class="row" style="gap:8px"><button class="btn primary" style="flex:1;min-height:44px" data-act="pushOn">Remind me</button><button class="btn" style="flex:1;min-height:44px" data-act="pushNo">No, thanks</button></div></section>`:""}
-    <p class="center muted" style="font-size:15px">${r.h?`You used ${plural(r.h,"hint","hints")}.`:"No hints."}${o.fresh&&lastDailyGain?' <b style="color:var(--good)">+1 hint</b> for solving the challenge.':""} Share it and see who does it faster.</p>
-    <section class="card stack" style="gap:12px"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="font-size:16px">${plural(s,"day","days")} streak</h2><span class="muted" style="font-size:13px">Best: ${save.daily.best}</span></div>${weekHTML()}<span class="shield" style="color:var(--soft)">${shieldText()}. If you miss a day, the shield saves your streak. It recharges every ${FREEZE_DAYS} days.</span></section>
-    <div class="row" style="justify-content:center;background:var(--night);color:var(--on-night);border-radius:18px;padding:12px 16px;gap:10px"><span style="font-size:13px;color:#AAAAAA">New challenge in</span><b id="countdown" style="font-size:20px;color:var(--fish);font-variant-numeric:tabular-nums">${untilMidnight()}</b></div>
-    <div class="stack mt-auto"><button class="btn primary" data-act="shareDaily">Share result</button>${dayIndex()>0?`<button class="btn" data-act="go" data-arg="past">Play past days</button>`:""}<button class="btn" data-act="go" data-arg="levels">Go to levels</button></div>
+  const s=streakNow(),nc=newCats().filter(c=>c.streak);markSeen(nc);
+  app.innerHTML=`<main class="view result min">
+    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><span class="eyebrow grow center">Daily challenge · ${shortDate()}</span><span style="width:44px;flex:none"></span></div>
+    <div class="mid">
+      <svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
+      <h2 class="visually-hidden">${o.fresh?"Challenge solved!":"You already solved today’s challenge"}</h2>
+      <b class="bigtime">${fmt(r.t)}</b>
+      <p class="line" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparing your time with everyone else’s…"}</p>
+      <p class="line">🔥 <b>${s}-day</b> streak${o.fresh&&lastDailyGain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
+      ${o.fresh&&lastFreeze?`<p class="line small">🛡️ Your shield saved yesterday’s streak</p>`:""}
+      ${nc.map(c=>chipCat(c)).join("")}
+      ${showPushAsk()?`<div class="pushline" id="pushAsk">${ico("bell",16)}<span>Remind you tomorrow if you haven’t played?</span><button class="linkbtn" data-act="pushOn">Remind me</button></div>`:""}
+    </div>
+    <p class="line small center" style="margin-bottom:10px">New challenge in <b id="countdown" style="font-variant-numeric:tabular-nums">${untilMidnight()}</b></p>
+    <button class="btn primary" data-act="shareDaily">Share result</button>
+    <div class="linkrow"><button class="linkbtn big" data-act="go" data-arg="levels">Go to levels</button>${dayIndex()>0?`<button class="linkbtn big" data-act="go" data-arg="past">Past days</button>`:""}</div>
   </main>`;
   if(!TEST)refreshRank();
 }
+
 function refreshRank(){dailyRank(j=>{const el=$("rankLine");if(!el)return;const r=save.daily.results[today()];if(j)el.textContent=rankText(r);else if(!r.c)el.hidden=true})}
 setInterval(()=>{const c=$("countdown");if(c)c.textContent=untilMidnight()},1000);
 
@@ -1244,7 +1306,7 @@ function renderHow(){
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Helpers</h2>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Hint</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Shows you one step. You earn hints with 3 stars, with the daily challenge and by finishing each stage. You can keep up to 5.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("bulb",18)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Light bulb: hover over a cat to highlight what it looks at.</span></div>
-      <div class="row"><span class="pill" style="min-width:56px;justify-content:center;color:var(--bad)">♥ 3</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">If you place a fish where it doesn’t go, it won’t stay and you get +10 seconds. After 3 mistakes you start over (from level 6).</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center;color:var(--bad)">♥ 3</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">When you place all the fish and something’s off, you lose a life and get +10 seconds. After 3 mistakes you start over (from level 6).</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("x",14)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">X (from level 26): mark where you’re sure there’s no fish.</span></div></section>
   </main>`;
 }

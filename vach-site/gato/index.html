@@ -97,11 +97,11 @@ p{margin:0}
 .minib span.c{background:var(--cat-bg)}
 .bar{height:8px;border-radius:999px;background:var(--tile);overflow:hidden}
 .bar i{display:block;height:100%;background:var(--cat);border-radius:999px}
-.daily{background:var(--fish);border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.daily{background:var(--fish);border-radius:24px;padding:16px 18px;display:flex;flex-direction:column;gap:12px}
 .streak{display:flex;flex-direction:column;align-items:center;background:var(--night);color:var(--on-night);border-radius:14px;padding:8px 12px;flex:none}
 .streak b{font-size:22px;line-height:1}.streak small{font-size:11px;font-weight:600}
 .tiles3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tile-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:80px;padding:12px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
+.tile-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;min-height:70px;padding:10px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:600;cursor:pointer;text-decoration:none}
 .tile-btn svg{width:22px;height:22px}
 .tile-btn.off{background:var(--tile);border-color:transparent;color:#8A887C;cursor:default}
 .tile-btn small{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
@@ -165,7 +165,46 @@ p{margin:0}
 .newcat .art{width:76px;height:76px;border-radius:50%;background:var(--cat-bg);display:grid;place-items:center;flex:none}
 #pushState{background:var(--good);color:#fff;border-color:transparent}#pushState.off{background:var(--card);color:var(--muted);border-color:var(--line)}
 .askcard{display:flex;flex-direction:column;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px}
-.weekly{background:var(--night);color:var(--on-night);border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.weekly{background:var(--night);color:var(--on-night);border-radius:20px;padding:14px 16px;display:flex;align-items:center;gap:12px;border:0;width:100%;font:inherit;cursor:pointer}
+div.weekly{cursor:default}
+.homecard{border-radius:24px;padding:18px 18px 16px;gap:14px}
+main.home{gap:14px}
+.shieldmini{font-size:11px;margin-left:3px;vertical-align:3px}
+main.min{gap:0}
+main.min .mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding-block:12px}
+main.min h1{font-size:34px;letter-spacing:-.03em;line-height:1.05;max-width:16ch}
+main.min .line{font-size:16px;color:var(--muted);line-height:1.4;margin:0}
+main.min .line b{color:var(--ink)}
+main.min .line.small{font-size:14px}
+main.min .bigtime{font-size:68px;font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 14px 6px 6px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
+.chip i{width:34px;height:34px;border-radius:50%;background:var(--cat-bg);display:grid;place-items:center;font-style:normal}
+.linkbtn.big{font-size:15px;align-self:center;padding:14px 4px 2px}
+.linkrow{display:flex;justify-content:center;gap:22px}
+.pushline{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 8px 6px 14px}
+.pushline .linkbtn{padding:4px 8px;color:var(--cat)}
+.result h1{font-size:30px;line-height:1.05}
+.result .stat{padding:10px 14px}
+.result .newcat{padding:10px 12px}.result .newcat .art{width:60px;height:60px}
+@media (max-height:760px){.result{padding-block:12px 14px;gap:10px!important}.result .hero{gap:8px}.result h1{font-size:26px}
+  .result .week i{width:30px;height:30px}.result .week div{gap:2px}.result .rank{padding:8px 12px;font-size:14px}.result .stat b{font-size:24px}.result .subnote{display:none}
+  .stage-end .hero>div:first-child{width:84px!important;height:84px!important}.stage-end .hero>div:first-child svg{width:54px;height:54px}.result .btn{min-height:46px}}
+@media (max-height:620px){.result .week{display:none}.resbtns{flex-direction:row!important}.resbtns>*{flex:1}.resbtns .pastbtn{display:none}.resbtns .btn{font-size:14px!important;padding:0 8px}.result .rowhero svg{display:none}.result h1{font-size:22px}.result .newcat .art{width:46px;height:46px}.result .newcat .art svg{width:44px;height:44px}
+  .stage-end .newsbox{display:none}.stage-end .hero>div:first-child{display:none!important}.result .hero svg[width="90"]{width:64px;height:64px}.result .hero>div[style*="width:100px"]{width:72px!important;height:64px!important}}
+.hdate{font-size:19px;font-weight:700;letter-spacing:-.02em;line-height:1.15}
+main.home .streak{padding:6px 10px}main.home .streak b{font-size:20px}main.home .streak small{font-size:10px}
+html.dark .btn.primary{background:#7B4FFF;color:#fff;border-color:#7B4FFF}
+html.dark .btn.primary span[style*="var(--fish)"]{color:#FFF3B8!important}
+@media (max-height:720px){
+  main.home{gap:10px;padding-block:12px 14px}
+  main.home .top{min-height:40px}
+  .homecard{padding:14px 16px;gap:10px}
+  .homecard .btn{min-height:46px!important}
+  .daily{padding:14px 16px;gap:10px}
+  .daily .btn{min-height:44px!important}
+  .weekly{padding:12px 14px}
+}
+@media (max-height:620px){.tiles3 .tile-btn{min-height:50px;flex-direction:row;gap:6px;font-size:13px;padding:8px 6px}}
 .shield{font-size:13px;font-weight:600;line-height:1.4}
 .week i.fz{background:var(--cat-bg);font-size:13px;font-style:normal}
 .lives{display:inline-flex;gap:2px;align-items:center}
@@ -174,6 +213,7 @@ p{margin:0}
 .cell.bad{background:var(--bad-bg)!important;box-shadow:inset 0 0 0 3px var(--bad)}
 .linkbtn{background:none;border:0;padding:6px 0;font:inherit;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .list button.justdone{animation:pop .5s ease-out both;box-shadow:inset 0 0 0 2px var(--good)}
+.board.shakeb{animation:shake .4s}
 .tile-btn .dot{position:absolute;top:8px;right:10px;width:10px;height:10px;border-radius:50%;background:var(--bad)}
 .installcard{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px 10px 10px 12px}
 .installcard img{border-radius:11px;flex:none}
@@ -250,8 +290,11 @@ html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
 .board-wrap{position:relative}
 .gameview{gap:16px;padding-top:max(28px,calc(env(safe-area-inset-top,0px) + 20px))}
 .gameview>.top{margin-bottom:6px}
+.gameview{--over:310px}.gameview.special{--over:360px}
+.gameview .board-wrap{width:100%;align-self:center;max-width:max(220px,calc(100vh - var(--over)));max-width:max(220px,calc(100dvh - var(--over)))}
+@media (max-height:720px){.gameview{gap:10px;padding-top:12px;padding-bottom:14px;--over:240px}.gameview.special{--over:322px}.gameview>.top{margin-bottom:0}.dailybar{padding:8px 14px}.dailybar b{font-size:24px}}
 .supplyrow{display:flex;align-items:center;gap:10px;min-height:28px;padding:0 2px}
-.supplyrow .fishrow{justify-content:flex-start}
+.supplyrow .fishrow{justify-content:flex-start;flex-wrap:nowrap}.supplyrow .fishrow.many{gap:3px}.supplyrow .fishrow.many svg{width:25px;height:15px}
 .supplyrow .lives{margin-left:auto}
 .cell.cheer{animation:cheer .55s ease-out both;animation-delay:var(--d,0ms)}
 .cell.cat.cheer{background:#D9F2EA}.cell.cat.cheer .clue{color:var(--good)}.cell.cat.cheer .face{animation:blink .55s var(--d,0ms) both}
@@ -408,6 +451,7 @@ function newCatHTML(list){
   if(!list.length)return "";
   return list.map(c=>`<button class="newcat" data-act="go" data-arg="album"><span class="art">${catArt(c,64)}</span><span class="stack" style="gap:2px;text-align:left"><span class="eyebrow" style="color:var(--cat)">Nuevo gato para tu álbum</span><b style="font-size:18px">${c.name}</b><span class="muted" style="font-size:13px">${albumCount()} de ${ALBUM.length} gatos</span></span></button>`).join("");
 }
+function chipCat(c){return `<button class="chip" data-act="go" data-arg="album"><i>${catArt(c,26)}</i>Nuevo gato: ${c.name}</button>`}
 function renderAlbum(){
   const n=albumCount();
   app.innerHTML=`<main class="view" style="gap:16px"><div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><h1 class="grow">Álbum</h1><span class="muted" style="font-size:14px;font-weight:600">${n} de ${ALBUM.length}</span></div>
@@ -591,25 +635,22 @@ function renderHome(){
   const left=st.to-(n-1)-(save.won[n]?1:0);
   const dk=save.daily.results[today()];
   const s=streakNow();
-  app.innerHTML=`<main class="view">
+  app.innerHTML=`<main class="view home">
     <div class="top"><div class="brand grow">${ico("cat",34,34,'style="color:var(--cat)"')}Gato Encerrado</div>
       <button class="round" data-act="go" data-arg="settings" aria-label="Ajustes">${ico("gear",20)}</button></div>
     ${TEST?`<section class="card stack" style="gap:10px;border:2px dashed var(--cat)"><span class="eyebrow" style="color:var(--cat)">Modo prueba</span><span style="font-size:14px;line-height:1.45">Todos los niveles están abiertos. Jugá en orden desde el nivel ${TEST_FROM} y, al terminar, mandá tus tiempos. Lo que juegues acá no se mezcla con tu partida normal.</span><span class="muted" style="font-size:13px">${plural(save.log.length,"registro","registros")} guardados</span><div class="row" style="gap:8px"><a class="btn primary" style="flex:1;padding:0 12px" href="https://wa.me/?text=${encodeURIComponent(testText())}" target="_blank" rel="noopener">WhatsApp</a><button class="btn" style="flex:1;padding:0 12px" data-act="copyLog">Copiar</button></div><button data-act="clearLog" style="background:none;border:0;font-weight:700;font-size:13px;color:var(--muted);min-height:36px;cursor:pointer">Empezar la prueba de nuevo</button></section>`:""}
-    <section class="card stack" style="border-radius:24px;padding:22px 20px 20px;gap:18px">
+    <section class="card stack homecard">
       <div class="row" style="justify-content:space-between;align-items:baseline"><span class="eyebrow">Etapa ${si+1} · ${st.name}</span><span class="muted" style="font-size:13px;font-weight:600">${done?"150 de 150":`Nivel ${n} de ${TOTAL}`}</span></div>
-      <div class="minib" aria-hidden="true"><span></span><span class="c">${ico("cat",26,26,'style="color:var(--cat);--eye:var(--cat-bg)"')}</span><span></span><span>${ico("fish",30,18)}</span><span>${ico("fish",30,18)}</span><span></span><span></span><span class="c">${ico("cat",26,26,'style="color:var(--cat);--eye:var(--cat-bg)"')}</span></div>
-      <button class="btn primary" style="width:auto;align-self:center;padding:0 28px;min-height:48px" data-act="${done?"go":"play"}" data-arg="${done?"levels":n}"><span style="font-size:17px">${done?"Ver niveles":"Jugar"}</span>${done?"":`<span style="color:var(--fish);font-weight:500">Nivel ${n}</span>`}</button>
-      <div class="stack" style="gap:6px"><div class="bar"><i style="width:${pct}%"></i></div>
-        <span class="muted" style="font-size:13px">${done?"Terminaste los 150 niveles. ¡Sos una Leyenda!":next?`Te faltan ${peces2(left)} para la etapa ${next.name}`:`Te faltan ${peces2(left)} para terminar el juego`}</span></div>
+      <div class="bar" role="img" aria-label="${done?"Terminaste los 150 niveles. ¡Sos una Leyenda!":next?`Te faltan ${peces2(left)} para la etapa ${next.name}`:`Te faltan ${peces2(left)} para terminar el juego`}"><i style="width:${pct}%"></i></div>
+      <button class="btn primary" style="min-height:50px" data-act="${done?"go":"play"}" data-arg="${done?"levels":n}"><span style="font-size:17px">${done?"Ver niveles":"Jugar"}</span>${done?"":`<span style="color:var(--fish);font-weight:500">Nivel ${n}</span>`}</button>
     </section>
     <section class="daily">
-      <div class="row" style="justify-content:space-between;align-items:flex-start">
-        <div class="stack" style="gap:4px"><span class="eyebrow" style="color:var(--ink)">Desafío del día</span><span style="font-size:22px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div>
-        <div class="streak"><b>${s}</b><small>${s===1?"día seguido":"días seguidos"}</small></div>
+      <div class="row" style="justify-content:space-between;align-items:center">
+        <div class="stack" style="gap:2px"><span class="eyebrow" style="color:var(--ink)">Desafío del día</span><span class="hdate">${longDate()}</span></div>
+        <div class="streak" title="${shieldText()}"><b>${s}${s>0&&freezeReady()?'<span class="shieldmini" aria-hidden="true">🛡️</span>':""}</b><small>${s===1?"día seguido":"días seguidos"}</small></div>
       </div>
-      <span style="font-size:14px;line-height:1.45">${dk?`Ya lo resolviste en ${fmt(dk.t)}. Volvé mañana para seguir la racha.`:"Un tablero nuevo cada día, igual para todos. Compará tu tiempo con tus amigos."}</span>
-      <button class="btn" data-act="go" data-arg="daily">${dk?"Ver mi resultado":"Jugar el desafío"} ${ico("arrow",18)}</button>
-      <div class="row" style="justify-content:space-between;gap:10px;flex-wrap:wrap">${s>0||save.daily.freeze?`<span class="shield">${shieldText()}</span>`:"<span></span>"}${dayIndex()>0?`<button class="linkbtn" data-act="go" data-arg="past">Días anteriores ${ico("chev",14)}</button>`:""}</div>
+      <button class="btn" style="min-height:48px" data-act="go" data-arg="daily">${dk?`Ver mi resultado · ${fmt(dk.t)}`:"Jugar el desafío"} ${ico("arrow",18)}</button>
+      ${dayIndex()>0?`<button class="linkbtn" style="align-self:center;margin-top:-6px" data-act="go" data-arg="past">Días anteriores</button>`:""}
     </section>
     ${weeklyHTML()}
     ${showInstallCard()?`<section class="installcard"><img src="/gato/icon-192.png" width="44" height="44" alt="" onerror="this.remove()"><span class="grow stack" style="gap:1px"><b style="font-size:15px">Tenelo como app</b><span class="muted" style="font-size:13px">En tu pantalla de inicio y sin internet</span></span><button class="btn primary" style="width:auto;min-height:40px;padding:0 16px" data-act="installApp">Instalar</button><button class="round" style="width:36px;height:36px" data-act="hideInstall" aria-label="No mostrar más">${ico("close",14)}</button></section>`:""}
@@ -626,24 +667,29 @@ const peces2=k=>plural(k,"nivel","niveles");
 function weeklyHTML(){
   if(TEST)return "";
   const r=save.weekly.results[weekKey()],lock=save.unlocked<WEEKLY_FROM;
-  return `<section class="weekly"><div class="row" style="justify-content:space-between;align-items:flex-start;gap:10px"><div class="stack" style="gap:4px"><span class="eyebrow" style="color:var(--fish)">Caso de la semana</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em">Caso n.º ${weekIndex()+1}</span></div><span class="pill" style="background:#222;color:var(--fish);border-color:#333">${r?"Resuelto":lock?"Cerrado":"+2 pistas"}</span></div>
-    <span style="font-size:14px;line-height:1.45;color:#CFCFC6">${lock?`Se abre cuando llegues al nivel ${WEEKLY_FROM}. Es un tablero grande y difícil, con toda la semana para resolverlo.`:r?`Lo resolviste en ${fmt(r.t)}. El próximo caso llega ${daysToSunday()===1?"mañana":`en ${daysToSunday()} días`}, el domingo.`:`Un tablero de 6×6 más difícil que los niveles. Tenés hasta el sábado. Nuevo caso cada domingo.`}</span>
-    ${lock?"":`<button class="btn" style="background:var(--fish);border-color:var(--fish);color:var(--ink)" data-act="go" data-arg="weekly">${r?"Ver mi resultado":"Investigar el caso"} ${ico("arrow",18)}</button>`}</section>`;
+  const sub=lock?`Se abre en el nivel ${WEEKLY_FROM}`:r?`Resuelto en ${fmt(r.t)} · nuevo el domingo`:`Más difícil · hasta el sábado`;
+  return `<${lock?"div":"button"} class="weekly" ${lock?"":'data-act="go" data-arg="weekly"'}><span class="stack grow" style="gap:2px;text-align:left"><span class="eyebrow" style="color:var(--fish)">Caso de la semana · n.º ${weekIndex()+1}</span><span style="font-size:15px;font-weight:600;color:#CFCFC6">${sub}</span></span>${lock?ico("lock",20,20,'style="color:#8A887C"'):`<span class="pill" style="background:var(--fish);color:#0A0A0A;border-color:var(--fish)">${r?"Ver":"+2 pistas"} ${ico("arrow",14)}</span>`}</${lock?"div":"button"}>`;
 }
 function renderWeeklyResult(o){
   o=o||{};const r=save.weekly.results[weekKey()];if(!r){go("home");return}
-  app.innerHTML=`<main class="view" style="gap:18px">
-    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Caso de la semana</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">Caso n.º ${weekIndex()+1}</span></div></div>
-    <div class="hero"><svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>${o.fresh?"¡Caso resuelto!":"Ya resolviste el caso de esta semana"}</h1></div>
-    <div class="stats"><div class="stat dark"><span class="eyebrow">Tu tiempo</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Casos resueltos</span><b>${weeklyCount()}</b></div></div>
-    <div class="rank" id="weekRank" ${TEST?"hidden":""}>${r.c?weekRankText(r):"Comparando tu tiempo con el de los demás…"}</div>
-    ${o.fresh&&lastWeeklyGain?`<div class="rank" style="background:var(--fish)">+${lastWeeklyGain} ${lastWeeklyGain===1?"pista":"pistas"} por resolver el caso</div>`:""}
-    ${(()=>{const nc=newCats().filter(c=>c.weekly);markSeen(nc);return newCatHTML(nc)})()}
-    <p class="center muted" style="font-size:15px">${r.h?`Usaste ${plural(r.h,"pista","pistas")}.`:"Sin pistas."} El próximo caso llega ${daysToSunday()===1?"mañana":`en ${daysToSunday()} días`}, el domingo.</p>
-    <div class="stack mt-auto"><button class="btn primary" data-act="shareWeekly">Compartir resultado</button><button class="btn" data-act="go" data-arg="home">Volver al inicio</button></div>
+  const nc=newCats().filter(c=>c.weekly);markSeen(nc);
+  app.innerHTML=`<main class="view result min">
+    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><span class="eyebrow grow center">Caso de la semana · n.º ${weekIndex()+1}</span><span style="width:44px;flex:none"></span></div>
+    <div class="mid">
+      <svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
+      <h2 class="visually-hidden">${o.fresh?"¡Caso resuelto!":"Ya resolviste el caso de esta semana"}</h2>
+      <b class="bigtime">${fmt(r.t)}</b>
+      <p class="line" id="weekRank" ${TEST?"hidden":""}>${r.c?weekRankText(r):"Comparando tu tiempo con el de los demás…"}</p>
+      <p class="line"><b>${plural(weeklyCount(),"caso resuelto","casos resueltos")}</b>${o.fresh&&lastWeeklyGain?` · <b style="color:var(--good)">+${lastWeeklyGain} pistas</b>`:""}</p>
+      ${nc.map(c=>chipCat(c)).join("")}
+    </div>
+    <p class="line small center" style="margin-bottom:10px">El próximo caso llega ${daysToSunday()===1?"mañana":`en ${daysToSunday()} días`}</p>
+    <button class="btn primary" data-act="shareWeekly">Compartir resultado</button>
+    <div class="linkrow"><button class="linkbtn big" data-act="go" data-arg="home">Volver al inicio</button></div>
   </main>`;
   if(!TEST)weeklyRank(j=>{const el=$("weekRank");if(!el)return;const rr=save.weekly.results[weekKey()];if(j)el.textContent=weekRankText(rr);else if(!rr.c)el.hidden=true});
 }
+
 function shareWeekly(){
   const r=save.weekly.results[weekKey()];if(!r)return;track("comparte-semana");
   const card=`<div class="sharecard" style="background:var(--night);color:var(--on-night)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Gato Encerrado</b></div><span class="eyebrow" style="color:var(--fish)">Caso de la semana n.º ${weekIndex()+1}</span><b style="font-size:38px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"pista","pistas"):"Sin pistas"}</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">¿Lo resolvés?</span></div>`;
@@ -756,8 +802,8 @@ function renderGameShell(){
   :`<div class="top"><button class="round" data-act="exitGame" aria-label="Salir del nivel">${ico("back",18)}</button>
       <div class="grow stack" style="gap:1px"><span class="eyebrow">${STAGES[si].name}</span><span style="font-size:20px;font-weight:700;letter-spacing:-.02em;white-space:nowrap">Nivel ${G.num}</span></div>
       <span class="pill" id="timer" style="position:relative" ${relaxOn()?"hidden":""}>0:00</span></div>`;
-  app.innerHTML=`<main class="view gameview">${head}
-    <div class="supplyrow"><div class="fishrow" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
+  app.innerHTML=`<main class="view gameview${daily?" special":""}">${head}
+    <div class="supplyrow"><div class="fishrow${L.k>=6?" many":""}" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
     <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="Tablero de ${L.n} por ${L.n}"></div></div>
     ${daily?dbar:'<span class="reward" id="reward"></span>'}
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -855,23 +901,33 @@ const relaxOn=()=>!!(G&&G.mode==="level"&&save.settings.relax);
 const penaltyOn=()=>G.mode!=="level"||G.num>=PENALTY_FROM;
 function livesHTML(){if(!penaltyOn())return "";const left=LIVES-G.errors;return Array.from({length:LIVES},(_,j)=>`<svg width="16" height="15" viewBox="0 0 20 18" aria-hidden="true"><path d="M10 17s-8-4.9-8-10.2C2 3.9 4.2 2 6.6 2c1.5 0 2.7.8 3.4 2 .7-1.2 1.9-2 3.4-2C15.8 2 18 3.9 18 6.8 18 12.1 10 17 10 17z" fill="${j<left?"var(--bad)":"none"}" stroke="${j<left?"var(--bad)":"#C9C6B8"}" stroke-width="1.8"/></svg>`).join("")}
 function drawLives(){const el=$("lives");if(el){el.innerHTML=livesHTML();el.setAttribute("aria-label",`Te quedan ${plural(LIVES-G.errors,"vida","vidas")}`)}}
-function wrongFish(i){
-  flash(i,"shake");flash(i,"bad");buzz([40,40,40]);beep([220,180],.09);
-  if(!penaltyOn()){setStatus("Mmm, ese pez no va ahí. Mirá bien lo que dicen los gatos.","warn");return}
+function failAttempt(msg){
+  if(!penaltyOn()){setStatus(msg,"warn");return}
+  const sig=G.cells.join("")+"|"+G.accused.slice().sort().join(",");
+  if(sig===G.failSig){setStatus(msg,"warn");return}
+  G.failSig=sig;buzz([40,40,40]);beep([220,180],.09);
+  const b=$("board");if(b){b.classList.remove("shakeb");void b.offsetWidth;b.classList.add("shakeb")}
+  penalize(msg);
+}
+function penalize(msg){
   G.errors++;if(!relaxOn())G.sec+=PENALTY;drawTime();drawLives();
   const t=$("timer");if(t&&!relaxOn()){const f=document.createElement("span");f.className="penalty";f.textContent="+"+PENALTY+"s";t.appendChild(f);setTimeout(()=>f.remove(),1200)}
   track(G.mode==="level"?"error":G.mode==="daily"?"desafio-error":"semana-error",G.mode==="level"?G.num:0);
   const left=LIVES-G.errors;
-  if(left>0){setStatus(relaxOn()?`Ese pez no va ahí. ${left===1?"Te queda 1 vida.":`Te quedan ${left} vidas.`}`:`Ese pez no va ahí: +${PENALTY} segundos. ${left===1?"Te queda 1 vida.":`Te quedan ${left} vidas.`}`,"warn");return}
+  if(left>0){setStatus(`${msg} ${relaxOn()?"":`+${PENALTY} segundos. `}${left===1?"Te queda 1 vida.":`Te quedan ${left} vidas.`}`,"warn");return}
   G.paused=true;track(G.mode==="level"?"sin-vidas":G.mode==="daily"?"desafio-sin-vidas":"semana-sin-vidas",G.mode==="level"?G.num:0);
   const lvl=G.mode==="level";
   openSheet(heroSheet(`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-sad"/></svg>`,"Te quedaste sin vidas",lvl?"Te equivocaste 3 veces. Volvé a empezar el nivel: el reloj arranca de cero.":"Te equivocaste 3 veces. El tablero se limpia y recuperás las vidas, pero el reloj sigue corriendo.")+
     `<div class="stack"><button class="btn primary" data-act="restartLives">Volver a empezar</button>${lvl?`<button class="btn" data-act="go" data-arg="home">Salir</button>`:""}</div>`,{dismiss:false});
 }
+function wrongFish(i){
+  flash(i,"shake");flash(i,"bad");buzz([40,40,40]);beep([220,180],.09);
+  setStatus("Mmm, ese pez no va ahí. Mirá bien lo que dicen los gatos.","warn");
+}
 function restartLives(){
   closeSheet(true);if(!G)return;
   if(G.mode==="level"){const n=G.num;G.done=true;startLevel(n);return}
-  G.cells=G.cells.map((v,j)=>G.locked.has(j)?1:0);G.accused=[];G.errors=0;G.paused=false;drawLives();renderBoard();setStatus("Tablero limpio. Tenés 3 vidas otra vez.");
+  G.cells=G.cells.map((v,j)=>G.locked.has(j)?1:0);G.accused=[];G.errors=0;G.failSig="";G.paused=false;drawLives();renderBoard();setStatus("Tablero limpio. Tenés 3 vidas otra vez.");
 }
 function tapCell(i,force){
   if(!G||G.done)return;clearTag();
@@ -884,7 +940,7 @@ function tapCell(i,force){
   else{
     const placed=G.cells.filter(x=>x===1).length;
     if(placed>=G.L.k){setStatus(`Ya pusiste ${peces(G.L.k)}. Para cambiar uno de lugar, tocalo para sacarlo.`,"warn");buzz(30);return}
-    if(!G.L.sol.includes(i)){wrongFish(i);return}
+    if(!penaltyOn()&&!G.L.sol.includes(i)){wrongFish(i);return}
     G.cells[i]=1;beep([523],.07);buzz(10);
   }
   renderBoard();check();
@@ -907,14 +963,14 @@ function check(fromCat){
   const L=G.L,placed=G.cells.filter(v=>v===1).length;
   if(placed<L.k){setStatus(fromCat&&G.accused.length?`Acusaste a ${G.accused.length===1?"un gato":"dos gatos"}.`:"");return}
   const w=wrongCats();
-  if(!L.L){if(!w.length)return win();setStatus(w.length===1?"Hay un gato que no está de acuerdo. Revisá.":"Hay gatos que no están de acuerdo. Revisá.","warn");return}
-  if(w.some(ci=>G.cats[ci].crown)){setStatus("Con estos peces, el gato con corona estaría mintiendo. Y nunca miente.","warn");return}
-  if(w.length===0){setStatus("Con estos peces nadie miente, pero alguien tiene que mentir. Revisá.","warn");return}
-  if(w.length<L.L){setStatus("Con estos peces miente un solo gato, pero son dos. Revisá.","warn");return}
-  if(w.length>L.L){setStatus(`Con estos peces, más de ${L.L===1?"un gato estaría":"dos gatos estarían"} mintiendo. Revisá.`,"warn");return}
+  if(!L.L){if(!w.length)return win();failAttempt(w.length===1?"Hay un gato que no está de acuerdo.":"Hay gatos que no están de acuerdo.");return}
+  if(w.some(ci=>G.cats[ci].crown)){failAttempt("Algo no cierra: el gato con corona estaría mintiendo.");return}
+  if(w.length===0){failAttempt("Algo no cierra: así nadie miente.");return}
+  if(w.length<L.L){failAttempt("Algo no cierra: así miente un solo gato.");return}
+  if(w.length>L.L){failAttempt(`Algo no cierra: así mienten más de ${L.L===1?"un gato":"dos gatos"}.`);return}
   if(G.accused.length<L.L){setStatus(L.L===1?"¡Los peces están bien! Ahora tocá al gato mentiroso.":G.accused.length?"¡Los peces están bien! Falta descubrir a otro gato.":"¡Los peces están bien! Ahora tocá a los dos gatos mentirosos.","ok");return}
   const bad=G.accused.filter(ci=>!w.includes(ci));
-  if(bad.length){bad.forEach(ci=>flash(G.cats[ci].i,"shake"));setStatus(L.L===1?"Ese gato dice la verdad. El mentiroso es otro.":"Un gato acusado dice la verdad. Revisá.","warn");buzz(40);return}
+  if(bad.length){bad.forEach(ci=>flash(G.cats[ci].i,"shake"));failAttempt(L.L===1?"Ese gato dice la verdad. El mentiroso es otro.":"Un gato acusado dice la verdad.");return}
   win();
 }
 function hint(){
@@ -1089,64 +1145,70 @@ function starsHTML(n,size){let h=`<div class="stars" role="img" aria-label="${n}
 function victoryTitle(L){return L===2?"¡Mentirosos descubiertos!":L===1?"¡Mentiroso descubierto!":"¡Caso cerrado!"}
 function renderVictory(r){
   if(!r){go("home");return}
-  const st=STAGES[r.si],last=r.n>=TOTAL;
-  const note=r.relax?(r.gain?`Sin errores: 3 estrellas y 1 pista. Tenés ${plural(save.bank,"pista","pistas")}.`:r.stars===3?"Sin errores: 3 estrellas.":`Con ${plural(r.errors,"error","errores")}: ${r.stars===2?"2 estrellas":"1 estrella"}. Sin errores son 3.`)
-    :r.gain?`Terminaste en menos de ${fmt(r.limitA)}: 3 estrellas y 1 pista. Tenés ${plural(save.bank,"pista","pistas")}.`
-    :r.full?`3 estrellas. Ya tenés el máximo de ${HINT_CAP} pistas, así que esta no se suma.`
-    :!r.first?"Ya habías ganado este nivel, así que no suma pistas."
-    :r.n<HINT_FROM?(r.stars===3?"¡3 estrellas! Desde la etapa Sospechas, cada 3 estrellas te da una pista.":`Para 3 estrellas, terminalo antes de ${fmt(r.limitA)}.`)
-    :`Con 3 estrellas (antes de ${fmt(r.limitA)}) ganás una pista.`;
+  const last=r.n>=TOTAL;
+  const tip=r.stars<3?(r.relax?"Sin errores son 3 estrellas":`3 estrellas: antes de ${fmt(r.limitA)}`):"";
   const nextLabel=r.stageJustDone?(last?"Ver mi logro":"Seguir"):"Siguiente nivel";
   const nextAct=r.stageJustDone?`data-act="stageEnd" data-arg="${r.si}"`:`data-act="play" data-arg="${r.n+1}"`;
-  app.innerHTML=`<main class="view" style="gap:22px">
-    <div class="top"><span class="eyebrow grow">Nivel ${r.n} · ${st.name}</span><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("close",18)}</button></div>
-    <div class="hero"><div style="position:relative;width:132px;height:120px"><svg width="120" height="120" style="color:var(--cat);position:absolute;left:0;top:0" aria-hidden="true"><use href="#cat-happy"/></svg><svg width="64" height="38" style="position:absolute;right:-6px;bottom:2px;transform:rotate(-14deg)" aria-hidden="true"><use href="#fish"/></svg></div>
-      <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,46)}</div>
-    <div class="stats"><div class="stat">${r.relax?`<span class="eyebrow">Errores</span><b>${r.errors}</b>`:`<span class="eyebrow">Tiempo</span><b>${fmt(r.sec)}</b>`}</div><div class="stat"><span class="eyebrow">Pistas ganadas</span><b style="color:${r.gain?"var(--good)":"var(--muted)"}">${r.gain?"+"+r.gain:"0"}</b></div></div>
-    <p class="center muted" style="font-size:15px;line-height:1.5">${note}</p>
-    <div class="stack mt-auto">${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
-      <button class="btn" data-act="shareLevel">Compartir resultado</button></div>
+  app.innerHTML=`<main class="view result min">
+    <div class="top"><span class="eyebrow grow">Nivel ${r.n}</span><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("close",18)}</button></div>
+    <div class="mid">
+      <svg width="104" height="104" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
+      <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,40)}
+      <p class="line">${r.relax?(r.errors?plural(r.errors,"error","errores"):"Sin errores"):`<b>${fmt(r.sec)}</b>`}${r.gain?` · <b style="color:var(--good)">+1 pista</b>`:""}</p>
+      ${tip?`<p class="line small">${tip}</p>`:""}
+    </div>
+    ${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
+    <button class="linkbtn big" data-act="shareLevel">Compartir</button>
   </main>`;
   lastResult=r;
 }
+
 let lastResult=null;
 
 /* ---------- Fin de etapa ---------- */
 function renderStageEnd(si){
   si=+si;const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
   const conf=[[34,92,"#7B4FFF",-30,14,6],[318,120,"#0A0A0A",24,16,6],[70,300,"#FFFEF8",0,10,10],[330,270,"#7B4FFF",60,14,6],[160,72,"#0A0A0A",0,10,10],[24,210,"#FFFEF8",12,16,6],[290,360,"#FFFEF8",0,10,10]];
-  app.innerHTML=`<main class="view stage-end" style="gap:22px">
+  const nc=newCats().filter(c=>c.stage===si);markSeen(nc);
+  app.innerHTML=`<main class="view stage-end result min">
     <div class="confetti" aria-hidden="true">${conf.map(([x,y,c,r,w,h])=>`<i style="left:${x/390*100}%;top:${y}px;width:${w}px;height:${h}px;background:${c};transform:rotate(${r}deg);${w===h?"border-radius:50%":""}"></i>`).join("")}</div>
-    <div class="hero" style="position:relative;margin-top:20px"><div style="width:150px;height:150px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 8px var(--card)"><svg width="96" height="96" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
-      <span class="eyebrow" style="color:var(--ink)">Terminaste ${st.name}</span><h1>${next?`¡Ascendiste a ${next.name}!`:"¡Sos una Leyenda!"}</h1></div>
-    <div class="stats" style="position:relative"><div class="stat" style="border:0"><span class="eyebrow">Niveles</span><b>${stageWon(si)} de ${count}</b></div><div class="stat" style="border:0"><span class="eyebrow">Estrellas</span><b>${stageStars(si)} de ${count*3}</b></div></div>
-    ${(()=>{const nc=newCats().filter(c=>c.stage===si);markSeen(nc);return nc.length?`<div style="position:relative">${newCatHTML(nc)}</div>`:""})()}
-    ${lastStageGain?`<p class="center" style="position:relative;font-size:16px;font-weight:700">+${lastStageGain} ${lastStageGain===1?"pista":"pistas"} por terminar la etapa</p>`:""}
-    ${next?`<div class="row" style="position:relative;background:var(--night);color:var(--on-night);border-radius:20px;padding:16px 18px;gap:14px"><span class="badge" style="width:44px;height:44px;background:var(--bg);color:var(--ink)">${ico("lock",20)}</span><span class="stack" style="gap:2px"><span class="eyebrow" style="color:var(--fish)">Novedad</span><span style="font-size:15px;line-height:1.4">En ${next.name}: ${next.news}, ${next.size}.</span></span></div>`:`<p class="center" style="position:relative;font-size:16px;line-height:1.5">Terminaste los 150 niveles de Gato Encerrado. Seguí jugando el desafío de cada día.</p>`}
-    <div class="stack mt-auto" style="position:relative">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">Seguir a ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Volver al inicio</button>`}
-      <button class="btn" data-act="shareStage" data-arg="${si}">Compartir mi logro</button></div>
+    <div class="top" style="position:relative"><span class="eyebrow grow" style="color:var(--ink)">Terminaste ${st.name}</span></div>
+    <div class="mid" style="position:relative">
+      <div style="width:120px;height:120px;border-radius:50%;background:var(--night);display:grid;place-items:center"><svg width="76" height="76" style="color:var(--cat);--eye:var(--night)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
+      <h1>${next?`¡Ascendiste a ${next.name}!`:"¡Sos una Leyenda!"}</h1>
+      <p class="line" style="color:var(--soft)"><b>${stageStars(si)} de ${count*3} ★</b>${lastStageGain?` · +${lastStageGain} ${lastStageGain===1?"pista":"pistas"}`:""}</p>
+      ${next?"":`<p class="line small" style="color:var(--soft)">Terminaste los 150 niveles. Seguí con el desafío de cada día.</p>`}
+      ${nc.map(c=>chipCat(c)).join("")}
+    </div>
+    <div class="stack" style="position:relative;gap:0">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">Seguir a ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Volver al inicio</button>`}
+      <button class="linkbtn big" data-act="shareStage" data-arg="${si}">Compartir mi logro</button></div>
   </main>`;
 }
+
 
 /* ---------- Desafío: resultado ---------- */
 function renderDailyResult(o){
   o=o||{};const r=save.daily.results[today()];if(!r){go("home");return}
-  const times=Object.values(save.daily.results).map(x=>x.t),best=Math.min(...times),s=streakNow();
-  app.innerHTML=`<main class="view" style="gap:18px">
-    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><div class="stack" style="gap:1px"><span class="eyebrow">Desafío del día</span><span style="font-size:18px;font-weight:700;letter-spacing:-.02em">${longDate()}</span></div></div>
-    <div class="hero">${o.fresh?`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1>¡Desafío resuelto!</h1>`:`<svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg><h1 style="font-size:32px">Ya resolviste el desafío de hoy</h1>`}</div>
-    <div class="stats"><div class="stat dark"><span class="eyebrow">Tu tiempo</span><b>${fmt(r.t)}</b></div><div class="stat"><span class="eyebrow">Tu mejor tiempo</span><b>${fmt(best)}</b></div></div>
-    ${o.fresh&&lastFreeze?`<div class="rank" style="background:var(--fish)">🛡️ Ayer no jugaste, pero tu protector salvó la racha.</div>`:""}
-    <div class="rank" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparando tu tiempo con el de los demás…"}</div>
-    ${(()=>{const nc=newCats().filter(c=>c.streak);markSeen(nc);return newCatHTML(nc)})()}
-    ${showPushAsk()?`<section class="askcard" id="pushAsk"><div class="row" style="gap:12px;align-items:flex-start"><span class="badge" style="width:44px;height:44px;border-radius:12px;background:var(--fish);flex:none">${ico("bell",22)}</span><span class="grow stack" style="gap:2px"><b style="font-size:16px">¿Te aviso mañana?</b><span class="muted" style="font-size:14px;line-height:1.4">Un recordatorio si todavía no jugaste, para no cortar la racha</span></span></div><div class="row" style="gap:8px"><button class="btn primary" style="flex:1;min-height:44px" data-act="pushOn">Avisame</button><button class="btn" style="flex:1;min-height:44px" data-act="pushNo">No, gracias</button></div></section>`:""}
-    <p class="center muted" style="font-size:15px">${r.h?`Usaste ${plural(r.h,"pista","pistas")}.`:"Sin pistas."}${o.fresh&&lastDailyGain?' <b style="color:var(--good)">+1 pista</b> por resolver el desafío.':""} Compartilo y fijate quién lo hace más rápido.</p>
-    <section class="card stack" style="gap:12px"><div class="row" style="justify-content:space-between;align-items:baseline"><h2 style="font-size:16px">Racha de ${plural(s,"día","días")}</h2><span class="muted" style="font-size:13px">Récord: ${save.daily.best}</span></div>${weekHTML()}<span class="shield" style="color:var(--soft)">${shieldText()}. Si un día no jugás, el protector salva tu racha. Se recarga cada ${FREEZE_DAYS} días.</span></section>
-    <div class="row" style="justify-content:center;background:var(--night);color:var(--on-night);border-radius:18px;padding:12px 16px;gap:10px"><span style="font-size:13px;color:#AAAAAA">Nuevo desafío en</span><b id="countdown" style="font-size:20px;color:var(--fish);font-variant-numeric:tabular-nums">${untilMidnight()}</b></div>
-    <div class="stack mt-auto"><button class="btn primary" data-act="shareDaily">Compartir resultado</button>${dayIndex()>0?`<button class="btn" data-act="go" data-arg="past">Jugar días anteriores</button>`:""}<button class="btn" data-act="go" data-arg="levels">Seguir con los niveles</button></div>
+  const s=streakNow(),nc=newCats().filter(c=>c.streak);markSeen(nc);
+  app.innerHTML=`<main class="view result min">
+    <div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Volver al inicio">${ico("back",18)}</button><span class="eyebrow grow center">Desafío del día · ${shortDate()}</span><span style="width:44px;flex:none"></span></div>
+    <div class="mid">
+      <svg width="72" height="72" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
+      <h2 class="visually-hidden">${o.fresh?"¡Desafío resuelto!":"Ya resolviste el desafío de hoy"}</h2>
+      <b class="bigtime">${fmt(r.t)}</b>
+      <p class="line" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparando tu tiempo con el de los demás…"}</p>
+      <p class="line">🔥 <b>${plural(s,"día","días")}</b> de racha${o.fresh&&lastDailyGain?` · <b style="color:var(--good)">+1 pista</b>`:""}</p>
+      ${o.fresh&&lastFreeze?`<p class="line small">🛡️ Tu protector salvó la racha de ayer</p>`:""}
+      ${nc.map(c=>chipCat(c)).join("")}
+      ${showPushAsk()?`<div class="pushline" id="pushAsk">${ico("bell",16)}<span>¿Te aviso mañana si no jugaste?</span><button class="linkbtn" data-act="pushOn">Avisame</button></div>`:""}
+    </div>
+    <p class="line small center" style="margin-bottom:10px">Nuevo desafío en <b id="countdown" style="font-variant-numeric:tabular-nums">${untilMidnight()}</b></p>
+    <button class="btn primary" data-act="shareDaily">Compartir resultado</button>
+    <div class="linkrow"><button class="linkbtn big" data-act="go" data-arg="levels">Ir a los niveles</button>${dayIndex()>0?`<button class="linkbtn big" data-act="go" data-arg="past">Días anteriores</button>`:""}</div>
   </main>`;
   if(!TEST)refreshRank();
 }
+
 function refreshRank(){dailyRank(j=>{const el=$("rankLine");if(!el)return;const r=save.daily.results[today()];if(j)el.textContent=rankText(r);else if(!r.c)el.hidden=true})}
 setInterval(()=>{const c=$("countdown");if(c)c.textContent=untilMidnight()},1000);
 
@@ -1244,7 +1306,7 @@ function renderHow(){
     <section class="card stack" style="gap:10px"><h2 style="font-size:16px">Ayudas</h2>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">Pista</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Te muestra un paso. Ganás pistas con 3 estrellas, con el desafío del día y al terminar cada etapa. Podés guardar hasta 5.</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("bulb",18)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Lamparita: al pasar sobre un gato, marca lo que mira.</span></div>
-      <div class="row"><span class="pill" style="min-width:56px;justify-content:center;color:var(--bad)">♥ 3</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Si ponés un pez donde no va, no se pone y suma 10 segundos. Con 3 errores volvés a empezar (desde el nivel 6).</span></div>
+      <div class="row"><span class="pill" style="min-width:56px;justify-content:center;color:var(--bad)">♥ 3</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Cuando ponés todos los peces y algo no cierra, perdés una vida y suma 10 segundos. Con 3 errores volvés a empezar (desde el nivel 6).</span></div>
       <div class="row"><span class="pill" style="min-width:56px;justify-content:center">${ico("x",14)}</span><span style="font-size:14px;line-height:1.4;color:var(--soft)">Cruz (desde el nivel 26): marcá dónde seguro no va un pez.</span></div></section>
   </main>`;
 }
@@ -1319,7 +1381,7 @@ const ACT={
   shareImg(a,btn){shareImage(btn)},
   playPast(a){startPast(a)},
   restartLives(){restartLives()},
-  pushOn(a,btn){btn.textContent="…";enablePush().then(ok=>{const c=$("pushAsk");if(c)c.innerHTML=ok?`<span class="grow" style="font-weight:700;text-align:center;padding:8px">Listo: te avisamos mañana si no jugaste.</span>`:`<span class="grow muted" style="text-align:center;padding:8px">No se pudo activar. Probá desde Ajustes.</span>`})},
+  pushOn(a,btn){btn.textContent="…";enablePush().then(ok=>{const c=$("pushAsk");if(c)c.innerHTML=ok?`<span style="font-weight:700;padding:4px 6px">Listo: te avisamos mañana si no jugaste.</span>`:`<span style="padding:4px 6px">No se pudo activar. Probá desde Ajustes.</span>`})},
   pushNo(){save.pushAsked=1;persist();const c=$("pushAsk");if(c)c.remove()},
   pushToggle(){if(pushNeedsInstall()){installApp();return}const st=$("pushState");if(save.push){disablePush().then(()=>{if(view==="settings")renderSettings()})}else{if(st)st.textContent="…";enablePush().then(()=>{if(view==="settings")renderSettings()})}},
   setLang(){save.lang=LANG==="es"?"en":"es";persist();if(GAME_URL)location.href=OTHER_URL;else{const b=document.querySelector('[data-act="setLang"]');if(b)b.lastChild.textContent=LANG==="es"?"Disponible en la web":"Available on the web"}},
