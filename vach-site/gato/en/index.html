@@ -35,7 +35,7 @@
 /* Layout: una columna tipo app de celular, centrada; paleta VACH* sobre crema (un solo tema, elegido) */
 :root{
   --bg:#F8F7EC; --card:#FFFEF8; --tile:#EEECDD; --ink:#0A0A0A; --muted:#66655C; --soft:#3D3C36; --line:rgba(10,10,10,.12);
-  --fish:#F5C800; --cat:#7B4FFF; --cat-bg:#EAE3FF; --ray:#E4DEF5; --good:#0E9A7C; --bad:#D9432C; --bad-bg:#FBE1DB;
+  --fish:#F5C800; --cat:#7B4FFF; --cat-bg:#EAE3FF; --ray:#E4DEF5; --good:#0E9A7C; --bad:#D9432C; --bad-bg:#FBE1DB; --water:#4DB5F0;
   --f:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --night:#0A0A0A; --on-night:#F8F7EC;
   color-scheme:light;
@@ -120,7 +120,47 @@ p{margin:0}
 .cell{position:relative;aspect-ratio:1;border:0;border-radius:9px;background:var(--tile);padding:0;cursor:pointer;display:grid;place-items:center;transition:background .12s,transform .08s}
 .cell:active{transform:scale(.95)}
 .cell.seen,.cell.ray{background:var(--ray)}
+.cell.nofish{background-color:var(--tile);background-image:repeating-linear-gradient(135deg,transparent 0 7px,var(--line) 7px 9px);opacity:.75}
+.cell.coach{box-shadow:inset 0 0 0 3px var(--cat);animation:coach 1.3s ease-in-out infinite}
+@keyframes coach{50%{box-shadow:inset 0 0 0 3px var(--cat),0 0 0 6px color-mix(in srgb,var(--cat) 25%,transparent)}}
 .cell .fish{width:72%}
+.cell .fish.in{animation:fdrop .42s cubic-bezier(.3,1.4,.5,1) both}
+@keyframes fdrop{0%{transform:translateY(-55%) scale(.5);opacity:0}55%{transform:translateY(6%) scale(1.1,.86);opacity:1}78%{transform:translateY(-4%) scale(.96,1.05)}100%{transform:none}}
+.cell .drop{position:absolute;left:50%;top:55%;width:7px;height:9px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:var(--water);pointer-events:none;animation:splash .5s ease-out forwards}
+@keyframes splash{from{transform:translate(-50%,-50%) rotate(var(--a)) translateY(0) scale(1);opacity:1}to{transform:translate(-50%,-50%) rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(.3);opacity:0}}
+.cell .ring{position:absolute;left:50%;top:60%;width:70%;aspect-ratio:2.4;border:2px solid var(--water);border-radius:50%;pointer-events:none;animation:wring .5s ease-out forwards}
+@keyframes wring{from{transform:translate(-50%,-50%) scale(.3);opacity:1}to{transform:translate(-50%,-50%) scale(1.3);opacity:0}}
+.cell.jump{animation:jump .62s cubic-bezier(.3,1.2,.5,1);z-index:2}
+@keyframes jump{0%{transform:none}18%{transform:scale(1.08,.86) translateY(6%)}50%{transform:translateY(-34%) scale(.94,1.08)}78%{transform:translateY(0) scale(1.06,.92)}100%{transform:none}}
+.cell .oops{position:absolute;top:-6px;left:50%;transform:translateX(-50%);background:var(--night);color:var(--on-night);font-size:12px;font-weight:700;padding:3px 7px;border-radius:8px;white-space:nowrap;pointer-events:none;animation:ofloat 1s ease-out forwards;z-index:3}
+@keyframes ofloat{0%{opacity:0;transform:translate(-50%,6px)}20%{opacity:1;transform:translate(-50%,-6px)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-18px)}}
+.result.shake{animation:rshk .25s linear}
+@keyframes rshk{25%{transform:translate(-3px,1px)}50%{transform:translate(3px,-1px)}75%{transform:translate(-2px,0)}}
+.timebox{position:relative;display:inline-block}
+.timebox .bolt{position:absolute;right:-26px;top:-8px;width:22px;height:38px;opacity:0;overflow:visible}
+.bolt path,.megabolt path{fill:#F5C800;stroke:#0A0A0A;stroke-linejoin:round}
+.bolt path{stroke-width:2.2}.megabolt path{stroke-width:1.6}
+.bolt.go{animation:bpop .35s ease-out forwards}
+@keyframes bpop{0%{opacity:0;transform:scale(.5)}60%{opacity:1;transform:scale(1.2)}100%{opacity:1;transform:none}}
+.vtime.zap{animation:tz .5s ease-out}
+@keyframes tz{0%{color:#F5C800;text-shadow:0 0 18px #F5C800}100%{text-shadow:none}}
+.stamp{align-self:center;display:block;width:fit-content;margin:2px auto 0;background:#F5C800;color:#0A0A0A;font-weight:700;font-size:15px;padding:6px 12px;border-radius:10px;border:2px solid #0A0A0A;transform:rotate(-5deg);opacity:0}
+.stamp.go{animation:fxstamp .45s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes fxstamp{0%{opacity:0;transform:rotate(-14deg) scale(2.3)}100%{opacity:1;transform:rotate(-5deg) scale(1)}}
+.stars svg.spop{animation:spop .45s cubic-bezier(.3,1.7,.5,1)}
+@keyframes spop{0%{transform:scale(0) rotate(-60deg)}100%{transform:none}}
+.storm{position:fixed;inset:0;z-index:60;pointer-events:none;display:grid;place-items:center}
+.storm .dim{position:absolute;inset:0;background:#0A0A0A;opacity:0}
+.storm .flash{position:absolute;inset:0;background:#FFF8D6;opacity:0}
+.storm .flash.go{animation:sfl .32s ease-out}
+@keyframes sfl{0%{opacity:.85}100%{opacity:0}}
+.megabolt{position:relative;width:34vmin;max-width:150px;height:auto;overflow:visible;opacity:0;filter:drop-shadow(0 0 10px #F5C800) drop-shadow(0 0 26px #F5C800)}
+.storm .zray{position:absolute;left:50%;top:50%;width:4px;height:22vmin;border-radius:4px;background:#F5C800;transform-origin:50% 0;opacity:0}
+.storm .arc{position:absolute;left:50%;top:50%;width:60vmin;max-width:320px;aspect-ratio:1;border-radius:50%;border:3px solid #F5C800;opacity:0;transform:translate(-50%,-50%) scale(.2)}
+.flame{display:inline-block;transform-origin:50% 90%}
+.flame.go{animation:ignite .5s cubic-bezier(.3,1.6,.5,1),flick 1.1s ease-in-out .5s 3}
+@keyframes ignite{0%{transform:scale(.2);filter:grayscale(1)}100%{transform:none}}
+@keyframes flick{0%,100%{transform:none}30%{transform:scale(1.08,.94) rotate(-4deg)}60%{transform:scale(.96,1.06) rotate(4deg)}}
 .cell .x{width:34%}
 .cell.lock{box-shadow:inset 0 0 0 2px var(--good)}
 .cell.cat{background:var(--cat-bg)}
@@ -322,7 +362,7 @@ html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
 @keyframes fly{0%{transform:none;opacity:1}100%{transform:translate(var(--x),var(--y)) rotate(var(--r));opacity:0}}
 .cell.cat.pop .clue{animation:pop2 .35s ease-out}
 @keyframes pop2{50%{transform:scale(1.35)}}
-@media (prefers-reduced-motion:reduce){.cell,.cell.hint,.cell.shake,.cell.cheer,.cell.busted,.cell .fish,.cell::before,.cell .face,.cell .clue{animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){.cell .drop,.cell .ring{display:none}.cell.jump,.stars svg.spop,.flame.go{animation:none!important}.cell,.cell.hint,.cell.shake,.cell.cheer,.cell.busted,.cell .fish,.cell::before,.cell .face,.cell .clue{animation:none!important;transition:none!important}
 .burst{display:none}.splash{animation:none;transition:none}}
 </style>
 
@@ -397,6 +437,7 @@ const INTROS={
   zero:{lv:2,short:"If a cat says 0, it sees no fish.",tag:"cat:zero",tagLabel:"Says 0: sees no fish",title:"Zero is a clue too",text:"If a cat says 0, it sees no fish. If a cat says 1, it sees one fish.",ex:[C("→0"),E(1),E(1)]},
   two:{lv:3,short:"Each fish you place fades out up top.",tag:"sel:#fishrow",tagLabel:"They fade as you place them",title:"Now there are 2 fish",text:"Above the board you see the fish you need to place. Each fish you put on the board fades out up top. When a cat sees exactly its number, it turns green.",ex:[C("→2",{ok:1}),F(1),F(1)]},
   diag:{lv:4,short:"They look diagonally too.",tag:"cat:diag",tagLabel:"Looks diagonally",title:"Diagonal looks",text:"Cats can also look diagonally.",ex:[C("↘1"),E(),F()]},
+  combine:{lv:5,short:"Combine what two cats tell you.",tag:"cat:zero",tagLabel:"This one rules squares out",title:"Combine clues",text:"Here no cat is enough on its own. See which squares one cat rules out and which ones the other has left: the fish goes where they agree.",ex:[C("→1"),F(1),{t:"cross"},{t:"cross"}]},
   liar:{lv:6,short:"One of the cats is lying. Find it and tap it.",tag:"sel:.pill.liar",tagLabel:"One is lying",title:"Something’s fishy here",text:"From this level on, one of the cats is lying: its number is false. Place the fish by trusting the others, then tap the liar to call it out. What each cat looks at is no longer marked: turn on the light bulb if you need it.",ex:[{t:"liar",label:"↑1"},F(),E()]},
   cross:{lv:26,short:"Mark with an X where no fish goes.",tag:"sel:#crossBtn",tagLabel:"Mark with an X",title:"Mark the empty squares",text:"Now you can put an X where you’re sure there’s no fish. Tap the X button, or press and hold the square (right-click on a computer).",ex:[{t:"cross"},{t:"cross"},F()]},
   more:{lv:46,short:"Bigger boards, more fish.",tag:"sel:#fishrow",tagLabel:"More fish",title:"More fish",text:"Boards grow to 6×6 and there are more fish to find. The cats’ numbers go up.",ex:[C("→2"),F(),F()]},
@@ -416,7 +457,7 @@ const TUTS={
   two_liars:{title:"Two are lying",ask:"Two of these cats are lying. Tap both.",cells:[{t:"cat",label:"→1",liar:0},{t:"fish"},{t:"cat",label:"←0",liar:1},{t:"cat",label:"←2",liar:1}],need:2,
     win:"Exactly! Both see a fish and say something else.",wrong:"That one tells the truth: it sees 1 fish."}
 };
-const INTRO_ORDER=["one","zero","two","diag","liar","cross","walls","more","twoface","crown","two_liars","big","sleep","legend"];
+const INTRO_ORDER=["one","zero","two","diag","combine","liar","cross","walls","more","twoface","crown","two_liars","big","sleep","legend"];
 const INTRO_AT={};INTRO_ORDER.forEach(k=>INTRO_AT[INTROS[k].lv]=k);
 
 /* ---------- guardado ---------- */
@@ -610,7 +651,49 @@ function beep(freqs,dur){
       const t=actx.currentTime+i*dur;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.12,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
       o.connect(g).connect(actx.destination);o.start(t);o.stop(t+dur+.02)})}catch(e){}
 }
+/* efectos sintetizados: pez, rayo, estrellas, racha */
+let fxMaster=null;
+function fxCtx(){if(!save.settings.sound)return null;try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();
+  if(!fxMaster){const c=actx.createDynamicsCompressor();fxMaster=actx.createGain();fxMaster.gain.value=.55;fxMaster.connect(c);c.connect(actx.destination)}return actx}catch(e){return null}}
+function tone({f,f2,type="sine",dur=.2,vol=.3,attack=.005,delay=0,lp}){const a=fxCtx();if(!a)return;const t=a.currentTime+delay,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);
+  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+attack);g.gain.exponentialRampToValueAtTime(.0001,t+dur);let n=o;if(lp){const fl=a.createBiquadFilter();fl.type="lowpass";fl.frequency.value=lp;o.connect(fl);n=fl}n.connect(g);g.connect(fxMaster);o.start(t);o.stop(t+dur+.05)}
+function noise({dur=.2,vol=.2,type="bandpass",f=2000,f2,q=1,delay=0}){const a=fxCtx();if(!a)return;const t=a.currentTime+delay,len=Math.ceil(a.sampleRate*dur),buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);for(let i=0;i<len;i++)d[i]=Math.random()*2-1;
+  const s=a.createBufferSource();s.buffer=buf;const fl=a.createBiquadFilter();fl.type=type;fl.Q.value=q;fl.frequency.setValueAtTime(f,t);if(f2)fl.frequency.exponentialRampToValueAtTime(f2,t+dur);const g=a.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+dur);s.connect(fl);fl.connect(g);g.connect(fxMaster);s.start(t);s.stop(t+dur)}
+const SND={
+  blup(){tone({f:820,f2:250,dur:.15,vol:.5});tone({f:1500,f2:900,dur:.07,vol:.12,delay:.05});noise({dur:.09,vol:.08,f:3200,q:2,delay:.02})},
+  plop(){tone({f:280,f2:720,dur:.11,vol:.28})},
+  ups(){tone({type:"triangle",f:620,f2:1150,dur:.09,vol:.3});tone({type:"triangle",f:990,f2:620,dur:.18,vol:.28,delay:.11})},
+  star(i){const f=[783.99,987.77,1174.66][i];tone({type:"triangle",f,dur:.4,vol:.3});tone({f:f*3,dur:.14,vol:.06,delay:.03});noise({dur:.05,vol:.05,f:7000,q:3})},
+  chord(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>tone({type:"triangle",f,dur:.8,vol:.2,delay:i*.07}))},
+  whoosh(){noise({dur:.35,vol:.18,type:"lowpass",f:250,f2:3200})},
+  power(){const a=fxCtx();if(!a)return;
+    noise({dur:.2,vol:.32,f:300,f2:3400,q:1.4});
+    const hit=(z,vol,len,body)=>{[[392,0],[493.88,.006],[587.33,.012],[783.99,.018]].forEach(([f,dl],k)=>{const o=a.createOscillator(),g=a.createGain(),lp=a.createBiquadFilter(),vb=a.createOscillator(),vg=a.createGain();
+      o.type=k%2?"square":"sawtooth";o.frequency.setValueAtTime(f*.5,z+dl);o.frequency.exponentialRampToValueAtTime(f,z+dl+.05);vb.frequency.value=7;vg.gain.value=f*.012;vb.connect(vg);vg.connect(o.frequency);
+      lp.type="lowpass";lp.frequency.setValueAtTime(3200,z);lp.frequency.exponentialRampToValueAtTime(900,z+len);
+      g.gain.setValueAtTime(.0001,z+dl);g.gain.exponentialRampToValueAtTime(vol,z+dl+.01);g.gain.setValueAtTime(vol,z+dl+len*.25);g.gain.exponentialRampToValueAtTime(.0001,z+len);
+      o.connect(lp);lp.connect(g);g.connect(fxMaster);o.start(z+dl);vb.start(z+dl);o.stop(z+len+.05);vb.stop(z+len+.05)});
+      tone({type:"triangle",f:196,f2:98,dur:len*.4,vol:body,attack:.003,delay:z-a.currentTime})};
+    const t=a.currentTime;
+    hit(t+.12,.08,.32,.4);
+    hit(t+.26,.15,.95,.75);
+    [783.99,987.77,1174.66,1567.98,1174.66,1567.98,2093].forEach((f,k)=>tone({f,dur:.18,vol:.11,attack:.003,delay:.34+k*.05}))},
+  cheer(z){const a=fxCtx();if(!a)return;const D=1.8,out=a.createGain();out.gain.setValueAtTime(.0001,z);out.gain.exponentialRampToValueAtTime(.5,z+.25);out.gain.setValueAtTime(.5,z+.9);out.gain.exponentialRampToValueAtTime(.0001,z+D);out.connect(fxMaster);
+    // gente festejando: ruido en bandas de voz que sube y baja al azar
+    const len=Math.ceil(a.sampleRate*D),buf=a.createBuffer(2,len,a.sampleRate);for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);let b0=0,b1=0,b2=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;b0=.99*b0+w*.05;b1=.96*b1+w*.3;b2=.57*b2+w*.9;d[i]=(b0+b1+b2)*.3}}
+    [[650,.9],[1100,.7],[1800,.5],[2600,.3]].forEach(([f,v],k)=>{const s=a.createBufferSource();s.buffer=buf;s.playbackRate.value=1+k*.03;const bp=a.createBiquadFilter();bp.type="bandpass";bp.frequency.value=f;bp.Q.value=1.6;
+      const g=a.createGain();g.gain.value=v*.6;const l=a.createOscillator(),lg=a.createGain();l.frequency.value=3+Math.random()*4;lg.gain.value=v*.35;l.connect(lg);lg.connect(g.gain);
+      s.connect(bp);bp.connect(g);g.connect(out);s.start(z);l.start(z);s.stop(z+D);l.stop(z+D)});
+    // algunos "¡uuh!" que suben, como gritos de festejo
+    [[0,.05],[1,.22],[2,.4]].forEach(([k,dl])=>{const o=a.createOscillator(),bp=a.createBiquadFilter(),g=a.createGain(),st=z+dl,f0=260+k*70;o.type="sawtooth";o.frequency.setValueAtTime(f0,st);o.frequency.exponentialRampToValueAtTime(f0*1.7,st+.35);o.frequency.exponentialRampToValueAtTime(f0*1.4,st+.6);
+      bp.type="bandpass";bp.frequency.value=900;bp.Q.value=3;g.gain.setValueAtTime(.0001,st);g.gain.exponentialRampToValueAtTime(.12,st+.08);g.gain.exponentialRampToValueAtTime(.0001,st+.65);o.connect(bp);bp.connect(g);g.connect(out);o.start(st);o.stop(st+.7)});}
+};
 function buzz(ms){if(!save.settings.vib)return;try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}}
+
+function retrig(el,cls,ms){if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);if(ms)setTimeout(()=>el.classList.remove(cls),ms)}
+function splash(i){const el=$("c"+i);if(!el)return;retrig(el.querySelector(".fish"),"in");
+  for(let k=0;k<7;k++){const d=document.createElement("span");d.className="drop";d.style.setProperty("--a",(-80+k*27+Math.random()*10)+"deg");d.style.setProperty("--r",(16+Math.random()*12)+"px");el.appendChild(d);setTimeout(()=>d.remove(),600)}
+  const r=document.createElement("span");r.className="ring";el.appendChild(r);setTimeout(()=>r.remove(),600)}
 
 /* ---------- hojas (paneles que suben) ---------- */
 let sheetClose=null;
@@ -773,8 +856,20 @@ function startLevel(num){
   if(!save.won[num])track("empieza",num);
   renderGameShell();
   const key=INTRO_AT[num];
-  if(key&&!save.seen[key])showIntro(key,true);
+  if(key&&!save.seen[key]&&COACH[key])coach(key);
+  else if(key&&!save.seen[key])showIntro(key,true);
   else if(num>=CROSS_FROM&&!save.seen.cross)showIntro("cross",true);
+}
+/* niveles 1 y 2: en vez de cartel, guía sobre el tablero */
+const COACH={
+  one:c=>`This cat says there’s 1 fish looking ${DNAME[c.d]}. Tap that square to place it.`,
+  zero:c=>`This cat says 0: there are no fish looking ${DNAME[c.d]}. Look for it in another square.`
+};
+function coach(key){
+  save.seen[key]=1;persist();
+  const c=G.cats.find(c=>key==="zero"?c.v===0:true);if(!c)return;
+  setTimeout(()=>{if(!G||G.done)return;showTag(key,true);setStatus(COACH[key](c),"info");
+    if(key==="one"){const j=c.r.find(j=>G.L.sol.includes(j));const el=$("c"+j);if(el)el.classList.add("coach")}},350);
 }
 /* desafíos de días anteriores: se juegan sin ranking ni racha */
 function dayDate(i){return new Date(2026,9,29+i)}
@@ -887,6 +982,7 @@ function renderBoard(){
   if(!G||!$("board"))return;
   const fixed=new Set();if(guideFixed())G.cats.forEach(c=>c.r.forEach(j=>fixed.add(j)));
   const hov=G.hover>=0&&hoverAllowed()?new Set(G.cats[G.hover].r):new Set();
+  const zero=new Set();if(G.L.L===0)G.cats.forEach((c,ci)=>{if(c.v===0&&!c.sleep&&(guideFixed()||G.hover===ci&&hoverAllowed()))c.r.forEach(j=>zero.add(j))});
   for(let i=0;i<G.N;i++){
     const el=$("c"+i),ci=G.catAt[i];
     el.tabIndex=i===G.focus?0:-1;
@@ -904,7 +1000,8 @@ function renderBoard(){
     const v=G.cells[i];
     const want=v===1?"f":v===2?"x":"";
     if(el.dataset.v!==want){el.dataset.v=want;el.innerHTML=v===1?'<svg class="fish" viewBox="0 0 40 24" aria-hidden="true"><use href="#fish"/></svg>':v===2?'<svg class="x" viewBox="0 0 20 20" aria-hidden="true" style="color:#8A887C"><use href="#x"/></svg>':""}
-    el.classList.toggle("seen",fixed.has(i)||hov.has(i)||!!(G.hintRay&&G.hintRay.has(i)));
+    el.classList.toggle("nofish",zero.has(i)&&v!==1);
+    el.classList.toggle("seen",!zero.has(i)&&(fixed.has(i)||hov.has(i)||!!(G.hintRay&&G.hintRay.has(i))));
     el.classList.toggle("lock",G.locked.has(i));
     el.setAttribute("aria-label",`Row ${Math.floor(i/G.n)+1}, column ${i%G.n+1}: ${v===1?"fish":v===2?"no fish here":"empty"}`);
   }
@@ -960,14 +1057,14 @@ function tapCell(i,force){
   if(G.locked.has(i)){setStatus("A hint placed that fish. It’s right.");return}
   const v=G.cells[i];
   if(mode===2){G.cells[i]=v===2?0:(v===1?1:2);if(v===1){setStatus("Remove the fish first to put an X.");return}buzz(8);renderBoard();return}
-  if(v===1){G.cells[i]=0;beep([330],.06)}
+  if(v===1){G.cells[i]=0;SND.plop()}
   else{
     const placed=G.cells.filter(x=>x===1).length;
     if(placed>=G.L.k){setStatus(`You already placed ${peces(G.L.k)}. To move one, tap it to remove it.`,"warn");buzz(30);return}
     if(!penaltyOn()&&!G.L.sol.includes(i)){wrongFish(i);return}
-    G.cells[i]=1;beep([523],.07);buzz(10);
+    G.cells[i]=1;SND.blup();buzz(10);
   }
-  renderBoard();check();
+  renderBoard();if(G.cells[i]===1)splash(i);check();
 }
 function tapCat(ci){
   if(!G||G.done)return;clearTag();
@@ -979,9 +1076,9 @@ function tapCat(ci){
   if(k>=0)G.accused.splice(k,1);
   else{
     if(G.accused.length>=G.L.L){setStatus(`You already accused ${G.L.L===1?"a cat":"two cats"}. Tap an accused cat to drop the charge.`,"warn");return}
-    G.accused.push(ci);beep([392,330],.08);
+    G.accused.push(ci);SND.ups();buzz([20,30,60]);
   }
-  renderBoard();check(true);
+  renderBoard();if(G.accused.includes(ci)){const el=$("c"+c.i);retrig(el,"jump",650);const o=document.createElement("span");o.className="oops";o.textContent="oops!";el.appendChild(o);setTimeout(()=>o.remove(),1000)}check(true);
 }
 function wrongCats(){const w=[];G.cats.forEach((c,ci)=>{if(seenBy(ci)!==c.v)w.push(ci)});return w}
 function check(fromCat){
@@ -1049,7 +1146,7 @@ function celebrate(){
     for(let i=0;i<26;i++){const a=Math.random()*Math.PI*2,d=90+Math.random()*120,e=document.createElement("i");
       e.style.cssText=`background:${col[i%5]};--x:${Math.cos(a)*d}px;--y:${Math.sin(a)*d-40}px;--r:${Math.random()*540-270}deg;--w:${200+Math.random()*200}ms;${i%3?"":"border-radius:50%"}`;b.appendChild(e)}
     w.appendChild(b);setTimeout(()=>b.remove(),1600)}
-  if(liars.size){beep([196,165],.12);setTimeout(()=>beep([523,659,784,1047,1319],.09),260)}else beep([523,659,784,1047],.11);
+  SND.chord();
 }
 function win(){
   G.done=true;clearInterval(tick);
@@ -1157,8 +1254,8 @@ function tutTap(i){
 }
 /* etiqueta sobre la novedad, en el tablero */
 let tagTimer=null;
-function clearTag(){clearTimeout(tagTimer);document.querySelectorAll(".tagbub").forEach(e=>e.remove());document.querySelectorAll(".tagged").forEach(e=>e.classList.remove("tagged"))}
-function showTag(key){
+function clearTag(){clearTimeout(tagTimer);document.querySelectorAll(".tagbub").forEach(e=>e.remove());document.querySelectorAll(".tagged").forEach(e=>e.classList.remove("tagged"));document.querySelectorAll(".coach").forEach(e=>e.classList.remove("coach"))}
+function showTag(key,sticky){
   const it=INTROS[key];if(!it||!G||!it.tag)return;
   clearTag();
   let el=null,side="";
@@ -1173,7 +1270,7 @@ function showTag(key){
   if(el.closest(".top"))side+=" b";
   el.classList.add("tagged");
   const b=document.createElement("span");b.className="tagbub "+side;b.textContent=it.tagLabel;el.appendChild(b);
-  tagTimer=setTimeout(clearTag,7000);
+  if(!sticky)tagTimer=setTimeout(clearTag,7000);
 }
 function unlockedIntros(){return INTRO_ORDER.filter(k=>INTROS[k].lv<=save.unlocked)}
 function helpCard(i){
@@ -1204,13 +1301,53 @@ function renderVictory(r){
     <div class="mid">
       <svg width="104" height="104" style="color:var(--cat)" aria-hidden="true"><use href="#cat-happy"/></svg>
       <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,40)}
-      <p class="line">${r.relax?(r.errors?plural(r.errors,"mistake","mistakes"):"No mistakes"):`<b>${fmt(r.sec)}</b>`}${r.gain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
+      <p class="line">${r.relax?(r.errors?plural(r.errors,"mistake","mistakes"):"No mistakes"):`<span class="timebox"><b class="vtime">${fmt(r.sec)}</b>${fastWin(r)?BOLT_SVG:""}</span>`}${r.gain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
+      ${fastWin(r)?`<span class="stamp">Lightning fast!</span>`:""}
       ${tip?`<p class="line small">${tip}</p>`:""}
     </div>
     ${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
     <button class="linkbtn big" data-act="shareLevel">Share</button>
   </main>`;
   lastResult=r;
+  if(!r.seenFx){r.seenFx=1;victoryFx(r)}else{const b=document.querySelector(".result .bolt"),st=document.querySelector(".result .stamp");if(b)b.style.opacity=1;if(st)st.style.opacity=1}
+}
+const fastWin=r=>!r.relax&&r.sec<=r.limitA;
+const BOLT_SVG=`<svg class="bolt" viewBox="0 0 40 72" aria-hidden="true"><path d="M27 2L6 40h13L11 70l25-40H23l9-28z"/></svg>`;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+const anim=(el,k,o)=>el&&el.animate?el.animate(k,Object.assign({fill:"forwards",easing:"ease-out"},o)):null;
+function starsFx(n,base){const s=[...document.querySelectorAll(".result .stars svg")];
+  for(let i=0;i<n;i++){if(s[i])s[i].style.fill="var(--tile)";setTimeout(()=>{if(!s[i]||!s[i].isConnected)return;s[i].style.fill="var(--fish)";retrig(s[i],"spop");SND.star(i);buzz(14)},base+i*260)}}
+async function victoryFx(r){
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(!fastWin(r)){starsFx(r.stars,250);return}
+  [...document.querySelectorAll(".result .stars svg")].forEach(x=>x.style.fill="var(--tile)");
+  const small=document.querySelector(".result .bolt"),st=document.querySelector(".result .stamp");
+  if(reduce||!small||!document.body.animate){if(small)small.style.opacity=1;if(st)st.style.opacity=1;SND.power();starsFx(r.stars,400);return}
+  const s=document.createElement("div");s.className="storm";s.setAttribute("aria-hidden","true");
+  s.innerHTML=`<div class="dim"></div><div class="arc"></div><div class="arc"></div>${"<i class=zray></i>".repeat(10)}<svg class="megabolt" viewBox="0 0 40 72"><path d="M27 2L6 40h13L11 70l25-40H23l9-28z"/></svg><div class="flash"></div>`;
+  document.body.appendChild(s);const dim=s.querySelector(".dim"),mb=s.querySelector(".megabolt"),fl=s.querySelector(".flash"),main=document.querySelector(".result");
+  anim(dim,[{opacity:0},{opacity:.6}],{duration:380});buzz([10,30,10,30,10]);
+  anim(mb,[{opacity:0,transform:"scale(.3)"},{opacity:.35,transform:"scale(.5) rotate(-4deg)"},{opacity:.2,transform:"scale(.45) rotate(4deg)"},{opacity:.45,transform:"scale(.55)"}],{duration:420});
+  setTimeout(()=>SND.power(),310);
+  await wait(430);
+  anim(mb,[{opacity:1,transform:"translateY(-90%) scale(1.3)"},{opacity:1,transform:"translateY(5%) scale(1.15,.88)",offset:.55},{opacity:1,transform:"none"}],{duration:260,easing:"cubic-bezier(.3,1.4,.5,1)"});
+  retrig(fl,"go");buzz(30);
+  await wait(140);
+  anim(mb,[{transform:"none"},{transform:"scale(1.35)"},{transform:"none"}],{duration:300,easing:"cubic-bezier(.3,1.6,.5,1)"});retrig(fl,"go");retrig(main,"shake",300);buzz([60,30,90]);
+  s.querySelectorAll(".zray").forEach((z,k)=>anim(z,[{opacity:1,transform:`rotate(${k*36}deg) translateY(30%) scaleY(.2)`},{opacity:0,transform:`rotate(${k*36}deg) translateY(55%) scaleY(1)`}],{duration:520}));
+  s.querySelectorAll(".arc").forEach((a,k)=>anim(a,[{opacity:.9,transform:"translate(-50%,-50%) scale(.3)"},{opacity:0,transform:"translate(-50%,-50%) scale(1.25)"}],{duration:600,delay:k*140}));
+  await wait(420);
+  [0,170,300].forEach(d=>setTimeout(()=>retrig(fl,"go"),d));
+  anim(mb,[{opacity:1},{opacity:.25},{opacity:1},{opacity:.4},{opacity:1},{opacity:.6},{opacity:1}],{duration:480,easing:"steps(7,end)"});
+  await wait(560);
+  if(!small.isConnected){s.remove();return}
+  const a=mb.getBoundingClientRect(),b=small.getBoundingClientRect();
+  anim(mb,[{transform:"none"},{transform:`translate(${(b.left+b.width/2)-(a.left+a.width/2)}px,${(b.top+b.height/2)-(a.top+a.height/2)}px) scale(${b.height/a.height}) rotate(-10deg)`}],{duration:380,easing:"cubic-bezier(.6,0,.3,1)"});
+  anim(dim,[{opacity:.6},{opacity:0}],{duration:380});
+  await wait(380);
+  s.remove();small.style.opacity=1;retrig(small,"go");retrig(document.querySelector(".result .vtime"),"zap");buzz(25);
+  await wait(120);if(st)st.classList.add("go");
+  starsFx(r.stars,250);
 }
 
 let lastResult=null;
@@ -1247,7 +1384,7 @@ function renderDailyResult(o){
       <h2 class="visually-hidden">${o.fresh?"Challenge solved!":"You already solved today’s challenge"}</h2>
       <b class="bigtime">${fmt(r.t)}</b>
       <p class="line" id="rankLine" ${TEST?"hidden":""}>${r.c?rankText(r):"Comparing your time with everyone else’s…"}</p>
-      <p class="line">🔥 <b>${s}-day</b> streak${o.fresh&&lastDailyGain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
+      <p class="line"><span class="${o.fresh?"flame go":"flame"}" aria-hidden="true">🔥</span> <b>${s}-day</b> streak${o.fresh&&lastDailyGain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
       ${o.fresh&&lastFreeze?`<p class="line small">🛡️ Your shield saved yesterday’s streak</p>`:""}
       ${nc.map(c=>chipCat(c)).join("")}
       ${showPushAsk()?`<div class="pushline" id="pushAsk">${ico("bell",16)}<span>Remind you tomorrow if you haven’t played?</span><button class="linkbtn" data-act="pushOn">Remind me</button></div>`:""}
@@ -1257,6 +1394,7 @@ function renderDailyResult(o){
     <div class="linkrow"><button class="linkbtn big" data-act="go" data-arg="levels">Go to levels</button>${dayIndex()>0?`<button class="linkbtn big" data-act="go" data-arg="past">Past days</button>`:""}</div>
   </main>`;
   if(!TEST)refreshRank();
+  if(o.fresh)setTimeout(()=>SND.whoosh(),40);
 }
 
 function refreshRank(){dailyRank(j=>{const el=$("rankLine");if(!el)return;const r=save.daily.results[today()];if(j)el.textContent=rankText(r);else if(!r.c)el.hidden=true})}
@@ -1401,7 +1539,7 @@ function renderWelcome(){
     <div class="mini" style="grid-template-columns:repeat(3,76px)" role="img" aria-label="A 3 by 3 board with a cat looking left that says 1, and a fish next to it">
       <span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span><span style="height:76px"></span>
       <span class="s" style="height:76px">${ico("fish",52,31)}</span><span class="c" style="height:76px"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg);width:36px"><use href="#cat"/></svg><b style="font-size:22px">←1</b></span><span style="height:76px"></span></div>
-    <div class="hero" style="gap:12px"><h1 style="font-size:34px;line-height:1.05">The cats know where the fish are</h1><p class="muted" style="font-size:16px;line-height:1.5;max-width:300px">Each cat tells you how many fish it sees. Listen to them and find them all. But careful: some of them may lie.</p></div>
+    <div class="hero" style="gap:12px"><h1 style="font-size:34px;line-height:1.05">The cats know where the fish are</h1><p class="muted" style="font-size:16px;line-height:1.5;max-width:300px">Each cat tells you how many fish it sees. Listen to them and find them all.</p></div>
     <div class="stack mt-auto"><button class="btn primary" data-act="welcomeGo">Start ${ico("arrow",18,18,'style="color:var(--fish)"')}</button><span class="center muted" style="font-size:13px">The first level takes a single tap.</span></div>
   </main>`;
 }
