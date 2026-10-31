@@ -1078,7 +1078,7 @@ function tapCat(ci){
     if(G.accused.length>=G.L.L){setStatus(`Ya acusaste a ${G.L.L===1?"un gato":"dos gatos"}. Tocá un acusado para sacarle la acusación.`,"warn");return}
     G.accused.push(ci);SND.ups();buzz([20,30,60]);
   }
-  renderBoard();if(G.accused.includes(ci)){const el=$("c"+c.i);retrig(el,"jump",650);const o=document.createElement("span");o.className="oops";o.textContent="¡ups!";el.appendChild(o);setTimeout(()=>o.remove(),1000)}check(true);
+  renderBoard();if(G.accused.includes(ci)){const el=$("c"+c.i);retrig(el,"jump",650)}check(true);
 }
 function wrongCats(){const w=[];G.cats.forEach((c,ci)=>{if(seenBy(ci)!==c.v)w.push(ci)});return w}
 function check(fromCat){
