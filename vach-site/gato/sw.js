@@ -1,5 +1,5 @@
 // Gato Encerrado: permite jugar sin internet. La página siempre intenta bajar la versión nueva primero.
-const CACHE = "gato-v20";
+const CACHE = "gato-v24";
 const CORE = ["/gato/", "/gato/en/", "/gato/manifest.webmanifest", "/gato/icon-192.png", "/gato/icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(CORE.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
