@@ -493,7 +493,7 @@ const blank=()=>({unlocked:1,stars:{},won:{},bank:3,seen:{},stageDone:{},welcome
 let save=blank();
 try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s){save=Object.assign(blank(),s);save.daily=Object.assign(blank().daily,s.daily||{});save.weekly=Object.assign(blank().weekly,s.weekly||{});save.settings=Object.assign(blank().settings,s.settings||{})}}catch(e){}
 save.bank=Math.min(HINT_CAP,Math.max(0,save.bank|0));
-if(!save.uid){save.uid=Array.from({length:16},()=>"abcdefghijkmnpqrstuvwxyz23456789"[Math.floor(Math.random()*32)]).join("")}
+if(!save.uid){let r;try{r=crypto.getRandomValues(new Uint8Array(20))}catch(e){r=Array.from({length:20},()=>Math.floor(Math.random()*256))}save.uid=Array.from(r,x=>"abcdefghijkmnpqrstuvwxyz23456789"[x%32]).join("")}
 if(TEST){save.unlocked=TOTAL;save.welcomed=1;save.log=save.log||[];if(save.bank<HINT_CAP)save.bank=HINT_CAP}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 function addHints(k){const b=save.bank;save.bank=Math.min(HINT_CAP,save.bank+k);return save.bank-b}
