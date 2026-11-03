@@ -1,4 +1,16 @@
 {
+  "redirects": [
+    {
+      "source": "/ig",
+      "destination": "/gato?utm_source=instagram&utm_medium=bio",
+      "permanent": false
+    },
+    {
+      "source": "/tt",
+      "destination": "/gato?utm_source=tiktok&utm_medium=bio",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/gato",
