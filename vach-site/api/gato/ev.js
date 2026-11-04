@@ -16,7 +16,7 @@ const DAY = 864e5, KEEP = 60 * 60 * 24 * 400; // se guardan 400 días
 const EXACT = new Set(["visita","bienvenida","empieza","gana","pista","sale","error","sin-vidas","desafio-empieza","desafio-gana","desafio-pista","desafio-error","desafio-sin-vidas",
   "semana-empieza","semana-gana","semana-pista","semana-error","semana-sin-vidas","anterior-empieza","anterior-gana","misiones-completas","protector-usado",
   "instalar-toca","instalar-tarjeta-6","instalada","abre-app","recordatorio-toca","recordatorio-activa","comparte-nivel","comparte-desafio","comparte-semana","comparte-etapa","comparte-imagen"]);
-const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-7]|link-[a-z]{2,12})$/;
+const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-7]|link-[a-z]{2,12}|tiempo-[a-e]|estrellas-[1-3])$/;
 const SOURCES = new Set(["instagram","tiktok","whatsapp","facebook","x","otro","directo"]);
 
 export async function POST(req) {
