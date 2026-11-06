@@ -24,11 +24,13 @@ export async function GET(req) {
   const all = (await redis.hgetall("gato:push")) || {};
   const played = new Set((await redis.zrange(`gato:desafio:${d}`, 0, -1)) || []);
   let sent = 0, skipped = 0, removed = 0;
-  const jobs = [];
+  const jobs = [], seen = new Set(); // un aviso por dispositivo aunque esté guardado dos veces
   for (const [id, raw] of Object.entries(all)) {
     let rec; try { rec = typeof raw === "string" ? JSON.parse(raw) : raw; } catch { continue; }
     if (!rec || !rec.sub || !PUSH_HOST.test(String(rec.sub.endpoint))) { await redis.hdel("gato:push", id); removed++; continue; }
     if (played.has(id)) { skipped++; continue; } // ya jugó hoy
+    if (seen.has(rec.sub.endpoint)) { await redis.hdel("gato:push", id); removed++; continue; } // repetido: se queda uno solo
+    seen.add(rec.sub.endpoint);
     const t = TEXT[rec.lang] || TEXT.es;
     jobs.push(async () => {
       try { await webpush.sendNotification(rec.sub, JSON.stringify({ title: t.title, body: t.body, url: t.url, tag: "gato-desafio" }), { TTL: 6 * 3600, timeout: 8000 }); sent++; }

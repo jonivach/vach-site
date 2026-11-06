@@ -40,6 +40,10 @@ export async function POST(req) {
   if (!sub.keys || !B64.test(String(sub.keys.p256dh || "")) || !B64.test(String(sub.keys.auth || ""))) return bad();
   if ((await redis.hlen("gato:push")) >= MAX_SUBS && !(await redis.hexists("gato:push", id))) return bad();
   const lang = b.lang === "en" ? "en" : "es";
+  // si este dispositivo ya estaba guardado con otro código (por ejemplo, después de reiniciar el progreso), se borra el anterior
+  const all = (await redis.hgetall("gato:push")) || {};
+  const dup = Object.entries(all).filter(([k, raw]) => { if (k === id) return false; try { const r = typeof raw === "string" ? JSON.parse(raw) : raw; return r && r.sub && r.sub.endpoint === sub.endpoint; } catch { return false; } }).map(([k]) => k);
+  if (dup.length) await redis.hdel("gato:push", ...dup);
   await redis.hset("gato:push", { [id]: JSON.stringify({ sub: { endpoint: sub.endpoint, keys: { p256dh: String(sub.keys.p256dh), auth: String(sub.keys.auth) } }, lang }) });
   return Response.json({ ok: true }, { headers: NO_STORE });
 }
