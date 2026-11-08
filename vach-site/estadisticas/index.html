@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0A0A0A">
+<title>Estadísticas VACH*</title>
+<link rel="icon" href="/favicon.ico">
+<style>
+  :root{color-scheme:dark;--bg:#0A0A0A;--card:#141414;--line:#262626;--ink:#F2F2F2;--soft:#B5B5B5;--muted:#7A7A7A;--acc:#FFD23F;--good:#5BD08A;--bad:#FF6B6B}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;padding:28px 16px 60px}
+  main{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  h1{font-size:26px;margin:0}
+  h2{font-size:17px;margin:0 0 4px}
+  p{margin:0;color:var(--soft)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input{flex:1;min-width:200px;padding:11px 14px;border-radius:12px;border:1px solid #333;background:#0F0F0F;color:#fff;font:inherit}
+  button{padding:11px 16px;border-radius:999px;border:1px solid #333;background:#1F1F1F;color:var(--ink);font:inherit;font-weight:700;cursor:pointer}
+  button.on,button.main{background:var(--acc);color:#0A0A0A;border-color:var(--acc)}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px}
+  .kpi b{display:block;font-size:38px;line-height:1.05;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .kpi span{color:var(--soft);font-size:14px}
+  .hero{background:#000;border-color:#000}
+  .hero b{color:var(--acc)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:14px}
+  th,td{text-align:right;padding:8px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child{text-align:left;white-space:normal}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .scroll{overflow-x:auto}
+  .bars{display:flex;flex-direction:column;gap:8px}
+  .bar{display:grid;grid-template-columns:120px 1fr 54px;gap:10px;align-items:center;font-size:14px}
+  .bar .track{height:12px;background:#1E1E1E;border-radius:4px;overflow:hidden}
+  .bar .fill{height:100%;background:var(--acc);border-radius:0 4px 4px 0}
+  .bar .n{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .bar .l{color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chart{position:relative}
+  .chart svg{display:block;width:100%;height:auto}
+  .tip{position:absolute;pointer-events:none;background:#000;border:1px solid #333;border-radius:10px;padding:6px 10px;font-size:13px;white-space:nowrap;transform:translate(-50%,-110%)}
+  ul.concl{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+  ul.concl li{display:flex;gap:10px;align-items:flex-start}
+  ul.concl li i{flex:none;width:10px;height:10px;border-radius:50%;margin-top:6px;background:var(--acc)}
+  #estado{min-height:1.4em}
+  .err{color:var(--bad)!important}
+  .muted{color:var(--muted);font-size:13px}
+  @media (max-width:520px){.bar{grid-template-columns:96px 1fr 44px}.kpi b{font-size:32px}}
+</style>
+</head>
+<body>
+<main>
+  <div>
+    <h1>Estadísticas de vach.com.ar</h1>
+    <p>Visitas, de dónde llega la gente y quién toca WhatsApp. Anónimo: sin cookies ni datos personales. Cuenta desde la publicación de este tablero.</p>
+  </div>
+
+  <div class="card" id="login">
+    <div class="row">
+      <input id="k" type="password" autocomplete="off" placeholder="Clave (la misma de las estadísticas del juego)">
+      <button class="main" id="entrar">Ver estadísticas</button>
+    </div>
+    <div id="estado" class="muted"></div>
+  </div>
+
+  <div id="panel" hidden>
+    <div class="row" style="margin-bottom:14px">
+      <button data-d="7">7 días</button><button data-d="30" class="on">30 días</button><button data-d="90">90 días</button>
+      <span class="muted" id="gen"></span>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>Lo que dicen los números</h2>
+      <ul class="concl" id="concl"></ul>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card"><h2>Personas por día</h2><div class="chart" id="chPeople"></div></div>
+      <div class="card"><h2>Personas que tocaron WhatsApp por día</h2><div class="chart" id="chWa"></div></div>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card"><h2>De dónde llegan</h2><p class="muted">Visitas por origen</p><div class="bars" id="src"></div></div>
+      <div class="card"><h2>Quién escribe por WhatsApp</h2><p class="muted">Toques en WhatsApp según de dónde llegó la persona</p><div class="bars" id="waSrc"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:18px">
+      <h2>Páginas</h2>
+      <p class="muted">Personas distintas, visitas, toques en WhatsApp e Instagram, cuántos bajan hasta el final y cuánto se quedan.</p>
+      <div class="scroll"><table id="pages"></table></div>
+    </div>
+
+    <div class="grid2" style="margin-top:18px">
+      <div class="card"><h2>Productos de Merchandising</h2><p class="muted">Personas distintas por página de producto</p><div class="bars" id="merch"></div></div>
+      <div class="card"><h2>El juego y la web</h2><div id="game"></div></div>
+    </div>
+  </div>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var KEY="vach-estadisticas-k", days=30, data=null;
+  try{$("k").value=localStorage.getItem(KEY)||""}catch(e){}
+  var NAMES={"/":"Home","404":"Página no encontrada","/merchandising/":"Merchandising","/laservach/":"LaserVach","/laservach/full-landing.html":"LaserVach (landing completa)","/vachlive/":"VachLive","/sublivach/":"SubliVach (cotizador)"};
+  var SRC={instagram:"Instagram",tiktok:"TikTok",facebook:"Facebook",whatsapp:"WhatsApp",google:"Google",buscador:"Otros buscadores",juego:"Gato Encerrado",directo:"Directo / sin dato",otro:"Otros sitios"};
+  function nombre(p){if(NAMES[p])return NAMES[p];var m=p.match(/^\/merchandising\/([^/]+)\/$/);if(m)return m[1].replace(/-/g," ").replace(/^./,function(c){return c.toUpperCase()})+" (merch)";return p}
+  function fmt(n){return Number(n||0).toLocaleString("es-AR")}
+  function pct(a,b){return b?Math.round(a/b*100)+"%":"–"}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+
+  function load(){
+    var k=$("k").value.trim();if(!k){$("estado").textContent="Pegá la clave.";return}
+    try{localStorage.setItem(KEY,k)}catch(e){}
+    $("estado").textContent="Cargando…";$("estado").className="muted";
+    fetch("/api/web/stats",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({k:k,days:days})})
+      .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error==="clave"?"La clave no es correcta.":"No se pudo cargar ("+(j.error||r.status)+").");return j})})
+      .then(function(j){data=j;$("login").hidden=true;$("panel").hidden=false;render()})
+      .catch(function(e){$("estado").textContent=e.message;$("estado").className="err"});
+  }
+  $("entrar").onclick=load;$("k").addEventListener("keydown",function(e){if(e.key==="Enter")load()});
+  document.querySelectorAll("[data-d]").forEach(function(b){b.onclick=function(){days=+b.dataset.d;document.querySelectorAll("[data-d]").forEach(function(x){x.classList.toggle("on",x===b)});load()}});
+
+  function sum(prefix){var o={};data.days.forEach(function(d){for(var f in d.counts)if(f.indexOf(prefix)===0){var k=f.slice(prefix.length);o[k]=(o[k]||0)+Number(d.counts[f])}});return o}
+  function total(f){var t=0;data.days.forEach(function(d){t+=Number(d.counts[f]||0)});return t}
+  function bars(el,obj,label){
+    var arr=Object.keys(obj).map(function(k){return[k,obj[k]]}).filter(function(x){return x[1]>0}).sort(function(a,b){return b[1]-a[1]});
+    var max=arr.length?arr[0][1]:1;
+    el.innerHTML=arr.length?arr.map(function(x){return '<div class="bar" title="'+esc(label(x[0]))+': '+fmt(x[1])+'"><span class="l">'+esc(label(x[0]))+'</span><span class="track"><span class="fill" style="width:'+Math.max(2,x[1]/max*100)+'%;display:block"></span></span><span class="n">'+fmt(x[1])+'</span></div>'}).join(""):'<p class="muted">Todavía no hay datos.</p>';
+  }
+  function chart(el,vals,labels,unit){
+    var W=600,H=180,pad=24,n=vals.length,max=Math.max(1,Math.max.apply(null,vals)),bw=(W-pad)/n,g=2;
+    var s='<svg viewBox="0 0 '+W+' '+(H+22)+'" role="img" aria-label="'+unit+' por día">';
+    s+='<line x1="'+pad+'" y1="'+H+'" x2="'+W+'" y2="'+H+'" stroke="#333" stroke-width="1"/>';
+    s+='<text x="0" y="12" fill="#7A7A7A" font-size="11">'+fmt(max)+'</text><text x="0" y="'+H+'" fill="#7A7A7A" font-size="11">0</text>';
+    vals.forEach(function(v,i){var h=v/max*(H-16),x=pad+i*bw+g/2,w=Math.max(1,bw-g);
+      if(v>0)s+='<path d="M'+x+' '+H+'V'+(H-h+Math.min(4,h))+'q0 -'+Math.min(4,h)+' '+Math.min(4,w/2)+' -'+Math.min(4,h)+'H'+(x+w-Math.min(4,w/2))+'q'+Math.min(4,w/2)+' 0 '+Math.min(4,w/2)+' '+Math.min(4,h)+'V'+H+'Z" fill="#FFD23F"/>';
+      s+='<rect x="'+(pad+i*bw)+'" y="0" width="'+bw+'" height="'+H+'" fill="transparent" data-i="'+i+'"/>'});
+    [0,Math.floor(n/2),n-1].forEach(function(i){s+='<text x="'+(pad+i*bw+bw/2)+'" y="'+(H+16)+'" fill="#7A7A7A" font-size="11" text-anchor="middle">'+labels[i].slice(8,10)+'/'+labels[i].slice(5,7)+'</text>'});
+    el.innerHTML=s+'</svg><div class="tip" hidden></div>';
+    var tip=el.querySelector(".tip");
+    el.querySelectorAll("rect[data-i]").forEach(function(r){
+      r.addEventListener("mouseenter",function(){var i=+r.dataset.i,box=el.getBoundingClientRect(),rb=r.getBoundingClientRect();tip.hidden=false;tip.textContent=labels[i].slice(8,10)+"/"+labels[i].slice(5,7)+": "+fmt(vals[i])+" "+unit;tip.style.left=(rb.left-box.left+rb.width/2)+"px";tip.style.top="8px"});
+      r.addEventListener("mouseleave",function(){tip.hidden=true});
+    });
+  }
+
+  function render(){
+    var d=data;
+    var v=sum("v:"),wa=sum("wa:"),ig=sum("ig:"),src=sum("src:"),waSrc=sum("wa-src:"),dev=sum("dev:");
+    var totV=0,totWa=0,totIg=0;for(var a in v)totV+=v[a];for(a in wa)totWa+=wa[a];for(a in ig)totIg+=ig[a];
+    var mob=dev.m||0,desk=dev.d||0,jug=total("jugador"),waJug=total("wa-jugador");
+    $("gen").textContent="Actualizado "+new Date(d.generated).toLocaleString("es-AR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+    $("kpis").innerHTML=
+      '<div class="kpi hero"><b>'+fmt(d.people)+'</b><span>personas distintas entraron a la web</span></div>'+
+      '<div class="kpi"><b>'+fmt(d.whatsapp)+'</b><span>tocaron WhatsApp ('+pct(d.whatsapp,d.people)+' de las personas)</span></div>'+
+      '<div class="kpi"><b>'+fmt(totV)+'</b><span>visitas a páginas · '+pct(mob,mob+desk)+' desde celular</span></div>'+
+      '<div class="kpi"><b>'+fmt(totIg)+'</b><span>toques en Instagram</span></div>';
+    chart($("chPeople"),d.days.map(function(x){return x.people}),d.days.map(function(x){return x.day}),"personas");
+    chart($("chWa"),d.days.map(function(x){return x.whatsapp}),d.days.map(function(x){return x.day}),"personas");
+    bars($("src"),src,function(k){return SRC[k]||k});
+    bars($("waSrc"),waSrc,function(k){return SRC[k]||k});
+    // tabla de páginas
+    var t=sum("t:"),sc=sum("sc:"),pages=Object.keys(d.pagePeople).filter(function(p){return d.pagePeople[p]||v[p]});
+    pages.sort(function(a,b){return (d.pagePeople[b]||0)-(d.pagePeople[a]||0)});
+    function tiempo(p){var o={a:0,b:0,c:0,d:0,e:0},n=0;for(var k in o){o[k]=t[p+":"+k]||0;n+=o[k]}if(!n)return"–";var acc=0,mid=n/2,lab={a:"menos de 10 s",b:"10–30 s",c:"30–60 s",d:"1–3 min",e:"más de 3 min"};for(k in o){acc+=o[k];if(acc>=mid)return lab[k]}}
+    function bajan(p){var n=0,f=0;["25","50","75","100"].forEach(function(k){var x=sc[p+":"+k]||0;n+=x;if(k==="75"||k==="100")f+=x});return n?pct(f,n):"–"}
+    $("pages").innerHTML='<tr><th>Página</th><th>Personas</th><th>Visitas</th><th>WhatsApp</th><th>Instagram</th><th>Llegan al 75 %</th><th>Tiempo típico</th></tr>'+
+      (pages.length?pages.map(function(p){return '<tr><td>'+esc(nombre(p))+'</td><td>'+fmt(d.pagePeople[p])+'</td><td>'+fmt(v[p])+'</td><td>'+fmt(wa[p])+'</td><td>'+fmt(ig[p])+'</td><td>'+bajan(p)+'</td><td>'+tiempo(p)+'</td></tr>'}).join(""):'<tr><td colspan="7" class="muted">Todavía no hay datos.</td></tr>');
+    var merch={};pages.forEach(function(p){if(/^\/merchandising\/[^/]+\/$/.test(p))merch[p]=d.pagePeople[p]});
+    bars($("merch"),merch,nombre);
+    var fromGame=src.juego||0;
+    $("game").innerHTML='<table><tr><td>Personas que jugaron Gato Encerrado</td><td>'+fmt(d.game)+'</td></tr><tr><td>Visitas a la web de gente que ya jugó</td><td>'+fmt(jug)+'</td></tr><tr><td>Visitas que llegaron desde el juego</td><td>'+fmt(fromGame)+'</td></tr><tr><td>Toques en WhatsApp de gente que ya jugó</td><td>'+fmt(waJug)+'</td></tr></table>';
+    // conclusiones
+    var c=[];
+    if(!totV)c.push("Todavía no hay datos: el contador arrancó con la publicación de este tablero. Volvé en unos días.");
+    else{
+      var topSrc=Object.keys(src).sort(function(a,b){return src[b]-src[a]})[0];
+      if(topSrc)c.push("La mayor parte de las visitas llega por <b>"+esc(SRC[topSrc]||topSrc)+"</b> ("+pct(src[topSrc],totV)+").");
+      if(d.people)c.push(d.whatsapp?"<b>"+pct(d.whatsapp,d.people)+"</b> de las personas tocó WhatsApp ("+fmt(d.whatsapp)+" de "+fmt(d.people)+"). Es lo más parecido a un pedido.":"Nadie tocó WhatsApp todavía en este período.");
+      var topWa=Object.keys(wa).sort(function(a,b){return wa[b]-wa[a]})[0];
+      if(topWa)c.push("La página que más contactos genera es <b>"+esc(nombre(topWa))+"</b> ("+fmt(wa[topWa])+(wa[topWa]===1?" toque":" toques")+" en WhatsApp).");
+      var bestM=Object.keys(merch).sort(function(a,b){return merch[b]-merch[a]})[0];
+      if(bestM)c.push("El producto que más interesa es <b>"+esc(nombre(bestM))+"</b> ("+fmt(merch[bestM])+(merch[bestM]===1?" persona":" personas")+").");
+      var waSrcTop=Object.keys(waSrc).sort(function(a,b){return (waSrc[b]/(src[b]||1))-(waSrc[a]/(src[a]||1))})[0];
+      if(waSrcTop&&src[waSrcTop]>=5)c.push("Los que llegan por <b>"+esc(SRC[waSrcTop]||waSrcTop)+"</b> son los que más escriben: "+pct(waSrc[waSrcTop],src[waSrcTop])+" de sus visitas terminan en WhatsApp.");
+      var poco=pages.filter(function(p){return (v[p]||0)>=10&&bajan(p)!=="–"&&parseInt(bajan(p))<30});
+      if(poco.length)c.push("Casi nadie baja hasta el final en <b>"+poco.map(nombre).map(esc).join(", ")+"</b>: lo importante tiene que estar arriba.");
+      if(fromGame)c.push("El juego trajo <b>"+fmt(fromGame)+"</b> visitas a la web"+(waJug?" y "+fmt(waJug)+" toques en WhatsApp de gente que jugó.":"."));
+      c.push(pct(mob,mob+desk)+" de las visitas son desde celular.");
+    }
+    $("concl").innerHTML=c.map(function(x){return"<li><i></i><span>"+x+"</span></li>"}).join("");
+  }
+  if($("k").value)load();
+})();
+</script>
+</body>
+</html>
