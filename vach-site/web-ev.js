@@ -72,6 +72,11 @@
     if (!t) return;
     track(t, x);
     if (t !== "nav") vev(t);
+    else if (x && x !== page) { // a dónde va desde esta página
+      var pg = function (p) { return p === "/" ? "/home" : p.replace(/\/$/, ""); };
+      var p2 = "/_ev/ir" + pg(x) + "/desde" + (page === "404" ? "/404" : pg(page));
+      try { window.va("pageview", { route: p2, path: p2 }); } catch (e) {}
+    }
     send(true);
   }, true);
 
@@ -81,6 +86,23 @@
     var h = document.documentElement, s = (h.scrollTop + innerHeight) / Math.max(1, h.scrollHeight);
     if (s > maxScroll) { if (maxScroll < 0.75 && s >= 0.75) vev("scroll75"); maxScroll = s; }
   }, { passive: true });
+  var hitos = [[30, "t30"], [60, "t60"], [180, "t180"]];
+  setInterval(function () {
+    var sec = (visible + (shown ? Date.now() - shown : 0)) / 1000;
+    while (hitos.length && sec >= hitos[0][0]) vev(hitos.shift()[1]);
+  }, 5000);
+
+  // fotos: cada foto que se abre en grande (el visor de las páginas de Merchandising)
+  var lbImg = document.getElementById("lightbox-img"), lastFoto = "";
+  if (lbImg && window.MutationObserver) new MutationObserver(function () {
+    var src = lbImg.getAttribute("src") || "", m = /\/([a-z0-9-]+)\.(webp|jpe?g|png|avif)(\?|$)/i.exec(src);
+    if (!m) { lastFoto = ""; return; }
+    var slug = m[1].toLowerCase();
+    if (slug === lastFoto) return;
+    lastFoto = slug;
+    vev("foto/" + slug);
+  }).observe(lbImg, { attributes: true, attributeFilter: ["src"] });
+
   function leave() {
     if (left) return; // se cuenta una sola vez por página
     left = true;
