@@ -34,6 +34,14 @@
   var mobile = matchMedia("(pointer: coarse)").matches || /Mobi|Android|iPhone/i.test(navigator.userAgent);
   var jugador = !!ls("gato-encerrado-web-v1"); // ya jugó Gato Encerrado en este navegador
 
+  // Vercel Web Analytics: visitas, origen, país y dispositivo (lo lee el tablero de claude.ai).
+  // Los toques en WhatsApp/Instagram se cuentan como visitas a direcciones virtuales /_ev/<tipo>/<página>.
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  if (!document.querySelector('script[src*="/_vercel/insights/"]')) {
+    var vs = document.createElement("script"); vs.defer = true; vs.src = "/_vercel/insights/script.js"; document.head.appendChild(vs);
+  }
+  function vev(t) { var p = "/_ev/" + t + (page === "404" ? "/404/" : page); try { window.va("pageview", { route: p, path: p }); } catch (e) {} }
+
   var q = [];
   function send(useBeacon) {
     if (!q.length) return;
@@ -63,6 +71,7 @@
     }
     if (!t) return;
     track(t, x);
+    if (t !== "nav") vev(t);
     send(true);
   }, true);
 
@@ -70,7 +79,7 @@
   var maxScroll = 0, shown = Date.now(), visible = 0, left = false;
   addEventListener("scroll", function () {
     var h = document.documentElement, s = (h.scrollTop + innerHeight) / Math.max(1, h.scrollHeight);
-    if (s > maxScroll) maxScroll = s;
+    if (s > maxScroll) { if (maxScroll < 0.75 && s >= 0.75) vev("scroll75"); maxScroll = s; }
   }, { passive: true });
   function leave() {
     if (left) return; // se cuenta una sola vez por página
