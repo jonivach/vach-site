@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Gato Encerrado · un juego de VACH*</title>
-<meta name="description" content="Juego de ingenio: los gatos te dicen cuántos peces ven, pero alguno miente. 150 niveles y un desafío nuevo cada día.">
+<meta name="description" content="Juego de ingenio: los gatos te dicen cuántos peces ven, pero alguno miente. 200 niveles y un desafío nuevo cada día.">
 <meta name="theme-color" content="#F8F7EC">
 <meta property="og:title" content="Gato Encerrado">
 <meta property="og:description" content="Los gatos saben dónde están los peces. Pero alguno miente. ¿Lo descubrís?">
@@ -17,6 +17,7 @@
 <meta property="og:site_name" content="VACH*">
 <meta property="og:locale" content="es_AR">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:description" content="Los gatos saben dónde están los peces. Pero alguno miente. 200 niveles y un desafío nuevo cada día.">
 <meta name="twitter:image" content="https://www.vach.com.ar/gato/og.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath fill='%237B4FFF' d='M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z'/%3E%3Ccircle cx='15' cy='23' r='2.2' fill='%23fff'/%3E%3Ccircle cx='25' cy='23' r='2.2' fill='%23fff'/%3E%3C/svg%3E">
@@ -632,25 +633,34 @@ async function disablePush(){
 const showPushAsk=()=>(pushSupported()||pushNeedsInstall())&&!save.push&&!save.pushAsked&&(()=>{try{return Notification.permission!=="denied"}catch(e){return true}})();
 
 /* ---------- ranking anónimo del desafío ---------- */
-const RANK_API="/api/gato/desafio";
+const RANK_API="/api/gato/desafio",START_API="/api/gato/inicio";
+// avisa al servidor cuándo se abrió el desafío (el servidor cuenta solo la primera vez)
+function rankStart(body){
+  if(TEST||!window.fetch)return;
+  try{fetch(START_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(Object.assign({id:save.uid},body))}).catch(()=>{})}catch(e){}
+}
+const rankBody=(r,o)=>JSON.stringify(Object.assign(o,{id:save.uid,t:r.t},Array.isArray(r.f)?{f:r.f,a:r.a||[]}:{}));
 function dailyRank(done){
   const r=save.daily.results[today()];if(!r||TEST||!window.fetch){done(null);return}
   let fin=false;const end=v=>{if(!fin){fin=true;done(v)}};setTimeout(()=>end(null),6000);
-  try{fetch(RANK_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({d:dayIndex()+1,id:save.uid,t:r.t})})
-    .then(x=>x.ok?x.json():null).then(j=>{if(j&&typeof j.total==="number"){r.p=j.pct;r.c=j.total;persist();end(j)}else end(null)}).catch(()=>end(null))}catch(e){end(null)}
+  try{fetch(RANK_API,{method:"POST",headers:{"content-type":"application/json"},body:rankBody(r,{d:dayIndex()+1})})
+    .then(x=>x.ok?x.json():null).then(j=>{if(j&&typeof j.total==="number"&&typeof j.t==="number"){r.p=j.pct;r.c=j.total;r.rt=j.t;persist();end(j)}else if(j&&typeof j.total==="number"&&!Array.isArray(r.f)){r.p=j.pct;r.c=j.total;persist();end(j)}else end(null)}).catch(()=>end(null))}catch(e){end(null)}
 }
 function weeklyRank(done){
   const r=save.weekly.results[weekKey()];if(!r||TEST||!window.fetch){done(null);return}
   let fin=false;const end=v=>{if(!fin){fin=true;done(v)}};setTimeout(()=>end(null),6000);
-  try{fetch(RANK_API,{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({w:weekIndex()+1,id:save.uid,t:r.t})})
-    .then(x=>x.ok?x.json():null).then(j=>{if(j&&typeof j.total==="number"){r.p=j.pct;r.c=j.total;persist();end(j)}else end(null)}).catch(()=>end(null))}catch(e){end(null)}
+  try{fetch(RANK_API,{method:"POST",headers:{"content-type":"application/json"},body:rankBody(r,{w:weekIndex()+1})})
+    .then(x=>x.ok?x.json():null).then(j=>{if(j&&typeof j.total==="number"&&typeof j.t==="number"){r.p=j.pct;r.c=j.total;r.rt=j.t;persist();end(j)}else if(j&&typeof j.total==="number"&&!Array.isArray(r.f)){r.p=j.pct;r.c=j.total;persist();end(j)}else end(null)}).catch(()=>end(null))}catch(e){end(null)}
 }
-function weekRankText(r){
+const rtLine=r=>r&&typeof r.rt==="number"?` Tu tiempo para el ranking: ${fmt(r.rt)}.`:"";
+function weekRankText(r){return weekRankText0(r)+(r&&r.c?rtLine(r):"")}
+function weekRankText0(r){
   if(!r||!r.c)return "";
   if(r.c<5)return r.c===1?"Sos el primero en resolver este caso.":`Sos de los primeros ${r.c} en resolver este caso.`;
   return r.p>=100?`Fuiste el más rápido de los ${r.c} detectives de esta semana.`:r.p<=0?`Esta semana lo resolvieron ${r.c} detectives.`:`Más rápido que el ${r.p}% de los ${r.c} detectives de esta semana.`;
 }
-function rankText(r){
+function rankText(r){return rankText0(r)+(r&&r.c?rtLine(r):"")}
+function rankText0(r){
   if(!r||!r.c)return "";
   if(r.c<5)return r.c===1?"Sos el primero en resolverlo hoy.":`Sos de los primeros ${r.c} en resolverlo hoy.`;
   return r.p>=100?`Fuiste el más rápido de los ${r.c} jugadores de hoy.`:r.p<=0?`Hoy lo resolvieron ${r.c} personas. Mañana vas por más.`:`Más rápido que el ${r.p}% de los ${r.c} jugadores de hoy.`;
@@ -863,6 +873,7 @@ function renderHome(){
         <div class="streak" title="${shieldText()}"><b>${s}${s>0&&freezeReady()?'<span class="shieldmini" aria-hidden="true">🛡️</span>':""}</b><small>${s===1?"día seguido":"días seguidos"}</small></div>
       </div>
       <button class="btn" style="min-height:48px" data-act="go" data-arg="daily">${dk?`Ver mi resultado · ${fmt(dk.t)}`:"Jugar el desafío"} ${ico("arrow",18)}</button>
+      ${dk?"":`<span class="muted" style="font-size:12px;text-align:center;margin-top:-4px">Para el ranking, el tiempo corre desde que abrís el desafío.</span>`}
       ${dayIndex()>0?`<button class="linkbtn" style="align-self:center;margin-top:-6px" data-act="go" data-arg="past">Días anteriores</button>`:""}
     </section>
     ${missionsRowHTML()}
@@ -1012,6 +1023,7 @@ function startWeekly(){
   if(save.unlocked<WEEKLY_FROM){go("home");return}
   if(save.weekly.results[weekKey()]){view="weeklyResult";renderWeeklyResult({});return}
   G=makeGame(weeklyPuzzle(),"weekly",0);
+  rankStart({w:weekIndex()+1});
   view="game";
   track("semana-empieza");
   renderGameShell();puzzleIntro(G.L);
@@ -1020,6 +1032,7 @@ function startDaily(){
   const dk=save.daily.results[today()];
   if(dk){view="dailyResult";renderDailyResult({already:true});return}
   G=makeGame(dailyPuzzle(),"daily",0);
+  rankStart({d:dayIndex()+1});
   view="game";
   track("desafio-empieza");
   renderGameShell();puzzleIntro(G.L);
@@ -1297,7 +1310,7 @@ function win(){
   }
   if(G.mode==="weekly"){
     const k=weekKey();lastWeeklyGain=0;
-    if(!save.weekly.results[k]){save.weekly.results[k]={t:G.sec,h:G.hintsUsed};lastWeeklyGain=addHints(2);track("semana-gana",0,{tiempo:tb(G.sec)})}
+    if(!save.weekly.results[k]){save.weekly.results[k]={t:G.sec,h:G.hintsUsed,f:G.cells.map((v,i)=>v===1?i:-1).filter(i=>i>=0),a:G.accused.slice()};lastWeeklyGain=addHints(2);track("semana-gana",0,{tiempo:tb(G.sec)})}
     persist();
     setTimeout(()=>{if(view==="game")go("weeklyResult",{fresh:true})},WIN_MS);
     return;
@@ -1310,7 +1323,7 @@ function win(){
       else if(l===daysAgo(2)&&freezeReady()&&save.daily.streak>0){save.daily.streak++;save.daily.freeze=yesterday();lastFreeze=true;track("protector-usado")}
       else if(l!==t)save.daily.streak=1;
       save.daily.last=t;save.daily.best=Math.max(save.daily.best,save.daily.streak);
-      save.daily.results[t]={t:G.sec,h:G.hintsUsed};
+      save.daily.results[t]={t:G.sec,h:G.hintsUsed,f:G.cells.map((v,i)=>v===1?i:-1).filter(i=>i>=0),a:G.accused.slice()};
       lastDailyGain=addHints(1);
       lastMilestone=null;save.daily.ms=save.daily.ms||{};const s=save.daily.streak;
       if(MILESTONES[s]&&!save.daily.ms[s]){save.daily.ms[s]=1;lastMilestone={n:s,gain:addHints(MILESTONES[s])};track("racha-"+s)}
