@@ -34,7 +34,7 @@ export async function POST(req) {
   const subs = (await redis.hgetall("gato:admin")) || {};
   if (b.test) {
     webpush.setVapidDetails(process.env.VAPID_SUBJECT || "https://www.vach.com.ar", process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
-    const msg = JSON.stringify({ title: "Gato Encerrado: alerta de prueba", body: "Las alertas funcionan. Te aviso cuando alguien llegue al nivel 130.", url: "/alertas-gato/", tag: "gato-alerta-prueba" });
+    const msg = JSON.stringify({ title: "Gato Encerrado: alerta de prueba", body: "Las alertas funcionan en este celular.", url: "/alertas-gato/", tag: "gato-alerta-prueba" });
     let sent = 0;
     await Promise.all(Object.entries(subs).map(async ([k, raw]) => {
       try { await webpush.sendNotification(typeof raw === "string" ? JSON.parse(raw) : raw, msg, { TTL: 3600, timeout: 8000 }); sent++; }
@@ -42,5 +42,6 @@ export async function POST(req) {
     }));
     return json({ ok: true, devices: Object.keys(subs).length, sent });
   }
-  return json({ ok: true, devices: Object.keys(subs).length, total130: Number(await redis.get("gato:alerta:130:total")) || 0 });
+  const [n75, n130, people] = await Promise.all([redis.get("gato:alerta:75:total"), redis.get("gato:alerta:130:total"), redis.pfcount("gato:uv:total")]);
+  return json({ ok: true, devices: Object.keys(subs).length, n75: Number(n75) || 0, n130: Number(n130) || 0, people: Number(people) || 0 });
 }

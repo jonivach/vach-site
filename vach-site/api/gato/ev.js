@@ -22,23 +22,43 @@ const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-8]|link-[a-z]{2,12}
 const TOTALS = new Set(["app-instalada","app-instalada-guiada","instalar-pide"]);
 const SOURCES = new Set(["instagram","tiktok","whatsapp","facebook","x","otro","directo"]);
 
-// alertas para el dueño del juego (se activan en /alertas-gato/): cuando alguien gana por primera vez estos niveles
-const ALERTAS = { 130: "nivel 130" };
-const ALERTAS_POR_DIA = 30; // tope, por si alguien manda eventos falsos
-async function alertar(lv, u) {
-  if (!/^[a-z0-9]{16,32}$/.test(u)) return;                                          // solo jugadores con código válido
-  if (!(await redis.set(`gato:alerta:${lv}:${u}`, 1, { nx: true, ex: 60 * 60 * 24 * 400 }))) return; // una vez por jugador
-  const hoy = await redis.incr(`gato:alerta:hoy`); if (hoy === 1) await redis.expire(`gato:alerta:hoy`, 86400);
+// alertas para el dueño del juego (se activan en /alertas-gato/)
+const ALERTAS = { 75: "nivel 75", 130: "nivel 130" }; // alguien gana por primera vez estos niveles
+const HITOS = [200, 250, 750, 1000];                  // personas distintas que jugaron, desde siempre
+const ALERTAS_POR_DIA = 30;                           // tope, por si alguien manda eventos falsos
+const STATS_DESDE = Date.UTC(2026, 10, 4);            // primer día con estadísticas
+async function avisar(title, body, tag) {
+  const hoy = await redis.incr("gato:alerta:hoy"); if (hoy === 1) await redis.expire("gato:alerta:hoy", 86400);
   if (hoy > ALERTAS_POR_DIA) return;
-  const total = await redis.incr(`gato:alerta:${lv}:total`);
   const subs = (await redis.hgetall("gato:admin")) || {};
   if (!Object.keys(subs).length || !process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) return;
   webpush.setVapidDetails(process.env.VAPID_SUBJECT || "https://www.vach.com.ar", process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
-  const msg = JSON.stringify({ title: `Gato Encerrado: ${ALERTAS[lv]}`, body: `Alguien acaba de ganar el ${ALERTAS[lv]}. ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, url: "/gato/", tag: `gato-alerta-${lv}-${total}` });
+  const msg = JSON.stringify({ title, body, url: "/alertas-gato/", tag });
   await Promise.all(Object.entries(subs).map(async ([k, raw]) => {
     try { await webpush.sendNotification(typeof raw === "string" ? JSON.parse(raw) : raw, msg, { TTL: 24 * 3600, timeout: 8000 }); }
     catch (e) { if (e.statusCode === 404 || e.statusCode === 410) await redis.hdel("gato:admin", k); }
   }));
+}
+async function alertarNivel(lv, u) {
+  if (!(await redis.set(`gato:alerta:${lv}:${u}`, 1, { nx: true, ex: 60 * 60 * 24 * 400 }))) return; // una vez por jugador
+  const total = await redis.incr(`gato:alerta:${lv}:total`);
+  await avisar(`Gato Encerrado: ${ALERTAS[lv]}`, `Alguien acaba de ganar el ${ALERTAS[lv]}. ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, `gato-alerta-${lv}-${total}`);
+}
+// total histórico de personas distintas: la primera vez se arma juntando los días anteriores
+async function personasTotal() {
+  if (!(await redis.exists("gato:uv:total"))) {
+    const dias = []; for (let t = STATS_DESDE; t <= Date.now(); t += 864e5) dias.push(`gato:uv:${new Date(t).toISOString().slice(0, 10)}`);
+    await redis.pfmerge("gato:uv:total", ...dias);
+    const n = await redis.pfcount("gato:uv:total");
+    for (const h of HITOS) if (n >= h) await redis.set(`gato:hito:${h}`, 1, { nx: true }); // los ya superados no avisan
+  }
+}
+async function alertarHitos(u) {
+  await personasTotal();
+  if (!(await redis.pfadd("gato:uv:total", u))) return; // ya estaba contada
+  const n = await redis.pfcount("gato:uv:total");
+  for (const h of HITOS) if (n >= h && (await redis.set(`gato:hito:${h}`, 1, { nx: true })))
+    await avisar(`Gato Encerrado: ${h} personas`, `Ya son ${h} personas las que jugaron Gato Encerrado.`, `gato-hito-${h}`);
 }
 
 export async function POST(req) {
@@ -73,6 +93,9 @@ export async function POST(req) {
   const u = String(b.u || "");
   if (/^[a-z0-9]{16,32}$/.test(u)) { p.pfadd(`gato:uv:${day}`, u); p.expire(`gato:uv:${day}`, KEEP); }
   await p.exec();
-  for (const lv of Object.keys(ALERTAS)) if (add["gana:" + lv]) { try { await alertar(lv, u); } catch {} }
+  if (/^[a-z0-9]{16,32}$/.test(u)) {
+    for (const lv of Object.keys(ALERTAS)) if (add["gana:" + lv]) { try { await alertarNivel(lv, u); } catch {} }
+    try { await alertarHitos(u); } catch {}
+  }
   return ok();
 }

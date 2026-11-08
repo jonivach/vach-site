@@ -16,6 +16,7 @@
   main{width:100%;max-width:420px;display:flex;flex-direction:column;gap:16px}
   h1{font-size:24px;margin:0}
   p{margin:0;color:#B5B5B5}
+  .card span{color:#B5B5B5;font-size:15px}
   .card{background:#151515;border:1px solid #262626;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
   label{font-size:14px;color:#B5B5B5}
   input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #333;background:#0F0F0F;color:#fff;font:inherit}
@@ -31,7 +32,9 @@
 <body>
 <main>
   <h1>Alertas de Gato Encerrado</h1>
-  <p>Te llega una notificación a este celular cada vez que alguien gana por primera vez el nivel 130.</p>
+  <p>Te llega una notificación a este celular cuando:</p>
+  <ul style="margin:0;padding-left:20px;color:#B5B5B5"><li>alguien gana por primera vez el nivel 75 o el 130</li><li>el juego llega a 200, 250, 750 y 1000 personas</li></ul>
+  <div class="card" id="resumen" hidden></div>
 
   <div class="card" id="ios" hidden>
     <b>En iPhone, primero instalá esta página</b>
@@ -66,6 +69,10 @@
   function clave(){var k=$("k").value.trim();try{localStorage.setItem(KEY,k)}catch(e){}return k}
   function b64(s){s=s.replace(/-/g,"+").replace(/_/g,"/");s+="===".slice((s.length+3)%4);var r=atob(s),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
   function api(body){return fetch("/api/gato/alertas",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error==="clave"?"La clave no es correcta.":"No se pudo ("+(j.error||r.status)+").");return j})})}
+  function resumen(){var k=$("k").value.trim();if(!k)return;
+    api({k:k}).then(function(j){var r=$("resumen");r.hidden=false;
+      r.innerHTML="<b>Hasta ahora</b><span>"+j.people+" personas jugaron (desde que hay estadísticas)</span><span>"+j.n75+" llegaron al nivel 75 · "+j.n130+" al 130</span><span>Celulares con alertas: "+j.devices+"</span>"}).catch(function(){})}
+  resumen();
   $("activar").onclick=function(){
     var k=clave();if(!k){est("Pegá la clave primero.","err");return}
     if(!reg){est("Este navegador no permite notificaciones.","err");return}
@@ -77,7 +84,7 @@
       var sw=x[0],key=x[1].key;
       return sw.pushManager.getSubscription().then(function(s){return s||sw.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64(key)})});
     }).then(function(sub){return api({k:k,sub:sub.toJSON()})})
-      .then(function(j){est("Listo: alertas activadas. Celulares que las reciben: "+j.devices+".","ok")})
+      .then(function(j){est("Listo: alertas activadas. Celulares que las reciben: "+j.devices+".","ok");resumen()})
       .catch(function(e){est(e.message||"No se pudo activar.","err")});
   };
   $("probar").onclick=function(){
