@@ -20,7 +20,7 @@ const WEEK_START = Date.UTC(2026, 9, 25); // caso de la semana n.º 1 (domingo)
 const MAX_PLAYERS = 100000;               // tope por desafío, para que nadie pueda llenar la base
 // Mientras el juego publicado no mande la respuesta (f y a), se aceptan tiempos sin verificar.
 // Cuando esté publicada la versión del juego que la manda, poner en false.
-const ACEPTAR_SIN_VERIFICAR = true;
+const ACEPTAR_SIN_VERIFICAR = false;
 const MIN_SEC = { 3: 5, 4: 8, 5: 13, 6: 20, 7: 30 }; // menos que esto no es humano
 const NO_STORE = { "cache-control": "no-store" };
 const bad = (error = "bad") => Response.json({ error }, { status: 400, headers: NO_STORE });
