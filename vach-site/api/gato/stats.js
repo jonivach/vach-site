@@ -19,6 +19,7 @@ export async function GET(req) {
   const p = redis.pipeline();
   for (const d of list) { p.hgetall(`gato:st:${d}`); p.pfcount(`gato:uv:${d}`); }
   for (const d of list) p.zcard(dkey(d));
+  p.pfcount(...list.map((d) => `gato:uv:${d}`)); // personas distintas en todo el período (sin repetir entre días)
   p.hgetall("gato:tot");
   p.hlen("gato:push");
   const r = await p.exec();
@@ -35,5 +36,5 @@ export async function GET(req) {
   const times = {};
   asked.forEach((i, j) => { times[i] = { best: score(t[j * 3]), median: score(t[j * 3 + 1]), slow: score(t[j * 3 + 2]) }; });
   const out = list.map((d, i) => ({ day: d, people: r[i * 2 + 1] || 0, ranking: rank[i], times: times[i] || null, counts: r[i * 2] || {} }));
-  return Response.json({ generated: new Date().toISOString(), reminders: r[r.length - 1] || 0, totals: r[r.length - 2] || {}, days: out }, { headers: { "cache-control": "no-store" } });
+  return Response.json({ generated: new Date().toISOString(), reminders: r[r.length - 1] || 0, people: r[r.length - 3] || 0, totals: r[r.length - 2] || {}, days: out }, { headers: { "cache-control": "no-store" } });
 }
