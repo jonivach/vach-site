@@ -38,5 +38,8 @@ export async function GET(req) {
     });
   }
   for (let i = 0; i < jobs.length; i += 50) await Promise.all(jobs.slice(i, i + 50).map(f => f())); // de a 50 a la vez
+  // constancia de que salió hoy (la usan las alertas de /alertas-gato para avisar si un día no sale)
+  const dia = new Date(Date.now() - 3 * 3600e3).toISOString().slice(0, 10);
+  await redis.set("gato:recordatorio:ultimo", JSON.stringify({ dia, sent, skipped, removed, fallaron: jobs.length - sent }), { ex: 60 * 60 * 24 * 30 });
   return Response.json({ d, sent, skipped, removed });
 }

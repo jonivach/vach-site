@@ -42,6 +42,6 @@ export async function POST(req) {
     }));
     return json({ ok: true, devices: Object.keys(subs).length, sent });
   }
-  const [n75, n130, people] = await Promise.all([redis.get("gato:alerta:75:total"), redis.get("gato:alerta:130:total"), redis.pfcount("gato:uv:total")]);
-  return json({ ok: true, devices: Object.keys(subs).length, n75: Number(n75) || 0, n130: Number(n130) || 0, people: Number(people) || 0 });
+  const [n75, n130, n200, apoyo, people] = await Promise.all(["gato:alerta:75:total", "gato:alerta:130:total", "gato:alerta:200:total", "gato:alerta:apoyo:total"].map((k) => redis.get(k)).concat(redis.pfcount("gato:uv:total")));
+  return json({ ok: true, devices: Object.keys(subs).length, n75: Number(n75) || 0, n130: Number(n130) || 0, n200: Number(n200) || 0, apoyo: Number(apoyo) || 0, people: Number(people) || 0 });
 }

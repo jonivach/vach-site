@@ -23,7 +23,7 @@ const TOTALS = new Set(["app-instalada","app-instalada-guiada","instalar-pide"])
 const SOURCES = new Set(["instagram","tiktok","whatsapp","facebook","x","otro","directo"]);
 
 // alertas para el dueño del juego (se activan en /alertas-gato/)
-const ALERTAS = { 75: "nivel 75", 130: "nivel 130" }; // alguien gana por primera vez estos niveles
+const ALERTAS = { 75: "nivel 75", 130: "nivel 130", 200: "nivel 200" }; // alguien gana por primera vez estos niveles
 const HITOS = [200, 250, 750, 1000];                  // personas distintas que jugaron, desde siempre
 const ALERTAS_POR_DIA = 30;                           // tope, por si alguien manda eventos falsos
 const STATS_DESDE = Date.UTC(2026, 10, 4);            // primer día con estadísticas
@@ -42,16 +42,21 @@ async function avisar(title, body, tag) {
 async function alertarNivel(lv, u) {
   if (!(await redis.set(`gato:alerta:${lv}:${u}`, 1, { nx: true, ex: 60 * 60 * 24 * 400 }))) return; // una vez por jugador
   const total = await redis.incr(`gato:alerta:${lv}:total`);
-  await avisar(`Gato Encerrado: ${ALERTAS[lv]}`, `Alguien acaba de ganar el ${ALERTAS[lv]}. ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, `gato-alerta-${lv}-${total}`);
+  const fin = Number(lv) === 200;
+  await avisar(fin ? "Gato Encerrado: ¡alguien lo terminó!" : `Gato Encerrado: ${ALERTAS[lv]}`,
+    `${fin ? "Alguien acaba de ganar el nivel 200 y terminó el juego." : `Alguien acaba de ganar el ${ALERTAS[lv]}.`} ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, `gato-alerta-${lv}-${total}`);
 }
 // total histórico de personas distintas: la primera vez se arma juntando los días anteriores
+let totalListo = false;
 async function personasTotal() {
+  if (totalListo) return;
   if (!(await redis.exists("gato:uv:total"))) {
     const dias = []; for (let t = STATS_DESDE; t <= Date.now(); t += 864e5) dias.push(`gato:uv:${new Date(t).toISOString().slice(0, 10)}`);
     await redis.pfmerge("gato:uv:total", ...dias);
     const n = await redis.pfcount("gato:uv:total");
     for (const h of HITOS) if (n >= h) await redis.set(`gato:hito:${h}`, 1, { nx: true }); // los ya superados no avisan
   }
+  totalListo = true;
 }
 async function alertarHitos(u) {
   await personasTotal();
@@ -59,6 +64,40 @@ async function alertarHitos(u) {
   const n = await redis.pfcount("gato:uv:total");
   for (const h of HITOS) if (n >= h && (await redis.set(`gato:hito:${h}`, 1, { nx: true })))
     await avisar(`Gato Encerrado: ${h} personas`, `Ya son ${h} personas las que jugaron Gato Encerrado.`, `gato-hito-${h}`);
+}
+
+// récord de personas en un día: avisa una sola vez por día, cuando hoy supera al mejor día anterior
+const RECORD_MINIMO = 10; // no avisa récords chicos
+async function alertarRecord(day) {
+  if (!(await redis.exists("gato:record:max"))) {
+    let max = 0; for (let t = STATS_DESDE; t < Date.parse(day); t += 864e5) max = Math.max(max, Number(await redis.pfcount(`gato:uv:${new Date(t).toISOString().slice(0, 10)}`)) || 0);
+    await redis.set("gato:record:max", max, { nx: true });
+  }
+  await redis.set(`gato:record:base:${day}`, Number(await redis.get("gato:record:max")) || 0, { nx: true, ex: 3 * 86400 }); // el récord con el que arrancó el día
+  const base = Number(await redis.get(`gato:record:base:${day}`)) || 0, hoy = Number(await redis.pfcount(`gato:uv:${day}`)) || 0;
+  if (hoy > (Number(await redis.get("gato:record:max")) || 0)) await redis.set("gato:record:max", hoy);
+  if (hoy > base && hoy >= RECORD_MINIMO && (await redis.set(`gato:record:aviso:${day}`, 1, { nx: true, ex: 3 * 86400 })))
+    await avisar("Gato Encerrado: récord de personas", `Hoy ya jugaron ${hoy} personas, más que en cualquier día anterior (el récord era ${base}).`, `gato-record-${day}`);
+}
+// apoyo: alguien tocó "Apoyá al gato" (abre Cafecito; no confirma que haya aportado)
+async function alertarApoyo(u, day) {
+  if (!(await redis.set(`gato:alerta:apoyo:${day}:${u}`, 1, { nx: true, ex: 2 * 86400 }))) return; // una vez por persona por día
+  const total = await redis.incr("gato:alerta:apoyo:total");
+  await avisar("Gato Encerrado: alguien tocó Apoyar", `Alguien abrió el link de Cafecito para apoyar al gato. Ya van ${total} ${total === 1 ? "vez" : "veces"}.`, `gato-apoyo-${total}`);
+}
+// recordatorio diario: avisa si a las 21 h de Argentina todavía no salió, o si salió pero no le llegó a nadie
+let recordatorioVisto = "";
+async function alertarRecordatorio(day) {
+  if (recordatorioVisto === day || new Date(Date.now() - 3 * 3600e3).getUTCHours() < 21) return;
+  if (!(await redis.hlen("gato:push"))) return; // nadie lo tiene activado
+  const raw = await redis.get("gato:recordatorio:ultimo");
+  const u = raw ? (typeof raw === "string" ? JSON.parse(raw) : raw) : null;
+  let problema = null;
+  if (!u || u.dia !== day) problema = "El recordatorio diario de hoy no salió. Revisá Cron Jobs en Vercel.";
+  else if (u.fallaron > 0 && !u.sent) problema = `El recordatorio de hoy salió, pero fallaron los ${u.fallaron} envíos.`;
+  recordatorioVisto = day; // ya revisado hoy en esta instancia
+  if (problema && (await redis.set(`gato:alerta:recordatorio:${day}`, 1, { nx: true, ex: 3 * 86400 })))
+    await avisar("Gato Encerrado: problema con el recordatorio", problema, `gato-recordatorio-${day}`);
 }
 
 export async function POST(req) {
@@ -91,11 +130,15 @@ export async function POST(req) {
   p.expire(key, KEEP);
   for (const f of fields) if (TOTALS.has(f)) p.hincrby("gato:tot", f, add[f]);
   const u = String(b.u || "");
+  const iUv = fields.length + 1 + fields.filter((f) => TOTALS.has(f)).length; // posición del pfadd en el pipeline
   if (/^[a-z0-9]{16,32}$/.test(u)) { p.pfadd(`gato:uv:${day}`, u); p.expire(`gato:uv:${day}`, KEEP); }
-  await p.exec();
+  const res = await p.exec();
+  const nuevoHoy = Number(res[iUv]) === 1; // primera vez que juega hoy
   if (/^[a-z0-9]{16,32}$/.test(u)) {
     for (const lv of Object.keys(ALERTAS)) if (add["gana:" + lv]) { try { await alertarNivel(lv, u); } catch {} }
-    try { await alertarHitos(u); } catch {}
+    if (nuevoHoy) { try { await alertarHitos(u); } catch {} try { await alertarRecord(day); } catch {} } // solo cuando aparece alguien nuevo hoy
+    if (add["link-apoyo"]) { try { await alertarApoyo(u, day); } catch {} }
   }
+  try { await alertarRecordatorio(day); } catch {}
   return ok();
 }
