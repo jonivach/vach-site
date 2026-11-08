@@ -3,6 +3,7 @@
 // no guarda quién hizo qué. El código al azar del navegador se usa solo para estimar cuántas personas distintas
 // jugaron cada día (HyperLogLog: no se puede leer de vuelta ningún código).
 import { Redis } from "@upstash/redis";
+import webpush from "web-push";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL,
@@ -20,6 +21,25 @@ const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-8]|link-[a-z]{2,12}
 // estos además se suman a un total histórico (sin vencimiento): cada celular los manda una sola vez
 const TOTALS = new Set(["app-instalada","app-instalada-guiada","instalar-pide"]);
 const SOURCES = new Set(["instagram","tiktok","whatsapp","facebook","x","otro","directo"]);
+
+// alertas para el dueño del juego (se activan en /alertas-gato/): cuando alguien gana por primera vez estos niveles
+const ALERTAS = { 130: "nivel 130" };
+const ALERTAS_POR_DIA = 30; // tope, por si alguien manda eventos falsos
+async function alertar(lv, u) {
+  if (!/^[a-z0-9]{16,32}$/.test(u)) return;                                          // solo jugadores con código válido
+  if (!(await redis.set(`gato:alerta:${lv}:${u}`, 1, { nx: true, ex: 60 * 60 * 24 * 400 }))) return; // una vez por jugador
+  const hoy = await redis.incr(`gato:alerta:hoy`); if (hoy === 1) await redis.expire(`gato:alerta:hoy`, 86400);
+  if (hoy > ALERTAS_POR_DIA) return;
+  const total = await redis.incr(`gato:alerta:${lv}:total`);
+  const subs = (await redis.hgetall("gato:admin")) || {};
+  if (!Object.keys(subs).length || !process.env.VAPID_PUBLIC_KEY || !process.env.VAPID_PRIVATE_KEY) return;
+  webpush.setVapidDetails(process.env.VAPID_SUBJECT || "https://www.vach.com.ar", process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
+  const msg = JSON.stringify({ title: `Gato Encerrado: ${ALERTAS[lv]}`, body: `Alguien acaba de ganar el ${ALERTAS[lv]}. ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, url: "/gato/", tag: `gato-alerta-${lv}-${total}` });
+  await Promise.all(Object.entries(subs).map(async ([k, raw]) => {
+    try { await webpush.sendNotification(typeof raw === "string" ? JSON.parse(raw) : raw, msg, { TTL: 24 * 3600, timeout: 8000 }); }
+    catch (e) { if (e.statusCode === 404 || e.statusCode === 410) await redis.hdel("gato:admin", k); }
+  }));
+}
 
 export async function POST(req) {
   if (Number(req.headers.get("content-length") || 0) > 4000) return ok();
@@ -53,5 +73,6 @@ export async function POST(req) {
   const u = String(b.u || "");
   if (/^[a-z0-9]{16,32}$/.test(u)) { p.pfadd(`gato:uv:${day}`, u); p.expire(`gato:uv:${day}`, KEEP); }
   await p.exec();
+  for (const lv of Object.keys(ALERTAS)) if (add["gana:" + lv]) { try { await alertar(lv, u); } catch {} }
   return ok();
 }

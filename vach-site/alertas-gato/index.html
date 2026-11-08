@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0A0A0A">
+<title>Alertas Gato Encerrado</title>
+<link rel="manifest" href="/alertas-gato/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/gato/apple-touch-icon.png">
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;min-height:100vh;background:#0A0A0A;color:#F2F2F2;font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;justify-content:center;padding:32px 16px}
+  main{width:100%;max-width:420px;display:flex;flex-direction:column;gap:16px}
+  h1{font-size:24px;margin:0}
+  p{margin:0;color:#B5B5B5}
+  .card{background:#151515;border:1px solid #262626;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
+  label{font-size:14px;color:#B5B5B5}
+  input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #333;background:#0F0F0F;color:#fff;font:inherit}
+  button{padding:13px 16px;border-radius:999px;border:0;font:inherit;font-weight:700;cursor:pointer}
+  .main{background:#FFD23F;color:#0A0A0A}
+  .sec{background:#1F1F1F;color:#F2F2F2;border:1px solid #333}
+  button:disabled{opacity:.5;cursor:default}
+  #estado{font-size:15px;color:#F2F2F2;min-height:1.4em}
+  .ok{color:#5BD08A!important}.err{color:#FF6B6B!important}
+  ol{margin:0;padding-left:20px;color:#B5B5B5}
+</style>
+</head>
+<body>
+<main>
+  <h1>Alertas de Gato Encerrado</h1>
+  <p>Te llega una notificación a este celular cada vez que alguien gana por primera vez el nivel 130.</p>
+
+  <div class="card" id="ios" hidden>
+    <b>En iPhone, primero instalá esta página</b>
+    <ol>
+      <li>Tocá el botón Compartir de Safari.</li>
+      <li>Elegí "Agregar a pantalla de inicio".</li>
+      <li>Abrí "Alertas Gato" desde el ícono y volvé a esta pantalla.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <label for="k">Clave (la misma de las estadísticas)</label>
+    <input id="k" type="password" autocomplete="off" placeholder="Pegá la clave">
+    <button class="main" id="activar">Activar alertas en este celular</button>
+    <button class="sec" id="probar">Mandar una alerta de prueba</button>
+    <button class="sec" id="apagar">Apagar alertas en este celular</button>
+    <div id="estado"></div>
+  </div>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var KEY="gato-alertas-k";
+  var est=function(t,c){var e=$("estado");e.textContent=t;e.className=c||""};
+  try{$("k").value=localStorage.getItem(KEY)||""}catch(e){}
+  var standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+  var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);
+  if(ios&&!standalone)$("ios").hidden=false;
+  var soporta="serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+  if(!soporta){est(ios?"Instalá la página en la pantalla de inicio para poder activar las alertas.":"Este navegador no permite notificaciones.","err")}
+  var reg=soporta?navigator.serviceWorker.register("/alertas-gato/sw.js",{scope:"/alertas-gato/"}):null;
+  function clave(){var k=$("k").value.trim();try{localStorage.setItem(KEY,k)}catch(e){}return k}
+  function b64(s){s=s.replace(/-/g,"+").replace(/_/g,"/");s+="===".slice((s.length+3)%4);var r=atob(s),a=new Uint8Array(r.length);for(var i=0;i<r.length;i++)a[i]=r.charCodeAt(i);return a}
+  function api(body){return fetch("/api/gato/alertas",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error==="clave"?"La clave no es correcta.":"No se pudo ("+(j.error||r.status)+").");return j})})}
+  $("activar").onclick=function(){
+    var k=clave();if(!k){est("Pegá la clave primero.","err");return}
+    if(!reg){est("Este navegador no permite notificaciones.","err");return}
+    est("Activando…");
+    Notification.requestPermission().then(function(p){
+      if(p!=="granted")throw new Error("No diste permiso para notificaciones.");
+      return Promise.all([reg.then(function(){return navigator.serviceWorker.ready}),fetch("/api/gato/push").then(function(r){return r.json()})]);
+    }).then(function(x){
+      var sw=x[0],key=x[1].key;
+      return sw.pushManager.getSubscription().then(function(s){return s||sw.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64(key)})});
+    }).then(function(sub){return api({k:k,sub:sub.toJSON()})})
+      .then(function(j){est("Listo: alertas activadas. Celulares que las reciben: "+j.devices+".","ok")})
+      .catch(function(e){est(e.message||"No se pudo activar.","err")});
+  };
+  $("probar").onclick=function(){
+    var k=clave();if(!k){est("Pegá la clave primero.","err");return}
+    est("Mandando…");
+    api({k:k,test:true}).then(function(j){est(j.sent?"Alerta de prueba enviada a "+j.sent+(j.sent===1?" celular.":" celulares."):"No hay celulares con las alertas activadas.",j.sent?"ok":"err")}).catch(function(e){est(e.message,"err")});
+  };
+  $("apagar").onclick=function(){
+    var k=clave();if(!reg){return}
+    navigator.serviceWorker.ready.then(function(sw){return sw.pushManager.getSubscription()}).then(function(s){
+      if(!s){est("Este celular no tenía alertas activadas.");return}
+      return api({k:k,off:true,sub:s.toJSON()}).then(function(){return s.unsubscribe()}).then(function(){est("Alertas apagadas en este celular.","ok")});
+    }).catch(function(e){est(e.message,"err")});
+  };
+})();
+</script>
+</body>
+</html>
