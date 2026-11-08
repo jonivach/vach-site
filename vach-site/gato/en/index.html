@@ -592,6 +592,7 @@ if(GAME_URL){
 }
 function installApp(){
   track("instalar-toca");
+  if(!save.installAsked&&!TEST){save.installAsked=1;persist();evPush("instalar-pide",0)}
   if(installEvt){installEvt.prompt();installEvt.userChoice.then(()=>{installEvt=null;if(view==="home")renderHome()}).catch(()=>{});return}
   const steps=IOS?[`Tap Safari’s <b>Share</b> button ${ico("share",18,18,'style="vertical-align:-3px"')}, at the bottom or top of the screen.`,`Scroll down and choose <b>Add to Home Screen</b>.`,`Tap <b>Add</b>. The cat shows up on your home screen.`]
     :MOBILE?[`Open the browser menu (the three dots ⋮).`,`Choose <b>Install app</b> or <b>Add to Home screen</b>.`,`Confirm. The cat shows up on your home screen.`]
@@ -603,6 +604,9 @@ const showInstallCard=()=>!STANDALONE&&!TEST&&!save.installHint&&MOBILE&&!!save.
 const FEEDBACK_AT=[75,130],FEEDBACK_URL="https://ig.me/m/gatoencerrado.juego";
 function showFeedback(n){if(document.querySelector(".fbwrap"))return;const w=document.createElement("div");w.className="fbwrap";w.innerHTML=`<div class="fbcard" role="dialog" aria-modal="true" aria-labelledby="fbT"><svg width="64" height="64" style="color:var(--cat)"><use href="#cat"/></svg><span class="eyebrow">Level ${n}</span><h2 id="fbT">You made it so far!</h2><p>You’re one of the players who got furthest in Something Fishy. We’d love to hear what you think of the game.</p><button class="btn primary" data-act="feedback">Message us on Instagram</button><button class="linkbtn" data-act="hideFeedback">Not now</button></div>`;document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));track("opinion-ve")}
 function showInstallModal(){if(document.querySelector(".fbwrap"))return;const w=document.createElement("div");w.className="fbwrap";w.innerHTML=`<div class="fbcard" role="dialog" aria-modal="true" aria-labelledby="inT"><img src="/gato/icon-192.png" width="72" height="72" alt="" style="border-radius:18px" onerror="this.remove()"><h2 id="inT">Get it as an app</h2><p>Open it with one tap from your home screen, keep your streak and get a nudge for each day’s challenge.</p><button class="btn primary" data-act="installFromModal">How to install</button><button class="linkbtn" data-act="hideInstallModal">Not now</button></div>`;document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));track("instalar-tarjeta-5")}
+function showPushModal(){if(document.querySelector(".fbwrap"))return;const inst=pushNeedsInstall();if(inst){save.pushInstN=(save.pushInstN||0)+1;persist()}const w=document.createElement("div");w.className="fbwrap";
+  w.innerHTML=`<div class="fbcard" role="dialog" aria-modal="true" aria-labelledby="puT"><span style="font-size:44px;line-height:1" aria-hidden="true">🔔</span><h2 id="puT">Want a nudge tomorrow?</h2><p>${inst?"To remind you when the new challenge is out, the game needs to be on your home screen. It takes three taps.":"We’ll send you a reminder if the day goes by without playing, so you keep your streak."}</p><span id="puMsg" class="muted" style="font-size:14px"></span><button class="btn primary" data-act="${inst?"installFromModal":"pushModalOn"}">${inst?"How to install":"Remind me"}</button><button class="linkbtn" data-act="pushModalNo">Not now</button></div>`;
+  document.body.appendChild(w);requestAnimationFrame(()=>w.classList.add("on"));track("recordatorio-ve")}
 function closeFeedback(){const w=document.querySelector(".fbwrap");if(w){w.classList.remove("on");setTimeout(()=>w.remove(),250)}}
 function installCardHTML(){return `<section class="installcard"><img src="/gato/icon-192.png" width="44" height="44" alt="" onerror="this.remove()"><span class="grow stack" style="gap:1px"><b style="font-size:15px">Get it as an app</b><span class="muted" style="font-size:13px;line-height:1.3">So you keep your streak and we remind you of each day’s challenge</span></span><button class="btn primary" style="width:auto;min-height:40px;padding:0 16px" data-act="installApp">Install</button><button class="round" style="width:36px;height:36px" data-act="hideInstall" aria-label="Don’t show again">${ico("close",14)}</button></section>`}
 
@@ -1559,13 +1563,16 @@ function renderDailyResult(o){
       ${o.fresh&&lastMissions.length?missionLines(lastMissions):""}
       ${nextMilestone(s)?`<p class="line small">Next celebration: <b>${nextMilestone(s)} days</b> (${nextMilestone(s)-s} to go)</p>`:""}
       ${nc.map(c=>chipCat(c)).join("")}
-      ${showPushAsk()?`<div class="pushline" id="pushAsk">${ico("bell",16)}<span>Remind you tomorrow if you haven’t played?</span><button class="linkbtn" data-act="pushOn">Remind me</button></div>`:""}
     </div>
     <p class="line small center" style="margin-bottom:10px">New challenge in <b id="countdown" style="font-variant-numeric:tabular-nums">${untilMidnight()}</b></p>
-    <button class="btn primary" data-act="shareDaily">Share result</button>
+    <p class="line small center" style="margin:-2px 0 8px">Send it to someone: can they beat you?</p>
+    <button class="btn primary" data-act="shareDailyQuick">${ico("share",18)} Share my result</button>
+    <button class="linkbtn" style="align-self:center;margin-top:2px" data-act="shareDaily">Image for stories</button>
     <div class="linkrow"><button class="linkbtn big" data-act="go" data-arg="levels">Go to levels</button>${dayIndex()>0?`<button class="linkbtn big" data-act="go" data-arg="past">Past days</button>`:""}</div>
   </main>`;
   if(!TEST)refreshRank();
+  // en iPhone sin instalar, la invitación se muestra como mucho dos veces (dos días distintos)
+  if(o.fresh&&!lastMilestone&&showPushAsk()&&!(pushNeedsInstall()&&(save.pushInstN||0)>=2))setTimeout(()=>{if(view==="dailyResult")showPushModal()},2600);
   if(o.fresh&&lastMilestone){const m=lastMilestone;lastMilestone=null;showMilestone(m)}
   else if(o.fresh)setTimeout(()=>SND.whoosh(),40);
   if(o.fresh)missionsFx(900);
@@ -1677,7 +1684,19 @@ function shareDaily(){
   const card=`<div class="sharecard" style="background:var(--night);color:var(--on-night)"><div class="row" style="align-self:stretch;gap:8px">${ico("cat",22,22,'style="color:var(--cat);--eye:var(--ink)"')}<b style="font-size:14px">Something Fishy</b><span style="margin-left:auto;font-size:12px;color:#AAAAAA">${shortDate()}</span></div><span class="eyebrow" style="color:var(--fish)">Challenge #${dayIndex()+1}</span><div aria-hidden="true" style="width:84px;display:grid;grid-template-columns:repeat(${P.n},1fr);gap:3px">${mini}</div><b style="font-size:38px;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums">${fmt(r.t)}</b><span style="font-size:14px;color:#AAAAAA">${r.h?plural(r.h,"hint","hints"):"No hints"} · ${plural(streakNow(),"day","days")} streak</span><span style="font-size:15px;font-weight:700;background:var(--fish);color:var(--ink);border-radius:999px;padding:6px 14px">Can you beat me?</span></div>`;
   const rk=r.c>=5&&r.p>0?`\n🏆 Faster than ${r.p}% today`:"";
   window.__img={eyebrow:`Challenge #${dayIndex()+1} · ${shortDate()}`,title:"Daily challenge",big:fmt(r.t),sub:(r.c>=5&&r.p>0?`Faster than ${r.p}% today`:"")+(streakNow()>1?`${r.c>=5&&r.p>0?" · ":""}${streakNow()}-day streak`:""),cta:"Can you beat me?"};
-  shareSheet(card,`Something Fishy · Challenge #${dayIndex()+1}\n⏱ ${fmt(r.t)} · ${r.h?"💡".repeat(Math.min(r.h,5)):"no hints"} · 🔥 ${streakNow()}${rk}\nCan you beat me?`);
+  shareSheet(card,dailyShareText(r));
+}
+// texto para compartir: tiempo, pistas y racha
+function dailyShareText(r){
+  const rk=r.c>=5&&r.p>0?`\n🏆 Faster than ${r.p}% today`:"";
+  return `Something Fishy · Challenge #${dayIndex()+1}\n⏱ ${fmt(r.t)} · ${r.h?"💡".repeat(Math.min(r.h,5)):"no hints"} · 🔥 ${streakNow()}${rk}\nCan you beat me?`;
+}
+// en el celular abre directo el menú de compartir del teléfono (WhatsApp, Instagram…); si no se puede, la hoja de siempre
+function shareDailyQuick(){
+  const r=save.daily.results[today()];if(!r)return;
+  const text=dailyShareText(r);
+  if(MOBILE&&navigator.share&&GAME_URL){track("comparte-desafio");navigator.share({text:text+"\n"+GAME_URL}).catch(e=>{if(!e||e.name!=="AbortError")shareDaily()});return}
+  shareDaily();
 }
 function copyShare(btn){
   const done=()=>{btn.textContent="Copied!";setTimeout(()=>{if(btn.isConnected)btn.textContent="Copy text"},1800)};
@@ -1779,7 +1798,7 @@ const ACT={
   lockedLevel(a){const n=current(),k=+a;lockedSheet(`Level ${k} is still locked`,`Levels open one at a time. You’re ${k-n===1?"1 level":(k-n)+" levels"} away: continue with level ${n}.`)},
   lockedStage(a){const st=STAGES[+a],n=current();lockedSheet(`${st.name} is still locked`,`It opens at level ${st.from}. You’re ${st.from-n===1?"1 level":(st.from-n)+" levels"} away: continue with level ${n}.`)},
   stageEnd(a){go("stage",a)},
-  shareLevel(){shareLevel()},shareWeekly(){shareWeekly()},shareStage(a){shareStage(a)},shareDaily(){shareDaily()},
+  shareLevel(){shareLevel()},shareWeekly(){shareWeekly()},shareStage(a){shareStage(a)},shareDaily(){shareDaily()},shareDailyQuick(){shareDailyQuick()},
   copyShare(a,btn){copyShare(btn)},
   helpCard(a){helpCard(+a)},
   reseen(){save.seen={};persist();const b=document.querySelector('[data-act="reseen"]');if(b)b.textContent="Done: they’ll show up again"},
@@ -1791,6 +1810,8 @@ const ACT={
   feedback(){track("link-opinion");save.fbHide=1;persist();window.open(FEEDBACK_URL,"_blank","noopener");closeFeedback()},
   hideFeedback(){save.fbHide=1;persist();closeFeedback()},
   installFromModal(){closeFeedback();setTimeout(installApp,260)},
+  pushModalOn(a,btn){btn.textContent="…";enablePush().then(ok=>{const m=$("puMsg");if(ok){if(m)m.textContent="Done: we’ll remind you tomorrow if you haven’t played.";setTimeout(closeFeedback,1400)}else{if(m)m.textContent="Couldn’t turn it on. Try from Settings.";btn.textContent="Remind me"}})},
+  pushModalNo(){save.pushAsked=1;persist();closeFeedback()},
   hideInstallModal(){save.installHint=1;persist();closeFeedback()},
   shareImg(a,btn){shareImage(btn)},
   playPast(a){startPast(a)},
@@ -1830,6 +1851,8 @@ function boot(){
     if(save.lang!==LANG){location.replace(OTHER_URL+location.search+location.hash);return}
   }
   if(STANDALONE)track("abre-app");
+  // primera vez que se abre desde la pantalla de inicio: se avisa una sola vez por celular
+  if(STANDALONE&&!TEST&&!save.instSeen){save.instSeen=1;persist();evPush("app-instalada",0);if(save.installAsked)evPush("app-instalada-guiada",0)}
   try{if(!sessionStorage.getItem("gato-visita")){sessionStorage.setItem("gato-visita","1");const s=(new URLSearchParams(location.search).get("utm_source")||"").toLowerCase();
     evPush("visita",0,s||(document.referrer&&!document.referrer.includes(location.host)?"otro":"directo"))}}catch(e){}
   try{const t=today();if(save.seenDay!==t){if(!save.first)save.first=save.welcomed?"antes":t;

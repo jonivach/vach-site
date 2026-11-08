@@ -15,8 +15,10 @@ const DAY = 864e5, KEEP = 60 * 60 * 24 * 400; // se guardan 400 días
 // eventos que se cuentan (los demás se ignoran)
 const EXACT = new Set(["visita","opinion-ve","bienvenida","empieza","gana","pista","sale","error","sin-vidas","desafio-empieza","desafio-gana","desafio-pista","desafio-error","desafio-sin-vidas",
   "semana-empieza","semana-gana","semana-pista","semana-error","semana-sin-vidas","anterior-empieza","anterior-gana","misiones-completas","protector-usado",
-  "instalar-toca","instalar-tarjeta-6","instalar-tarjeta-5","instalada","abre-app","recordatorio-toca","recordatorio-activa","comparte-nivel","comparte-desafio","comparte-semana","comparte-etapa","comparte-imagen"]);
-const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-7]|link-[a-z]{2,12}|tiempo-[a-e]|estrellas-[1-3]|retorno-(?:0|1|2|7|14|30|x))$/;
+  "instalar-toca","instalar-tarjeta-6","instalar-tarjeta-5","recordatorio-ve","instalada","abre-app","app-instalada","app-instalada-guiada","instalar-pide","recordatorio-toca","recordatorio-activa","comparte-nivel","comparte-desafio","comparte-semana","comparte-etapa","comparte-imagen"]);
+const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-8]|link-[a-z]{2,12}|tiempo-[a-e]|estrellas-[1-3]|retorno-(?:0|1|2|7|14|30|x))$/;
+// estos además se suman a un total histórico (sin vencimiento): cada celular los manda una sola vez
+const TOTALS = new Set(["app-instalada","app-instalada-guiada","instalar-pide"]);
 const SOURCES = new Set(["instagram","tiktok","whatsapp","facebook","x","otro","directo"]);
 
 export async function POST(req) {
@@ -36,10 +38,10 @@ export async function POST(req) {
     if (!Array.isArray(item)) continue;
     const e = String(item[0] || ""), lv = Math.floor(Number(item[1]) || 0);
     if (!EXACT.has(e) && !PATTERN.test(e)) continue;
-    if (lv > 150 || lv < 0) continue;
+    if (lv > 200 || lv < 0) continue;
     let f = e;
     if (e === "visita") f = "visita:" + (SOURCES.has(String(item[2])) ? String(item[2]) : "otro") + ":" + lang;
-    else if (lv >= 1 && lv <= 150) f = e + ":" + lv;
+    else if (lv >= 1 && lv <= 200) f = e + ":" + lv;
     add[f] = (add[f] || 0) + 1;
   }
   const fields = Object.keys(add);
@@ -47,6 +49,7 @@ export async function POST(req) {
   const key = `gato:st:${day}`, p = redis.pipeline();
   for (const f of fields) p.hincrby(key, f, add[f]);
   p.expire(key, KEEP);
+  for (const f of fields) if (TOTALS.has(f)) p.hincrby("gato:tot", f, add[f]);
   const u = String(b.u || "");
   if (/^[a-z0-9]{16,32}$/.test(u)) { p.pfadd(`gato:uv:${day}`, u); p.expire(`gato:uv:${day}`, KEEP); }
   await p.exec();
