@@ -1675,7 +1675,7 @@ function shareStage(si){
   si=+si;track("comparte-etapa");const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
   const card=`<div class="sharecard" style="background:var(--fish)">${brandRow()}<div style="width:68px;height:68px;border-radius:50%;background:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 5px var(--card)"><svg width="44" height="44" style="color:var(--cat);--eye:var(--ink)" aria-hidden="true"><use href="#cat-happy"/></svg></div><span class="eyebrow" style="color:var(--ink)">${next?"New rank":"Game complete"}</span><b style="font-size:30px;letter-spacing:-.04em;line-height:1">${next?next.name:"Leyenda"}</b><span style="font-size:14px">${st.name} complete · ${stageStars(si)} of ${count*3} ★</span><svg width="52" height="14" aria-label="VACH*"><use href="#vach"/></svg></div>`;
   window.__img={eyebrow:next?"New rank":"Game complete",title:next?next.name:"Legend",big:`${stageStars(si)} / ${count*3}`,bigStar:true,sub:"Can you unmask the lying cats?"};
-  shareSheet(card,next?`I was promoted to ${next.name} in Something Fishy! I finished the ${st.name} stage with ${stageStars(si)} of ${count*3} stars.\nCan you unmask the lying cats?`:`I finished all 150 levels of Something Fishy! I’m a Legend.\nCan you unmask the lying cats?`);
+  shareSheet(card,next?`I was promoted to ${next.name} in Something Fishy! I finished the ${st.name} stage with ${stageStars(si)} of ${count*3} stars.\nCan you unmask the lying cats?`:`I finished all ${TOTAL} levels of Something Fishy! I’m a Master.\nCan you unmask the lying cats?`);
 }
 function shareDaily(){
   const r=save.daily.results[today()];if(!r)return;track("comparte-desafio");
@@ -1847,8 +1847,12 @@ document.addEventListener("keydown",e=>{
 /* ---------- arranque ---------- */
 function boot(){
   if(GAME_URL&&!TEST){
-    if(!save.lang){save.lang=/^es\b/i.test(navigator.language||"es")?"es":"en";persist()}
-    if(save.lang!==LANG){location.replace(OTHER_URL+location.search+location.hash);return}
+    // /gato/en/ siempre en inglés (y lo recuerda); /gato/ sigue lo elegido antes o, la primera vez, el idioma del navegador
+    if(LANG==="en"){if(save.lang!=="en"){save.lang="en";persist()}}
+    else{
+      if(!save.lang){save.lang=/^es\b/i.test(navigator.language||"es")?"es":"en";persist()}
+      if(save.lang!==LANG){location.replace(OTHER_URL+location.search+location.hash);return}
+    }
   }
   if(STANDALONE)track("abre-app");
   // primera vez que se abre desde la pantalla de inicio: se avisa una sola vez por celular
