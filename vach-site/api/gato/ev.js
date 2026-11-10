@@ -16,14 +16,14 @@ const DAY = 864e5, KEEP = 60 * 60 * 24 * 400; // se guardan 400 días
 // eventos que se cuentan (los demás se ignoran)
 const EXACT = new Set(["visita","opinion-ve","bienvenida","empieza","gana","pista","sale","error","sin-vidas","desafio-empieza","desafio-gana","desafio-pista","desafio-error","desafio-sin-vidas",
   "semana-empieza","semana-gana","semana-pista","semana-error","semana-sin-vidas","anterior-empieza","anterior-gana","misiones-completas","protector-usado",
-  "instalar-toca","instalar-tarjeta-6","instalar-tarjeta-5","recordatorio-ve","instalada","abre-app","app-instalada","app-instalada-guiada","instalar-pide","recordatorio-toca","recordatorio-activa","comparte-nivel","comparte-desafio","comparte-semana","comparte-etapa","comparte-imagen"]);
-const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-[1-8]|link-[a-z]{2,12}|tiempo-[a-e]|estrellas-[1-3]|retorno-(?:0|1|2|7|14|30|x))$/;
+  "instalar-toca","instalar-tarjeta-6","instalar-tarjeta-5","recordatorio-ve","instalada","abre-app","app-instalada","app-instalada-guiada","instalar-pide","recordatorio-toca","recordatorio-activa","comparte-nivel","comparte-desafio","comparte-semana","comparte-etapa","comparte-imagen","secreto-ve"]);
+const PATTERN = /^(mision-[a-z]{2,12}|racha-\d{1,3}|etapa-(?:[1-9]|10)|link-[a-z]{2,12}|tiempo-[a-e]|estrellas-[1-3]|retorno-(?:0|1|2|7|14|30|x))$/;
 // estos además se suman a un total histórico (sin vencimiento): cada celular los manda una sola vez
 const TOTALS = new Set(["app-instalada","app-instalada-guiada","instalar-pide"]);
 const SOURCES = new Set(["instagram","tiktok","whatsapp","facebook","x","otro","directo"]);
 
 // alertas para el dueño del juego (se activan en /alertas-gato/)
-const ALERTAS = { 75: "nivel 75", 130: "nivel 130", 200: "nivel 200" }; // alguien gana por primera vez estos niveles
+const ALERTAS = { 75: "nivel 75", 130: "nivel 130", 200: "nivel 200", 225: "nivel 225", 250: "nivel 250" }; // alguien gana por primera vez estos niveles (201 a 250: parte secreta)
 const HITOS = [200, 250, 750, 1000];                  // personas distintas que jugaron, desde siempre
 const ALERTAS_POR_DIA = 30;                           // tope, por si alguien manda eventos falsos
 const STATS_DESDE = Date.UTC(2026, 10, 4);            // primer día con estadísticas
@@ -42,9 +42,12 @@ async function avisar(title, body, tag) {
 async function alertarNivel(lv, u) {
   if (!(await redis.set(`gato:alerta:${lv}:${u}`, 1, { nx: true, ex: 60 * 60 * 24 * 400 }))) return; // una vez por jugador
   const total = await redis.incr(`gato:alerta:${lv}:total`);
-  const fin = Number(lv) === 200;
-  await avisar(fin ? "Gato Encerrado: ¡alguien lo terminó!" : `Gato Encerrado: ${ALERTAS[lv]}`,
-    `${fin ? "Alguien acaba de ganar el nivel 200 y terminó el juego." : `Alguien acaba de ganar el ${ALERTAS[lv]}.`} ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, `gato-alerta-${lv}-${total}`);
+  const TXT = {
+    200: ["Gato Encerrado: ¡alguien lo terminó!", "Alguien acaba de ganar el nivel 200 y encontró la parte secreta."],
+    225: ["Gato Encerrado: secreto, Olfato", "Alguien terminó la etapa secreta Olfato (nivel 225)."],
+    250: ["Gato Encerrado: ¡terminó el secreto!", "Alguien acaba de ganar el nivel 250 y terminó la parte secreta."],
+  }[Number(lv)] || [`Gato Encerrado: ${ALERTAS[lv]}`, `Alguien acaba de ganar el ${ALERTAS[lv]}.`];
+  await avisar(TXT[0], `${TXT[1]} ${total === 1 ? "Es el primero en llegar." : `Ya son ${total} jugadores.`}`, `gato-alerta-${lv}-${total}`);
 }
 // total histórico de personas distintas: la primera vez se arma juntando los días anteriores
 let totalListo = false;
@@ -117,10 +120,10 @@ export async function POST(req) {
     if (!Array.isArray(item)) continue;
     const e = String(item[0] || ""), lv = Math.floor(Number(item[1]) || 0);
     if (!EXACT.has(e) && !PATTERN.test(e)) continue;
-    if (lv > 200 || lv < 0) continue;
+    if (lv > 250 || lv < 0) continue; // 1 a 200 y la parte secreta (201 a 250)
     let f = e;
     if (e === "visita") f = "visita:" + (SOURCES.has(String(item[2])) ? String(item[2]) : "otro") + ":" + lang;
-    else if (lv >= 1 && lv <= 200) f = e + ":" + lv;
+    else if (lv >= 1 && lv <= 250) f = e + ":" + lv;
     add[f] = (add[f] || 0) + 1;
   }
   const fields = Object.keys(add);

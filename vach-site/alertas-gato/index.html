@@ -71,7 +71,7 @@
   function api(body){return fetch("/api/gato/alertas",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)}).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error==="clave"?"La clave no es correcta.":"No se pudo ("+(j.error||r.status)+").");return j})})}
   function resumen(){var k=$("k").value.trim();if(!k)return;
     api({k:k}).then(function(j){var r=$("resumen");r.hidden=false;
-      r.innerHTML="<b>Hasta ahora</b><span>"+j.people+" personas distintas jugaron desde el 4 de noviembre (cada una cuenta una sola vez)</span><span>"+j.n75+" llegaron al nivel 75 · "+j.n130+" al 130 · "+j.n200+" terminaron el juego</span><span>Toques en Apoyar: "+j.apoyo+"</span><span>Celulares con alertas: "+j.devices+"</span>"}).catch(function(){})}
+      r.innerHTML="<b>Hasta ahora</b><span>"+j.people+" personas distintas jugaron desde el 4 de noviembre (cada una cuenta una sola vez)</span><span>"+j.n75+" llegaron al nivel 75 · "+j.n130+" al 130 · "+j.n200+" terminaron el juego · "+(j.n225||0)+" al 225 · "+(j.n250||0)+" al 250</span><span>Toques en Apoyar: "+j.apoyo+"</span><span>Celulares con alertas: "+j.devices+"</span>"}).catch(function(){})}
   resumen();
   $("activar").onclick=function(){
     var k=clave();if(!k){est("Pegá la clave primero.","err");return}

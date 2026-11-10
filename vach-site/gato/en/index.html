@@ -301,6 +301,43 @@ html.dark .btn.primary span[style*="var(--fish)"]{color:#FFF3B8!important}
 .cell.wall svg{position:absolute;inset:0;width:100%;height:100%}
 html.dark .cell.wall{background:#3B3A34;color:#5C5A50}
 .cell.cat.sleep{background:var(--tile)}
+.midbar{display:flex;justify-content:center;min-height:32px;margin:-2px 0 2px}
+.midpill{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;padding:6px 12px;border-radius:999px;background:var(--night);color:var(--on-night);font-variant-numeric:tabular-nums;white-space:nowrap}
+.midpill.hot{background:var(--bad);color:#fff;animation:midp 1s infinite}
+.midpill.done{background:var(--tile);color:var(--soft)}
+@keyframes midp{50%{transform:scale(1.06)}}
+.midflash{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .35s;z-index:40}
+.midflash.on{opacity:.8}
+.cell.midnew{animation:midnew 1.1s ease-out}
+.cell.midnew::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 4px var(--fish);animation:midring 2.6s ease-out forwards;pointer-events:none}
+@keyframes midnew{0%{transform:scale(.3) rotate(-10deg);opacity:0}60%{transform:scale(1.1)}100%{transform:none;opacity:1}}
+@keyframes midring{0%,70%{opacity:1}100%{opacity:0}}
+.secrethead{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--cat);margin:14px 2px 2px}
+.secretnote{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:15px;line-height:1.4;background:var(--night);color:var(--on-night);border-radius:16px;padding:12px 14px;margin:0}
+.secretov{position:fixed;inset:0;z-index:60;background:#0A0A0A;color:#F8F7EC;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px max(24px,env(safe-area-inset-right,0px)) 24px max(24px,env(safe-area-inset-left,0px));opacity:0;transition:opacity 1.2s}
+.secretov.on{opacity:1}
+.secretov h1{font-size:40px;line-height:1;letter-spacing:-.05em;margin:0;max-width:12ch}
+.secretov p{font-size:17px;line-height:1.45;color:#C9C6B8;max-width:32ch;margin:0}
+.secretov p b{color:#F8F7EC}.secretov p.small{font-size:14px;color:#A6A497}
+.secretov .btn{min-width:220px;margin-top:10px;background:#F5C800;color:#0A0A0A;border-color:#F5C800}
+.secretov .eyes{display:flex;gap:22px;margin-bottom:6px}
+.secretov .eyes i{width:30px;height:16px;background:#F5C800;border-radius:50% 50% 50% 50%/100% 100% 0 0;animation:seye 4s 1.2s infinite}
+@keyframes seye{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.1)}}
+.pcmp{display:grid;grid-template-columns:1fr;gap:14px}
+.plab{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.psm{font-size:14px;line-height:1.4;color:var(--soft);margin:0}.psm b{color:var(--ink)}
+.pgrid{display:grid;gap:5px;padding:7px;background:var(--card);border:1px solid var(--line);border-radius:16px;width:min(100%,220px)}
+.pgrid>*{aspect-ratio:1;border-radius:10px;background:var(--tile);position:relative;display:grid;place-items:center;border:0;padding:0;font:inherit;color:var(--ink)}
+.pgrid button{cursor:pointer}
+.pgrid .s{background:#FFF1A8;box-shadow:inset 0 0 0 2px var(--fish)}
+html.dark .pgrid .s{background:#4A4220}
+.pgrid .c{background:var(--cat-bg)}
+.pgrid .c svg.f{position:absolute;left:8%;top:6%;width:54%}
+.pgrid .c b{position:absolute;right:7%;bottom:5%;font-size:15px;line-height:1;display:flex;align-items:center;gap:1px}
+.pgrid .c b .ar{width:12px;height:12px}
+.pgrid svg[width="40"]{width:80%;height:auto}
+.pgrid .pnew{animation:midnew 1s ease-out;box-shadow:inset 0 0 0 3px var(--fish)}
+@media (prefers-reduced-motion:reduce){.secretov,.midflash{transition:none}.cell.midnew,.pgrid .pnew,.midpill.hot,.secretov .eyes i{animation:none}}
 .cell.cat.sleep .clue.zz{font-size:calc(var(--clue,18px)*.9);color:var(--muted);font-style:italic}
 .cell.cat.sleep .clue.zz small{font-size:.7em;vertical-align:.5em}
 .mini .w{background:#D9D5C2;color:#A9A48C;overflow:hidden}html.dark .mini .w{background:#3B3A34;color:#5C5A50}
@@ -431,6 +468,8 @@ html.lock,html.lock body{overflow:hidden;overscroll-behavior:none}
   <symbol id="bag" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M5 8h14l-1.2 11a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></g></symbol>
   <symbol id="arrow2" viewBox="0 0 20 20"><path d="M2.5 10h15M13 5.5l4.5 4.5-4.5 4.5M7 5.5L2.5 10 7 14.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="cat-sleep" viewBox="0 0 40 40"><path fill="currentColor" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><path d="M12 23q3 2.2 6 0M22 23q3 2.2 6 0" fill="none" stroke="var(--eye,#F8F7EC)" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="cat-sniff" viewBox="0 0 40 40"><path fill="currentColor" d="M7 8l8 6.5a15 15 0 0 1 10 0L33 8l1 13a14 13 0 1 1-28 0z"/><path d="M12 22.5q3-2.4 6 0M22 22.5q3-2.4 6 0" fill="none" stroke="var(--eye,#F8F7EC)" stroke-width="2" stroke-linecap="round"/><path d="M18 26.3h4l-2 2.4z" fill="#F7A8C4"/></symbol>
+  <symbol id="around" viewBox="0 0 20 20"><g fill="currentColor"><rect x="1" y="1" width="5" height="5" rx="1.2"/><rect x="7.5" y="1" width="5" height="5" rx="1.2"/><rect x="14" y="1" width="5" height="5" rx="1.2"/><rect x="1" y="7.5" width="5" height="5" rx="1.2"/><rect x="14" y="7.5" width="5" height="5" rx="1.2"/><rect x="1" y="14" width="5" height="5" rx="1.2"/><rect x="7.5" y="14" width="5" height="5" rx="1.2"/><rect x="14" y="14" width="5" height="5" rx="1.2"/></g></symbol>
   <symbol id="wall" viewBox="0 0 40 40"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 13h36M2 27h36M14 2v11M28 13v14M10 27v11M26 27v11"/></g></symbol>
   <symbol id="crown" viewBox="0 0 24 18"><path d="M2 15.5L3.5 5l5 4.5L12 2l3.5 7.5 5-4.5L22 15.5z" fill="#F5C800" stroke="#0A0A0A" stroke-width="1.6" stroke-linejoin="round"/></symbol>
   <symbol id="trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -459,6 +498,10 @@ const WEEKLY_FROM=26;
 const GAME_URL="https://www.vach.com.ar/gato/en";
 const LANG="en",OTHER_URL=LANG==="es"?"/gato/en/":"/gato/";
 const TOTAL=LEVELS.length;
+const SECRET=[{"n":6,"k":6,"L":0,"intro":"sniff","cats":[[3,0,"N",1,0,"o"],[4,0,"N",1,0,"o"],[2,2,"N",1,0,"o"],[4,2,"N",1,0,"o"],[3,4,"N",3,0,"o"],[5,4,"N",4,0,"o"]],"sol":[5,8,22,28,34,35],"li":[],"t":[90,180]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[1,0,"N",2,0,"o"],[1,1,"N",2,0,"o"],[1,2,"N",1,0,"o"],[4,2,"N",3,0,"o"],[2,3,"N",3,0,"o"],[1,4,"NE",2,0],[3,4,"N",1,0,"o"]],"sol":[0,2,10,15,19,21],"li":[],"t":[110,220]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[4,0,"N",0,0,"o"],[3,1,"N",3,0,"o"],[5,1,"SW",0,0],[5,2,"S",0,0],[1,3,"N",2,0,"o"],[2,3,"N",2,0,"o"],[2,4,"N",2,0,"o"],[3,5,"NE",1,0]],"sol":[2,8,14,25,28,32],"li":[],"t":[115,230]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[1,0,"N",3,0,"o"],[2,2,"N",1,0,"o"],[1,3,"N",1,0,"o"],[5,3,"N",0,0,"o"],[1,4,"E",0,0],[4,4,"N",2,0,"o"],[0,5,"NE",1,0],[4,5,"W",1,0]],"sol":[0,2,6,20,33,35],"li":[],"t":[130,260]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[4,1,"N",2,0,"o"],[4,2,"N",3,0,"o"],[5,2,"N",2,0,"o"],[2,3,"N",2,0,"o"],[3,3,"N",1,0,"o"],[3,5,"NW",1,0],[5,5,"N",2,0,"o"]],"sol":[11,15,19,23,29,34],"li":[],"t":[135,270]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[0,0,"N",0,0,"o"],[0,1,"SE",1,0],[0,2,"N",3,0,"o"],[5,2,"N",2,0,"o"],[4,4,"N",2,0,"o"],[5,4,"W",0,0],[1,5,"N",5,0,"o"],[3,5,"N",1,0,"o"]],"sol":[13,18,19,22,23,32],"li":[6],"t":[135,270]},{"n":6,"k":7,"L":1,"intro":null,"cats":[[1,0,"SE",0,0],[2,1,"N",2,0,"o"],[4,1,"SW",2,0],[2,2,"S",1,0],[3,2,"N",2,0,"o"],[5,2,"N",1,0,"o"],[1,3,"N",3,0,"o"],[2,3,"N",3,0,"o"],[0,4,"N",3,0,"o"],[1,5,"N",3,0]],"sol":[7,13,16,18,21,25,30],"li":[3],"t":[140,280]},{"n":6,"k":7,"L":1,"intro":null,"cats":[[0,0,"N",2,0,"o"],[1,1,"N",2,0,"o"],[2,1,"N",3,0,"o"],[1,3,"E",1,0],[3,3,"SW",1,0],[4,3,"W",1,0],[2,4,"N",3,0,"o"],[5,4,"N",2,0,"o"],[0,5,"E",2,0],[4,5,"N",2,0,"o"]],"sol":[1,6,20,25,28,31,35],"li":[2],"t":[150,300]},{"n":6,"k":7,"L":1,"intro":null,"cats":[[1,0,"SE",3,0],[4,0,"S",2,0],[0,1,"N",2,0,"o"],[1,1,"SE",2,0],[3,1,"N",1,0,"o"],[4,2,"N",3,0,"o"],[0,3,"N",2,0,"o"],[2,5,"N",5,0,"o"]],"sol":[12,13,15,21,22,28,29],"li":[7],"t":[155,310]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[1,0,"SE",2,0],[4,1,"N",3,0,"o"],[0,2,"N",0,0,"o"],[4,2,"NW",1,0],[0,3,"NE",1,0],[2,4,"N",2,0,"o"],[3,4,"N",5,0,"o"],[2,5,"N",0,0,"o"],[5,5,"N",1,0,"o"]],"sol":[3,9,15,20,21,29],"li":[6],"t":[155,310]},{"n":6,"k":7,"L":1,"intro":null,"cats":[[3,0,"N",3,0,"o"],[1,1,"SE",2,0],[0,2,"S",1,0],[2,2,"N",0,0,"o"],[5,3,"SW",1,0],[2,4,"N",4,0,"o"],[3,4,"N",2,0,"o"],[0,5,"N",1,0,"o"],[2,5,"NE",0,0]],"sol":[2,4,10,24,28,34,35],"li":[5],"t":[165,330]},{"n":6,"k":6,"L":1,"intro":null,"cats":[[3,0,"N",3,0,"o"],[5,1,"N",3,0,"o"],[1,2,"N",2,0,"o"],[2,2,"SW",1,0],[4,2,"S",0,0],[1,3,"N",1,0,"o"],[5,3,"N",2,0,"o"],[3,4,"N",1,0,"o"]],"sol":[4,8,10,17,20,29],"li":[3],"t":[170,340]},{"n":7,"k":7,"L":1,"intro":null,"cats":[[0,1,"E",1,0],[3,1,"S",2,0],[4,1,"N",2,0,"o"],[2,3,"SW",0,0],[1,4,"N",4,0,"o"],[2,4,"N",3,0,"o"],[4,4,"N",2,0,"o"],[6,4,"NW",1,0],[1,5,"N",2,0,"o"],[5,5,"NW",0,0],[6,5,"W",1,0],[5,6,"W",0,0]],"sol":[12,17,22,26,28,31,37],"li":[4],"walls":[2,33],"t":[180,360]},{"n":7,"k":7,"L":1,"intro":null,"cats":[[5,0,"W",1,0],[3,1,"NE",0,0,"2"],[4,1,"N",2,0,"o"],[5,1,"N",1,0,"2"],[2,2,"N",1,0,"o"],[0,3,"S",2,0],[4,3,"E",2,0],[3,4,"N",1,0,"o"],[3,5,"NW",1,0],[5,5,"W",2,0],[4,6,"N",2,0,"o"]],"sol":[3,14,17,35,39,42,47],"li":[6],"walls":[0,6],"t":[185,370]},{"n":7,"k":7,"L":1,"intro":null,"cats":[[0,0,"S",2,0],[5,0,"N",1,0,"o"],[6,1,"W",2,0],[0,2,"N",1,0],[5,2,"N",0,0],[4,3,"W",4,0,"2"],[5,3,"SW",1,0],[2,4,"W",0,0],[4,4,"S",2,0],[2,5,"N",2,0,"o"],[2,6,"N",1,0,"o"]],"sol":[7,11,21,31,38,39,46],"li":[5],"walls":[35],"t":[190,380]},{"n":7,"k":7,"L":1,"intro":null,"cats":[[4,0,"E",4,0,"2"],[2,1,"E",3,0],[4,1,"W",2,0],[1,3,"N",1,0,"o"],[3,4,"N",1,0],[4,4,"N",1,0,"o"],[6,4,"W",1,0],[0,5,"N",1,0,"o"],[5,5,"NW",2,0],[6,5,"W",0,0],[1,6,"N",1,0,"o"]],"sol":[8,10,12,13,16,33,42],"li":[0],"walls":[26,28],"t":[195,390]},{"n":7,"k":7,"L":1,"intro":null,"cats":[[3,0,"N",1,0,"o"],[4,1,"N",1,0,"o"],[0,2,"N",2,0,"o"],[1,2,"S",1,0],[4,2,"N",0,0,"o"],[5,2,"N",2,0,"o"],[0,3,"NW",0,0,"2"],[4,4,"W",2,0],[0,5,"N",1,0,"o"],[1,5,"N",1,0,"o"],[1,6,"N",3,0],[6,6,"NW",1,0]],"sol":[1,4,8,22,28,31,40],"li":[5],"walls":[16],"t":[195,390]},{"n":7,"k":7,"L":1,"intro":null,"cats":[[5,0,"W",1,0],[6,1,"S",2,0],[3,2,"SW",3,0],[5,2,"N",0,0,"o"],[5,3,"N",1,0,"o"],[3,4,"SE",0,0],[4,4,"N",2,0,"o"],[5,5,"NW",2,0],[1,6,"N",1,0,"o"],[2,6,"N",3,0],[6,6,"N",1,0,"o"]],"sol":[2,16,24,34,37,38,41],"li":[2],"walls":[1,25],"t":[200,400]},{"n":7,"k":8,"L":2,"intro":null,"cats":[[0,1,"SE",2,0],[5,1,"N",0,0,"o"],[4,2,"N",1,1,"o"],[4,3,"E",0,0],[5,3,"SW",1,0],[6,3,"N",2,0,"o"],[1,4,"S",1,0],[2,4,"N",1,0],[3,4,"N",0,0,"o"],[0,5,"E",2,0],[1,5,"NE",0,0],[3,5,"N",0,0],[6,5,"NW",3,0],[6,6,"N",1,0]],"sol":[9,15,17,33,34,43,44,47],"li":[9,11],"walls":[2,10,22],"t":[205,410]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[0,0,"S",0,0],[2,0,"N",1,0,"o"],[1,1,"S",1,0],[2,1,"N",3,1,"o"],[0,2,"SE",3,0],[0,3,"N",2,0,"o"],[4,3,"NW",0,0],[6,3,"N",1,0,"o"],[2,4,"N",2,0,"o"],[6,4,"NW",1,0],[2,5,"NE",1,0],[6,6,"W",2,0]],"sol":[10,15,16,19,22,38,46],"li":[2,11],"walls":[1,39,45],"t":[200,400]},{"n":7,"k":8,"L":2,"intro":null,"cats":[[2,0,"SE",0,0],[6,0,"N",1,0,"o"],[2,1,"N",3,1,"o"],[4,1,"E",0,0],[2,2,"N",1,0,"o"],[4,2,"N",2,0,"o"],[2,3,"SE",0,0],[1,4,"N",3,0,"o"],[4,4,"N",3,0,"o"],[0,5,"NE",1,0],[1,6,"N",4,0],[3,6,"N",1,0,"o"],[5,6,"N",1,0,"o"]],"sol":[1,3,5,15,19,25,38,40],"li":[7,10],"walls":[8,30],"t":[210,420]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[2,1,"N",1,0,"o"],[4,1,"N",2,0,"o"],[0,2,"E",2,0],[1,2,"SE",1,0],[5,3,"W",0,0],[1,4,"N",3,0,"o"],[0,5,"NE",3,1],[5,5,"W",2,0],[2,6,"N",4,0,"o"],[6,6,"N",1,0,"o"]],"sol":[5,17,20,23,36,37,41],"li":[4,8],"walls":[1,22],"t":[220,440]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[2,0,"N",4,1,"o"],[1,2,"E",0,0,"2"],[2,2,"NW",0,0],[4,2,"SW",1,0],[4,3,"N",3,0,"o"],[6,4,"W",0,0],[0,5,"N",2,0,"o"],[5,6,"N",4,0,"o"]],"sol":[1,3,9,10,24,42,43],"li":[4,7],"walls":[36],"t":[235,470]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[1,0,"N",6,0,"2"],[5,0,"S",2,0],[0,1,"E",3,0],[2,1,"S",2,0],[3,3,"N",2,0,"o"],[4,3,"N",0,0,"o"],[6,3,"S",1,0],[0,5,"NE",1,0],[1,5,"N",3,1,"o"],[2,6,"E",0,0,"2"],[5,6,"N",1,0,"o"]],"sol":[12,16,28,29,30,34,40],"li":[0,2],"walls":[0,17,21],"t":[235,470]},{"n":7,"k":7,"L":2,"intro":null,"cats":[[0,0,"N",3,1,"o"],[5,0,"SW",2,0],[4,1,"N",2,0,"o"],[5,2,"E",2,0,"2"],[2,3,"N",6,0,"o"],[3,3,"N",4,0,"o"],[6,4,"S",1,0],[0,5,"N",1,0,"o"],[5,6,"E",1,0,"2"]],"sol":[1,7,8,17,18,29,48],"li":[4,5],"walls":[9,37,42],"t":[265,530],"boss":1},{"n":6,"k":5,"L":0,"intro":"midnight","cats":[[5,5,"N",0,0],[0,2,"N",0,0,"o"],[0,3,"S",0,0],[1,5,"E",1,0],[2,3,"N",1,0,"o"],[4,4,"N",1,0,"o"],[4,1,"N",1,0,"o"],[2,2,"N",1,0,"o"],[1,4,"N",0,0]],"sol":[0,2,15,22,32],"li":[],"ev":[{"at":30,"type":"move","cats":[[5,5,"N",0,0],[0,2,"N",0,0,"o"],[5,0,"SW",1,0],[1,5,"E",1,0],[2,3,"N",1,0,"o"],[4,4,"N",1,0,"o"],[4,1,"N",1,0,"o"],[2,2,"N",1,0,"o"],[1,4,"N",0,0]],"cat":2}],"t":[115,230]},{"n":6,"k":5,"L":0,"intro":null,"cats":[[1,3,"E",0,0],[5,3,"N",3,0],[4,4,"NW",1,0],[4,0,"S",1,0],[0,5,"N",1,0],[4,1,"SW",0,0]],"sol":[0,5,11,17,34],"li":[],"ev":[{"at":30,"type":"turn","cats":[[1,3,"E",0,0],[5,3,"NW",0,0],[4,4,"NW",1,0],[4,0,"S",1,0],[0,5,"N",1,0],[4,1,"SW",0,0]],"cat":1}],"t":[120,240]},{"n":6,"k":5,"L":0,"intro":null,"cats":[[3,3,"S",0,0],[5,0,"N",2,0,"o"],[4,5,"NW",1,0],[0,4,"N",1,0],[2,1,"SE",0,0],[3,1,"SW",1,0],[4,1,"SW",0,0]],"sol":[4,6,11,14,16],"li":[],"ev":[{"at":30,"type":"move","cats":[[3,3,"S",0,0],[3,2,"N",2,0,"o"],[4,5,"NW",1,0],[0,4,"N",1,0],[2,1,"SE",0,0],[3,1,"SW",1,0],[4,1,"SW",0,0]],"cat":1}],"t":[120,240]},{"n":6,"k":5,"L":0,"intro":null,"cats":[[5,5,"N",1,0,"o"],[2,0,"N",2,0,"o"],[4,5,"NW",0,0],[5,4,"N",0,0],[3,1,"N",3,0,"o"],[0,4,"NE",1,0],[5,2,"NW",1,0],[1,0,"SE",2,0],[1,3,"S",0,0]],"sol":[3,8,14,22,28],"li":[],"ev":[{"at":30,"type":"turn","cats":[[5,5,"N",1,0,"o"],[2,0,"N",2,0,"o"],[4,5,"NW",0,0],[5,4,"N",0,0],[3,1,"N",3,0,"o"],[0,4,"NE",1,0],[5,2,"W",1,0],[1,0,"SE",2,0],[1,3,"S",0,0]],"cat":6}],"t":[130,260]},{"n":6,"k":5,"L":0,"intro":null,"cats":[[4,3,"N",2,0,"o"],[5,1,"W",1,0],[4,5,"N",1,0,"o"],[1,3,"E",0,0],[4,0,"W",1,0],[5,0,"SW",0,0],[1,5,"NE",0,0],[3,1,"SW",1,0],[2,1,"S",0,0],[1,1,"SE",1,0]],"sol":[0,6,17,24,28],"li":[],"ev":[{"at":30,"type":"wall","cats":[[4,3,"N",2,0,"o"],[5,1,"W",1,0],[4,5,"N",1,0,"o"],[1,3,"E",0,0],[4,0,"W",0,0],[5,0,"SW",0,0],[1,5,"NE",0,0],[3,1,"SW",1,0],[2,1,"S",0,0],[1,1,"SE",1,0]],"walls":[1],"cell":1}],"t":[130,260]},{"n":6,"k":5,"L":0,"intro":null,"cats":[[3,5,"N",1,0,"o"],[5,3,"W",2,0],[4,1,"W",0,0],[1,2,"E",0,0],[2,1,"SE",1,0],[4,3,"N",0,0],[1,3,"N",1,0,"o"],[2,4,"N",3,0,"o"],[3,0,"N",1,0,"o"],[1,5,"E",1,0]],"sol":[2,20,21,29,32],"li":[],"ev":[{"at":30,"type":"sleep","cats":[[3,5,"N",1,0,"o"],[5,3,"W",2,0],[4,1,"W",0,0],[1,2,"E",0,0],[2,1,"S",0,0,"z"],[4,3,"N",0,0],[1,3,"N",1,0,"o"],[2,4,"N",3,0,"o"],[3,0,"N",1,0,"o"],[1,5,"E",1,0]],"cat":4}],"t":[135,270]},{"n":6,"k":5,"L":0,"intro":null,"cats":[[0,4,"S",0,0,"z"],[0,1,"E",1,0],[4,4,"W",1,0],[1,1,"S",1,0],[4,3,"W",1,0],[4,0,"S",1,0],[4,2,"N",0,0,"o"],[3,5,"NW",0,0],[0,5,"N",1,0,"o"],[5,2,"W",1,0]],"sol":[8,14,18,25,34],"li":[],"ev":[{"at":30,"type":"wake","cats":[[0,4,"N",1,0],[0,1,"E",1,0],[4,4,"W",1,0],[1,1,"S",1,0],[4,3,"W",1,0],[4,0,"S",1,0],[4,2,"N",0,0,"o"],[3,5,"NW",0,0],[0,5,"N",1,0,"o"],[5,2,"W",1,0]],"cat":0}],"t":[135,270]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[5,4,"N",2,0,"o"],[2,1,"N",2,0,"o"],[5,0,"SW",1,0],[4,0,"W",0,0],[1,4,"E",1,0],[0,2,"NE",1,0],[5,5,"N",2,0,"o"],[1,3,"N",2,0,"o"],[0,0,"SE",2,0]],"sol":[7,13,16,20,28,34],"li":[],"ev":[{"at":30,"type":"move","cats":[[5,4,"N",2,0,"o"],[2,1,"N",2,0,"o"],[5,0,"SW",1,0],[4,0,"W",0,0],[1,4,"E",1,0],[0,2,"NE",1,0],[5,5,"N",2,0,"o"],[1,3,"N",2,0,"o"],[5,2,"W",2,0]],"cat":8}],"t":[140,280]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[2,5,"N",1,0,"o"],[4,0,"SW",1,0],[5,0,"SW",1,0],[2,4,"N",1,0],[1,1,"E",1,0],[5,1,"S",1,0],[5,3,"W",2,0],[0,2,"E",0,0],[5,5,"N",1,0]],"sol":[8,21,22,24,25,29],"li":[],"ev":[{"at":30,"type":"wall","cats":[[2,5,"N",1,0,"o"],[4,0,"SW",0,0],[5,0,"SW",1,0],[2,4,"N",1,0],[1,1,"E",1,0],[5,1,"S",1,0],[5,3,"W",2,0],[0,2,"E",0,0],[5,5,"N",1,0]],"walls":[19],"cell":19}],"t":[140,280]},{"n":6,"k":6,"L":0,"intro":null,"cats":[[2,1,"N",2,0,"o"],[5,4,"NW",1,0],[0,3,"S",0,0],[2,3,"W",1,0],[2,0,"W",0,0],[0,1,"SE",3,0]],"sol":[12,13,15,19,27,34],"li":[],"ev":[{"at":30,"type":"turn","cats":[[2,1,"N",2,0,"o"],[5,4,"NW",1,0],[0,3,"S",0,0],[2,3,"W",1,0],[2,0,"W",0,0],[0,1,"S",1,0]],"cat":5}],"t":[145,290]},{"n":7,"k":6,"L":0,"intro":"twice","cats":[[6,4,"W",1,0],[0,6,"N",2,0],[6,3,"N",0,0,"o"],[4,3,"N",1,0,"o"],[2,6,"N",1,0,"o"],[2,2,"N",1,0,"o"],[5,6,"NW",2,0],[1,6,"N",0,0],[6,5,"N",0,0],[6,2,"S",1,0]],"sol":[7,18,23,28,37,48],"li":[],"ev":[{"at":30,"type":"wall","cats":[[6,4,"W",0,0],[0,6,"N",2,0],[6,3,"N",0,0,"o"],[4,3,"N",1,0,"o"],[2,6,"N",1,0,"o"],[2,2,"N",1,0,"o"],[5,6,"NW",2,0],[1,6,"N",0,0],[6,5,"N",0,0],[6,2,"S",1,0]],"walls":[30],"cell":30},{"at":60,"type":"move","cats":[[3,2,"S",0,0],[0,6,"N",2,0],[6,3,"N",0,0,"o"],[4,3,"N",1,0,"o"],[2,6,"N",1,0,"o"],[2,2,"N",1,0,"o"],[5,6,"NW",2,0],[1,6,"N",0,0],[6,5,"N",0,0],[6,2,"S",1,0]],"walls":[30],"cat":0}],"t":[180,360]},{"n":7,"k":6,"L":0,"intro":null,"cats":[[0,4,"N",1,0,"o"],[1,2,"N",1,0,"o"],[4,0,"S",0,0],[1,6,"N",1,0,"o"],[3,5,"NE",1,0],[6,6,"N",2,0],[0,3,"N",0,0],[0,5,"N",0,0,"o"],[5,0,"SW",1,0],[3,4,"N",0,0,"o"]],"sol":[6,17,20,22,40,44],"li":[],"ev":[{"at":30,"type":"wall","cats":[[0,4,"N",1,0,"o"],[1,2,"N",1,0,"o"],[4,0,"S",0,0],[1,6,"N",1,0,"o"],[3,5,"NE",1,0],[6,6,"N",1,0],[0,3,"N",0,0],[0,5,"N",0,0,"o"],[5,0,"SW",1,0],[3,4,"N",0,0,"o"]],"walls":[13],"cell":13},{"at":60,"type":"turn","cats":[[0,4,"N",1,0,"o"],[1,2,"N",1,0,"o"],[4,0,"S",0,0],[1,6,"N",1,0,"o"],[3,5,"NE",1,0],[6,6,"NW",1,0],[0,3,"N",0,0],[0,5,"N",0,0,"o"],[5,0,"SW",1,0],[3,4,"N",0,0,"o"]],"walls":[13],"cat":5}],"t":[195,390]},{"n":7,"k":6,"L":0,"intro":null,"cats":[[5,2,"S",0,0,"z"],[1,2,"N",0,0,"o"],[6,2,"SW",1,0],[2,0,"SE",2,0],[6,6,"N",1,0],[1,5,"E",1,0],[1,6,"NE",2,0],[0,1,"SE",1,0],[4,3,"NE",0,0],[6,5,"N",2,0,"o"]],"sol":[26,29,31,33,34,37],"li":[],"ev":[{"at":30,"type":"wake","cats":[[5,2,"SW",2,0],[1,2,"N",0,0,"o"],[6,2,"SW",1,0],[2,0,"SE",2,0],[6,6,"N",1,0],[1,5,"E",1,0],[1,6,"NE",2,0],[0,1,"SE",1,0],[4,3,"NE",0,0],[6,5,"N",2,0,"o"]],"cat":0},{"at":60,"type":"move","cats":[[5,2,"SW",2,0],[1,2,"N",0,0,"o"],[6,2,"SW",1,0],[2,0,"SE",2,0],[6,6,"N",1,0],[1,5,"E",1,0],[1,6,"NE",2,0],[0,1,"SE",1,0],[1,1,"S",1,0],[6,5,"N",2,0,"o"]],"cat":8}],"t":[195,390]},{"n":7,"k":6,"L":0,"intro":null,"cats":[[4,0,"S",0,0],[5,3,"N",0,0],[0,6,"E",1,0],[1,2,"E",1,0],[4,4,"N",1,0,"o"],[2,3,"SE",0,0],[3,0,"N",3,0,"o"],[2,2,"S",1,0],[6,5,"N",0,0]],"sol":[2,9,10,17,33,44],"li":[],"ev":[{"at":30,"type":"move","cats":[[4,0,"S",0,0],[5,3,"N",0,0],[0,6,"E",1,0],[1,2,"E",1,0],[4,4,"N",1,0,"o"],[2,3,"SE",0,0],[3,0,"N",3,0,"o"],[2,2,"S",1,0],[5,5,"W",0,0]],"cat":8},{"at":60,"type":"turn","cats":[[4,0,"S",0,0],[5,3,"N",0,0],[0,6,"E",1,0],[1,2,"E",1,0],[4,4,"N",1,0,"o"],[2,3,"SE",0,0],[3,0,"N",3,0,"o"],[2,2,"S",1,0],[5,5,"NW",0,0]],"cat":8}],"t":[180,360]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[2,2,"S",0,0],[0,1,"SE",0,0],[3,6,"NE",0,0],[1,4,"N",1,0,"o"],[2,3,"N",1,0,"o"],[0,6,"N",2,0],[5,3,"N",2,0,"o"],[0,5,"N",0,0,"o"],[4,6,"NE",1,0],[4,2,"SW",0,0],[2,4,"N",1,0,"o"],[0,0,"N",1,0,"o"]],"sol":[8,14,17,19,21,34,38],"li":[],"ev":[{"at":30,"type":"move","cats":[[5,5,"N",1,0],[0,1,"SE",0,0],[3,6,"NE",0,0],[1,4,"N",1,0,"o"],[2,3,"N",1,0,"o"],[0,6,"N",2,0],[5,3,"N",2,0,"o"],[0,5,"N",0,0,"o"],[4,6,"NE",1,0],[4,2,"SW",0,0],[2,4,"N",1,0,"o"],[0,0,"N",1,0,"o"]],"cat":0},{"at":60,"type":"turn","cats":[[5,5,"NW",1,0],[0,1,"SE",0,0],[3,6,"NE",0,0],[1,4,"N",1,0,"o"],[2,3,"N",1,0,"o"],[0,6,"N",2,0],[5,3,"N",2,0,"o"],[0,5,"N",0,0,"o"],[4,6,"NE",1,0],[4,2,"SW",0,0],[2,4,"N",1,0,"o"],[0,0,"N",1,0,"o"]],"cat":0}],"t":[195,390]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[1,5,"E",1,0],[0,2,"E",1,0],[0,1,"N",1,0,"o"],[6,2,"N",2,0,"o"],[3,2,"S",1,0],[5,0,"SW",2,0],[5,1,"S",2,0],[4,4,"SE",1,0],[6,6,"NW",1,0],[5,4,"W",1,0],[3,3,"E",0,0]],"sol":[1,11,13,19,29,40,45],"li":[],"ev":[{"at":30,"type":"turn","cats":[[1,5,"E",1,0],[0,2,"E",1,0],[0,1,"N",1,0,"o"],[6,2,"N",2,0,"o"],[3,2,"S",1,0],[5,0,"SW",2,0],[5,1,"S",2,0],[4,4,"N",1,0],[6,6,"NW",1,0],[5,4,"W",1,0],[3,3,"E",0,0]],"cat":7},{"at":60,"type":"move","cats":[[1,5,"E",1,0],[0,2,"E",1,0],[0,1,"N",1,0,"o"],[6,2,"N",2,0,"o"],[3,2,"S",1,0],[5,0,"SW",2,0],[5,1,"S",2,0],[4,5,"NW",0,0],[6,6,"NW",1,0],[5,4,"W",1,0],[3,3,"E",0,0]],"cat":7}],"t":[195,390]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[6,1,"S",0,0,"z"],[1,2,"SE",1,0],[3,2,"S",1,0],[0,0,"E",1,0],[4,4,"SE",2,0],[5,3,"W",1,0],[0,5,"NE",2,0],[2,4,"N",0,0],[3,5,"NE",1,0],[2,1,"E",1,0],[5,1,"S",1,0]],"sol":[5,11,20,24,39,40,48],"li":[],"ev":[{"at":30,"type":"wake","cats":[[6,1,"SW",0,0],[1,2,"SE",1,0],[3,2,"S",1,0],[0,0,"E",1,0],[4,4,"SE",2,0],[5,3,"W",1,0],[0,5,"NE",2,0],[2,4,"N",0,0],[3,5,"NE",1,0],[2,1,"E",1,0],[5,1,"S",1,0]],"cat":0},{"at":60,"type":"move","cats":[[6,1,"SW",0,0],[1,2,"SE",1,0],[3,2,"S",1,0],[0,0,"E",1,0],[4,4,"SE",2,0],[5,3,"W",1,0],[0,5,"NE",2,0],[2,4,"N",0,0],[3,5,"NE",1,0],[2,1,"E",1,0],[0,2,"NE",0,0]],"cat":10}],"t":[190,380]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[0,2,"E",1,0],[1,4,"N",2,0,"o"],[0,1,"SE",2,0],[5,5,"W",0,0],[3,2,"NW",1,0],[0,4,"S",1,0],[5,4,"W",3,0]],"sol":[1,15,21,30,31,32,42],"li":[],"ev":[{"at":30,"type":"move","cats":[[0,2,"E",1,0],[1,4,"N",2,0,"o"],[0,1,"SE",2,0],[2,3,"N",0,0],[3,2,"NW",1,0],[0,4,"S",1,0],[5,4,"W",3,0]],"cat":3},{"at":60,"type":"move","cats":[[0,2,"E",1,0],[1,4,"N",2,0,"o"],[2,2,"SW",0,0],[2,3,"N",0,0],[3,2,"NW",1,0],[0,4,"S",1,0],[5,4,"W",3,0]],"cat":2}],"t":[205,410]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[1,1,"N",0,0,"o"],[5,2,"N",1,0,"o"],[1,3,"E",1,0],[3,5,"SW",2,0,"2"],[6,1,"W",1,0],[3,2,"N",2,0,"o"],[0,5,"SW",1,0,"2"],[1,6,"N",3,0,"o"],[4,4,"W",1,0],[2,4,"E",1,0],[6,6,"W",1,0]],"sol":[10,20,23,31,36,37,44],"li":[],"walls":[27],"ev":[{"at":30,"type":"sleep","cats":[[1,1,"N",0,0,"o"],[5,2,"N",1,0,"o"],[1,3,"E",1,0],[3,5,"SW",2,0,"2"],[6,1,"S",0,0,"z"],[3,2,"N",2,0,"o"],[0,5,"SW",1,0,"2"],[1,6,"N",3,0,"o"],[4,4,"W",1,0],[2,4,"E",1,0],[6,6,"W",1,0]],"walls":[27],"cat":4},{"at":60,"type":"wall","cats":[[1,1,"N",0,0,"o"],[5,2,"N",1,0,"o"],[1,3,"E",1,0],[3,5,"SW",2,0,"2"],[6,1,"S",0,0,"z"],[3,2,"N",2,0,"o"],[0,5,"SW",1,0,"2"],[1,6,"N",3,0,"o"],[4,4,"W",1,0],[2,4,"E",1,0],[6,6,"W",0,0]],"walls":[27,46],"cell":46}],"t":[205,410]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[0,1,"N",3,0,"o"],[3,6,"N",1,0,"o"],[0,6,"N",0,0,"o"],[5,4,"N",1,0,"o"],[4,0,"S",0,0],[6,1,"SW",1,0],[6,5,"N",0,0],[1,4,"N",3,0],[3,3,"SW",1,0],[2,0,"SW",1,0],[1,0,"S",3,0]],"sol":[0,8,15,22,26,30,37],"li":[],"walls":[6],"ev":[{"at":30,"type":"sleep","cats":[[0,1,"N",3,0,"o"],[3,6,"N",1,0,"o"],[0,6,"N",0,0,"o"],[5,4,"N",1,0,"o"],[4,0,"S",0,0],[6,1,"SW",1,0],[6,5,"S",0,0,"z"],[1,4,"N",3,0],[3,3,"SW",1,0],[2,0,"SW",1,0],[1,0,"S",3,0]],"walls":[6],"cat":6},{"at":60,"type":"move","cats":[[0,1,"N",3,0,"o"],[3,6,"N",1,0,"o"],[4,6,"N",0,0,"o"],[5,4,"N",1,0,"o"],[4,0,"S",0,0],[6,1,"SW",1,0],[6,5,"S",0,0,"z"],[1,4,"N",3,0],[3,3,"SW",1,0],[2,0,"SW",1,0],[1,0,"S",3,0]],"walls":[6],"cat":2}],"t":[210,420]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[5,1,"S",0,0,"z"],[3,4,"W",0,0,"2"],[5,3,"N",2,0,"o"],[1,1,"SE",1,0],[2,2,"N",1,0,"o"],[6,0,"S",2,0],[4,6,"N",2,0,"o"],[4,3,"W",0,0,"2"],[3,3,"NW",1,0],[0,3,"N",1,0,"o"]],"sol":[0,15,18,20,45,47,48],"li":[],"walls":[10,43],"ev":[{"at":30,"type":"wake","cats":[[5,1,"SW",1,0],[3,4,"W",0,0,"2"],[5,3,"N",2,0,"o"],[1,1,"SE",1,0],[2,2,"N",1,0,"o"],[6,0,"S",2,0],[4,6,"N",2,0,"o"],[4,3,"W",0,0,"2"],[3,3,"NW",1,0],[0,3,"N",1,0,"o"]],"walls":[10,43],"cat":0},{"at":60,"type":"move","cats":[[5,1,"SW",1,0],[3,4,"W",0,0,"2"],[5,3,"N",2,0,"o"],[1,1,"SE",1,0],[2,2,"N",1,0,"o"],[6,0,"S",2,0],[4,6,"N",2,0,"o"],[2,5,"E",0,0,"2"],[3,3,"NW",1,0],[0,3,"N",1,0,"o"]],"walls":[10,43],"cat":7}],"t":[205,410]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[5,0,"N",2,0,"o"],[6,5,"N",0,0,"o"],[0,1,"E",0,0],[4,3,"SW",1,0],[0,0,"SE",2,0],[5,2,"N",1,0,"o"],[5,5,"N",2,0,"o"],[6,2,"SW",2,0],[4,5,"W",0,0]],"sol":[4,6,16,26,32,43,46],"li":[],"walls":[10,13],"ev":[{"at":30,"type":"move","cats":[[5,0,"N",2,0,"o"],[6,5,"N",0,0,"o"],[0,1,"E",0,0],[4,3,"SW",1,0],[0,0,"SE",2,0],[5,2,"N",1,0,"o"],[2,6,"N",1,0,"o"],[6,2,"SW",2,0],[4,5,"W",0,0]],"walls":[10,13],"cat":6},{"at":60,"type":"wall","cats":[[5,0,"N",2,0,"o"],[6,5,"N",0,0,"o"],[0,1,"E",0,0],[4,3,"SW",1,0],[0,0,"SE",1,0],[5,2,"N",1,0,"o"],[2,6,"N",1,0,"o"],[6,2,"SW",2,0],[4,5,"W",0,0]],"walls":[10,13,24],"cell":24}],"t":[215,430]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[5,6,"W",0,0],[5,5,"NW",2,0],[2,5,"E",0,0],[4,5,"N",0,0,"o"],[1,6,"N",2,0,"o"],[1,1,"S",1,0],[0,0,"N",2,0,"o"]],"sol":[1,7,16,24,26,35,36],"li":[],"walls":[10,28],"ev":[{"at":30,"type":"turn","cats":[[5,6,"N",1,0],[5,5,"NW",2,0],[2,5,"E",0,0],[4,5,"N",0,0,"o"],[1,6,"N",2,0,"o"],[1,1,"S",1,0],[0,0,"N",2,0,"o"]],"walls":[10,28],"cat":0},{"at":60,"type":"move","cats":[[5,6,"N",1,0],[5,5,"NW",2,0],[1,3,"E",2,0],[4,5,"N",0,0,"o"],[1,6,"N",2,0,"o"],[1,1,"S",1,0],[0,0,"N",2,0,"o"]],"walls":[10,28],"cat":2}],"t":[215,430]},{"n":7,"k":7,"L":0,"intro":null,"cats":[[6,2,"W",0,0],[3,6,"NE",0,0],[4,2,"N",1,0,"o"],[3,5,"E",1,0],[0,4,"N",1,0,"o"],[1,3,"N",1,0,"o"],[0,6,"N",3,0],[5,0,"SW",1,0],[5,2,"S",0,0]],"sol":[0,7,24,30,35,37,41],"li":[],"walls":[8,27],"ev":[{"at":30,"type":"turn","cats":[[6,2,"W",0,0],[3,6,"NE",0,0],[4,2,"N",1,0,"o"],[3,5,"W",2,0],[0,4,"N",1,0,"o"],[1,3,"N",1,0,"o"],[0,6,"N",3,0],[5,0,"SW",1,0],[5,2,"S",0,0]],"walls":[8,27],"cat":3},{"at":60,"type":"move","cats":[[6,2,"W",0,0],[3,6,"NE",0,0],[4,2,"N",1,0,"o"],[3,5,"W",2,0],[4,3,"N",1,0,"o"],[1,3,"N",1,0,"o"],[0,6,"N",3,0],[5,0,"SW",1,0],[5,2,"S",0,0]],"walls":[8,27],"cat":4}],"t":[210,420]},{"n":7,"k":8,"L":0,"intro":null,"cats":[[5,1,"SW",2,0],[2,4,"N",2,0,"o"],[4,1,"SW",0,0],[0,5,"N",3,0],[1,6,"E",1,0],[4,6,"N",1,0,"o"],[0,0,"N",0,0,"o"],[3,4,"SE",1,0,"2"],[2,6,"NE",0,0],[5,6,"NW",1,0]],"sol":[14,18,21,24,28,37,39,48],"li":[],"walls":[19,27],"ev":[{"at":30,"type":"turn","cats":[[5,1,"SW",2,0],[2,4,"N",2,0,"o"],[4,1,"SW",0,0],[0,5,"N",3,0],[1,6,"N",0,0],[4,6,"N",1,0,"o"],[0,0,"N",0,0,"o"],[3,4,"SE",1,0,"2"],[2,6,"NE",0,0],[5,6,"NW",1,0]],"walls":[19,27],"cat":4},{"at":60,"type":"move","cats":[[5,1,"SW",2,0],[2,4,"N",2,0,"o"],[4,1,"SW",0,0],[0,5,"N",3,0],[1,6,"N",0,0],[4,6,"N",1,0,"o"],[3,2,"N",2,0,"o"],[3,4,"SE",1,0,"2"],[2,6,"NE",0,0],[5,6,"NW",1,0]],"walls":[19,27],"cat":6},{"at":90,"type":"sleep","cats":[[5,1,"SW",2,0],[2,4,"N",2,0,"o"],[4,1,"SW",0,0],[0,5,"N",3,0],[1,6,"N",0,0],[4,6,"N",1,0,"o"],[3,2,"N",2,0,"o"],[3,4,"SE",1,0,"2"],[2,6,"NE",0,0],[5,6,"S",0,0,"z"]],"walls":[19,27],"cat":9}],"t":[230,460],"boss":1}],S_FROM=TOTAL+1,S_TO=TOTAL+SECRET.length;
+const lvAt=n=>n<=TOTAL?LEVELS[n-1]:SECRET[n-S_FROM];
+const isSecret=n=>n>TOTAL;
+const maxLevel=()=>save.secret?S_TO:TOTAL;
 const DIRS={N:[0,-1],NE:[1,-1],E:[1,0],SE:[1,1],S:[0,1],SW:[-1,1],W:[-1,0],NW:[-1,-1]};
 const ANG={E:0,SE:45,S:90,SW:135,W:180,NW:225,N:270,NE:315};
 const OPP={N:"S",S:"N",E:"W",W:"E",NE:"SW",SW:"NE",NW:"SE",SE:"NW"};
@@ -471,8 +514,11 @@ const STAGES=[
   {name:"Chief",from:71,to:100,size:"6×6 boards",news:"the crown and two liars"},
   {name:"Secret Agent",from:101,to:125,size:"7×7 boards",news:"sleeping cats"},
   {name:"Legend",from:126,to:150,size:"7×7 boards",news:"everything mixed"},
-  {name:"Master",from:151,to:200,size:"7×7 boards",news:"more fish, more tricks"}
+  {name:"Master",from:151,to:200,size:"7×7 boards",news:"more fish, more tricks"},
+  {name:"Sniffer",from:201,to:225,size:"6×6 and 7×7 boards",news:"the sniffing cat",secret:1},
+  {name:"Midnight",from:226,to:250,size:"6×6 and 7×7 boards",news:"the board changes",secret:1}
 ];
+const MAIN_LAST=7;
 const LIMITS={3:[20,40],4:[45,90],5:[90,180],6:[150,300],7:[240,480]};
 const CROSS_FROM=26, BULB_FROM=6, GUIDE_TO=10, FIXED_TO=5, HOVER_TO=5, HINT_CAP=5, HINT_FROM=6;
 const F=(seen)=>({t:"fish",seen}),C=(label,o)=>Object.assign({t:"cat",label},o||{}),E=(seen)=>({t:"empty",seen});
@@ -492,6 +538,9 @@ const INTROS={
   big:{lv:101,short:"7×7 boards: more room to hide fish.",tag:"sel:#fishrow",tagLabel:"Bigger",title:"7×7 boards",text:"Boards grow to 7×7. More cats and more places to check: take it step by step, starting with the cats that say 0.",ex:[C("→0"),E(1),E(1)]},
   sleep:{lv:116,short:"The sleeping cat looks at nothing: it tells you nothing.",tag:"cat:sleep",tagLabel:"Fast asleep",title:"The sleeping cat",text:"Some cats are asleep: they look nowhere, have no number and never lie. They’re there to distract you. No fish goes on their square, and other cats can see past them.",ex:[C("→1"),{t:"sleep"},F(1)]},
   legend:{lv:126,short:"The toughest cases. Good luck.",tag:"sel:.pill.liar",tagLabel:"Good luck, Legend",title:"The toughest cases",text:"Everything mixed: walls, two-faced cats, sleeping cats, the crown and two liars. Good luck, Legend.",ex:[C("↗3",{crown:1}),F(),{t:"liar",label:"↓0"}]},
+  sniff:{lv:201,short:"The sniffing cat counts the fish right next to it, in the 8 squares around it.",tag:"cat:sniff",tagLabel:"Sniffs around",title:"The sniffing cat",text:"Its eyes are closed, but it can smell. Its number says how many fish are right next to it: the 8 squares around it, diagonals included. Anything farther away, it can’t smell. In a corner it smells 3 squares; on an edge, 5.",ex:[F(1),{t:"sniff",label:"2"},F(1)]},
+  midnight:{lv:226,short:"When the countdown hits zero, something on the board changes. The fish never move.",tag:"sel:#midbar",tagLabel:"Countdown",title:"Midnight",text:"There’s a countdown at the top. When it hits zero, something on the board changes: a cat moves, turns around, falls asleep or wakes up, or a wall appears. The fish never move, but the clue that changes is gone. Get everything you can out of it before the change, and mark it with fish and crosses.",ex:[C("→1"),E(1),F(1)]},
+  twice:{lv:236,short:"Now the board changes twice.",tag:"sel:#midbar",tagLabel:"Two changes",title:"Two midnights",text:"From this level on, the board changes twice: at 30 seconds and at one minute. Mark everything you know before each change.",ex:[C("→1"),E(1),F(1)]},
   master:{lv:151,short:"More fish, more tricks.",tag:"sel:.pill.liar",tagLabel:"Master",title:"Master stage",text:"The final stage: boards with more fish and every trick at once. Walls, two-faced cats, sleepers, the crown and two liars.",ex:[C("↗3",{crown:1}),F(),{t:"liar",label:"↓0"}]}
 };
 const TUTS={
@@ -502,7 +551,7 @@ const TUTS={
   two_liars:{title:"Two are lying",ask:"Two of these cats are lying. Tap both.",cells:[{t:"cat",label:"→1",liar:0},{t:"fish"},{t:"cat",label:"←0",liar:1},{t:"cat",label:"←2",liar:1}],need:2,
     win:"Exactly! Both see a fish and say something else.",wrong:"That one tells the truth: it sees 1 fish."}
 };
-const INTRO_ORDER=["one","zero","two","diag","combine","liar","cross","walls","more","twoface","crown","two_liars","big","sleep","legend"];
+const INTRO_ORDER=["one","zero","two","diag","combine","liar","cross","walls","more","twoface","crown","two_liars","big","sleep","legend","sniff","midnight","twice"];
 const INTRO_AT={};INTRO_ORDER.forEach(k=>INTRO_AT[INTROS[k].lv]=k);
 
 /* ---------- guardado ---------- */
@@ -516,7 +565,7 @@ try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(s){save=Object.assi
 save.bank=Math.min(HINT_CAP,Math.max(0,save.bank|0));
 function newUid(){let r;try{r=crypto.getRandomValues(new Uint8Array(20))}catch(e){r=Array.from({length:20},()=>Math.floor(Math.random()*256))}return Array.from(r,x=>"abcdefghijkmnpqrstuvwxyz23456789"[x%32]).join("")}
 if(!save.uid)save.uid=newUid();
-if(TEST){save.unlocked=TOTAL;save.welcomed=1;save.log=save.log||[];if(save.bank<HINT_CAP)save.bank=HINT_CAP}
+if(TEST){save.unlocked=TOTAL+SECRET.length;save.secret=1;save.secretShown=1;save.welcomed=1;save.log=save.log||[];if(save.bank<HINT_CAP)save.bank=HINT_CAP}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(save))}catch(e){}}
 function addHints(k){const b=save.bank;save.bank=Math.min(HINT_CAP,save.bank+k);return save.bank-b}
 let lastStageGain=0,lastDailyGain=0,lastFreeze=false,lastWeeklyGain=0;
@@ -682,10 +731,10 @@ const fmt=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`;
 const plural=(k,a,b)=>k===1?`1 ${a}`:`${k} ${b}`;
 const peces=k=>plural(k,"fish","fish");
 const stageOf=n=>STAGES.findIndex(s=>n>=s.from&&n<=s.to);
-const starsTotal=()=>Object.values(save.stars).reduce((a,b)=>a+b,0);
+const starsTotal=()=>Object.entries(save.stars).reduce((a,[n,b])=>a+(+n<=TOTAL?b:0),0);
 const stageStars=si=>{let t=0;for(let n=STAGES[si].from;n<=STAGES[si].to;n++)t+=save.stars[n]||0;return t};
 const stageWon=si=>{let t=0;for(let n=STAGES[si].from;n<=STAGES[si].to;n++)if(save.won[n])t++;return t};
-const current=()=>{if(TEST){for(let n=TEST_FROM;n<=TOTAL;n++)if(!save.won[n])return n;return TOTAL}return Math.min(save.unlocked,TOTAL)};
+const current=()=>{if(TEST){for(let n=TEST_FROM;n<=TOTAL;n++)if(!save.won[n])return n;return TOTAL}return Math.min(save.unlocked,maxLevel())};
 const allDone=()=>!!save.won[TOTAL];
 const ico=(id,w,h,extra)=>`<svg width="${w}" height="${h||w}" aria-hidden="true" ${extra||""}><use href="#${id}"/></svg>`;
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -856,9 +905,9 @@ function missionsRowHTML(){const M=missionsToday(),n=missionsDoneCount();
   return `<button class="missionrow" data-act="missions"><span aria-hidden="true">🎯</span><span class="grow">Daily missions</span><span class="mdots" aria-hidden="true">${M.list.map(k=>`<i class="${M.done[k]?"on":""}"></i>`).join("")}</span><b>${n}/3</b>${ico("chev",16)}</button>`}
 
 function renderHome(){
-  const n=current(),si=stageOf(n),st=STAGES[si],done=allDone();
+  const n=current(),si=stageOf(n),st=STAGES[si],sec=!!st.secret,done=sec?!!save.won[S_TO]:allDone();
   const inStage=st.to-st.from+1,doneIn=stageWon(si),pct=Math.round(doneIn/inStage*100);
-  const next=STAGES[si+1];
+  const next=si<MAIN_LAST||sec?STAGES[si+1]:null;
   const left=st.to-(n-1)-(save.won[n]?1:0);
   const dk=save.daily.results[today()];
   const s=streakNow();
@@ -867,8 +916,8 @@ function renderHome(){
       <button class="round" data-act="go" data-arg="settings" aria-label="Settings">${ico("gear",20)}</button></div>
     ${TEST?`<section class="card stack" style="gap:10px;border:2px dashed var(--cat)"><span class="eyebrow" style="color:var(--cat)">Test mode</span><span style="font-size:14px;line-height:1.45">All levels are open. Play in order from level ${TEST_FROM} and send your times when you’re done. What you play here doesn’t mix with your normal game.</span><span class="muted" style="font-size:13px">${plural(save.log.length,"entry","entries")} saved</span><div class="row" style="gap:8px"><a class="btn primary" style="flex:1;padding:0 12px" href="https://wa.me/?text=${encodeURIComponent(testText())}" target="_blank" rel="noopener">WhatsApp</a><button class="btn" style="flex:1;padding:0 12px" data-act="copyLog">Copy</button></div><button data-act="clearLog" style="background:none;border:0;font-weight:700;font-size:13px;color:var(--muted);min-height:36px;cursor:pointer">Start the test over</button></section>`:""}
     <section class="card stack homecard">
-      <div class="row" style="justify-content:space-between;align-items:baseline"><span class="eyebrow">Stage ${si+1} · ${st.name}</span><span class="muted" style="font-size:13px;font-weight:600">${done?`${TOTAL} of ${TOTAL}`:`Level ${n} of ${TOTAL}`}</span></div>
-      <div class="bar" role="img" aria-label="${done?`You finished all ${TOTAL} levels. You’re a Master!`:next?`${peces2(left)} to go until ${next.name}`:`${peces2(left)} to go until the end`}"><i style="width:${pct}%"></i></div>
+      <div class="row" style="justify-content:space-between;align-items:baseline"><span class="eyebrow">${sec?`🌙 Secret · ${st.name}`:`Stage ${si+1} · ${st.name}`}</span><span class="muted" style="font-size:13px;font-weight:600">${sec?(done?"Secret finished":`Level ${n}`):done?`${TOTAL} of ${TOTAL}`:`Level ${n} of ${TOTAL}`}</span></div>
+      <div class="bar" role="img" aria-label="${sec&&done?"You finished the secret part":done?`You finished all ${TOTAL} levels. You’re a Master!`:next?`${peces2(left)} to go until ${next.name}`:`${peces2(left)} to go until the end`}"><i style="width:${pct}%"></i></div>
       <button class="btn primary" style="min-height:50px" data-act="${done?"go":"play"}" data-arg="${done?"levels":n}"><span style="font-size:17px">${done?"See levels":"Play"}</span>${done?"":`<span style="color:var(--fish);font-weight:500">Level ${n}</span>`}</button>
     </section>
     <section class="daily">
@@ -934,6 +983,8 @@ function renderLevels(){
   if(openStage===null)openStage=cs;
   let h=`<main class="view"><div class="top"><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("back",18)}</button><h1 class="grow">Levels</h1><span class="muted" style="font-size:14px;font-weight:600">${starsTotal()} of ${TOTAL*3} ★</span></div>`;
   STAGES.forEach((st,si)=>{
+    if(st.secret&&!save.secret)return;
+    if(st.secret&&STAGES[si-1]&&!STAGES[si-1].secret)h+=`<p class="secrethead">🌙 Secret · don’t tell anyone</p>`;
     const count=st.to-st.from+1,locked=st.from>save.unlocked,done=stageWon(si)===count;
     const sub=`Levels ${st.from} to ${st.to} · ${st.size}`;
     if(locked){
@@ -960,15 +1011,43 @@ function lockedSheet(title,text){
 }
 
 /* ---------- Juego ---------- */
+function catsOf(n,list,walls){
+  const ray=(x,y,d)=>{const r=[];let a=x+DIRS[d][0],b=y+DIRS[d][1];while(a>=0&&b>=0&&a<n&&b<n){const j=b*n+a;if(walls.has(j))break;r.push(j);a+=DIRS[d][0];b+=DIRS[d][1]}return r};
+  const near=(x,y)=>{const r=[];for(const d in DIRS){const a=x+DIRS[d][0],b=y+DIRS[d][1];if(a>=0&&b>=0&&a<n&&b<n&&!walls.has(b*n+a))r.push(b*n+a)}return r};
+  return list.map(([x,y,d,v,cr,kind])=>{const sleep=kind==="z",two=kind==="2",sniff=kind==="o";const r=sleep?[]:sniff?near(x,y):ray(x,y,d).concat(two?ray(x,y,OPP[d]):[]);return{x,y,d,v:sleep?0:v,crown:!!cr,two,sleep,sniff,i:y*n+x,r}});
+}
 function makeGame(L,mode,num){
   const N=L.n*L.n;
   const walls=new Set(L.walls||[]);
-  const ray=(x,y,d)=>{const r=[];let a=x+DIRS[d][0],b=y+DIRS[d][1];while(a>=0&&b>=0&&a<L.n&&b<L.n){const j=b*L.n+a;if(walls.has(j))break;r.push(j);a+=DIRS[d][0];b+=DIRS[d][1]}return r};
-  const cats=L.cats.map(([x,y,d,v,cr,kind])=>{const sleep=kind==="z",two=kind==="2";const r=sleep?[]:ray(x,y,d).concat(two?ray(x,y,OPP[d]):[]);return{x,y,d,v:sleep?0:v,crown:!!cr,two,sleep,i:y*L.n+x,r}});
+  const cats=catsOf(L.n,L.cats,walls);
   const catAt=new Array(N).fill(-1);cats.forEach((c,ci)=>catAt[c.i]=ci);
   return{L,mode,num,n:L.n,N,walls,cats,catAt,cells:new Array(N).fill(0),locked:new Set(),accused:[],sec:0,done:false,paused:false,
-    hover:-1,crossMode:false,bulb:!!save.settings.bulb,focus:0,hintsUsed:0,errors:0};
+    hover:-1,crossMode:false,bulb:!!save.settings.bulb,focus:0,hintsUsed:0,errors:0,ph:0,real:0};
 }
+/* Medianoche: a los X segundos el tablero cambia (los peces nunca se mueven) */
+const phaseOf=(L,p)=>p===0?{cats:L.cats,walls:L.walls||[]}:{cats:L.ev[p-1].cats,walls:L.ev[p-1].walls||[]};
+const MID_MSG={move:"A cat moved! Its old clue is gone: now it looks from somewhere else.",turn:"A cat turned around! Now it looks the other way.",wall:"A wall appeared! It blocks the cats’ view: check which numbers changed.",sleep:"A cat fell asleep! It doesn’t tell you anything now.",wake:"A cat woke up! Now it looks and counts."};
+function midTick(){if(!G||!G.L.ev||G.done)return;G.real++;const e=G.L.ev[G.ph];if(e&&G.real>=e.at)midChange()}
+function midChange(){
+  const e=G.L.ev[G.ph];G.ph++;
+  const old=new Map(G.cats.map(c=>[c.i,c.d+"|"+c.v+"|"+c.sleep+"|"+c.sniff])),oldW=new Set(G.walls);
+  G.walls=new Set(e.walls||[]);G.cats=catsOf(G.n,e.cats,G.walls);G.catAt=new Array(G.N).fill(-1);G.cats.forEach((c,ci)=>G.catAt[c.i]=ci);
+  for(let i=0;i<G.N;i++)if(G.catAt[i]>=0||G.walls.has(i)){G.cells[i]=0;G.locked.delete(i)}
+  G.hover=-1;G.hintRay=null;G.hEmpty=new Set();G.hFish=new Set();G.lastHint=null;
+  const fx=document.createElement("div");fx.className="midflash";document.body.appendChild(fx);requestAnimationFrame(()=>fx.classList.add("on"));
+  buzz([40,60,40]);SND.ups();
+  setTimeout(()=>{if(!G||view!=="game")return;
+    buildBoard();renderBoard();drawTime();
+    const changed=[];G.cats.forEach(c=>{if(old.get(c.i)!==c.d+"|"+c.v+"|"+c.sleep+"|"+c.sniff)changed.push(c.i)});G.walls.forEach(i=>{if(!oldW.has(i))changed.push(i)});
+    changed.forEach(i=>{const el=$("c"+i);if(el)retrig(el,"midnew",2600)});
+    fx.classList.remove("on");setTimeout(()=>fx.remove(),400);
+    setStatus(MID_MSG[e.type]+(G.ph<G.L.ev.length?" And it will change again.":""),"info");
+    if(G.cells.filter(v=>v===1).length===G.L.k)check();
+  },450);
+}
+function midPastOk(){for(let p=0;p<G.ph;p++){const ph=phaseOf(G.L,p),cs=catsOf(G.n,ph.cats,new Set(ph.walls));if(cs.some(c=>!c.sleep&&c.r.filter(j=>G.cells[j]===1).length!==c.v))return false}return true}
+function midBarHTML(){const ev=G.L.ev,left=ev.length-G.ph;if(!left)return `<span class="midpill done">🌙 ${ev.length>1?"All changed":"Changed"}</span>`;
+  const s=Math.max(0,ev[G.ph].at-G.real);return `<span class="midpill${s<=5?" hot":""}">🌙 ${ev.length>1?`Change ${G.ph+1} of ${ev.length} in`:"Something changes in"} ${fmt(s)}</span>`}
 const guideFixed=()=>G.mode==="level"&&G.num<=FIXED_TO;
 const guideNums=()=>G.mode==="level"&&G.num<=GUIDE_TO;
 const hoverAllowed=()=>(G.mode==="level"&&G.num<=HOVER_TO)||G.bulb;
@@ -976,9 +1055,9 @@ const hasBulb=()=>G.mode!=="level"||G.num>=BULB_FROM;
 const hasCross=()=>G.mode!=="level"||G.num>=CROSS_FROM;
 
 function startLevel(num){
-  num=Math.max(1,Math.min(+num||current(),TOTAL));
+  num=Math.max(1,Math.min(+num||current(),maxLevel()));
   if(num>save.unlocked){go("levels");return}
-  G=makeGame(LEVELS[num-1],"level",num);
+  G=makeGame(lvAt(num),"level",num);
   view="game";
   if(!save.won[num])track("empieza",num);
   renderGameShell();
@@ -1055,6 +1134,7 @@ function renderGameShell(){
       <span class="pill" id="timer" style="position:relative" ${relaxOn()?"hidden":""}>0:00</span></div>`;
   app.innerHTML=`<main class="view gameview${daily?" special":""}">${head}
     <div class="supplyrow"><div class="fishrow${L.k>=7?" many many7":L.k>=5?" many":L.k===4?" mid4":""}" id="fishrow" role="img"></div>${liarPill}<span class="lives" id="lives"></span></div>
+    ${L.ev?`<div class="midbar" id="midbar" aria-live="polite"></div>`:""}
     <div class="board-wrap"><div class="board" id="board" role="grid" aria-label="${L.n} by ${L.n} board"></div></div>
     ${daily?dbar:'<span class="reward" id="reward"></span>'}
     <p class="status" id="status" role="status" aria-live="polite"></p>
@@ -1067,10 +1147,11 @@ function renderGameShell(){
   </main>`;
   buildBoard();renderBoard();drawTime();drawLives();
   clearInterval(tick);
-  tick=setInterval(()=>{if(G&&view==="game"&&!G.done&&!G.paused&&!document.hidden){G.sec++;drawTime()}},1000);
+  tick=setInterval(()=>{if(G&&view==="game"&&!G.done&&!G.paused&&!document.hidden){G.sec++;midTick();drawTime()}},1000);
 }
 function drawTime(){
   const t=$("timer");if(t)t.textContent=fmt(G.sec);
+  const mb=$("midbar");if(mb&&G.L.ev)mb.innerHTML=midBarHTML();
   const r=$("reward");if(!r)return;
   const [a,b]=G.L.t||LIMITS[G.n];
   const canGain=!save.won[G.num]&&G.num>=HINT_FROM&&save.bank<HINT_CAP;
@@ -1090,6 +1171,7 @@ function buildBoard(){
     if(ci>=0){
       const c=G.cats[ci];el.classList.add("cat");if(c.sleep)el.classList.add("sleep");if(c.two)el.classList.add("two");
       el.innerHTML=c.sleep?`<svg class="face" viewBox="0 0 40 40" aria-hidden="true" style="color:var(--muted)"><use href="#cat-sleep"/></svg><span class="clue zz">z<small>z</small></span>`
+        :c.sniff?`<svg class="face" viewBox="0 0 40 40" aria-hidden="true" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat-sniff"/></svg>${c.crown?'<svg class="crown" viewBox="0 0 24 18" aria-hidden="true"><use href="#crown"/></svg>':""}<span class="clue"><svg viewBox="0 0 20 20" aria-hidden="true"><use href="#around"/></svg>${c.v}</span>`
         :`<svg class="face" viewBox="0 0 40 40" aria-hidden="true" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat"/></svg>${c.crown?'<svg class="crown" viewBox="0 0 24 18" aria-hidden="true"><use href="#crown"/></svg>':""}<span class="clue"><svg viewBox="0 0 20 20" aria-hidden="true" style="transform:rotate(${ANG[c.d]}deg)"><use href="#${c.two?"arrow2":"arrow"}"/></svg>${c.v}</span>`;
       el.addEventListener("mouseenter",()=>hoverCat(ci,true));
       el.addEventListener("mouseleave",()=>hoverCat(ci,false));
@@ -1128,7 +1210,7 @@ function renderBoard(){
       const okNow=guideNums()&&sb===c.v;if(okNow&&!el.classList.contains("ok")){el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop")}
       el.classList.toggle("ok",okNow);
       el.classList.toggle("over",guideNums()&&sb>c.v);
-      el.setAttribute("aria-label",c.sleep?"Sleeping cat: looks at nothing":`${c.two?"Two-faced cat":"Cat"}${c.crown?" with a crown":""}: says it sees ${peces(c.v)} looking ${DNAME[c.d]}${c.two?" and "+DNAME[OPP[c.d]]:""}${acc?". Accused of lying":""}`);
+      el.setAttribute("aria-label",c.sleep?"Sleeping cat: looks at nothing":c.sniff?`Sniffing cat${c.crown?" with a crown":""}: says ${peces(c.v)} right next to it${acc?". Accused of lying":""}`:`${c.two?"Two-faced cat":"Cat"}${c.crown?" with a crown":""}: says it sees ${peces(c.v)} looking ${DNAME[c.d]}${c.two?" and "+DNAME[OPP[c.d]]:""}${acc?". Accused of lying":""}`);
       continue;
     }
     if(G.walls.has(i))continue;
@@ -1220,6 +1302,11 @@ function check(fromCat){
   const L=G.L,placed=G.cells.filter(v=>v===1).length;
   if(placed<L.k){setStatus(fromCat&&G.accused.length?`You accused ${G.accused.length===1?"a cat":"two cats"}.`:"");return}
   const w=wrongCats();
+  if(L.ev){
+    if(L.sol.every(i=>G.cells[i]===1))return win();
+    if(w.length){failAttempt(w.length===1?"One cat doesn’t agree.":"Some cats don’t agree.");return}
+    if(!midPastOk()){failAttempt("That doesn’t match what the cats said before the change.");return}
+    setStatus("The cats agree for now. Wait for the change: then you’ll know if it’s right.","info");return}
   if(!L.L){if(!w.length)return win();failAttempt(w.length===1?"One cat doesn’t agree.":"Some cats don’t agree.");return}
   if(w.some(ci=>G.cats[ci].crown)){failAttempt("Something’s off: the crowned cat would be lying.");return}
   if(w.length===0){failAttempt("Something’s off: this way nobody lies.");return}
@@ -1346,13 +1433,15 @@ function win(){
   if(first){track("gana",n,{tiempo:tb(G.sec)});evPush("tiempo-"+(G.sec<30?"a":G.sec<60?"b":G.sec<120?"c":G.sec<300?"d":"e"),n);if(!relax)evPush("estrellas-"+st,n)}
   testLog({n,s:G.sec,h:G.hintsUsed,st,e:G.errors});
   save.stars[n]=Math.max(save.stars[n]||0,st);save.won[n]=1;
-  save.unlocked=Math.max(save.unlocked,Math.min(TOTAL,n+1));
+  let secretNew=false;
+  if(n===TOTAL&&!save.secret){save.secret=1;secretNew=true;track("secreto-ve")}
+  save.unlocked=Math.max(save.unlocked,Math.min(maxLevel(),n+1));
   const si=stageOf(n),stageJustDone=n===STAGES[si].to&&!save.stageDone[si];
   lastStageGain=0;
   if(stageJustDone){save.stageDone[si]=1;lastStageGain=addHints(2);track("etapa-"+(si+1))}
   persist();
   const mis=missionEvent("win",{stars:st,hints:G.hintsUsed,sec:G.sec,fast:!relax&&G.sec<=a,errors:G.errors,relax});
-  res={missions:mis,n,L:G.L.L,sec:G.sec,stars:st,gain,first,limitA:a,stageJustDone,si,relax,errors:G.errors,full:full&&first&&st===3&&n>=HINT_FROM};
+  res={secretNew,missions:mis,n,L:G.L.L,sec:G.sec,stars:st,gain,first,limitA:a,stageJustDone,si,relax,errors:G.errors,full:full&&first&&st===3&&n>=HINT_FROM};
   setTimeout(()=>{if(view==="game")go("victory",res)},WIN_MS);
 }
 function quitLog(){if(G&&!G.done&&G.mode==="level"&&!G.logged){G.logged=1;if(!save.won[G.num])track("sale",G.num,{tiempo:tb(G.sec)});if(G.sec>=5)testLog({n:G.num,s:G.sec,x:1})}}
@@ -1373,6 +1462,7 @@ function miniHTML(ex){
     if(c.t==="empty")return `<span class="${c.seen?"s":""}"></span>`;
     if(c.t==="wall")return `<span class="w"><svg viewBox="0 0 40 40" style="position:absolute;inset:0;width:100%;height:100%"><use href="#wall"/></svg></span>`;
     if(c.t==="sleep")return `<span class="zc"><svg class="f" viewBox="0 0 40 40" style="color:var(--muted)"><use href="#cat-sleep"/></svg><b style="color:var(--muted);font-style:italic">zz</b></span>`;
+    if(c.t==="sniff")return `<span class="c"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat-sniff"/></svg><b style="display:flex;align-items:center;gap:1px"><svg viewBox="0 0 20 20" style="width:14px;height:14px"><use href="#around"/></svg>${c.label}</b></span>`;
     if(c.t==="liar")return `<span class="l"><svg class="f" viewBox="0 0 40 40" style="color:var(--bad);--eye:var(--bad-bg)"><use href="#cat"/></svg><b>${c.label}</b></span>`;
     return `<span class="c"><svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat"/></svg>${c.crown?'<svg class="cr" viewBox="0 0 24 18"><use href="#crown"/></svg>':""}<b style="${c.ok?"color:var(--good)":""}">${c.label}</b></span>`;
   }).join("")}</div>`;
@@ -1384,10 +1474,44 @@ function introCard(key,i,list){
     <div class="stack" style="gap:8px"><h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${it.title}</h2><p style="font-size:17px;line-height:1.45;color:var(--soft)">${list?it.text:it.short}</p></div>`;
 }
 function showIntro(key,inGame){
+  if(key==="sniff"||key==="midnight"){practiceSheet(key);return}
   if(TUTS[key]){tut={key,acc:[],cross:[],done:false,msg:"",bad:-1};openSheet('<div id="tutBox" class="stack" style="gap:16px"></div>',{dismiss:false});renderTut();return}
   openSheet(introCard(key)+`<button class="btn primary" data-act="introOk" data-arg="${key}">Play</button>`,{dismiss:false});
 }
-let tut=null;
+let tut=null,ptick=null;
+function pCell(t,label,cls){const cat=t==="cat"||t==="sniff";return `<span class="${cat?"c":""} ${cls||""}">${t==="cat"?`<svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat"/></svg><b>${label}</b>`:t==="sniff"?`<svg class="f" viewBox="0 0 40 40" style="color:var(--cat);--eye:var(--cat-bg)"><use href="#cat-sniff"/></svg><b><svg viewBox="0 0 20 20" class="ar"><use href="#around"/></svg>${label}</b>`:t==="fish"?ico("fish",40,24):""}</span>`}
+function practiceSheet(key){
+  const sn=key==="sniff",it=INTROS[key];
+  openSheet(`<div class="stack" style="gap:14px"><span class="eyebrow" style="color:var(--cat)">Level ${it.lv} · New</span>
+    <h2 id="sheetTitle" style="font-size:24px;letter-spacing:-.03em;line-height:1.1">${it.title}</h2>
+    ${sn?`<div class="pcmp"><div class="stack" style="gap:6px"><span class="plab">The one you know</span><div class="pgrid" style="grid-template-columns:repeat(4,1fr)" aria-hidden="true">${pCell("cat","→1")}${pCell("","","s")}${pCell("fish","","s")}${pCell("","","s")}</div><p class="psm">Looks <b>in a line</b>, along its arrow.</p></div>
+      <div class="stack" style="gap:6px"><span class="plab">The sniffer</span><div class="pgrid" style="grid-template-columns:repeat(3,1fr);width:150px" aria-hidden="true">${pCell("fish","","s")}${pCell("","","s")}${pCell("","","s")}${pCell("","","s")}${pCell("sniff","2")}${pCell("fish","","s")}${pCell("","","s")}${pCell("","","s")}${pCell("","","s")}</div><p class="psm">Smells what’s <b>right next to it</b>: the 8 squares around it, diagonals included.</p></div></div>`
+    :`<p style="font-size:16px;line-height:1.45;color:var(--soft)">There’s a countdown at the top. When it hits zero, <b style="color:var(--ink)">something on the board changes</b>. The fish never move, but the clue that changes is gone: mark what you know with fish and crosses before the change.</p>`}
+    <span class="plab">Try it</span><p id="pq" style="font-size:16px;line-height:1.45;color:var(--soft)"></p>
+    <div class="row" style="gap:14px;align-items:flex-start"><div class="pgrid play" id="pgrid" style="grid-template-columns:repeat(4,1fr)"></div>${sn?"":`<span class="midpill" id="pchg">🌙 0:08</span>`}</div>
+    <button class="btn primary" data-act="introOk" data-arg="${key}" id="pgo" disabled>Solve it to continue</button></div>`,{dismiss:false});
+  sn?practiceSniff():practiceMid();
+}
+function pDone(){const b=$("pgo");if(b){b.disabled=false;b.textContent="Play"}beep([523,659,784],.09)}
+function practiceSniff(){const C=5,near=[0,1,2,4,6,8,9,10];let tries=0;const q=$("pq");q.innerHTML=`<b style="color:var(--ink)">This cat says 1.</b> Place a fish it can smell.`;
+  const draw=(f,ok)=>{$("pgrid").innerHTML=Array.from({length:16},(_,i)=>i===C?pCell("sniff","1"):`<button data-p="${i}" class="${ok&&near.includes(i)?"s":""}" aria-label="Casilla">${i===f?ico("fish",40,24):""}</button>`).join("");
+    $("pgrid").querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>tap(+b.dataset.p))};
+  const tap=i=>{if(near.includes(i)){draw(i,true);q.innerHTML=`<b style="color:var(--good)">That’s it!</b> It’s right next to the cat${[0,2,8,10].includes(i)?", diagonally":""}, so it can smell it. The highlighted squares are all the ones it smells.`;pDone()}
+    else{tries++;draw(i,false);q.innerHTML=`<b style="color:var(--bad)">That one’s too far:</b> it isn’t next to the cat, so it can’t smell it.${tries>1?" Diagonals count too.":""}`;buzz(30)}};
+  draw(-1,false)}
+function practiceMid(){let cat=0,cd=8,moved=false,done=false;const marks={},q=$("pq");
+  q.innerHTML=`<b style="color:var(--ink)">There’s 1 fish.</b> The cat says it’s in its row, but you don’t know which square yet.`;
+  const draw=()=>{$("pgrid").innerHTML=Array.from({length:16},(_,i)=>i===cat?pCell("cat",moved?"↑1":"→1",moved?"pnew":""):`<button data-p="${i}" class="${!moved&&[1,2,3].includes(i)?"s":""}" aria-label="Casilla">${marks[i]==="f"?ico("fish",40,24):marks[i]==="x"?ico("x",20,20,'style="color:#8A887C"'):""}</button>`).join("");
+    $("pgrid").querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>tap(+b.dataset.p))};
+  const tap=i=>{if(done)return;
+    if(!moved){if([1,2,3].includes(i))q.innerHTML=`<b style="color:var(--ink)">You can’t tell which one yet.</b> It could be any of the 3 highlighted squares. What you do know: there are no fish outside that row.`;else{marks[i]="x";draw();q.innerHTML=`<b style="color:var(--good)">Good:</b> there’s definitely no fish there. Crosses stay even if the cat moves.`}return}
+    if(i===3){marks[3]="f";done=true;draw();q.innerHTML=`<b style="color:var(--good)">That’s it!</b> Before, the cat said the fish was in the top row; now, in the right column. Only the corner fits both.`;pDone()}
+    else{q.innerHTML=`<b style="color:var(--bad)">Not that one:</b> remember what the cat said before it moved. The fish is in its old row <b>and</b> in the column it looks at now.`;buzz(30)}};
+  draw();clearInterval(ptick);
+  ptick=setInterval(()=>{const c=$("pchg");if(!c){clearInterval(ptick);return}cd--;
+    if(cd>0){c.textContent=`🌙 ${fmt(cd)}`;c.classList.toggle("hot",cd<=3);return}
+    clearInterval(ptick);moved=true;cat=15;c.textContent="🌙 Changed";c.className="midpill done";draw();buzz([40,60,40]);
+    q.innerHTML=`<b style="color:var(--ink)">The cat moved!</b> Now it looks up and says 1: the fish is in its column. Where is it?`},1000)}
 function renderTut(){
   const T=TUTS[tut.key],it=INTROS[tut.key],box=$("tutBox");if(!box)return;
   const cells=T.cells.map((c,i)=>{
@@ -1420,7 +1544,7 @@ function showTag(key,sticky){
   const [kind,what]=[it.tag.slice(0,it.tag.indexOf(":")),it.tag.slice(it.tag.indexOf(":")+1)];
   if(kind==="sel")el=document.querySelector("#app "+what);
   else{
-    const ci=G.cats.findIndex(c=>what==="any"||(what==="zero"&&c.v===0)||(what==="diag"&&c.d.length===2)||(what==="crown"&&c.crown)||(what==="two"&&c.two)||(what==="sleep"&&c.sleep));
+    const ci=G.cats.findIndex(c=>what==="any"||(what==="zero"&&c.v===0)||(what==="diag"&&c.d.length===2)||(what==="crown"&&c.crown)||(what==="two"&&c.two)||(what==="sleep"&&c.sleep)||(what==="sniff"&&c.sniff));
     if(ci<0)return;const c=G.cats[ci];el=$("c"+c.i);side=c.x===0?"l":c.x===G.n-1?"r":"";
   }
   if(!el)return;
@@ -1453,7 +1577,7 @@ function solutionHTML(L){
   const cats={};L.cats.forEach((c,k)=>cats[c[1]*n+c[0]]={c,k});
   let h="";for(let i=0;i<n*n;i++){const ct=cats[i];
     if(ct){const [x,y,d,v,cr,kind]=ct.c;const lie=li.has(ct.k);
-      h+=`<span class="sc ${lie?"lie":""} ${kind==="z"?"zz":""}">${kind==="z"?"z":`<svg viewBox="0 0 20 20" style="transform:rotate(${ANG[d]}deg)"><use href="#${kind==="2"?"arrow2":"arrow"}"/></svg><b>${v}</b>`}</span>`}
+      h+=`<span class="sc ${lie?"lie":""} ${kind==="z"?"zz":""}">${kind==="z"?"z":kind==="o"?`<svg viewBox="0 0 20 20"><use href="#around"/></svg><b>${v}</b>`:`<svg viewBox="0 0 20 20" style="transform:rotate(${ANG[d]}deg)"><use href="#${kind==="2"?"arrow2":"arrow"}"/></svg><b>${v}</b>`}</span>`}
     else if(W.has(i))h+=`<span class="swl"></span>`;
     else h+=`<span>${F.has(i)?'<svg class="sf" viewBox="0 0 40 24"><use href="#fish"/></svg>':""}</span>`}
   return `<div class="solmini" style="grid-template-columns:repeat(${n},1fr)" role="img" aria-label="Your solution">${h}</div>`;
@@ -1461,14 +1585,14 @@ function solutionHTML(L){
 function victoryTitle(L){return L===2?"Liars caught!":L===1?"Liar caught!":"Case closed!"}
 function renderVictory(r){
   if(!r){go("home");return}
-  const last=r.n>=TOTAL;
+  const last=r.n>=S_TO||(r.n===TOTAL&&!save.secret);
   const tip=r.stars<3?(r.relax?"No mistakes gets you 3 stars":`3 stars: before ${fmt(r.limitA)}`):"";
   const nextLabel=r.stageJustDone?(last?"See my achievement":"Continue"):"Next level";
   const nextAct=r.stageJustDone?`data-act="stageEnd" data-arg="${r.si}"`:`data-act="play" data-arg="${r.n+1}"`;
   app.innerHTML=`<main class="view result min">
     <div class="top"><span class="eyebrow grow">Nivel ${r.n}</span><button class="round" data-act="go" data-arg="home" aria-label="Back to home">${ico("close",18)}</button></div>
     <div class="mid">
-      ${solutionHTML(LEVELS[r.n-1])}
+      ${solutionHTML(lvAt(r.n))}
       <h1>${victoryTitle(r.L)}</h1>${starsHTML(r.stars,40)}
       <p class="line">${r.relax?(r.errors?plural(r.errors,"mistake","mistakes"):"No mistakes"):`<span class="timebox"><b class="vtime">${fmt(r.sec)}</b>${fastWin(r)?BOLT_SVG:""}</span>`}${r.gain?` · <b style="color:var(--good)">+1 hint</b>`:""}</p>
       ${fastWin(r)?`<span class="stamp">Lightning fast!</span>`:""}
@@ -1476,7 +1600,7 @@ function renderVictory(r){
       ${tip?`<p class="line small">${tip}</p>`:""}
     </div>
     ${last&&!r.stageJustDone?"":`<button class="btn primary" ${nextAct}>${nextLabel} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`}
-    <button class="linkbtn big" data-act="shareLevel">Share</button>
+    ${isSecret(r.n)?SECRET_NOTE:`<button class="linkbtn big" data-act="shareLevel">Share</button>`}
   </main>`;
   if(r.n===6&&r.first&&showInstallCard()&&!r.seenFx)track("instalar-tarjeta-6");
   lastResult=r;
@@ -1485,6 +1609,7 @@ function renderVictory(r){
   if(!r.seenFx){r.seenFx=1;victoryFx(r)}else{const b=document.querySelector(".result .bolt"),st=document.querySelector(".result .stamp");if(b)b.style.opacity=1;if(st)st.style.opacity=1}
 }
 const fastWin=r=>!r.relax&&r.sec<=r.limitA;
+const SECRET_NOTE=`<p class="secretnote"><span aria-hidden="true">🤫</span> <span><b>This is a secret: no sharing.</b> Let others find it on their own.</span></p>`;
 const BOLT_SVG=`<svg class="bolt" viewBox="0 0 40 72" aria-hidden="true"><path d="M27 2L6 40h13L11 70l25-40H23l9-28z"/></svg>`;
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const anim=(el,k,o)=>el&&el.animate?el.animate(k,Object.assign({fill:"forwards",easing:"ease-out"},o)):null;
@@ -1528,7 +1653,7 @@ let lastResult=null;
 
 /* ---------- Fin de etapa ---------- */
 function renderStageEnd(si){
-  si=+si;const st=STAGES[si],next=STAGES[si+1],count=st.to-st.from+1;
+  si=+si;const st=STAGES[si],next=si===MAIN_LAST?null:STAGES[si+1],count=st.to-st.from+1,sec=!!st.secret;
   const conf=[[34,92,"#7B4FFF",-30,14,6],[318,120,"#0A0A0A",24,16,6],[70,300,"#FFFEF8",0,10,10],[330,270,"#7B4FFF",60,14,6],[160,72,"#0A0A0A",0,10,10],[24,210,"#FFFEF8",12,16,6],[290,360,"#FFFEF8",0,10,10]];
   const nc=newCats().filter(c=>c.stage===si);markSeen(nc);
   app.innerHTML=`<main class="view stage-end result min">
@@ -1536,16 +1661,32 @@ function renderStageEnd(si){
     <div class="top" style="position:relative"><span class="eyebrow grow" style="color:var(--ink)">You finished ${st.name}</span></div>
     <div class="mid" style="position:relative">
       <div style="width:120px;height:120px;border-radius:50%;background:var(--night);display:grid;place-items:center"><svg width="76" height="76" style="color:var(--cat);--eye:var(--night)" aria-hidden="true"><use href="#cat-happy"/></svg></div>
-      <h1>${next?`Promoted to ${next.name}!`:"You’re a Legend!"}</h1>
+      <h1>${next?`Promoted to ${next.name}!`:sec?"You finished the secret!":"You’re a Legend!"}</h1>
       <p class="line" style="color:var(--soft)"><b>${stageStars(si)} de ${count*3} ★</b>${lastStageGain?` · +${lastStageGain} ${lastStageGain===1?"hint":"hints"}`:""}</p>
-      ${next?"":`<p class="line small" style="color:var(--soft)">You finished all ${TOTAL} levels. Keep playing the daily challenge.</p>`}
+      ${next?"":sec?`<p class="line small" style="color:var(--soft)">Very few people make it this far. Keep going with the daily challenge.</p>`:`<p class="line small" style="color:var(--soft)">You finished all ${TOTAL} levels. Keep playing the daily challenge.</p>`}
       ${nc.map(c=>chipCat(c)).join("")}
     </div>
     <div class="stack" style="position:relative;gap:0">${next?`<button class="btn primary" data-act="play" data-arg="${next.from}">On to ${next.name} ${ico("arrow",18,18,'style="color:var(--fish)"')}</button>`:`<button class="btn primary" data-act="go" data-arg="home">Back to home</button>`}
-      <button class="linkbtn big" data-act="shareStage" data-arg="${si}">Share my achievement</button></div>
+      ${sec?SECRET_NOTE:`<button class="linkbtn big" data-act="shareStage" data-arg="${si}">Share my achievement</button>`}</div>
   </main>`;
+  if(si===MAIN_LAST&&save.secret&&!save.secretShown)setTimeout(()=>{if(view==="stage")showSecret()},2600);
 }
 
+
+/* ---------- La parte secreta: se revela al ganar el último nivel ---------- */
+function showSecret(){
+  save.secretShown=1;persist();if(document.querySelector(".secretov"))return;
+  const o=document.createElement("div");o.className="secretov";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");o.setAttribute("aria-labelledby","secTitle");
+  o.innerHTML=`<div class="eyes" aria-hidden="true"><i></i><i></i></div>
+    <h1 id="secTitle">You’re not done yet.</h1>
+    <p>You found something almost nobody sees: <b>50 more levels</b>, with rules that don’t appear anywhere else.</p>
+    <p class="small">It’s a secret: these levels can’t be shared. Let others find them on their own 🤫</p>
+    <button class="btn primary" data-act="secretGo">Enter</button><button class="linkbtn" data-act="secretLater" style="color:#A6A497">Not now</button>`;
+  document.body.appendChild(o);document.documentElement.classList.add("lock");
+  requestAnimationFrame(()=>o.classList.add("on"));SND.chord();buzz([60,120,60]);
+  setTimeout(()=>{const b=o.querySelector(".btn");if(b)b.focus({preventScroll:true})},900);
+}
+function closeSecret(){const o=document.querySelector(".secretov");if(o)o.remove();document.documentElement.classList.remove("lock")}
 
 /* ---------- Desafío: resultado ---------- */
 function renderDailyResult(o){
@@ -1788,7 +1929,7 @@ const ACT={
   play(a){go("game",+a)},
   closeSheet(){closeSheet()},
   exitGame(){exitGame()},
-  resetBoard(){if(!G||G.done)return;G.cells=G.cells.map((v,i)=>G.locked.has(i)?1:0);G.accused=[];G.crossMode=false;setStatus("Board cleared. The clock keeps running.");renderBoard()},
+  resetBoard(){if(!G||G.done)return;if(G.L.ev&&G.mode==="level"&&G.ph>0){const n=G.num;G.done=true;startLevel(n);setStatus("Back to the start: the board is as it was and the clock starts from zero.","info");return}G.cells=G.cells.map((v,i)=>G.locked.has(i)?1:0);G.accused=[];G.crossMode=false;setStatus("Board cleared. The clock keeps running.");renderBoard()},
   hint(){hint()},
   toggleCross(){if(!G)return;G.crossMode=!G.crossMode;setStatus(G.crossMode?"X mode: tap the squares where there’s no fish.":"");renderBoard()},
   toggleBulb(){if(!G)return;G.bulb=!G.bulb;G.hover=-1;renderBoard()},
@@ -1816,6 +1957,8 @@ const ACT={
   shareImg(a,btn){shareImage(btn)},
   playPast(a){startPast(a)},
   restartLives(){restartLives()},
+  secretGo(){closeSecret();go("game",S_FROM)},
+  secretLater(){closeSecret();go("home")},
   pushOn(a,btn){btn.textContent="…";enablePush().then(ok=>{const c=$("pushAsk");if(c)c.innerHTML=ok?`<span class="grow" style="font-weight:700;text-align:center;padding:8px">Done: we’ll remind you tomorrow if you haven’t played.</span>`:`<span class="grow muted" style="text-align:center;padding:8px">Couldn’t turn it on. Try from Settings.</span>`})},
   pushNo(){save.pushAsked=1;persist();const c=$("pushAsk");if(c)c.remove()},
   pushToggle(){if(pushNeedsInstall()){installApp();return}const st=$("pushState");if(save.push){disablePush().then(()=>{if(view==="settings")renderSettings()})}else{if(st)st.textContent="…";enablePush().then(()=>{if(view==="settings")renderSettings()})}},
@@ -1854,6 +1997,10 @@ function boot(){
       if(save.lang!==LANG){location.replace(OTHER_URL+location.search+location.hash);return}
     }
   }
+  // quien ya había ganado el último nivel antes de que existiera la parte secreta, la encuentra al entrar
+  // para probar la parte secreta sin jugar los 200 niveles: abre los 50 niveles en este celular
+  if(location.hash==="#noche-7319"){save.secret=1;save.unlocked=Math.max(save.unlocked,S_TO);persist();history.replaceState(null,"",location.pathname+location.search);setTimeout(()=>{if(view==="home")showSecret()},900)}
+  if(save.won[TOTAL]&&!save.secret){save.secret=1;save.unlocked=Math.max(save.unlocked,S_FROM);persist();setTimeout(()=>{if(view==="home")showSecret()},900)}
   if(STANDALONE)track("abre-app");
   // primera vez que se abre desde la pantalla de inicio: se avisa una sola vez por celular
   if(STANDALONE&&!TEST&&!save.instSeen){save.instSeen=1;persist();evPush("app-instalada",0);if(save.installAsked)evPush("app-instalada-guiada",0)}
